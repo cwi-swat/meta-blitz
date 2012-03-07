@@ -59,12 +59,9 @@ public final class RasterImage implements Image{
 
 
 	@Override
-	public Sample getSample(double x, double y, double w, double h) {
-		if(w == 1.0 && h == 1.0 && (int)x == x && (int)y == y){
+	public Sample getSample(double x, double y) {
 			int start = getIndex((int)x, (int)y, 0);
 			int end = start + channels;
 			return new Sample(Arrays.copyOfRange(data, start, end));			
-		}
-		throw new Error("Not yet implemented");
 	}
 }

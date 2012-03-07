@@ -1,4 +1,4 @@
-package bezier.colors;
+package bezier.image;
 
 import bezier.util.Util;
 
