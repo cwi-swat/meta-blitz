@@ -12,7 +12,7 @@ public class RenderPaths {
 
 	public static int ANTIALIASING_BORDER = 1;
 	
-	public static Image renderPaths(Paths p){
+	public static RasterImage renderPaths(Paths p){
 		int x = (int)p.getBBox().x - ANTIALIASING_BORDER;
 		int y = (int)p.getBBox().y - ANTIALIASING_BORDER;
 		int xr = (int)Math.ceil(p.getBBox().xr) + ANTIALIASING_BORDER;
@@ -22,10 +22,10 @@ public class RenderPaths {
 		
 		BufferedImage img = makeImage(p,x,y, w, h);
 		Raster r = img.getRaster();
-		int size = w*h*Image.NR_CHANNELS;
+		int size = w*h*RasterImage.NR_CHANNELS;
 		double[] res = new double[size];
 		res = r.getPixels(0, 0, w, h, res);
-		return new Image(x, y, w, h, Image.NR_CHANNELS, res);
+		return new RasterImage(x, y, w, h, RasterImage.NR_CHANNELS, res);
 	}
 
 	public static BufferedImage makeImage(Paths p,int x, int y, int w, int h) {

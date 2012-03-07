@@ -19,7 +19,7 @@ import javax.swing.JFrame;
 import bezier.colors.Color;
 import bezier.composite.Path;
 import bezier.composite.Paths;
-import bezier.image.Image;
+import bezier.image.RasterImage;
 import bezier.points.Vec;
 
 
@@ -187,7 +187,7 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 	}
 	
 	
-	public void blit(Image img){
+	public void blit(RasterImage img){
 		g.drawImage(img.toAWT(), img.x, img.y, null);
 	}
 	
