@@ -1,5 +1,6 @@
 package bezier.graphtheory;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -15,6 +16,11 @@ public class MutableGraph<A> {
 	public MutableGraph() {
 		edges = new HashSet<STuple<A>>();
 		nodes = new HashSet<A>();
+	}
+	
+	public MutableGraph(Collection<A> nodes) {
+		edges = new HashSet<STuple<A>>();
+		this.nodes = new HashSet<A>(nodes);
 	}
 	
 	public boolean hasCycles(){

@@ -16,11 +16,13 @@ import java.awt.event.WindowListener;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
-import bezier.colors.Color;
+import bezier.image.Color;
 import bezier.composite.Path;
 import bezier.composite.Paths;
+import bezier.composite.Shapes;
 import bezier.image.RasterImage;
 import bezier.points.Vec;
+import bezier.util.DummySWTSHape;
 
 
 public abstract class DemoBase  extends JComponent implements KeyListener,MouseWheelListener,MouseListener, MouseMotionListener, WindowListener{
@@ -174,17 +176,17 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 	}
 	
 	public void draw(Paths p, Color border, Color inside){
-		java.awt.Shape s = p.toAWT();
 		
 		if(!inside.isFullyTransparent()){
 			g.setColor(inside.toAWT());
-			g.fill(s);
+			g.fill(new DummySWTSHape(p.getPathIterator()));
 		}
 		if(!border.isFullyTransparent()){
 			g.setColor(border.toAWT());
-			g.draw(s);
+			g.draw(new DummySWTSHape(p.getPathIterator()));
 		}
 	}
+	
 	
 	
 	public void blit(RasterImage img){
@@ -192,7 +194,7 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 	}
 	
 	public void draw(Path p){
-		draw(p,Color.BLACK);
+		draw(p,bezier.image.Color.BLACK);
 	}
 	
 	public void draw(Path p, Color border){

@@ -1,6 +1,7 @@
 package bezier.segment.curve;
 
 import java.awt.Shape;
+import java.awt.geom.PathIterator;
 import java.awt.geom.QuadCurve2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,12 +70,6 @@ public final class QuadCurve extends NonLinearCurve implements Curve{
 	public Curve reverse() {
 		return new QuadCurve(p2, p1, p0);
 	}
-
-	@Override
-	public Shape toAWT() {
-		return new QuadCurve2D.Double(p0.x,p0.y,p1.x,p1.y,p2.x,p2.y);
-	}
-
 
 	@Override
 	public  Tuple<Curve,Curve> split(double t) {
@@ -149,6 +144,15 @@ public final class QuadCurve extends NonLinearCurve implements Curve{
 	@Override
 	public Curve getWithAdjustedStartPoint(Vec newStartPoint) {
 		return new QuadCurve(newStartPoint, p1, p2);
+	}
+
+	@Override
+	public int currentSegment(float[] coords) {
+		coords[0] =(float) p1.x;
+		coords[1] = (float)p1.y;
+		coords[2] =(float) p2.x;
+		coords[3] = (float)p2.y;
+		return PathIterator.SEG_QUADTO;
 	}
 
 	

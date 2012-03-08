@@ -8,32 +8,32 @@ import bezier.points.Matrix;
 import bezier.points.Vec;
 import bezier.segment.LengthMap;
 import bezier.util.BBox;
+import bezier.util.HasBBox;
 import bezier.util.Tuple;
 
-public interface Curve {
+public interface Curve extends HasBBox{
 
-	abstract boolean isLine();
-	abstract Line getLine();
-	abstract BBox getBBox();
-	abstract boolean overlapsWith(BBox r);
-	abstract Tuple<Curve,Curve> split(double t);
-	abstract Tuple<Curve,Curve> splitSimpler();
-	abstract boolean fastIntersectionCheck(Curve other);
-	abstract Curve getWithAdjustedStartPoint(Vec newStartPoint);
-	abstract Vec getStartPoint();
-	abstract Vec getEndPoint();
-	abstract Vec getAt(double t);
-	abstract Vec getTangentAt(double t);
-	abstract List<Curve> makeMonotomous();
-	abstract void fillLengthMap(LengthMap map, double samplesDirect);
-	abstract List<Curve> projectOn(Path p, LengthMap lm);
+	boolean isLine();
+	Line getLine();
+	boolean overlapsWith(BBox r);
+	Tuple<Curve,Curve> split(double t);
+	Tuple<Curve,Curve> splitSimpler();
+	boolean fastIntersectionCheck(Curve other);
+	Curve getWithAdjustedStartPoint(Vec newStartPoint);
+	Vec getStartPoint();
+	Vec getEndPoint();
+	Vec getAt(double t);
+	Vec getTangentAt(double t);
+	List<Curve> makeMonotomous();
+	void fillLengthMap(LengthMap map, double samplesDirect);
+	List<Curve> projectOn(Path p, LengthMap lm);
 	
-	abstract Curve transform(Matrix m);
-	abstract Curve lift();
-	abstract int nrBelow(Vec p);
+	Curve transform(Matrix m);
+	Curve lift();
+	int nrBelow(Vec p);
 	
-	abstract Curve reverse();
+	Curve reverse();
 	
-	abstract Shape toAWT() ;
-	abstract String toString();
+	String toString();
+	int currentSegment(float[] coords);
 }

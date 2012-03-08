@@ -1,11 +1,12 @@
 package bezier.composite;
 
-import java.util.List;
+import java.awt.geom.Path2D;
 
-import bezier.graphtheory.Graph;
+import bezier.graphtheory.MutableGraph;
 import bezier.points.Vec;
+import bezier.util.BBox;
 
-public class Shape {
+public class Shape implements Area{
 	
 	public final Path outer;
 	public final Shapes inner;
@@ -15,12 +16,29 @@ public class Shape {
 		this.inner = inner;
 	}
 
+	public Shape(MutableGraph<Path> sub) {
+		outer = sub.getRoot();
+		sub.removeNode(outer);
+		inner = new Shapes(sub);
+	}
+
 	public boolean isInside(Vec p){
 		return outer.isInside(p) && !inner.isInside(p);
 	}
-	
-	public Shape create(List<Shape> shapes, Graph containsGraph){
-		
+
+	@Override
+	public BBox getBBox() {
+		return outer.bbox;
 	}
 	
+	
+	public String toString(){
+		StringBuffer b = new StringBuffer();
+		b.append("Shape:outer\n");
+		b.append(outer.toString());
+		b.append("inner\n");
+		b.append(inner.toString());
+		b.append('\n');
+		return b.toString();
+	}
 }

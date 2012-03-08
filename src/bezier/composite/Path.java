@@ -1,6 +1,7 @@
 package bezier.composite;
 
 import java.awt.geom.Path2D;
+import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +17,7 @@ import bezier.segment.curve.CurveOperations;
 import bezier.segment.curve.QuadCurve;
 import bezier.segment.curve.TInterval;
 import bezier.util.BBox;
+import bezier.util.DummySWTSHape;
 import bezier.util.Tuple;
 import bezier.util.Util;
 
@@ -26,11 +28,7 @@ public final class Path implements Area{
 	
 	public Path(List<Curve> curves){
 		this.curves = curves;
-		BBox[] bboxs = new BBox[curves.size()];
-		for(int i = 0; i < curves.size() ; i++){
-			bboxs[i] = curves.get(i).getBBox();
-		}
-		this.bbox = BBox.merge(bboxs);
+		this.bbox = new BBox(curves.toArray(new Curve[]{}));
 	}
 	
 	public Path(Curve c) {
@@ -116,21 +114,25 @@ public final class Path implements Area{
 	public int nrIntersectionsBelow(Vec p){
 		int nr = 0;
 		int i = 0;
-		while(i < curves.size()){
+		int end = curves.size();
+		while(i < end){
 			Curve c = curves.get(i);
 			boolean sameStart = c.getStartPoint().x == p.x;
 			boolean sameEnd = c.getEndPoint().x == p.x;
 			if(sameStart || sameEnd){ // border case
-				if(sameEnd){
-					i++;
-				}
 				Tuple<Integer,Integer> straight = getStraightInterval(i, p.x);
 				// if tangent did not change, it is an intersection
-				double yHigh = Math.max(curves.get(straight.l).getEndPoint().y, curves.get(straight.r).getStartPoint().y);
-				if(yHigh < p.y && Math.signum(curves.get(straight.l).getTangentAt(1.0).x) ==
-							Math.signum(curves.get(straight.l).getTangentAt(0.0).x)){
-							nr++;
+				int s = Util.mod(straight.l, curves.size());
+				int e = Util.mod(straight.r, curves.size());
+				if(straight.l < 0){
+					end = Math.min(end, -straight.l);
 				}
+				double yHigh = Math.max(curves.get(s).getEndPoint().y, curves.get(e).getStartPoint().y);
+				
+				if(yHigh < p.y && Math.signum(curves.get(s).getTangentAt(1.0).x) ==
+							Math.signum(curves.get(e).getTangentAt(0.0).x)){
+							nr++;
+				} 
 				i = straight.r+1;
 			} else {
 				nr+= c.nrBelow(p);
@@ -143,26 +145,6 @@ public final class Path implements Area{
 	public boolean isInside(Vec p){
 		return bbox.isInside(p) &&  nrIntersectionsBelow(p) % 2 == 1;
 	}
-	
-
-	static final class CurveAndDist implements Comparable<CurveAndDist>{
-		double dist;
-		int ci;
-		CurveAndDist(int ci, Curve c, Vec from){
-			this.ci = ci;
-			dist = c.getAt(0.5).distanceSquared(from);
-		}
-		@Override
-		public int compareTo(CurveAndDist o) {
-			return Double.compare(dist, o.dist);
-		}
-	}
-//	
-//	public DistPoint project(Vec from){
-//		DistPoint res = new DistPoint();
-//		project(from,res);
-//		return res;
-//	}
 	
 	public Path reverse(){
 		List<Curve> result = new ArrayList<Curve>();
@@ -218,43 +200,6 @@ public final class Path implements Area{
 		} 
 	}
 	
-//	public LengthMap getLengthMap(){
-//		LengthMap map = new LengthMap();
-//		for(Curve c : curves ){
-//			c.fillLengthMap(map);
-//		}
-//		return map;
-//	}
-	
-//	public static List<TPair> removeDoubles(List<TPair> tps){
-//
-//		if(tps.size() <= 1){
-//			return tps;
-//		}
-//		List<TPair> result = new ArrayList<TPair>();
-//		int end = tps.size() - 1;
-//		TPair prev = tps.get(tps.size()-1);
-//		if(tps.get(0).point.isEqError(prev.point)){
-//			end--;
-//			while(end >= 0 && tps.get(end).point.isEqError(prev.point)){
-//				end--;
-//			}
-//		}
-//		prev = tps.get(0);
-//		for(int i = 1 ; i <= end; i++){
-//			TPair tp = tps.get(i);
-//			if(!tp.point.isEqError(prev.point)){
-//				result.add(prev);
-//				
-//			} 
-//			prev = tp;
-//		}
-//		if(tps.size() > 0 || !tps.get(tps.size()-1).point.isEqError(prev.point)){
-//			result.add(prev);
-//		}
-//		return result;
-//	}
-	
 	
 	public List<TPair> getIntersections(Path r){
 		if(!bbox.overlaps(r.bbox)){
@@ -269,99 +214,8 @@ public final class Path implements Area{
 		}
 		return result;
 	}
-//	
-//	public void project(Vec from, DistPoint res){
-//		CurveAndDist[] cdist = new CurveAndDist[curves.length];
-//		for(int i = 0; i < curves.length; i++){
-//			cdist[i] = new CurveAndDist(i,curves[i], from);
-//		}
-//		Arrays.sort(cdist);
-//		for(CurveAndDist c : cdist){
-//			res.changed = false;
-//			curves[c.ci].project(from, res);
-//			if(res.changed){
-//				res.t+= c.ci;
-//			}
-//		}
-//	}
-//	
-//	static class CurvePair implements Comparable<CurvePair>{
-//		final int il, ir;
-//		final MinMax minMax;
-//		
-//		
-//		public CurvePair(int il, int ir, MinMax minMax) {
-//			this.il = il;
-//			this.ir = ir;
-//			this.minMax = minMax;
-//		}
-//
-//		@Override
-//		public int compareTo(CurvePair o) {
-//			return Double.compare(minMax.getMin(), o.minMax.getMin());
-//		}
-//	}
-//	
-//	public static DistTPair project(Path a, Path b){
-//		DistTPair res = new DistTPair();
-//		CurvePair[] pairs = new CurvePair[a.curves.length * b.curves.length];
-//		for(int i = 0 ; i < a.curves.length ; i++){
-//			for(int j = 0 ; j < b.curves.length ; j++){
-//				MinMax mm = a.curves[i].bbox.minMaxDistSquared(b.curves[j].bbox);
-//				pairs[i * b.curves.length + j] = 
-//						new CurvePair(i, j,mm);
-//				res.update(mm.getMax());
-//				CurvePair p =pairs[i * b.curves.length + j];
-//			}
-//		}
-////		System.out.printf("Should be at least %f\n", res.max);
-//		Arrays.sort(pairs);
-//		for(CurvePair p : pairs){
-//			if(p.minMax.getMin() <= res.max){
-////				System.out.printf("Trying %d %d %f %f\n", p.il,p.ir, p.minMax.getMin(), p.minMax.getMax());
-//				OldCurve.project(a.curves[p.il],b.curves[p.ir],p.minMax,res);
-//				if(res.changed){
-//					res.tl += p.il;
-//					res.tr += p.ir;
-////					System.out.printf("Update %f %f\n",res.tl,res.tr);
-//					res.changed = false;
-//				}
-//			}
-//		}
-////		System.out.printf("Done\n\n");
-//		return res;
-//	}
-//	
-//	public List<Vec> getAtX(double x){
-//		List<Vec> result = new ArrayList<Vec>();
-//		for(OldCurve c : curves){
-//			Double t = c.findX(x);
-//			if(t!= null){
-//				result.add(c.getAt(t));
-//			}
-//		}
-//		return result;
-//	}
-//	
-//
-//	public List<Vec> getAtY(double y){
-//		List<Vec> result = new ArrayList<Vec>();
-//		for(OldCurve c : curves){
-//			Double t = c.findY(y);
-//			if(t!= null){
-//				result.add(c.getAt(t));
-//			}
-//		}
-//		return result;
-//	}
 
-	public Path2D.Double toAWT(){
-		Path2D.Double res = new Path2D.Double();
-		for(Curve c: curves){
-			res.append(c.toAWT(), true);
-		}
-		return res;
-	}
+
 	
 	public String toString(){
 		StringBuffer b = new StringBuffer();
@@ -373,16 +227,6 @@ public final class Path implements Area{
 		b.append('\n');
 		return b.toString();
 	}
-//	
-//	public List<Curve> projectOnto(double startT, double endT, LengthMap map, Curve curve){
-//		int from = (int) startT;
-//		int till = (int) endT;
-//		if(till == curves.length){
-//			till--;
-//		}
-//		
-//		
-//	}
 	
 	public Vec getStartPoint(){
 		return curves.get(0).getStartPoint();
@@ -513,7 +357,7 @@ public final class Path implements Area{
 				System.out.println("this");
 				System.out.print(this);
 			}
-			if(p.curves.isEmpty() && p.getStartPoint().distanceSquared(p.getEndPoint()) <= Constants.MAX_ERROR_POW2){
+			if(!p.curves.isEmpty() && p.getStartPoint().distanceSquared(p.getEndPoint()) <= Constants.MAX_ERROR_POW2){
 				if(p.getLengthMap().totalLength() > Constants.MAX_ERROR){
 					segments.add(p);
 				} else {
@@ -617,5 +461,59 @@ public final class Path implements Area{
 		Vec dir = getTangentAt(t).normalize().perpendicularCCW();
 //		System.out.printf("Norm %f\n",dir.norm());
 		return start.add(dir.mul(v.y));
+	}
+	
+	class PathPathIterator implements PathIterator{
+
+		int cur ;
+		
+		public PathPathIterator() {
+			cur = -1;
+		}
+		
+		@Override
+		public int getWindingRule() {
+			return PathIterator.WIND_EVEN_ODD;
+		}
+
+		@Override
+		public boolean isDone() {
+			return cur == curves.size();
+		}
+
+		@Override
+		public void next() {
+			cur++;
+		}
+
+		@Override
+		public int currentSegment(double[] coords) {
+			System.out.println("USING DOUBLE!!");
+			double[] coordd = new double[6];
+			int res = currentSegment(coordd);
+			for(int i = 0 ; i < coordd.length ; i++){
+				coords[i] = (float)coordd[i];
+			}
+			return res;
+		}
+
+		@Override
+		public int currentSegment(float[] coords) {
+			if(cur == -1){
+				Vec start = getStartPoint();
+				coords[0] = (float)start.x;
+				coords[1] = (float)start.y;
+				return PathIterator.SEG_MOVETO;
+			} else if(cur == curves.size()){
+				return PathIterator.SEG_CLOSE;
+			} else {
+				return curves.get(cur).currentSegment(coords);
+			}
+		}
+		
+	}
+	
+	public PathIterator getPathIterator(){
+		return new PathPathIterator();
 	}
 }

@@ -1,6 +1,7 @@
 package bezier.composite;
 
 import java.awt.geom.Path2D;
+import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -9,12 +10,15 @@ import java.util.Set;
 
 import javax.swing.text.Segment;
 
+import bezier.graphtheory.MutableGraph;
 import bezier.points.Matrix;
+import bezier.points.Transformation;
 import bezier.points.Vec;
 import bezier.segment.LengthMap;
 import bezier.segment.TPair;
 import bezier.segment.curve.Curve;
 import bezier.util.BBox;
+import bezier.util.STuple;
 import bezier.util.Tuple;
 
 public class Paths implements Area{
@@ -24,11 +28,7 @@ public class Paths implements Area{
 
 	public Paths(List<Path> paths) {
 		this.paths = paths;
-		BBox[] bboxs = new BBox[paths.size()];
-		for(int i = 0; i < paths.size() ; i++){
-			bboxs[i] = paths.get(i).getBBox();
-		}
-		this.bbox = BBox.merge(bboxs);
+		this.bbox = new BBox(paths.toArray(new Path[]{}));
 	}
 	
 	public Paths(Path p){
@@ -225,14 +225,6 @@ public class Paths implements Area{
 		return new Paths(result);
 	}
 	
-	public Path2D.Double toAWT(){
-		Path2D.Double res = new Path2D.Double();
-		for(Path c: paths){
-			res.append(c.toAWT(), false);
-		}
-		return res;
-	}
-	
 	public String toString(){
 		StringBuffer b = new StringBuffer();
 		b.append("Paths:\n");
@@ -258,5 +250,84 @@ public class Paths implements Area{
 
 	public Path get(int i) {
 		return paths.get(i);
+	}
+
+	public Paths transform(Transformation translate) {
+		return transform(translate.to);
+	}
+	
+	public MutableGraph<Path> containsGraph(){
+		MutableGraph<Path> containsGraph = new MutableGraph<Path>(paths);
+		for(int i = 0 ; i < paths.size() ; i++){
+			for(int j = 0 ; j < paths.size() ; j++){
+				if(i != j && paths.get(j).isInside(paths.get(i).getArbPoint())){
+					containsGraph.addEdge(new STuple<Path>(paths.get(j), paths.get(i)));
+//					System.out.println("Contains!!");
+				}
+			}
+		}
+
+		return containsGraph;
+	}
+	
+	class PathsIterator implements PathIterator{
+
+		int cur;
+		PathIterator curP; 
+		
+		public PathsIterator() {
+			cur = 0;
+			curP = paths.get(0).getPathIterator();
+		}
+		
+		@Override
+		public int getWindingRule() {
+			return PathIterator.WIND_EVEN_ODD;
+		}
+
+		@Override
+		public boolean isDone() {
+			return curP.isDone() && cur == paths.size()-1;
+		}
+
+		@Override
+		public void next() {
+			if(curP.isDone()){
+				cur++;
+				if(cur != paths.size()){
+					curP = paths.get(cur).getPathIterator();
+				} else {
+					curP = null;
+				}
+			} else {
+				curP.next();
+			}
+		}
+
+		@Override
+		public int currentSegment(float[] coords) {
+//			int res = curP.currentSegment(coords);
+//			switch(res){
+//			case PathIterator.SEG_CLOSE: System.out.printf("Close\n"); break;
+//			case PathIterator.SEG_MOVETO: System.out.printf("Move %f %f\n", coords[0],coords[1]); break;
+//			case PathIterator.SEG_LINETO: System.out.printf("Line %f %f\n", coords[0],coords[1]); break;
+//			case PathIterator.SEG_QUADTO: System.out.printf("Quad %f %f %f %f\n", coords[0],coords[1],coords[2],coords[3]); break;
+//			case PathIterator.SEG_CUBICTO: System.out.printf("Quad %f %f %f %f %f %f\n", coords[0],coords[1],coords[2],coords[3],coords[4],coords[5]); break;
+//			default: System.out.println("HUH?");
+//			}
+//			return res;
+			return curP.currentSegment(coords);
+		}
+
+		@Override
+		public int currentSegment(double[] coords) {
+			return curP.currentSegment(coords);
+		
+		}
+		
+	}
+	
+	public PathIterator getPathIterator(){
+		return new PathsIterator();
 	}
 }

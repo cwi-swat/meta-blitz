@@ -1,6 +1,6 @@
 package bezier.demos;
 
-import bezier.colors.Color;
+import bezier.image.Color;
 import bezier.composite.Paths;
 import bezier.font.FontFactory;
 import bezier.points.Matrix;

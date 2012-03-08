@@ -42,42 +42,42 @@ public class Matrix {
 		return identity;
 	}
 	
-	public Matrix rotate(double rads){
+	public static Matrix rotate(double rads){
 		double s = Math.sin(rads);
 		double c = Math.cos(rads);
-		return mul(new Matrix(c,s,0,
-				          -s,c,0));
+		return new Matrix(c,s,0,
+				          -s,c,0);
 	}
 	
-	public Matrix translate(double x, double y){
-		return mul(new Matrix(1,0,x,0,1,y));
+	public static Matrix translate(double x, double y){
+		return new Matrix(1,0,x,0,1,y);
 	}
 	
-	public Matrix translate(Vec v){
+	public static Matrix translate(Vec v){
 		return translate(v.x,v.y);
 	}
 	
-	public Matrix scale(double x, double y){
-		return mul(new Matrix(x,0,0,0,y,0));
+	public static Matrix scale(double x, double y){
+		return new Matrix(x,0,0,0,y,0);
 	}
 	
-	public Matrix scale(Vec v){
+	public static Matrix scale(Vec v){
 		return scale(v.x,v.y);
 	}
 	
-	public Matrix shearX(double x){
-		return mul(new Matrix(1,x,0,0,1,0));
-	}
-	
-	public Matrix shearY(double x){
-		return mul(new Matrix(1,x,0,0,1,0));
-	}
-
-	public Matrix scale(double d) {
+	public static Matrix scale(double d) {
 		return scale(d,d);
 	}
 	
+	public static Matrix shearX(double x){
+		return new Matrix(1,x,0,0,1,0);
+	}
 	
+	public static Matrix shearY(double x){
+		return new Matrix(1,0,0,x,1,0);
+	}
 	
-
+	public String toString(){
+		return String.format("[%7.3f %7.3f %7.3f]\n[%7.3f %7.3f %7.3f]\n[%7.3f %7.3f %7.3f]\n",x1,x2,x3,y1,y2,y3,0.0,0.0,1.0);
+	}
 }

@@ -2,6 +2,7 @@ package bezier.segment.curve;
 
 import java.awt.Shape;
 import java.awt.geom.Line2D;
+import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -151,11 +152,6 @@ public final class Line implements Curve{
 	}
 
 	@Override
-	public Shape toAWT() {
-		return new Line2D.Double(start.x, start.y, end.x , end.y);
-	}
-
-	@Override
 	public Vec getStartPoint() {
 		return start;
 	}
@@ -234,6 +230,13 @@ public final class Line implements Curve{
 	@Override
 	public Curve getWithAdjustedStartPoint(Vec newStartPoint) {
 		return new Line(newStartPoint,end);
+	}
+
+	@Override
+	public int currentSegment(float[] coords) {
+		coords[0] =(float) end.x;
+		coords[1] = (float)end.y;
+		return PathIterator.SEG_LINETO;
 	}
 	
 }

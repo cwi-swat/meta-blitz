@@ -2,16 +2,18 @@ package bezier.demos;
 
 import java.util.List;
 
-import bezier.colors.Color;
+import bezier.image.Color;
 import bezier.composite.Intersections;
 import bezier.composite.Path;
 import bezier.composite.Paths;
+import bezier.composite.Shapes;
 import bezier.font.FontFactory;
 import bezier.points.Matrix;
 import bezier.points.Vec;
 import bezier.segment.LengthMap;
 import bezier.segment.curve.QuadCurve;
 import bezier.util.Tuple;
+import static bezier.points.Transformation.id;
 
 public class SetOperations extends DemoBase{
 
@@ -54,15 +56,15 @@ public class SetOperations extends DemoBase{
 	
 	@Override
 	public void draw() {
-		  Paths ts = FontFactory.text2Paths("l");
-		  Paths ts2 = FontFactory.text2Paths("   o");
+		  Paths ts = FontFactory.text2Paths("tz");
+		  Paths ts2 = FontFactory.text2Paths(lastLine);
 		
-		  ts2 = ts2.transform(Matrix.identity.translate(25,400).scale(5));
+		  ts2 = ts2.transform(id.translate(25,400).scale(5));
 //		  if(dump){
 //			  System.out.println(ts2);
 //		  }
-		  ts = ts.transform(Matrix.identity.scale(5).rotate(wheel / 100.0 * Math.PI));
-		  ts = ts.transform(Matrix.identity.translate(mouse.sub(ts.bbox.middle()))).makeMonotomous();
+		  ts = ts.transform(id.scale(5).rotate(wheel / 100.0 * Math.PI));
+		  ts = ts.transform(id.translate(mouse.sub(ts.bbox.middle()))).makeMonotomous();
 		  ts2 = ts2.makeMonotomous();
 //		  if(dump){
 //			  System.out.println(ts2);
@@ -75,7 +77,7 @@ public class SetOperations extends DemoBase{
 		  case SUBTRACT_L: res = ts2.substract(ts); break;
 		  case INTERSECTION: res = ts.intersection(ts2); break;
 		  }
-		  
+//		  Shapes sres = new Shapes(res);
 //		  System.out.print(res);
 		  draw(res,Color.BLACK, Color.GREEN.interpolate(0.5, Color.BLACK));
 		  List<Vec> inters2 = ts.getIntersectionPoints(ts2);
@@ -107,6 +109,7 @@ public class SetOperations extends DemoBase{
 	      
 		
 	}
+
 
 	
 	

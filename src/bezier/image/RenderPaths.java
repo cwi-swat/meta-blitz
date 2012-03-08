@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 
 import bezier.composite.Paths;
+import bezier.util.DummySWTSHape;
 
 public class RenderPaths {
 
@@ -25,6 +26,7 @@ public class RenderPaths {
 		int size = w*h*RasterImage.NR_CHANNELS;
 		double[] res = new double[size];
 		res = r.getPixels(0, 0, w, h, res);
+		
 		return new RasterImage(x, y, w, h, RasterImage.NR_CHANNELS, res);
 	}
 
@@ -36,7 +38,7 @@ public class RenderPaths {
                 RenderingHints.VALUE_ANTIALIAS_ON);
    	    g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g.setColor(Color.BLACK);
-		g.fill(p.toAWT());
+		g.fill(new DummySWTSHape(p.getPathIterator()));
 		g.dispose();
 		return img;
 	}

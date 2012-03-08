@@ -4,9 +4,11 @@ import static bezier.util.IntervalLocation.*;
 
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
+import java.util.List;
 
 import bezier.points.Vec;
 import bezier.segment.Constants;
+import bezier.segment.curve.Curve;
 import bezier.segment.curve.Line;
 public final class BBox {
 	
@@ -20,14 +22,24 @@ public final class BBox {
 		this.height = yd - y;
 	}
 	
-	public BBox(Vec ... vecs){
+	public BBox(Vec a, Vec b){
+		x = Math.min(a.x, b.x);
+		xr = Math.max(a.x, b.x);
+		y = Math.min(a.y, b.y);
+		yd = Math.max(a.y, b.y);
+		this.width = xr - x;
+		this.height = yd - y;
+	}
+	
+	public BBox(HasBBox[] curves) {
 		double x = Double.MAX_VALUE, xr = Double.MIN_VALUE,
 				y = Double.MAX_VALUE, yd = Double.MIN_VALUE;
-		for(Vec v : vecs){
-			x = Math.min(v.x, x);
-			xr = Math.max(v.x, xr);
-			y = Math.min(v.y, y);
-			yd = Math.max(v.y, yd);
+		for(HasBBox v : curves){
+			BBox b = v.getBBox();
+			x = Math.min(b.x, x);
+			xr = Math.max(b.xr, xr);
+			y = Math.min(b.y, y);
+			yd = Math.max(b.yd, yd);
 		}
 		this.x = x; this.y = y;
 		this.xr = xr;
@@ -35,7 +47,7 @@ public final class BBox {
 		this.width = xr - x;
 		this.height = yd - y;
 	}
-	
+
 	public boolean overlaps(BBox other){
 		return overlapsX(other) && overlapsY(other);
 	}

@@ -64,4 +64,19 @@ public final class RasterImage implements Image{
 			int end = start + channels;
 			return new Sample(Arrays.copyOfRange(data, start, end));			
 	}
+	
+	@Override
+	public String toString(){
+		StringBuffer b = new StringBuffer();
+		for(int x = 0 ; x < width ; x++){
+			for(int y = 0 ; y < height ; y++){
+				for(int c = 0 ; c < channels; c++){
+					b.append(data[getIndex(x, y, c)]);
+					b.append(' ');
+				}
+			}
+			b.append('\n');
+		}
+		return b.toString();
+	}
 }

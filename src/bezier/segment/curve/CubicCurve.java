@@ -4,6 +4,7 @@ import static bezier.util.Util.findQuadraticPolynomialRoots;
 
 import java.awt.Shape;
 import java.awt.geom.CubicCurve2D;
+import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,11 +70,6 @@ public final class CubicCurve extends NonLinearCurve {
 	@Override
 	public Curve reverse() {
 		return new CubicCurve(p3,p2,p1,p0);
-	}
-
-	@Override
-	public Shape toAWT() {
-		return new CubicCurve2D.Double(p0.x,p0.y,p1.x,p1.y,p2.x,p2.y,p3.x,p3.y);
 	}
 
 	@Override
@@ -205,6 +201,18 @@ public final class CubicCurve extends NonLinearCurve {
 	@Override
 	public Curve getWithAdjustedStartPoint(Vec newStartPoint) {
 		return new CubicCurve(newStartPoint, p1, p2, p3);
+	}
+
+
+	@Override
+	public int currentSegment(float[] coords) {
+		coords[0] = (float)p1.x;
+		coords[1] = (float)p1.y;
+		coords[2] = (float)p2.x;
+		coords[3] = (float)p2.y;
+		coords[4] = (float)p3.x;
+		coords[5] = (float)p3.y;
+		return PathIterator.SEG_CUBICTO;
 	}
 	
 
