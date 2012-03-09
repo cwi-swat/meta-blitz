@@ -1,5 +1,10 @@
 package bezier.image;
 
+import bezier.points.Vec;
+import bezier.util.BBox;
+
 public interface Image {
-	Sample getSample(double x, double y);
+	BBox getBBox();
+	int nrChannels();
+	Sample getSample(Vec p);
 }

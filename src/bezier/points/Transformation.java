@@ -27,16 +27,17 @@ public final class Transformation {
 		return back.mul(to);
 	}
 	
+	
 	public Transformation mul(Transformation other){
-		return new Transformation(to.mul(other.to), other.back.mul(back));
+		return new Transformation(other.to.mul(to),  back.mul(other.back));
 	}
 	
 	public Transformation rotate(double rads){
-		return new Transformation(to.mul(Matrix.rotate(rads)), Matrix.rotate(-rads).mul(back));
+		return new Transformation(Matrix.rotate(rads).mul(to), back.mul(Matrix.rotate(-rads)));
 	}
 	
 	public Transformation translate(double x,double y){
-		return new Transformation(to.mul(Matrix.translate(x, y)), Matrix.translate(-x,-y).mul(back));
+		return new Transformation(Matrix.translate(x, y).mul(to), back.mul(Matrix.translate(-x,-y)));
 	}
 	
 	public Transformation translate(Vec v){
@@ -44,7 +45,7 @@ public final class Transformation {
 	}
 	
 	public Transformation scale(double x, double y){
-		return new Transformation(to.mul(Matrix.scale(x, y)), Matrix.scale(1.0/x,1.0/y).mul(back));
+		return new Transformation(Matrix.scale(x, y).mul(to), back.mul(Matrix.scale(1.0/x,1.0/y)));
 	}
 	
 	public Transformation scale(Vec s){
@@ -56,10 +57,10 @@ public final class Transformation {
 	}
 	
 	public Transformation shearX(double x){
-		return new Transformation(to.mul(Matrix.shearX(x)), Matrix.shearX(-x).mul(back));
+		return new Transformation(Matrix.shearX(x).mul(to), back.mul(Matrix.shearX(-x)));
 	}
 	
 	public Transformation shearY(double x){
-		return new Transformation(to.mul(Matrix.shearX(x)), Matrix.shearX(-x).mul(back));
+		return new Transformation(Matrix.shearY(x).mul(to), back.mul(Matrix.shearY(-x)));
 	}
 }

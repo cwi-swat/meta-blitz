@@ -77,6 +77,11 @@ public class Matrix {
 		return new Matrix(1,0,0,x,1,0);
 	}
 	
+	public static Matrix rotateAroundPoint(Vec v, double rads){
+		Matrix rotBack = rotate(-rads);
+		return translate(v).mul(rotate(rads)).mul(translate(rotBack.mul(v)));
+	}
+	
 	public String toString(){
 		return String.format("[%7.3f %7.3f %7.3f]\n[%7.3f %7.3f %7.3f]\n[%7.3f %7.3f %7.3f]\n",x1,x2,x3,y1,y2,y3,0.0,0.0,1.0);
 	}

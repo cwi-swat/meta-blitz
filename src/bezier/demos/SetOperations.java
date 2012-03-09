@@ -2,7 +2,7 @@ package bezier.demos;
 
 import java.util.List;
 
-import bezier.image.Color;
+import bezier.image.Sample;
 import bezier.composite.Intersections;
 import bezier.composite.Path;
 import bezier.composite.Paths;
@@ -79,7 +79,7 @@ public class SetOperations extends DemoBase{
 		  }
 //		  Shapes sres = new Shapes(res);
 //		  System.out.print(res);
-		  draw(res,Color.BLACK, Color.GREEN.interpolate(0.5, Color.BLACK));
+		  draw(res,Sample.BLACK, Sample.GREEN.interpolate(0.5, Sample.BLACK));
 		  List<Vec> inters2 = ts.getIntersectionPoints(ts2);
 		  for(Vec v : inters2){
 			  drawOval(v, 10);

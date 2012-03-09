@@ -5,13 +5,16 @@ import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.util.Arrays;
 
+import bezier.points.Vec;
+import bezier.util.BBox;
+
 public final class RasterImage implements Image{
 	
 	public static final int ALPHA = 0;
 	public static final int BLUE = 1;
 	public static final int GREEN = 2;
 	public static final int RED = 3;
-	public static final int NR_CHANNELS = 4;
+
 	
 	public final int x, y;
 	public final int width;
@@ -29,6 +32,7 @@ public final class RasterImage implements Image{
 		this.data = data;
 		this.totalSize= width *height * channels;
 	}
+
 	
 	
 	public double get(int x, int y, int channel){
@@ -59,10 +63,19 @@ public final class RasterImage implements Image{
 
 
 	@Override
-	public Sample getSample(double x, double y) {
-			int start = getIndex((int)x, (int)y, 0);
+	public Sample getSample(Vec p) {
+
+		int xc = (int)p.x - x;
+		int yc = (int)p.y - y;
+		if(xc < 0 || xc >= width || yc < 0 || yc >= height){
+//			System.out.printf("Not inside %s\n", p);
+			return Sample.TRANSPARENT;
+		}
+			int start = getIndex(xc,yc, 0);
 			int end = start + channels;
-			return new Sample(Arrays.copyOfRange(data, start, end));			
+			
+			Sample res =  new Sample(Arrays.copyOfRange(data, start, end));
+			return res;
 	}
 	
 	@Override
@@ -78,5 +91,17 @@ public final class RasterImage implements Image{
 			b.append('\n');
 		}
 		return b.toString();
+	}
+
+
+	@Override
+	public BBox getBBox() {
+		return new BBox(x,y,x + width,y + height);
+	}
+
+
+	@Override
+	public int nrChannels() {
+		return channels;
 	}
 }

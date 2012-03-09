@@ -1,6 +1,6 @@
 package bezier.demos;
 
-import bezier.image.Color;
+import bezier.image.Sample;
 import bezier.composite.Paths;
 import bezier.font.FontFactory;
 import bezier.points.Matrix;
@@ -16,8 +16,8 @@ public class InsideCheck extends DemoBase{
 		Paths ts = FontFactory.text2Paths(lastLine);
 		ts = ts.transform(Matrix.identity.translate(0,300).scale(5).rotate(wheel / 100.0 * Math.PI)).makeMonotomous();
 		boolean inside = ts.isInside(mouse);
-		Color c = inside ?  Color.GREEN : Color.RED;
-		draw(ts,Color.BLACK,c);
+		Sample c = inside ?  Sample.GREEN : Sample.RED;
+		draw(ts,Sample.BLACK,c);
 		g.draw(ts.bbox.toAWT());
 	}
 

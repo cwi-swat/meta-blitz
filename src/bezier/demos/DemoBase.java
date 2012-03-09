@@ -16,7 +16,10 @@ import java.awt.event.WindowListener;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
-import bezier.image.Color;
+import bezier.image.Image;
+import bezier.image.Rasterize;
+import bezier.image.Sample;
+import bezier.image.Sample;
 import bezier.composite.Path;
 import bezier.composite.Paths;
 import bezier.composite.Shapes;
@@ -65,15 +68,15 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 	}
 	
 	public void fillOval(Vec location, double w, double h){
-		fillOval(location, w, h,Color.BLACK);
+		fillOval(location, w, h,Sample.BLACK);
 	}
 	
-	public void fillOval(Vec location, double w, Color inside){
+	public void fillOval(Vec location, double w, Sample inside){
 		fillOval(location, w, w, inside);
 	}
 	
-	public void fillOval(Vec location, double w, double h, Color inside){
-		drawOval(location, w, h,Color.TRANSPARENT,inside);
+	public void fillOval(Vec location, double w, double h, Sample inside){
+		drawOval(location, w, h,Sample.TRANSPARENT,inside);
 	}
 	
 	public void drawOval(Vec location, double w){
@@ -81,22 +84,22 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 	}
 	
 	public void drawOval(Vec location, double w, double h){
-		drawOval(location, w, h, Color.BLACK);
+		drawOval(location, w, h, Sample.BLACK);
 	}
 	
-	public void drawOval(Vec location, double w, double h, Color border){
-		drawOval(location, w, h, border,Color.TRANSPARENT);
+	public void drawOval(Vec location, double w, double h, Sample border){
+		drawOval(location, w, h, border,Sample.TRANSPARENT);
 	}
 	
-	public void drawOval(Vec location, double w, Color border){
-		drawOval(location, w, border, Color.TRANSPARENT);
+	public void drawOval(Vec location, double w, Sample border){
+		drawOval(location, w, border, Sample.TRANSPARENT);
 	}
 	
-	public void drawOval(Vec location, double w, Color border, Color inside){
+	public void drawOval(Vec location, double w, Sample border, Sample inside){
 		drawOval(location, w,w, border, inside);
 	}
 	
-	public void drawOval(Vec location, double w, double h, Color border, Color inside){
+	public void drawOval(Vec location, double w, double h, Sample border, Sample inside){
 		if(!inside.isFullyTransparent()){
 			g.setColor(inside.toAWT());
 			g.fillOval(round(location.x)-round(w/2.0),round(location.y)-round(h/2.0), round(w), round(h));
@@ -112,34 +115,34 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 	}
 	
 	public void fillRect(Vec location, double w, double h){
-		fillRect(location, w, h,Color.BLACK);
+		fillRect(location, w, h,Sample.BLACK);
 	}
 	
-	public void fillRect(Vec location, double w, Color inside){
+	public void fillRect(Vec location, double w, Sample inside){
 		fillRect(location, w, w, inside);
 	}
 	
-	public void fillRect(Vec location, double w, double h, Color inside){
-		drawRect(location, w, h,Color.TRANSPARENT,inside);
+	public void fillRect(Vec location, double w, double h, Sample inside){
+		drawRect(location, w, h,Sample.TRANSPARENT,inside);
 	}
 	
 	public void drawRect(Vec location, double w, double h){
-		drawRect(location, w, h, Color.BLACK);
+		drawRect(location, w, h, Sample.BLACK);
 	}
 	
-	public void drawRect(Vec location, double w, double h, Color border){
-		drawRect(location, w, h, border,Color.TRANSPARENT);
+	public void drawRect(Vec location, double w, double h, Sample border){
+		drawRect(location, w, h, border,Sample.TRANSPARENT);
 	}
 	
-	public void drawRect(Vec location, double w, Color border){
-		drawRect(location, w, border, Color.TRANSPARENT);
+	public void drawRect(Vec location, double w, Sample border){
+		drawRect(location, w, border, Sample.TRANSPARENT);
 	}
 	
-	public void drawRect(Vec location, double w, Color border, Color inside){
+	public void drawRect(Vec location, double w, Sample border, Sample inside){
 		drawRect(location, w,w, border, inside);
 	}
 	
-	public void drawRect(Vec location, double w, double h, Color border, Color inside){
+	public void drawRect(Vec location, double w, double h, Sample border, Sample inside){
 		
 		if(!inside.isFullyTransparent()){
 			g.setColor(inside.toAWT());
@@ -152,30 +155,30 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 	}
 	
 	public void fill(Paths p){
-		draw(p,Color.TRANSPARENT,Color.BLACK);
+		draw(p,Sample.TRANSPARENT,Sample.BLACK);
 	}
 	
-	public void fill(Paths p,Color inside){
-		draw(p,Color.TRANSPARENT,inside);
+	public void fill(Paths p,Sample inside){
+		draw(p,Sample.TRANSPARENT,inside);
 	}
 	
 	public void fill(Path p){
-		draw(p,Color.TRANSPARENT,Color.BLACK);
+		draw(p,Sample.TRANSPARENT,Sample.BLACK);
 	}
 	
-	public void fill(Path p,Color inside){
-		draw(p,Color.TRANSPARENT,inside);
+	public void fill(Path p,Sample inside){
+		draw(p,Sample.TRANSPARENT,inside);
 	}
 	
 	public void draw(Paths p){
-		draw(p,Color.BLACK);
+		draw(p,Sample.BLACK);
 	}
 	
-	public void draw(Paths p, Color border){
-		draw(p,border,Color.TRANSPARENT);
+	public void draw(Paths p, Sample border){
+		draw(p,border,Sample.TRANSPARENT);
 	}
 	
-	public void draw(Paths p, Color border, Color inside){
+	public void draw(Paths p, Sample border, Sample inside){
 		
 		if(!inside.isFullyTransparent()){
 			g.setColor(inside.toAWT());
@@ -193,15 +196,20 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 		g.drawImage(img.toAWT(), img.x, img.y, null);
 	}
 	
+	
+	public void draw(Image img){
+		blit(Rasterize.rasterize(img));
+	}
+	
 	public void draw(Path p){
-		draw(p,bezier.image.Color.BLACK);
+		draw(p,Sample.BLACK);
 	}
 	
-	public void draw(Path p, Color border){
-		draw(p,border,Color.TRANSPARENT);
+	public void draw(Path p, Sample border){
+		draw(p,border,Sample.TRANSPARENT);
 	}
 	
-	public void draw(Path p, Color border, Color inside){
+	public void draw(Path p, Sample border, Sample inside){
 		draw(new Paths(p),border,inside);
 	}
 	

@@ -1,6 +1,6 @@
 package bezier.demos;
 
-import bezier.image.Color;
+import bezier.image.Sample;
 import bezier.composite.Path;
 import bezier.composite.Paths;
 import bezier.font.FontFactory;
@@ -33,7 +33,7 @@ public class TextOnPath extends DemoBase{
         ts = ts.transform(id.translate(lm.totalLength()*0.1,0));
         ts = ts.projectOn(p, lm);
         draw(p);
-        draw(ts, Color.BLACK,Color.GREEN.interpolate(0.5, Color.BLACK));
+        draw(ts, Sample.BLACK,Sample.GREEN.interpolate(0.5, Sample.BLACK));
 
 	}
 	

@@ -277,7 +277,7 @@ public class Paths implements Area{
 		
 		public PathsIterator() {
 			cur = 0;
-			curP = paths.get(0).getPathIterator();
+			setCurP();
 		}
 		
 		@Override
@@ -287,20 +287,24 @@ public class Paths implements Area{
 
 		@Override
 		public boolean isDone() {
-			return curP.isDone() && cur == paths.size()-1;
+			return curP == null || curP.isDone() && cur == paths.size()-1;
 		}
 
 		@Override
 		public void next() {
+
+			curP.next();
 			if(curP.isDone()){
 				cur++;
-				if(cur != paths.size()){
-					curP = paths.get(cur).getPathIterator();
-				} else {
-					curP = null;
-				}
+				setCurP();
+			}
+		}
+
+		public void setCurP() {
+			if(cur != paths.size()){
+				curP = paths.get(cur).getPathIterator();
 			} else {
-				curP.next();
+				curP = null;
 			}
 		}
 

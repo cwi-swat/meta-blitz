@@ -478,7 +478,7 @@ public final class Path implements Area{
 
 		@Override
 		public boolean isDone() {
-			return cur == curves.size();
+			return cur == curves.size() + 1;
 		}
 
 		@Override
