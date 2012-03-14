@@ -2,7 +2,7 @@ package bezier.demos;
 
 import bezier.composite.Paths;
 import bezier.font.FontFactory;
-import bezier.image.Sample;
+import bezier.image.old.Sample;
 import bezier.points.Transformation;
 
 public class InsideCheck extends DemoBase{

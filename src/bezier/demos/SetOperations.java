@@ -6,7 +6,7 @@ import java.util.List;
 
 import bezier.composite.Paths;
 import bezier.font.FontFactory;
-import bezier.image.Sample;
+import bezier.image.old.Sample;
 import bezier.points.Vec;
 
 public class SetOperations extends DemoBase{

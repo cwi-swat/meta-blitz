@@ -4,7 +4,7 @@ import bezier.composite.Path;
 import bezier.composite.Paths;
 import bezier.composite.TPaths;
 import bezier.font.FontFactory;
-import bezier.image.Sample;
+import bezier.image.old.Sample;
 import bezier.points.Transformation;
 import bezier.segment.curve.Line;
 import bezier.util.STuple;

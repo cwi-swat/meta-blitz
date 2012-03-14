@@ -18,10 +18,10 @@ import javax.swing.JFrame;
 
 import bezier.composite.Path;
 import bezier.composite.Paths;
-import bezier.image.Image;
-import bezier.image.RasterImage;
-import bezier.image.Rasterize;
-import bezier.image.Sample;
+import bezier.image.old.Image;
+import bezier.image.old.RasterImage;
+import bezier.image.old.Rasterize;
+import bezier.image.old.Sample;
 import bezier.points.Vec;
 import bezier.segment.curve.Curve;
 import bezier.util.DummySWTSHape;

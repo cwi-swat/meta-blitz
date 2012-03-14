@@ -4,14 +4,14 @@ package bezier.demos;
 import static bezier.points.Transformation.id;
 import bezier.composite.Paths;
 import bezier.font.FontFactory;
-import bezier.image.CircularGradient;
-import bezier.image.GaussianBlur;
-import bezier.image.Image;
-import bezier.image.RasterImage;
-import bezier.image.RenderPaths;
-import bezier.image.Sample;
-import bezier.image.TransformedImage;
-import bezier.image.UseAlphaLeft;
+import bezier.image.old.CircularGradient;
+import bezier.image.old.GaussianBlur;
+import bezier.image.old.Image;
+import bezier.image.old.RasterImage;
+import bezier.image.old.RenderPaths;
+import bezier.image.old.Sample;
+import bezier.image.old.TransformedImage;
+import bezier.image.old.UseAlphaLeft;
 public class TestImage extends DemoBase {
 
 	private static final long serialVersionUID = 2620494065723135106L;

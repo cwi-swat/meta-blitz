@@ -4,7 +4,7 @@ import static bezier.points.Transformation.id;
 import bezier.composite.Path;
 import bezier.composite.Paths;
 import bezier.font.FontFactory;
-import bezier.image.Sample;
+import bezier.image.old.Sample;
 import bezier.points.Vec;
 import bezier.segment.LengthMap;
 import bezier.segment.curve.QuadCurve;

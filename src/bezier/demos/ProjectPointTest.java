@@ -5,7 +5,7 @@ import bezier.composite.Paths;
 import bezier.composite.TPaths;
 import bezier.demos.SetOperations.SetOperationChoices;
 import bezier.font.FontFactory;
-import bezier.image.Sample;
+import bezier.image.old.Sample;
 import bezier.points.Transformation;
 
 public class ProjectPointTest extends DemoBase {
