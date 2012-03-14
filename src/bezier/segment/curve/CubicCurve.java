@@ -2,8 +2,6 @@ package bezier.segment.curve;
 
 import static bezier.util.Util.findQuadraticPolynomialRoots;
 
-import java.awt.Shape;
-import java.awt.geom.CubicCurve2D;
 import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +12,7 @@ import bezier.points.Vec;
 import bezier.segment.Constants;
 import bezier.segment.LengthMap;
 import bezier.util.BBox;
-import bezier.util.Tuple;
+import bezier.util.STuple;
 public final class CubicCurve extends NonLinearCurve {
 
 	public final Vec p0,p1,p2,p3;
@@ -78,7 +76,7 @@ public final class CubicCurve extends NonLinearCurve {
 	}
 
 	@Override
-	public  Tuple<Curve,Curve> split(double t) {
+	public STuple<Curve> split(double t) {
 		Vec l0, l1, l2, l3;
 		Vec r0, r1, r2, r3;
 		l0 = p0;
@@ -89,7 +87,7 @@ public final class CubicCurve extends NonLinearCurve {
 		l2 = inter.interpolate(t, l1);
 		r1 = r2.interpolate(t, inter);
 		l3 = r0 = r1.interpolate(t, l2);
-		return new  Tuple<Curve,Curve>(
+		return new  STuple<Curve>(
 				new CubicCurve(l0,l1,l2,l3),
 				new CubicCurve(r0,r1,r2,r3));
 	}

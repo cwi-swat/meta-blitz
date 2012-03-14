@@ -1,7 +1,5 @@
 package bezier.image;
 
-import bezier.points.Vec;
-import bezier.util.BBox;
 
 public class GaussianBlur{
 	

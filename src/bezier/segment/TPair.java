@@ -1,6 +1,5 @@
 package bezier.segment;
 
-import bezier.points.Vec;
 
 public class TPair {
 

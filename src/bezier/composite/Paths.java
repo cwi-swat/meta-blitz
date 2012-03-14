@@ -1,25 +1,26 @@
 package bezier.composite;
 
-import java.awt.geom.Path2D;
 import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.swing.text.Segment;
 
 import bezier.graphtheory.MutableGraph;
 import bezier.points.Matrix;
 import bezier.points.Transformation;
 import bezier.points.Vec;
+import bezier.segment.BestProjection;
 import bezier.segment.LengthMap;
 import bezier.segment.TPair;
-import bezier.segment.curve.Curve;
+import bezier.segment.curve.CurveOperations;
+import bezier.segment.curve.TInterval;
 import bezier.util.BBox;
 import bezier.util.STuple;
 import bezier.util.Tuple;
+import bezier.util.Util;
 
 public class Paths implements Area{
 	
@@ -40,12 +41,17 @@ public class Paths implements Area{
 		this(new ArrayList<Path>(done));
 	}
 
+
 	public Paths transform(Matrix m){
 		List<Path> newCurves = new ArrayList<Path>(paths.size());
 		for(Path c : paths){
 			newCurves.add(c.transform(m));
 		}
 		return new Paths(newCurves);
+	}
+	
+	public Vec getAt(TPaths t){
+		return paths.get(t.pathIndex).getAt(t.t);
 	}
 
 	@Override
@@ -333,5 +339,67 @@ public class Paths implements Area{
 	
 	public PathIterator getPathIterator(){
 		return new PathsIterator();
+	}
+	
+
+	public TPaths project(final Vec p){
+		if(paths.isEmpty()){
+			return null;
+		}
+		final BestProjection<TPaths> best = new BestProjection<TPaths>();
+		final List<Integer> indexesNearestFirst = Util.natListTill(paths.size());
+		final List<Double> distanceMiddles = new ArrayList<Double>(paths.size());
+		for(int i : indexesNearestFirst){
+			double dist = paths.get(i).getStartPoint().distanceSquared(p);
+			distanceMiddles.add(dist);
+			best.update(new TPaths(i,0), dist);
+		}
+		Collections.sort(indexesNearestFirst,new Comparator<Integer>() {
+			@Override
+			public int compare(Integer o1, Integer o2) {
+				return Double.compare(
+						distanceMiddles.get(o1), distanceMiddles.get(o2));
+			}
+		});
+		for(int i : indexesNearestFirst){
+			BestProjection<Double> bestLocal = new BestProjection<Double>(best.distanceSquaredUpperbound);
+			paths.get(i).project(p,bestLocal);
+			if(bestLocal.t != null){
+				best.update(new TPaths(i,bestLocal.t) , bestLocal.distanceSquaredUpperbound);
+			}
+		}
+		return best.t;
+	}
+	
+	public STuple<TPaths> project(final Paths other){
+		if(paths.isEmpty() || other.paths.isEmpty()){
+			return null;
+		}
+		BestProjection<STuple<TPaths>> best = new BestProjection<STuple<TPaths>>();
+		List<STuple<Integer>> indexesNearestFirst = Util.natPairs(paths.size(),other.paths.size());
+		final List<Double> distanceMiddles = new ArrayList<Double>(indexesNearestFirst.size());
+		for(STuple<Integer> tpair : indexesNearestFirst){
+			double dist = paths.get(tpair.l).getStartPoint().distanceSquared(
+					other.paths.get(tpair.r).getStartPoint());
+			STuple<TPaths> t = new STuple<TPaths>(new TPaths(tpair.l, 0), new TPaths(tpair.r, 0));
+			best.update(t,dist);
+			distanceMiddles.add(dist);
+		}
+		Collections.sort(indexesNearestFirst,new Comparator<STuple<Integer>>() {
+			@Override
+			public int compare(STuple<Integer> o1, STuple<Integer> o2) {
+				return Double.compare(
+						distanceMiddles.get(o1.l * other.paths.size() + o1.r)
+						, distanceMiddles.get(o2.l * other.paths.size() + o2.r));
+			}
+		});
+		for(STuple<Integer> i : indexesNearestFirst){
+			BestProjection<TPair> bestLocal = new BestProjection<TPair>(best.distanceSquaredUpperbound);
+			paths.get(i.l).project(other.paths.get(i.r),bestLocal);
+			if(bestLocal.t != null){
+				best.update(new STuple<TPaths>(new TPaths(i.l,bestLocal.t.tl), new TPaths(i.r,bestLocal.t.tr)) , bestLocal.distanceSquaredUpperbound);
+			}
+		}
+		return best.t;
 	}
 }

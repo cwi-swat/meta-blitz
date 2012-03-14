@@ -1,17 +1,11 @@
 package bezier.composite;
 
-import java.awt.geom.Path2D;
-import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import bezier.graphtheory.Graph;
 import bezier.graphtheory.MutableGraph;
 import bezier.points.Vec;
 import bezier.util.BBox;
-import bezier.util.STuple;
-import bezier.util.Tuple;
 
 public class Shapes implements Area{
 

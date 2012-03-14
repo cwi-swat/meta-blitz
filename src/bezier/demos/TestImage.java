@@ -1,22 +1,20 @@
 package bezier.demos;
 
 
+import static bezier.points.Transformation.id;
 import bezier.composite.Paths;
 import bezier.font.FontFactory;
 import bezier.image.CircularGradient;
 import bezier.image.GaussianBlur;
-import bezier.image.Gradient;
 import bezier.image.Image;
 import bezier.image.RasterImage;
-import bezier.image.Rasterize;
 import bezier.image.RenderPaths;
 import bezier.image.Sample;
 import bezier.image.TransformedImage;
 import bezier.image.UseAlphaLeft;
-import bezier.points.Matrix;
-import bezier.points.Vec;
-import static bezier.points.Transformation.id;
 public class TestImage extends DemoBase {
+
+	private static final long serialVersionUID = 2620494065723135106L;
 
 	public static void main(String[] args) {
         new TestImage();

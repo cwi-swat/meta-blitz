@@ -1,17 +1,17 @@
 package bezier.demos;
 
-import bezier.image.Sample;
+import static bezier.points.Transformation.id;
 import bezier.composite.Path;
 import bezier.composite.Paths;
 import bezier.font.FontFactory;
-import bezier.points.Matrix;
-import bezier.points.Transformation;
+import bezier.image.Sample;
 import bezier.points.Vec;
 import bezier.segment.LengthMap;
 import bezier.segment.curve.QuadCurve;
-import static bezier.points.Transformation.id;
 
 public class TextOnPath extends DemoBase{
+
+	private static final long serialVersionUID = -4592695752080318229L;
 
 	public static void main(String[] args) {
         new TextOnPath();

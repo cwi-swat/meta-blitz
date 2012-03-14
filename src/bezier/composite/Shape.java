@@ -1,7 +1,5 @@
 package bezier.composite;
 
-import java.awt.geom.Path2D;
-
 import bezier.graphtheory.MutableGraph;
 import bezier.points.Vec;
 import bezier.util.BBox;

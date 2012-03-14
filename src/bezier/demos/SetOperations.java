@@ -1,22 +1,17 @@
 package bezier.demos;
 
+import static bezier.points.Transformation.id;
+
 import java.util.List;
 
-import bezier.image.Sample;
-import bezier.composite.Intersections;
-import bezier.composite.Path;
 import bezier.composite.Paths;
-import bezier.composite.Shapes;
 import bezier.font.FontFactory;
-import bezier.points.Matrix;
+import bezier.image.Sample;
 import bezier.points.Vec;
-import bezier.segment.LengthMap;
-import bezier.segment.curve.QuadCurve;
-import bezier.util.Tuple;
-import static bezier.points.Transformation.id;
 
 public class SetOperations extends DemoBase{
 
+	private static final long serialVersionUID = -8697035763451173868L;
 	public static void main(String[] args) {
         new SetOperations();
     }

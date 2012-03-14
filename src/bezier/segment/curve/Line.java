@@ -1,7 +1,5 @@
 package bezier.segment.curve;
 
-import java.awt.Shape;
-import java.awt.geom.Line2D;
 import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +10,7 @@ import bezier.points.Vec;
 import bezier.segment.LengthMap;
 import bezier.segment.TPair;
 import bezier.util.BBox;
-import bezier.util.Tuple;
+import bezier.util.STuple;
 import bezier.util.Util;
 
 
@@ -52,12 +50,7 @@ public final class Line implements Curve{
 	}
 	
 	public double closestT(Vec p){
-		double qx = start.x - p.x;
-		double qy = start.y - p.y;
-		if(dir.x == dir.y && dir.x == 0){
-			return 0.5;
-		}
-		return Util.clamp(-(dir.x * qx + dir.y * qy) / (dir.x * dir.x + dir.y * dir.y));
+		return Util.clamp(-(dir.y * start.y + dir.x * start.x - dir.y * p.y - dir.x * p.x)/ (dir.x* dir.x + dir.y * dir.y));
 	}
 	
 	public TPair closestTs(Line r){
@@ -68,9 +61,9 @@ public final class Line implements Curve{
 			double pls = closestT(r.start);
 			double ple = closestT(r.end);
 			double drs = start.distanceSquared(r.getAt(prs));
-			double dre = end.distance(r.getAt(pre));
-			double dls = r.start.distance(getAt(pls));
-			double dle = r.end.distance(getAt(ple));
+			double dre = end.distanceSquared(r.getAt(pre));
+			double dls = r.start.distanceSquared(getAt(pls));
+			double dle = r.end.distanceSquared(getAt(ple));
 			
 			double min = Util.min4(drs, dre, dls, dle);
 			if(min == drs){
@@ -182,7 +175,7 @@ public final class Line implements Curve{
 	}
 
 	@Override
-	public Tuple<Curve, Curve> splitSimpler() {
+	public STuple<Curve> splitSimpler() {
 		throw new Error("Cannot make line simpler!");
 	}
 	
@@ -192,9 +185,9 @@ public final class Line implements Curve{
 	}
 
 	@Override
-	public Tuple<Curve, Curve> split(double t) {
+	public STuple<Curve> split(double t) {
 		Vec middle = getAt(t);
-		return new Tuple<Curve,Curve>(new Line(start,middle), new Line(middle,end));
+		return new STuple<Curve>(new Line(start,middle), new Line(middle,end));
 	}
 
 	@Override

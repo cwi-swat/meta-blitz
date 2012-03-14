@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.List;
 
 public class Util {
-	private static final double MAX_ERROR = 0.005;
 
 	public static <T> int floorBinarySearch(List<T> elems, T toFind, Comparator<T> comp ){
 		int min = -1;
@@ -219,5 +218,23 @@ public class Util {
 			}
 		}
 		
+	}
+
+	public static List<Integer> natListTill(int size) {
+		List<Integer> result = new ArrayList<Integer>(size);
+		for(int i = 0; i < size; i++){
+			result.add(i);
+		}
+		return result;
+	}
+	
+	public static List<STuple<Integer>> natPairs(int sizea, int sizeb){
+		List<STuple<Integer>> result = new ArrayList<STuple<Integer>>(sizea*sizeb);
+		for(int i = 0; i < sizea; i++){
+			for(int j = 0; j < sizeb; j++){
+				result.add(new STuple<Integer>(i, j));
+			}
+		}
+		return result;
 	}
 }

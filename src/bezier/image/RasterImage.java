@@ -1,7 +1,6 @@
 package bezier.image;
 
 import java.awt.image.BufferedImage;
-import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.util.Arrays;
 

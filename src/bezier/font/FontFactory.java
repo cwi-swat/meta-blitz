@@ -13,7 +13,7 @@ import javax.swing.UIManager;
 
 import bezier.composite.Path;
 import bezier.composite.Paths;
-import bezier.points.Matrix;
+import bezier.points.Transformation;
 import bezier.points.Vec;
 import bezier.segment.curve.CubicCurve;
 import bezier.segment.curve.Curve;
@@ -81,7 +81,7 @@ public class FontFactory {
         }
         
         Paths res = new Paths(result);
-        return res.transform(Matrix.identity.translate(res.bbox.x,0));
+        return res.transform(Transformation.id.translate(-res.bbox.x,-res.bbox.y));
 	}
 	
 

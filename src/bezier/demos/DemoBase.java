@@ -16,19 +16,19 @@ import java.awt.event.WindowListener;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
-import bezier.image.Image;
-import bezier.image.Rasterize;
-import bezier.image.Sample;
-import bezier.image.Sample;
 import bezier.composite.Path;
 import bezier.composite.Paths;
-import bezier.composite.Shapes;
+import bezier.image.Image;
 import bezier.image.RasterImage;
+import bezier.image.Rasterize;
+import bezier.image.Sample;
 import bezier.points.Vec;
+import bezier.segment.curve.Curve;
 import bezier.util.DummySWTSHape;
 
 
 public abstract class DemoBase  extends JComponent implements KeyListener,MouseWheelListener,MouseListener, MouseMotionListener, WindowListener{
+	private static final long serialVersionUID = 1478770999111265074L;
 	Vec size;
 	Vec mouse;
 	String textInput;
@@ -190,6 +190,13 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 		}
 	}
 	
+	public void draw(Curve c, Sample border){
+		draw(new Path(c),border, Sample.TRANSPARENT);
+	}
+	
+	public void draw(Curve c){
+		draw(new Path(c),Sample.BLACK, Sample.TRANSPARENT);
+	}
 	
 	
 	public void blit(RasterImage img){

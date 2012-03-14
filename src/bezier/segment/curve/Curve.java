@@ -1,6 +1,5 @@
 package bezier.segment.curve;
 
-import java.awt.Shape;
 import java.util.List;
 
 import bezier.composite.Path;
@@ -9,15 +8,15 @@ import bezier.points.Vec;
 import bezier.segment.LengthMap;
 import bezier.util.BBox;
 import bezier.util.HasBBox;
-import bezier.util.Tuple;
+import bezier.util.STuple;
 
 public interface Curve extends HasBBox{
 
 	boolean isLine();
 	Line getLine();
 	boolean overlapsWith(BBox r);
-	Tuple<Curve,Curve> split(double t);
-	Tuple<Curve,Curve> splitSimpler();
+	STuple<Curve> split(double t);
+	STuple<Curve> splitSimpler();
 	boolean fastIntersectionCheck(Curve other);
 	Curve getWithAdjustedStartPoint(Vec newStartPoint);
 	Vec getStartPoint();

@@ -1,14 +1,12 @@
 package bezier.util;
-import static bezier.util.Util.*;
-import static bezier.util.IntervalLocation.*;
+import static bezier.util.Util.getIntervalLocation;
+import static bezier.util.Util.getIntervalLocationExEnd;
 
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
-import java.util.List;
 
 import bezier.points.Vec;
 import bezier.segment.Constants;
-import bezier.segment.curve.Curve;
 import bezier.segment.curve.Line;
 public final class BBox {
 	
@@ -112,7 +110,7 @@ public final class BBox {
 			yMinDist = minDistSquared(y, yd, other.y, other.yd);
 		}
 		yMaxDist = maxDistSquared(y, yd, other.y, other.yd);
-		return new MinMax(xMinDist + yMinDist, xMaxDist + yMaxDist + Constants.MAX_ERROR);
+		return new MinMax(xMinDist + yMinDist, xMaxDist + yMaxDist);
 	}
 
 	public Vec getFarthestPoint(Vec p){

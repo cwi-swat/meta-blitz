@@ -1,8 +1,6 @@
 package bezier.segment.curve;
 
-import java.awt.Shape;
 import java.awt.geom.PathIterator;
-import java.awt.geom.QuadCurve2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +10,7 @@ import bezier.points.Vec;
 import bezier.segment.Constants;
 import bezier.segment.LengthMap;
 import bezier.util.BBox;
-import bezier.util.Tuple;
+import bezier.util.STuple;
 import bezier.util.Util;
 
 public final class QuadCurve extends NonLinearCurve implements Curve{
@@ -72,11 +70,11 @@ public final class QuadCurve extends NonLinearCurve implements Curve{
 	}
 
 	@Override
-	public  Tuple<Curve,Curve> split(double t) {
+	public  STuple<Curve> split(double t) {
 		Vec cl = p1.interpolate(t, p0);
 		Vec cr = p2.interpolate(t, p1);
 		Vec cm = cr.interpolate(t, cl);
-		return new  Tuple<Curve,Curve>(new QuadCurve(p0,cl,cm),
+		return new  STuple<Curve>(new QuadCurve(p0,cl,cm),
 										new QuadCurve(cm, cr, p2));
 	}
 

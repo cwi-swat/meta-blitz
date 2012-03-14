@@ -10,7 +10,7 @@ import bezier.points.Vec;
 import bezier.segment.LengthMap;
 import bezier.util.BBox;
 import bezier.util.IntervalLocation;
-import bezier.util.Tuple;
+import bezier.util.STuple;
 
 public abstract class NonLinearCurve implements Curve {
 
@@ -24,8 +24,8 @@ public abstract class NonLinearCurve implements Curve {
 		} 
 		return bbox;
 	}
-	public abstract Tuple<Curve,Curve> split(double t);
-	public Tuple<Curve,Curve> split(){
+	public abstract STuple<Curve> split(double t);
+	public STuple<Curve> split(){
 		return split(0.5);
 	}
 	abstract List<Double> getXYRoots();
@@ -48,7 +48,7 @@ public abstract class NonLinearCurve implements Curve {
 //		}
 		for(double root : roots){
 			double relRoot = (root - offset) / (1.0 - offset);
-			Tuple<Curve,Curve> split = right.split(relRoot);
+			STuple<Curve> split = right.split(relRoot);
 //			System.out.printf("Splitting at %f\n", root);
 			result.add(split.l);
 			right = split.r;
@@ -104,11 +104,11 @@ public abstract class NonLinearCurve implements Curve {
 	}
 	
 	@Override
-	public Tuple<Curve,Curve> splitSimpler(){
-		Tuple<Curve, Curve> s = split();
+	public STuple<Curve> splitSimpler(){
+		STuple<Curve> s = split();
 		NonLinearCurve l = (NonLinearCurve)s.l;
 		NonLinearCurve r = (NonLinearCurve)s.r;
-		return new Tuple<Curve,Curve>(l.getSimplerApproximation(),r.getSimplerApproximation());
+		return new STuple<Curve>(l.getSimplerApproximation(),r.getSimplerApproximation());
 	}
 
 	@Override

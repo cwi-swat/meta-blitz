@@ -1,6 +1,5 @@
 package bezier.points;
 
-import static bezier.points.Matrix.*;
 
 public final class Transformation {
 	

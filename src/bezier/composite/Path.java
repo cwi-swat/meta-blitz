@@ -1,23 +1,24 @@
 package bezier.composite;
 
-import java.awt.geom.Path2D;
 import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import bezier.demos.SetOperations;
 import bezier.points.Matrix;
+import bezier.points.Transformation;
 import bezier.points.Vec;
+import bezier.segment.BestProjection;
 import bezier.segment.Constants;
 import bezier.segment.LengthMap;
 import bezier.segment.TPair;
 import bezier.segment.curve.Curve;
 import bezier.segment.curve.CurveOperations;
-import bezier.segment.curve.QuadCurve;
 import bezier.segment.curve.TInterval;
 import bezier.util.BBox;
-import bezier.util.DummySWTSHape;
+import bezier.util.STuple;
 import bezier.util.Tuple;
 import bezier.util.Util;
 
@@ -41,6 +42,10 @@ public final class Path implements Area{
 			newCurves.add(c.transform(m));
 		}
 		return new Path(newCurves);
+	}
+	
+	public Path transform(Transformation t){
+		return transform(t.to);
 	}
 
 	public Vec getArbPoint(){
@@ -208,13 +213,66 @@ public final class Path implements Area{
 		List<TPair> result = new ArrayList<TPair>(30);
 		for(int i = 0 ; i < curves.size() ; i++){
 			for(int j = 0; j < r.curves.size() ; j++){
-				CurveOperations.intersections(curves.get(i), new TInterval(i,1),
-						r.curves.get(j),new TInterval(j,1), result);
+				CurveOperations.intersections(curves.get(i), new TInterval(i),
+						r.curves.get(j),new TInterval(j), result);
 			}
 		}
 		return result;
 	}
 
+	public double project(final Vec p){
+		return project(p, new BestProjection<Double>());
+	}
+	
+	public Double project(final Vec p, BestProjection<Double> best){
+		final List<Integer> indexesNearestFirst = Util.natListTill(curves.size());
+		final List<Double> distanceMiddles = new ArrayList<Double>(curves.size());
+		for(int i : indexesNearestFirst){
+			double dist = curves.get(i).getAt(0.5).distanceSquared(p);
+			distanceMiddles.add(dist);
+			best.update(i+0.5, dist);
+		}
+		Collections.sort(indexesNearestFirst,new Comparator<Integer>() {
+			@Override
+			public int compare(Integer o1, Integer o2) {
+				return Double.compare(
+						distanceMiddles.get(o1), distanceMiddles.get(o2));
+			}
+		});
+		for(int i : indexesNearestFirst){
+			CurveOperations.project(p, curves.get(i), new TInterval(i), best);
+		}
+		return best.t;
+	}
+	
+	public TPair project(final Path other){
+		return project(other,new BestProjection<TPair>());
+	}
+	
+	public TPair project(final Path other, BestProjection<TPair> best){
+		List<STuple<Integer>> indexesNearestFirst = Util.natPairs(curves.size(),other.curves.size());
+		final List<Double> distanceMiddles = new ArrayList<Double>(indexesNearestFirst.size());
+		for(STuple<Integer> tpair : indexesNearestFirst){
+			double dist = curves.get(tpair.l).getAt(0.5).distanceSquared(
+					other.curves.get(tpair.r).getAt(0.5));
+			TPair t = new TPair(tpair.l + 0.5,tpair.r + 0.5);
+			best.update(t,dist);
+			distanceMiddles.add(dist);
+		}
+		Collections.sort(indexesNearestFirst,new Comparator<STuple<Integer>>() {
+			@Override
+			public int compare(STuple<Integer> o1, STuple<Integer> o2) {
+				return Double.compare(
+						distanceMiddles.get(o1.l * other.curves.size() + o1.r)
+						, distanceMiddles.get(o2.l * other.curves.size() + o2.r));
+			}
+		});
+		for(STuple<Integer> i : indexesNearestFirst){
+			CurveOperations.project(curves.get(i.l),new TInterval(i.l),
+					other.curves.get(i.r),new TInterval(i.r),best);
+		}
+		return best.t;
+	}
 
 	
 	public String toString(){
@@ -466,9 +524,11 @@ public final class Path implements Area{
 	class PathPathIterator implements PathIterator{
 
 		int cur ;
+		boolean closed;
 		
 		public PathPathIterator() {
 			cur = -1;
+			closed = isClosed();
 		}
 		
 		@Override
@@ -478,7 +538,7 @@ public final class Path implements Area{
 
 		@Override
 		public boolean isDone() {
-			return cur == curves.size() + 1;
+			return cur == curves.size() + (closed ? 1 : 0);
 		}
 
 		@Override

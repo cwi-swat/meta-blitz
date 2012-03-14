@@ -3,7 +3,7 @@ package bezier.image;
 public class Sample {
 
 
-	public static final Sample BLACK = new Sample(1,0,0,0);
+	public static final Sample BLACK = new Sample(0,0,0,1);
 	public static final Sample WHITE = new Sample(1,1,1,1);	
 	public static final Sample RED = new Sample(0,0,1,1);	
 	public static final Sample GREEN = new Sample(0,1,0,1);	

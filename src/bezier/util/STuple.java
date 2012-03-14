@@ -17,6 +17,7 @@ public final class STuple<A>{
 		return result;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -25,7 +26,7 @@ public final class STuple<A>{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		STuple other = (STuple) obj;
+		STuple<A> other = (STuple<A>) obj;
 		if (l == null) {
 			if (other.l != null)
 				return false;
