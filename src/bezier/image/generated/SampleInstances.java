@@ -2,7 +2,6 @@ package bezier.image.generated;
 
 import bezier.image.Sample;
 import bezier.util.Util;
-
 public class SampleInstances{
 
 	
@@ -22,6 +21,18 @@ public class SampleInstances{
  	}
   
      public Sample1 mul(Sample1 rhs){
+ 		return new Sample1(this.a * rhs.a);
+ 	}
+ 
+ 	public Sample1 max(Sample1 rhs){
+ 		return new Sample1(Math.max(this.a , rhs.a));
+ 	}
+ 
+ 	public Sample1 min(Sample1 rhs){
+ 		return new Sample1(Math.min(this.a , rhs.a));
+ 	}
+ 
+     public Sample1 div(Sample1 rhs){
  		return new Sample1(this.a * rhs.a);
  	}
  
@@ -84,6 +95,18 @@ public class SampleInstances{
  	}
   
      public Sample2 mul(Sample2 rhs){
+ 		return new Sample2(this.a * rhs.a,this.b * rhs.b);
+ 	}
+ 
+ 	public Sample2 max(Sample2 rhs){
+ 		return new Sample2(Math.max(this.a , rhs.a),Math.max(this.b , rhs.b));
+ 	}
+ 
+ 	public Sample2 min(Sample2 rhs){
+ 		return new Sample2(Math.min(this.a , rhs.a),Math.min(this.b , rhs.b));
+ 	}
+ 
+     public Sample2 div(Sample2 rhs){
  		return new Sample2(this.a * rhs.a,this.b * rhs.b);
  	}
  
@@ -152,6 +175,18 @@ public class SampleInstances{
  	}
   
      public Sample3 mul(Sample3 rhs){
+ 		return new Sample3(this.a * rhs.a,this.b * rhs.b,this.c * rhs.c);
+ 	}
+ 
+ 	public Sample3 max(Sample3 rhs){
+ 		return new Sample3(Math.max(this.a , rhs.a),Math.max(this.b , rhs.b),Math.max(this.c , rhs.c));
+ 	}
+ 
+ 	public Sample3 min(Sample3 rhs){
+ 		return new Sample3(Math.min(this.a , rhs.a),Math.min(this.b , rhs.b),Math.min(this.c , rhs.c));
+ 	}
+ 
+     public Sample3 div(Sample3 rhs){
  		return new Sample3(this.a * rhs.a,this.b * rhs.b,this.c * rhs.c);
  	}
  
@@ -234,6 +269,18 @@ public class SampleInstances{
  	}
   
      public Sample4 mul(Sample4 rhs){
+ 		return new Sample4(this.a * rhs.a,this.b * rhs.b,this.c * rhs.c,this.d * rhs.d);
+ 	}
+ 
+ 	public Sample4 max(Sample4 rhs){
+ 		return new Sample4(Math.max(this.a , rhs.a),Math.max(this.b , rhs.b),Math.max(this.c , rhs.c),Math.max(this.d , rhs.d));
+ 	}
+ 
+ 	public Sample4 min(Sample4 rhs){
+ 		return new Sample4(Math.min(this.a , rhs.a),Math.min(this.b , rhs.b),Math.min(this.c , rhs.c),Math.min(this.d , rhs.d));
+ 	}
+ 
+     public Sample4 div(Sample4 rhs){
  		return new Sample4(this.a * rhs.a,this.b * rhs.b,this.c * rhs.c,this.d * rhs.d);
  	}
  
@@ -346,6 +393,18 @@ public class SampleInstances{
  	}
   
      public Sample5 mul(Sample5 rhs){
+ 		return new Sample5(this.a * rhs.a,this.b * rhs.b,this.c * rhs.c,this.d * rhs.d,this.e * rhs.e);
+ 	}
+ 
+ 	public Sample5 max(Sample5 rhs){
+ 		return new Sample5(Math.max(this.a , rhs.a),Math.max(this.b , rhs.b),Math.max(this.c , rhs.c),Math.max(this.d , rhs.d),Math.max(this.e , rhs.e));
+ 	}
+ 
+ 	public Sample5 min(Sample5 rhs){
+ 		return new Sample5(Math.min(this.a , rhs.a),Math.min(this.b , rhs.b),Math.min(this.c , rhs.c),Math.min(this.d , rhs.d),Math.min(this.e , rhs.e));
+ 	}
+ 
+     public Sample5 div(Sample5 rhs){
  		return new Sample5(this.a * rhs.a,this.b * rhs.b,this.c * rhs.c,this.d * rhs.d,this.e * rhs.e);
  	}
  
@@ -520,6 +579,18 @@ public class SampleInstances{
  	}
   
      public Sample6 mul(Sample6 rhs){
+ 		return new Sample6(this.a * rhs.a,this.b * rhs.b,this.c * rhs.c,this.d * rhs.d,this.e * rhs.e,this.f * rhs.f);
+ 	}
+ 
+ 	public Sample6 max(Sample6 rhs){
+ 		return new Sample6(Math.max(this.a , rhs.a),Math.max(this.b , rhs.b),Math.max(this.c , rhs.c),Math.max(this.d , rhs.d),Math.max(this.e , rhs.e),Math.max(this.f , rhs.f));
+ 	}
+ 
+ 	public Sample6 min(Sample6 rhs){
+ 		return new Sample6(Math.min(this.a , rhs.a),Math.min(this.b , rhs.b),Math.min(this.c , rhs.c),Math.min(this.d , rhs.d),Math.min(this.e , rhs.e),Math.min(this.f , rhs.f));
+ 	}
+ 
+     public Sample6 div(Sample6 rhs){
  		return new Sample6(this.a * rhs.a,this.b * rhs.b,this.c * rhs.c,this.d * rhs.d,this.e * rhs.e,this.f * rhs.f);
  	}
  
@@ -820,6 +891,18 @@ public class SampleInstances{
  	}
   
      public Sample7 mul(Sample7 rhs){
+ 		return new Sample7(this.a * rhs.a,this.b * rhs.b,this.c * rhs.c,this.d * rhs.d,this.e * rhs.e,this.f * rhs.f,this.g * rhs.g);
+ 	}
+ 
+ 	public Sample7 max(Sample7 rhs){
+ 		return new Sample7(Math.max(this.a , rhs.a),Math.max(this.b , rhs.b),Math.max(this.c , rhs.c),Math.max(this.d , rhs.d),Math.max(this.e , rhs.e),Math.max(this.f , rhs.f),Math.max(this.g , rhs.g));
+ 	}
+ 
+ 	public Sample7 min(Sample7 rhs){
+ 		return new Sample7(Math.min(this.a , rhs.a),Math.min(this.b , rhs.b),Math.min(this.c , rhs.c),Math.min(this.d , rhs.d),Math.min(this.e , rhs.e),Math.min(this.f , rhs.f),Math.min(this.g , rhs.g));
+ 	}
+ 
+     public Sample7 div(Sample7 rhs){
  		return new Sample7(this.a * rhs.a,this.b * rhs.b,this.c * rhs.c,this.d * rhs.d,this.e * rhs.e,this.f * rhs.f,this.g * rhs.g);
  	}
  
@@ -1350,6 +1433,4 @@ public class SampleInstances{
  	
  	
  };
-}
-	
-	
+}	

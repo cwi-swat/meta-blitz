@@ -1,5 +1,6 @@
 package bezier.demos;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -12,16 +13,19 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import bezier.composite.Path;
 import bezier.composite.Paths;
-import bezier.image.old.Image;
-import bezier.image.old.RasterImage;
-import bezier.image.old.Rasterize;
-import bezier.image.old.Sample;
+import bezier.image.Image;
+import bezier.image.functions.Mul;
+import bezier.image.generated.ColorsAlpha;
+import bezier.image.generated.RasterInstances;
+import bezier.image.generated.RasterInstances.Raster4;
+import  bezier.image.generated.SampleInstances.Sample4;
 import bezier.points.Vec;
 import bezier.segment.curve.Curve;
 import bezier.util.DummySWTSHape;
@@ -59,6 +63,11 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
         frame.addKeyListener(this);
     }
 	
+	public static Color fromSample(Sample4 sample){
+		return new Color((float)sample.a,(float)sample.b,
+						 (float)sample.c,(float)sample.d);
+	}
+	
 	public static int round(double x){
 		return (int)(x + 0.5);
 	}
@@ -68,15 +77,15 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 	}
 	
 	public void fillOval(Vec location, double w, double h){
-		fillOval(location, w, h,Sample.BLACK);
+		fillOval(location, w, h,ColorsAlpha.black);
 	}
 	
-	public void fillOval(Vec location, double w, Sample inside){
+	public void fillOval(Vec location, double w, Sample4 inside){
 		fillOval(location, w, w, inside);
 	}
 	
-	public void fillOval(Vec location, double w, double h, Sample inside){
-		drawOval(location, w, h,Sample.TRANSPARENT,inside);
+	public void fillOval(Vec location, double w, double h, Sample4 inside){
+		drawOval(location, w, h,ColorsAlpha.transparent,inside);
 	}
 	
 	public void drawOval(Vec location, double w){
@@ -84,28 +93,28 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 	}
 	
 	public void drawOval(Vec location, double w, double h){
-		drawOval(location, w, h, Sample.BLACK);
+		drawOval(location, w, h, ColorsAlpha.black);
 	}
 	
-	public void drawOval(Vec location, double w, double h, Sample border){
-		drawOval(location, w, h, border,Sample.TRANSPARENT);
+	public void drawOval(Vec location, double w, double h, Sample4 border){
+		drawOval(location, w, h, border,ColorsAlpha.black);
 	}
 	
-	public void drawOval(Vec location, double w, Sample border){
-		drawOval(location, w, border, Sample.TRANSPARENT);
+	public void drawOval(Vec location, double w, Sample4 border){
+		drawOval(location, w, border, ColorsAlpha.transparent);
 	}
 	
-	public void drawOval(Vec location, double w, Sample border, Sample inside){
+	public void drawOval(Vec location, double w, Sample4 border, Sample4 inside){
 		drawOval(location, w,w, border, inside);
 	}
 	
-	public void drawOval(Vec location, double w, double h, Sample border, Sample inside){
-		if(!inside.isFullyTransparent()){
-			g.setColor(inside.toAWT());
+	public void drawOval(Vec location, double w, double h, Sample4 border, Sample4 inside){
+		if(inside.last() > 0.0 ){
+			g.setColor(fromSample(inside));
 			g.fillOval(round(location.x)-round(w/2.0),round(location.y)-round(h/2.0), round(w), round(h));
 		}
-		if(!border.isFullyTransparent()){
-			g.setColor(border.toAWT());
+		if(border.last() > 0.0){
+			g.setColor(fromSample(border));
 			g.drawOval(round(location.x)-round(w/2.0),round(location.y)-round(h/2.0), round(w), round(h));
 		}
 	}
@@ -115,108 +124,114 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 	}
 	
 	public void fillRect(Vec location, double w, double h){
-		fillRect(location, w, h,Sample.BLACK);
+		fillRect(location, w, h,ColorsAlpha.black);
 	}
 	
-	public void fillRect(Vec location, double w, Sample inside){
+	public void fillRect(Vec location, double w, Sample4 inside){
 		fillRect(location, w, w, inside);
 	}
 	
-	public void fillRect(Vec location, double w, double h, Sample inside){
-		drawRect(location, w, h,Sample.TRANSPARENT,inside);
+	public void fillRect(Vec location, double w, double h, Sample4 inside){
+		drawRect(location, w, h,ColorsAlpha.transparent,inside);
 	}
 	
 	public void drawRect(Vec location, double w, double h){
-		drawRect(location, w, h, Sample.BLACK);
+		drawRect(location, w, h, ColorsAlpha.black);
 	}
 	
-	public void drawRect(Vec location, double w, double h, Sample border){
-		drawRect(location, w, h, border,Sample.TRANSPARENT);
+	public void drawRect(Vec location, double w, double h, Sample4 border){
+		drawRect(location, w, h, border,ColorsAlpha.transparent);
 	}
 	
-	public void drawRect(Vec location, double w, Sample border){
-		drawRect(location, w, border, Sample.TRANSPARENT);
+	public void drawRect(Vec location, double w, Sample4 border){
+		drawRect(location, w, border, ColorsAlpha.transparent);
 	}
 	
-	public void drawRect(Vec location, double w, Sample border, Sample inside){
+	public void drawRect(Vec location, double w, Sample4 border, Sample4 inside){
 		drawRect(location, w,w, border, inside);
 	}
 	
-	public void drawRect(Vec location, double w, double h, Sample border, Sample inside){
+	public void drawRect(Vec location, double w, double h, Sample4 border, Sample4 inside){
 		
-		if(!inside.isFullyTransparent()){
-			g.setColor(inside.toAWT());
+		if(inside.last() > 0.0){
+			g.setColor(fromSample(inside));
 			g.fillRect(round(location.x)-round(w/2.0),round(location.y)-round(h/2.0), round(w), round(h));
 		}
-		if(!border.isFullyTransparent()){
-			g.setColor(border.toAWT());
+		if(inside.last() > 0.0){
+			g.setColor(fromSample(border));
 			g.drawRect(round(location.x)-round(w/2.0),round(location.y)-round(h/2.0), round(w), round(h));
 		}
 	}
 	
 	public void fill(Paths p){
-		draw(p,Sample.TRANSPARENT,Sample.BLACK);
+		draw(p,ColorsAlpha.transparent,ColorsAlpha.black);
 	}
 	
-	public void fill(Paths p,Sample inside){
-		draw(p,Sample.TRANSPARENT,inside);
+	public void fill(Paths p,Sample4 inside){
+		draw(p,ColorsAlpha.transparent,inside);
 	}
 	
 	public void fill(Path p){
-		draw(p,Sample.TRANSPARENT,Sample.BLACK);
+		draw(p,ColorsAlpha.transparent,ColorsAlpha.black);
 	}
 	
-	public void fill(Path p,Sample inside){
-		draw(p,Sample.TRANSPARENT,inside);
+	public void fill(Path p,Sample4 inside){
+		draw(p,ColorsAlpha.transparent,inside);
 	}
 	
 	public void draw(Paths p){
-		draw(p,Sample.BLACK);
+		draw(p,ColorsAlpha.black);
 	}
 	
-	public void draw(Paths p, Sample border){
-		draw(p,border,Sample.TRANSPARENT);
+	public void draw(Paths p, Sample4 border){
+		draw(p,border,ColorsAlpha.transparent);
 	}
 	
-	public void draw(Paths p, Sample border, Sample inside){
+	public void draw(Paths p, Sample4 border, Sample4 inside){
 		
-		if(!inside.isFullyTransparent()){
-			g.setColor(inside.toAWT());
+		if(inside.last() > 0){
+			g.setColor(fromSample(inside));
 			g.fill(new DummySWTSHape(p.getPathIterator()));
 		}
-		if(!border.isFullyTransparent()){
-			g.setColor(border.toAWT());
+		if(border.last() > 0){
+			g.setColor(fromSample(border));
 			g.draw(new DummySWTSHape(p.getPathIterator()));
 		}
 	}
 	
-	public void draw(Curve c, Sample border){
-		draw(new Path(c),border, Sample.TRANSPARENT);
+	public void draw(Curve c, Sample4 border){
+		draw(new Path(c),border, ColorsAlpha.transparent);
 	}
 	
 	public void draw(Curve c){
-		draw(new Path(c),Sample.BLACK, Sample.TRANSPARENT);
+		draw(new Path(c),ColorsAlpha.black, ColorsAlpha.transparent);
+	}
+	
+	public void draw(Image<Sample4> img){
+		blit(new Raster4(new Mul<Sample4>(img,255.0)));
 	}
 	
 	
-	public void blit(RasterImage img){
-		g.drawImage(img.toAWT(), img.x, img.y, null);
+	public void blit(RasterInstances.Raster4 img){
+		if(img.area.width == 0 || img.area.height == 0){
+			return;
+		}
+		BufferedImage bi = new BufferedImage(img.getArea().width, img.getArea().height, BufferedImage.TYPE_INT_ARGB);
+		bi.getRaster().setPixels(0, 0, img.getArea().width, img.getArea().height, img.data);
+		g.drawImage(bi, img.getArea().x, img.getArea().y, null);
 	}
 	
-	
-	public void draw(Image img){
-		blit(Rasterize.rasterize(img));
-	}
+
 	
 	public void draw(Path p){
-		draw(p,Sample.BLACK);
+		draw(p,ColorsAlpha.black);
 	}
 	
-	public void draw(Path p, Sample border){
-		draw(p,border,Sample.TRANSPARENT);
+	public void draw(Path p, Sample4 border){
+		draw(p,border,ColorsAlpha.transparent);
 	}
 	
-	public void draw(Path p, Sample border, Sample inside){
+	public void draw(Path p, Sample4 border, Sample4 inside){
 		draw(new Paths(p),border,inside);
 	}
 	

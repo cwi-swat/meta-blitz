@@ -129,4 +129,47 @@ public final class CurveOperations {
 		return best.t;
 	}
 
+
+	public static void projectNormal(Vec p, Curve c, TInterval ti, BestProjection<Double> best){
+		if(c.isLine()){
+			Line cl = (Line)c;
+			Double t = cl.closestTNormal(p);
+			if(t == null) return;
+			double distSquared = c.getAt(t).distanceSquared(p);
+			t = ti.convertBack(t);
+			best.update(t, distSquared);
+			if(ProjectPointTest.dump) System.out.printf("Updated %f %f\n",distSquared, best.distanceSquaredUpperbound );
+		} else {
+			BBox b = c.getBBox();
+			double distSquaredLowerBound = b.getNearestPoint(p).distanceSquared(p);
+			if(distSquaredLowerBound >= best.distanceSquaredUpperbound){
+				if(ProjectPointTest.dump){
+					System.out.printf("Cutting off %f %f!\n", distSquaredLowerBound, best.distanceSquaredUpperbound);
+				}
+				return;
+			} else {
+				if(ProjectPointTest.dump) System.out.printf("Continuing %f %f!\n", distSquaredLowerBound, best.distanceSquaredUpperbound);
+			}
+			STuple<Curve> s = c.splitSimpler();
+			STuple<TInterval> tis = ti.split();
+			Curve l = s.l; Curve r = s.r; TInterval til = tis.l; TInterval tir = tis.r;
+			if(l.getBBox().getMiddle().distanceSquared(p) <=
+					r.getBBox().getMiddle().distanceSquared(p)){
+				project(p, l,til, best);
+				project(p, r,tir, best);
+			} else {
+				project(p, r,tir, best);
+				project(p, l,til, best);
+			}
+		}
+		
+	}
+	
+	public static double projectNormal(Vec p, Curve c){
+		BestProjection<Double> best = new BestProjection<Double>(
+				0.5,c.getAt(0.5).distanceSquared(p));
+		projectNormal(p,c,new TInterval(),best);
+		return best.t;
+	}
+	
 }

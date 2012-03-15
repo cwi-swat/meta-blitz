@@ -28,6 +28,18 @@ public str generateVector(int sizev, list[int] sizes){
 		   '		return new Sample<sizev>(<intercalate(",",["this.<v> * rhs.<v>" | v <- vars])>);
 		   '	}
 		   '
+		   '	public Sample<sizev> max(Sample<sizev> rhs){
+		   '		return new Sample<sizev>(<intercalate(",",["Math.max(this.<v> , rhs.<v>)" | v <- vars])>);
+		   '	}
+		   '
+		   '	public Sample<sizev> min(Sample<sizev> rhs){
+		   '		return new Sample<sizev>(<intercalate(",",["Math.min(this.<v> , rhs.<v>)" | v <- vars])>);
+		   '	}
+		   '
+		   '    public Sample<sizev> div(Sample<sizev> rhs){
+		   '		return new Sample<sizev>(<intercalate(",",["this.<v> * rhs.<v>" | v <- vars])>);
+		   '	}
+		   '
 		   '	public Sample<sizev> mul(double d){
 		   '		return new Sample<sizev>(<intercalate(",",["this.<v> * d" | v <- vars])>);
 		   '	}
@@ -70,33 +82,28 @@ public str generateVectors(int maxSize){
 public str generateRaster(int size){
 	list[str] vars = getVars(size);
 	return "
-		   'public static class Raster<size> implements BoundedImage\<Sample<size>\>{
-		   '	private final double[] data;
-		   '	private final int size;
-		   '	public final int w,h;
-		   '	public final int x,y;
+		   'public static class Raster<size> implements Image\<Sample<size>\>{
+		   '	public final double[] data;
+		   '    public final PixelArea area;
+		   '	public final int size;
 		   '
-		   '	public Raster<size>(int x, int y, int w, int h, double[] data){
-		   '		this.x = x;
-		   '		this.y = y;
-		   '		this.w = w;
-		   '		this.h = h;
-		   '		this.size = w * h * <size>;
+		   '	public Raster<size>(PixelArea area, double[] data){
+		   '		this.area = area;
+		   '		this.size = area.width * area.height * <size>;
 		   '		this.data = data;
 		   '	}	
 		   '
-		   '    public Raster<size>(int x, int y, int w, int h, Image\<Sample<size>\> img){
-		   '		this(x,y,w,h,getData(x,y,w,h,img));
+		   '    public Raster<size>(Image\<Sample<size>\> img){
+		   '		this(img.getArea(),getData(img.getArea(),img));
 		   '	}
 		   '	
-		   '	public Raster<size>(BoundedImage\<Sample<size>\> img){
-		   '		this(img.getX(),img.getY(),img.getWidth(),img.getHeight(),img);
-		   '	}
-		   '	private static double[] getData(int x, int y, int w, int h, Image\<Sample<size>\> img){
-		   '		double[] data = new double[w * h * <size>];
+		   '
+		   '	public static double[] getData(PixelArea area, Image\<Sample<size>\> img){
+		   '		if(area == null) throw new Error(\"Cannot get pixels of undefined area!\");
+		   '		double[] data = new double[area.width * area.height * <size>];
 		   '		int z = 0;
-		   '		for(int j = y ; j \< h ; j++){
-		   '			for(int i = x ; i \< w ; i++){
+		   '		for(int j = area.y ; j \< area.y + area.height ; j++){
+		   '			for(int i = area.x ; i \< area.x + area.width ; i++){
 		   '				Sample<size> s = img.get(i,j);
 		   '				 <for(v <- vars){>data[z++] = s.<v>;
 		   '				<}>
@@ -104,17 +111,37 @@ public str generateRaster(int size){
 		   '		}
 		   '		return data;
 		   '	}
+		   '
+		   '
+		   '	public Sample<size> getMax() {
+		   '		int size = area.width * area.height * <size> ;
+		   '		Sample<size> max = new Sample<size>(<intercalate(",",["Double.NEGATIVE_INFINITY"| i <- [1..size]])>);
+		   '		for(int i = 0 ; i \< size ; i+=<size>){
+		   '			max = max.max(new Sample<size>(<intercalate(",",["data[i + <i>]" | i <- [1..size]])>));
+		   '		}
+		   '		return max;
+		   '	}
+		   '
+		   '	public Sample<size> getMin() {
+		   '		Sample<size> min = new Sample<size>(<intercalate(",",["Double.POSITIVE_INFINITY"| i <- [1..size]])>);
+		   '		for(int i = 0 ; i \< size ; i+=<size>){
+		   '			min = min.min(new Sample<size>(<intercalate(",",["data[i + <i>]" | i <- [1..size]])>));
+		   '		}
+		   '		return min;
+		   '	}
+		   '
 		   '	public Sample<size> get(double x, double y){
-		   '		int start = ((int)y * w  + (int)x) * <size> ;
+		   '		x-=area.x; y-=area.y;
+		   '		int start = ((int)y * area.width  + (int)x) * <size> ;
 		   '		if(start \< 0 || start \>= size){
 		   '			return new Sample<size>(<intercalate(",",["0" | i <- [0..size-1]])>);
 		   '		}
 		   '		return new Sample<size>(<intercalate(",",["data[start + <i>]" | i <- [0..size-1]])>);
 		   '	}
-		   '	public int getX(){ return x; }
-		   ' 	public int getY(){ return y; }
-		   '	public int getWidth(){ return w; }
-		   '	public int getHeight() { return h; } 
+		   '
+		   '	public PixelArea getArea(){
+		   '		return area;
+		   '	}
 		   '}";
 }
 
@@ -136,76 +163,35 @@ public str generateAppendImage(list[int] sizes){
 	'	<for(sizev <- sizes){>
 	'		<for(i <- [1,2..sizev-1],j := sizev - i){>
 	'		public static Image\<Sample<sizev>\> append<i><j>(final Image\<Sample<i>\> l, final Image\<Sample<j>\> r){
+	'			final PixelArea area = PixelArea.merge(l.getArea(),r.getArea());
 	'			return new Image\<Sample<sizev>\>(){
+	'				
+	'				public PixelArea getArea(){
+	'					return area;
+	'				}
+	'				
 	'				public Sample<sizev> get(double x, double y){
 	'					return l.get(x,y).concat(r.get(x,y));
 	'				}
 	'			};
 	'		}
+	'		<}>
 	'
 	'
-	'
-	'	private static class ConcatBoundedImg<i><j> implements BoundedImage\<Sample<sizev>\>{
-	'		int x, y, w, h;
-	'		Image\<Sample<i>\> l;
-	'		Image\<Sample<j>\> r;
-	'		
-	'		ConcatBoundedImg<i><j>(int x, int y, int w, int h, Image\<Sample<i>\> l, Image\<Sample<j>\> r){
-	'			this.x = x;
-	'			this.y = y;
-	'			this.w = w;
-	'			this.h = h;
-	'			this.l = l;
-	'			this.r = r;
-	'		}
-	'
-	'		public int getX() { return x; }
-	'		public int getY() { return y; }
-	'		public int getWidth() { return w; }
-	'		public int getHeight() { return h; }
-	'		public Sample<sizev> get(double x, double y){
-	'			if(x \< this.x || y \< this.y || x \> this.x + this.w -1 || y \> this.y + this.h -1){
-	'				return new Sample<sizev>(<intercalate(",",["0" | z <- [1..sizev]])>);
-	'			}
-	'			return l.get(x,y).concat(r.get(x,y));
-	'		}
-	'	
-	'	}
-	'	public static  BoundedImage\<Sample<sizev>\> appendb<i><j>(final BoundedImage\<Sample<i>\> l, final Image\<Sample<j>\> r){
-	'		return new ConcatBoundedImg<i><j>(l.getX(),l.getY(),l.getWidth(),l.getHeight(),l,r);
-	'	}
-	'
-	'	public static  BoundedImage\<Sample<sizev>\> append<i>b<j>(final Image\<Sample<i>\> l, final BoundedImage\<Sample<j>\> r){
-	'		return new ConcatBoundedImg<i><j>(r.getX(),r.getY(),r.getWidth(),r.getHeight(),l,r);
-	'	}
-	'
-	'	public static BoundedImage\<Sample<sizev>\> appendb<i>b<j>(final BoundedImage\<Sample<i>\> l, final BoundedImage\<Sample<j>\> r){
-	'		return new ConcatBoundedImg<i><j>(Math.max(l.getX(),r.getX()),Math.max(l.getY(),r.getY()),Math.min(l.getWidth(),r.getWidth()),Math.min(l.getHeight(),r.getHeight()),l,r);
-	'	}
-	'	<}>
 	'
 	'
 	'		<for(s <- power(toSet([1..sizev])), size(s) < sizev, size(s) != 0){>
 	'		public static Image\<Sample<sizev - size(s)>\> del<sizev>_<intercalate("",sort(toList(s)))>(final Image\<Sample<sizev>\> l){
 	'			return new Image\<Sample<sizev -  size(s)>\>(){
+	'
+	'				public PixelArea getArea(){ return l.getArea(); }
+	'
 	'				public Sample<sizev -  size(s)> get(double x, double y){
 	'					return l.get(x,y).del<intercalate("",sort(toList(s)))>();
 	'				}
 	'			};
 	'		}
 	'		
-	'		public static Image\<Sample<sizev -  size(s)>\> delb<sizev>_<intercalate("",sort(toList(s)))>(final BoundedImage\<Sample<sizev>\> l){
-	'			return new BoundedImage\<Sample<sizev -  size(s)>\>(){
-	'				public Sample<sizev -  size(s)> get(double x, double y){
-	'					return l.get(x,y).del<intercalate("",sort(toList(s)))>();
-	'				}
-	'			
-	'			public int getX() { return l.getX(); }
-	'			public int getY() { return l.getY(); }
-	'			public int getWidth() { return l.getWidth(); }
-	'			public int getHeight() { return l.getHeight(); }
-	'			};
-	'		}
 	'
 	'
 	'

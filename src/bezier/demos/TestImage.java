@@ -2,16 +2,30 @@ package bezier.demos;
 
 
 import static bezier.points.Transformation.id;
+
+import java.util.List;
+
+import bezier.composite.Path;
 import bezier.composite.Paths;
 import bezier.font.FontFactory;
-import bezier.image.old.CircularGradient;
-import bezier.image.old.GaussianBlur;
-import bezier.image.old.Image;
-import bezier.image.old.RasterImage;
-import bezier.image.old.RenderPaths;
-import bezier.image.old.Sample;
-import bezier.image.old.TransformedImage;
-import bezier.image.old.UseAlphaLeft;
+import bezier.image.FromShape;
+import bezier.image.Image;
+import bezier.image.functions.Constant;
+import bezier.image.functions.Div;
+import bezier.image.functions.GiveX;
+import bezier.image.functions.ImageTransformation;
+import bezier.image.functions.Lerp;
+import bezier.image.functions.ProjectOnPath;
+import bezier.image.generated.Colors;
+import bezier.image.generated.ColorsAlpha;
+import bezier.image.generated.ImageSampleOpers;
+import bezier.image.generated.SampleInstances.Sample1;
+import bezier.image.generated.SampleInstances.Sample3;
+import bezier.image.generated.SampleInstances.Sample4;
+import bezier.points.Vec;
+import bezier.segment.LengthMap;
+import bezier.segment.curve.Curve;
+import bezier.segment.curve.QuadCurve;
 public class TestImage extends DemoBase {
 
 	private static final long serialVersionUID = 2620494065723135106L;
@@ -20,31 +34,44 @@ public class TestImage extends DemoBase {
         new TestImage();
     }
 	
+	boolean drag;
+	Vec control = new Vec(0,0);
+
+	@Override
+	public void handleKeyStroke(char key){
+		drag = !drag;
+		System.out.printf("%s \n",drag);
+	}
+	
 	@Override
 	public void draw() {
-		  Paths ts2 = FontFactory.text2Paths("Atze");
-			
-		  ts2 = ts2.transform(id.translate(-ts2.bbox.x,-ts2.bbox.y).scale(5).translate(mouse)).makeMonotomous();
-//		  g.drawImage(RenderPaths.makeImage(ts2,(int)ts2.getBBox().x, (int)ts2.getBBox().y, 500, 500), 0, 0, null);
-		 
-//		  if(!lastLine.isEmpty()){
-//		  fill(ts2);
-//		  System.out.print(id.rotateAroundPoint(new Vec(0.5,0.5), 0.2 * Math.PI).to);
-			  RasterImage img = RenderPaths.renderPaths(ts2);
-			  Image grd = new UseAlphaLeft(img,
-					  new TransformedImage(
-							  new CircularGradient(Sample.RED, Sample.GREEN), 
-							  id.scale(ts2.getBBox().width, ts2.getBBox().height).
-							  translate(-ts2.getBBox().width/2.0, -ts2.getBBox().height/2.0).
-//							  rotate(wheel / 100.0 * Math.PI).
-							  translate(ts2.getBBox().width/2.0, ts2.getBBox().height/2.0)
-							  ));
-							 
-			  
-//			  System.out.print(img);
-			  RasterImage img2 =  GaussianBlur.blur(grd, Math.abs(wheel / 250.0));
-//			  System.out.print(img2);
-			  blit(img2);
+		  Paths ts = FontFactory.text2Paths("blabla");
+	        double yDiff = ts.bbox.y + ts.bbox.height / 2.0;
+	        ts = ts.transform(id.translate(-ts.bbox.x,-yDiff));
+	        Vec middle = size.div(2);
+			if(!drag){
+				control = mouse.sub(middle).mul(2).add(middle);
+			}
+	        List<Curve> c = new QuadCurve(new Vec(0,size.y/2), 
+	        								control, 
+	        								new Vec(size.x,size.y/2)).makeMonotomous();
+	        Path p = new Path(c);
+	        
+	        LengthMap lm = p.getLengthMap();
+	        ts = ts.transform(id.scale(lm.totalLength()/ts.bbox.width * 0.8));
+	        ts = ts.transform(id.translate(lm.totalLength()*0.1,0));
+	        ts = ts.projectOn(p, lm);
+//	        draw(p);
+//	        drawOval(p.getAt(p.project(mouse)),10);
+//		  draw(ts2);
+		  Image<Sample1> img1 = FromShape.paths2img(ts);
+		  Image<Sample1> imgl = ProjectOnPath.projectLength(img1, p, lm);
+//		  
+		  Image<Sample3> img2 = 
+				  new Lerp<Sample3>(imgl,
+						  new Constant<Sample3>(Colors.black), new Constant<Sample3>(Colors.white));
+		  Image<Sample4> img3 = ImageSampleOpers.append31(img2,img1);
+		  draw(img3);
 //		  }
 		  
 

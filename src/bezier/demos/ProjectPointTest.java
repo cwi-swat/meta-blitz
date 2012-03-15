@@ -5,7 +5,7 @@ import bezier.composite.Paths;
 import bezier.composite.TPaths;
 import bezier.demos.SetOperations.SetOperationChoices;
 import bezier.font.FontFactory;
-import bezier.image.old.Sample;
+import bezier.image.generated.ColorsAlpha;
 import bezier.points.Transformation;
 
 public class ProjectPointTest extends DemoBase {
@@ -30,7 +30,7 @@ public class ProjectPointTest extends DemoBase {
 		TPaths t = ts.project(mouse);
 //		System.out.printf("%f\n",tt);
 
-		draw(ts,Sample.BLACK,Sample.GREEN.interpolate(0.5, Sample.BLACK));
+		draw(ts,ColorsAlpha.black,ColorsAlpha.green.lerp(0.5, ColorsAlpha.black));
 		if(t != null){
 			drawOval(ts.getAt(t),10);
 		}

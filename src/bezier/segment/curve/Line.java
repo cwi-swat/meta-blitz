@@ -50,7 +50,21 @@ public final class Line implements Curve{
 	}
 	
 	public double closestT(Vec p){
-		return Util.clamp(-(dir.y * start.y + dir.x * start.x - dir.y * p.y - dir.x * p.x)/ (dir.x* dir.x + dir.y * dir.y));
+		return Util.clamp(closestTAll(p));
+	}
+
+	public double closestTAll(Vec p) {
+		return -(dir.y * start.y + dir.x * start.x - dir.y * p.y - dir.x * p.x)/ (dir.x* dir.x + dir.y * dir.y);
+	}
+	
+	public Double closestTNormal(Vec p){
+		double t = closestTAll(p);
+		if(t < 0 || t >= 1){
+			return null;
+		} else {
+			return t;
+		}
+		
 	}
 	
 	public TPair closestTs(Line r){
@@ -113,6 +127,7 @@ public final class Line implements Curve{
 			}
 		}
 	}
+	
 
 	public double getTAtY(double y){
 		return (y - start.y)/dir.y;

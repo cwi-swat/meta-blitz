@@ -4,7 +4,7 @@ import bezier.composite.Path;
 import bezier.composite.Paths;
 import bezier.composite.TPaths;
 import bezier.font.FontFactory;
-import bezier.image.old.Sample;
+import bezier.image.generated.ColorsAlpha;
 import bezier.points.Transformation;
 import bezier.segment.curve.Line;
 import bezier.util.STuple;
@@ -26,8 +26,8 @@ public class ProjectTest extends DemoBase {
 		STuple<TPaths> tp = ts.project(t2);
 
 
-		draw(ts,Sample.BLACK,Sample.GREEN.interpolate(0.5, Sample.BLACK));
-		draw(t2,Sample.BLACK,Sample.GREEN.interpolate(0.5, Sample.BLACK));
+		draw(ts,ColorsAlpha.black,ColorsAlpha.green.lerp(0.5, ColorsAlpha.black));
+		draw(t2,ColorsAlpha.black,ColorsAlpha.green.lerp(0.5, ColorsAlpha.black));
 		if(tp != null){
 			draw(new Line(ts.getAt(tp.l),t2.getAt(tp.r)));
 		}

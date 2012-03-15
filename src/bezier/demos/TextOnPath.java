@@ -4,7 +4,7 @@ import static bezier.points.Transformation.id;
 import bezier.composite.Path;
 import bezier.composite.Paths;
 import bezier.font.FontFactory;
-import bezier.image.old.Sample;
+import bezier.image.generated.ColorsAlpha;
 import bezier.points.Vec;
 import bezier.segment.LengthMap;
 import bezier.segment.curve.QuadCurve;
@@ -33,7 +33,7 @@ public class TextOnPath extends DemoBase{
         ts = ts.transform(id.translate(lm.totalLength()*0.1,0));
         ts = ts.projectOn(p, lm);
         draw(p);
-        draw(ts, Sample.BLACK,Sample.GREEN.interpolate(0.5, Sample.BLACK));
+        draw(ts,ColorsAlpha.black,ColorsAlpha.green.lerp(0.5, ColorsAlpha.black));
 
 	}
 	

@@ -6,7 +6,7 @@ import java.util.List;
 
 import bezier.composite.Paths;
 import bezier.font.FontFactory;
-import bezier.image.old.Sample;
+import bezier.image.generated.ColorsAlpha;
 import bezier.points.Vec;
 
 public class SetOperations extends DemoBase{
@@ -74,7 +74,7 @@ public class SetOperations extends DemoBase{
 		  }
 //		  Shapes sres = new Shapes(res);
 //		  System.out.print(res);
-		  draw(res,Sample.BLACK, Sample.GREEN.interpolate(0.5, Sample.BLACK));
+		  draw(res,ColorsAlpha.black,ColorsAlpha.green.lerp(0.5, ColorsAlpha.black));
 		  List<Vec> inters2 = ts.getIntersectionPoints(ts2);
 		  for(Vec v : inters2){
 			  drawOval(v, 10);
