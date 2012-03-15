@@ -1,7 +1,7 @@
 package bezier.image;
 
-public interface Image<Sample> {
+public interface Image<A> {
 
-	Sample get(double x, double y);
+	A get(double x, double y);
 	
 }

@@ -1,6 +1,6 @@
 package bezier.image;
 
-public interface BoundedImage<Sample> extends Image<Sample>{
+public interface BoundedImage<A> extends Image<A>{
 
 	int getX();
 	int getY();
