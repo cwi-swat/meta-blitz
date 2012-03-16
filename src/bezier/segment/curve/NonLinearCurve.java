@@ -15,8 +15,20 @@ import bezier.util.STuple;
 public abstract class NonLinearCurve implements Curve {
 
 	private BBox bbox; 
-
+	private CurveApproxTree approx;
+	
 	abstract BBox makeBBox();
+	
+	public CurveApproxTree getFullApproxLengthTree(){
+		return new CurveApproxTree(this);
+	}
+	
+	public CurveApproxTree getApproxTree(){
+		if(approx == null){
+			approx = new CurveApproxTree(this);
+		} 
+		return approx;
+	}
 	
 	public BBox getBBox(){
 		if(bbox == null){

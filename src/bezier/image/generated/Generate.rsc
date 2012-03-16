@@ -37,7 +37,7 @@ public str generateVector(int sizev, list[int] sizes){
 		   '	}
 		   '
 		   '    public Sample<sizev> div(Sample<sizev> rhs){
-		   '		return new Sample<sizev>(<intercalate(",",["this.<v> * rhs.<v>" | v <- vars])>);
+		   '		return new Sample<sizev>(<intercalate(",",["this.<v> / rhs.<v>" | v <- vars])>);
 		   '	}
 		   '
 		   '	public Sample<sizev> mul(double d){
@@ -117,7 +117,7 @@ public str generateRaster(int size){
 		   '		int size = area.width * area.height * <size> ;
 		   '		Sample<size> max = new Sample<size>(<intercalate(",",["Double.NEGATIVE_INFINITY"| i <- [1..size]])>);
 		   '		for(int i = 0 ; i \< size ; i+=<size>){
-		   '			max = max.max(new Sample<size>(<intercalate(",",["data[i + <i>]" | i <- [1..size]])>));
+		   '			max = max.max(new Sample<size>(<intercalate(",",["data[i + <i>]" | i <- [0..size-1]])>));
 		   '		}
 		   '		return max;
 		   '	}
@@ -125,7 +125,7 @@ public str generateRaster(int size){
 		   '	public Sample<size> getMin() {
 		   '		Sample<size> min = new Sample<size>(<intercalate(",",["Double.POSITIVE_INFINITY"| i <- [1..size]])>);
 		   '		for(int i = 0 ; i \< size ; i+=<size>){
-		   '			min = min.min(new Sample<size>(<intercalate(",",["data[i + <i>]" | i <- [1..size]])>));
+		   '			min = min.min(new Sample<size>(<intercalate(",",["data[i + <i>]" | i <- [0..size-1]])>));
 		   '		}
 		   '		return min;
 		   '	}

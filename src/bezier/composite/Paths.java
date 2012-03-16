@@ -15,8 +15,6 @@ import bezier.points.Vec;
 import bezier.segment.BestProjection;
 import bezier.segment.LengthMap;
 import bezier.segment.TPair;
-import bezier.segment.curve.CurveOperations;
-import bezier.segment.curve.TInterval;
 import bezier.util.BBox;
 import bezier.util.STuple;
 import bezier.util.Tuple;

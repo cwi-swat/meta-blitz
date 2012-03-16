@@ -42,7 +42,7 @@ public class RasterInstances{
 	 		int size = area.width * area.height * 1 ;
 	 		Sample1 max = new Sample1(Double.NEGATIVE_INFINITY);
 	 		for(int i = 0 ; i < size ; i+=1){
-	 			max = max.max(new Sample1(data[i + 1]));
+	 			max = max.max(new Sample1(data[i + 0]));
 	 		}
 	 		return max;
 	 	}
@@ -50,7 +50,7 @@ public class RasterInstances{
 	 	public Sample1 getMin() {
 	 		Sample1 min = new Sample1(Double.POSITIVE_INFINITY);
 	 		for(int i = 0 ; i < size ; i+=1){
-	 			min = min.min(new Sample1(data[i + 1]));
+	 			min = min.min(new Sample1(data[i + 0]));
 	 		}
 	 		return min;
 	 	}
@@ -106,7 +106,7 @@ public class RasterInstances{
 	 		int size = area.width * area.height * 2 ;
 	 		Sample2 max = new Sample2(Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY);
 	 		for(int i = 0 ; i < size ; i+=2){
-	 			max = max.max(new Sample2(data[i + 1],data[i + 2]));
+	 			max = max.max(new Sample2(data[i + 0],data[i + 1]));
 	 		}
 	 		return max;
 	 	}
@@ -114,7 +114,7 @@ public class RasterInstances{
 	 	public Sample2 getMin() {
 	 		Sample2 min = new Sample2(Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY);
 	 		for(int i = 0 ; i < size ; i+=2){
-	 			min = min.min(new Sample2(data[i + 1],data[i + 2]));
+	 			min = min.min(new Sample2(data[i + 0],data[i + 1]));
 	 		}
 	 		return min;
 	 	}
@@ -171,7 +171,7 @@ public class RasterInstances{
 	 		int size = area.width * area.height * 3 ;
 	 		Sample3 max = new Sample3(Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY);
 	 		for(int i = 0 ; i < size ; i+=3){
-	 			max = max.max(new Sample3(data[i + 1],data[i + 2],data[i + 3]));
+	 			max = max.max(new Sample3(data[i + 0],data[i + 1],data[i + 2]));
 	 		}
 	 		return max;
 	 	}
@@ -179,7 +179,7 @@ public class RasterInstances{
 	 	public Sample3 getMin() {
 	 		Sample3 min = new Sample3(Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY);
 	 		for(int i = 0 ; i < size ; i+=3){
-	 			min = min.min(new Sample3(data[i + 1],data[i + 2],data[i + 3]));
+	 			min = min.min(new Sample3(data[i + 0],data[i + 1],data[i + 2]));
 	 		}
 	 		return min;
 	 	}
@@ -237,7 +237,7 @@ public class RasterInstances{
 	 		int size = area.width * area.height * 4 ;
 	 		Sample4 max = new Sample4(Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY);
 	 		for(int i = 0 ; i < size ; i+=4){
-	 			max = max.max(new Sample4(data[i + 1],data[i + 2],data[i + 3],data[i + 4]));
+	 			max = max.max(new Sample4(data[i + 0],data[i + 1],data[i + 2],data[i + 3]));
 	 		}
 	 		return max;
 	 	}
@@ -245,7 +245,7 @@ public class RasterInstances{
 	 	public Sample4 getMin() {
 	 		Sample4 min = new Sample4(Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY);
 	 		for(int i = 0 ; i < size ; i+=4){
-	 			min = min.min(new Sample4(data[i + 1],data[i + 2],data[i + 3],data[i + 4]));
+	 			min = min.min(new Sample4(data[i + 0],data[i + 1],data[i + 2],data[i + 3]));
 	 		}
 	 		return min;
 	 	}
@@ -304,7 +304,7 @@ public class RasterInstances{
 	 		int size = area.width * area.height * 5 ;
 	 		Sample5 max = new Sample5(Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY);
 	 		for(int i = 0 ; i < size ; i+=5){
-	 			max = max.max(new Sample5(data[i + 1],data[i + 2],data[i + 3],data[i + 4],data[i + 5]));
+	 			max = max.max(new Sample5(data[i + 0],data[i + 1],data[i + 2],data[i + 3],data[i + 4]));
 	 		}
 	 		return max;
 	 	}
@@ -312,7 +312,7 @@ public class RasterInstances{
 	 	public Sample5 getMin() {
 	 		Sample5 min = new Sample5(Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY);
 	 		for(int i = 0 ; i < size ; i+=5){
-	 			min = min.min(new Sample5(data[i + 1],data[i + 2],data[i + 3],data[i + 4],data[i + 5]));
+	 			min = min.min(new Sample5(data[i + 0],data[i + 1],data[i + 2],data[i + 3],data[i + 4]));
 	 		}
 	 		return min;
 	 	}
@@ -372,7 +372,7 @@ public class RasterInstances{
 	 		int size = area.width * area.height * 6 ;
 	 		Sample6 max = new Sample6(Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY);
 	 		for(int i = 0 ; i < size ; i+=6){
-	 			max = max.max(new Sample6(data[i + 1],data[i + 2],data[i + 3],data[i + 4],data[i + 5],data[i + 6]));
+	 			max = max.max(new Sample6(data[i + 0],data[i + 1],data[i + 2],data[i + 3],data[i + 4],data[i + 5]));
 	 		}
 	 		return max;
 	 	}
@@ -380,7 +380,7 @@ public class RasterInstances{
 	 	public Sample6 getMin() {
 	 		Sample6 min = new Sample6(Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY);
 	 		for(int i = 0 ; i < size ; i+=6){
-	 			min = min.min(new Sample6(data[i + 1],data[i + 2],data[i + 3],data[i + 4],data[i + 5],data[i + 6]));
+	 			min = min.min(new Sample6(data[i + 0],data[i + 1],data[i + 2],data[i + 3],data[i + 4],data[i + 5]));
 	 		}
 	 		return min;
 	 	}
@@ -441,7 +441,7 @@ public class RasterInstances{
 	 		int size = area.width * area.height * 7 ;
 	 		Sample7 max = new Sample7(Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY,Double.NEGATIVE_INFINITY);
 	 		for(int i = 0 ; i < size ; i+=7){
-	 			max = max.max(new Sample7(data[i + 1],data[i + 2],data[i + 3],data[i + 4],data[i + 5],data[i + 6],data[i + 7]));
+	 			max = max.max(new Sample7(data[i + 0],data[i + 1],data[i + 2],data[i + 3],data[i + 4],data[i + 5],data[i + 6]));
 	 		}
 	 		return max;
 	 	}
@@ -449,7 +449,7 @@ public class RasterInstances{
 	 	public Sample7 getMin() {
 	 		Sample7 min = new Sample7(Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY);
 	 		for(int i = 0 ; i < size ; i+=7){
-	 			min = min.min(new Sample7(data[i + 1],data[i + 2],data[i + 3],data[i + 4],data[i + 5],data[i + 6],data[i + 7]));
+	 			min = min.min(new Sample7(data[i + 0],data[i + 1],data[i + 2],data[i + 3],data[i + 4],data[i + 5],data[i + 6]));
 	 		}
 	 		return min;
 	 	}

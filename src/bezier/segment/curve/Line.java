@@ -246,5 +246,19 @@ public final class Line implements Curve{
 		coords[1] = (float)end.y;
 		return PathIterator.SEG_LINETO;
 	}
+
+	@Override
+	public CurveApproxTree getApproxTree() {
+		return new CurveApproxTree(this);
+	}
+
+	public double length() {
+		return end.distance(start);
+	}
+
+	@Override
+	public CurveApproxTree getFullApproxLengthTree() {
+		return new CurveApproxTree(this);
+	}
 	
 }

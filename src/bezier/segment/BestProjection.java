@@ -1,9 +1,12 @@
 package bezier.segment;
 
+import bezier.points.Vec;
+
 
 public class BestProjection<A>{
 	public A t;
 	public double distanceSquaredUpperbound;
+	public Vec v;
 	
 	public BestProjection(){
 		t = null;
@@ -20,10 +23,24 @@ public class BestProjection<A>{
 		distanceSquaredUpperbound = initDist;
 	}
 	
+	public BestProjection(A init, double initDist, Vec v) {
+		this.t = init;
+		distanceSquaredUpperbound = initDist;
+		this.v = v;
+	}
+
 	public void update(A t, double dist){
 		if(dist < distanceSquaredUpperbound){
 			this.t = t;
 			distanceSquaredUpperbound = dist;
+		}
+	}
+	
+	public void update(A t, double dist, Vec v){
+		if(dist < distanceSquaredUpperbound){
+			this.t = t;
+			distanceSquaredUpperbound = dist;
+			this.v = v;
 		}
 	}
 }

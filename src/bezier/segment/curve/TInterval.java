@@ -20,14 +20,14 @@ public class TInterval {
 		this.tLength = 1;
 	}
 
-	STuple<TInterval> split(){
+	public STuple<TInterval> split(){
 		double halfLength = 0.5 * tLength;
 		return new STuple<TInterval>(
 				new TInterval(tStart, halfLength),
 				new TInterval(tStart + halfLength, halfLength));
 	}
 
-	double convertBack(double t){
+	public double convertBack(double t){
 		return tStart + t * tLength;
 	}
 }

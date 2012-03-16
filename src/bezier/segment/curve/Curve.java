@@ -12,6 +12,8 @@ import bezier.util.STuple;
 
 public interface Curve extends HasBBox{
 
+	CurveApproxTree getApproxTree();
+	CurveApproxTree getFullApproxLengthTree();
 	boolean isLine();
 	Line getLine();
 	boolean overlapsWith(BBox r);
@@ -35,4 +37,5 @@ public interface Curve extends HasBBox{
 	
 	String toString();
 	int currentSegment(float[] coords);
+
 }

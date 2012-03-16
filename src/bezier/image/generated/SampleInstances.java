@@ -33,7 +33,7 @@ public class SampleInstances{
  	}
  
      public Sample1 div(Sample1 rhs){
- 		return new Sample1(this.a * rhs.a);
+ 		return new Sample1(this.a / rhs.a);
  	}
  
  	public Sample1 mul(double d){
@@ -107,7 +107,7 @@ public class SampleInstances{
  	}
  
      public Sample2 div(Sample2 rhs){
- 		return new Sample2(this.a * rhs.a,this.b * rhs.b);
+ 		return new Sample2(this.a / rhs.a,this.b / rhs.b);
  	}
  
  	public Sample2 mul(double d){
@@ -187,7 +187,7 @@ public class SampleInstances{
  	}
  
      public Sample3 div(Sample3 rhs){
- 		return new Sample3(this.a * rhs.a,this.b * rhs.b,this.c * rhs.c);
+ 		return new Sample3(this.a / rhs.a,this.b / rhs.b,this.c / rhs.c);
  	}
  
  	public Sample3 mul(double d){
@@ -281,7 +281,7 @@ public class SampleInstances{
  	}
  
      public Sample4 div(Sample4 rhs){
- 		return new Sample4(this.a * rhs.a,this.b * rhs.b,this.c * rhs.c,this.d * rhs.d);
+ 		return new Sample4(this.a / rhs.a,this.b / rhs.b,this.c / rhs.c,this.d / rhs.d);
  	}
  
  	public Sample4 mul(double d){
@@ -405,7 +405,7 @@ public class SampleInstances{
  	}
  
      public Sample5 div(Sample5 rhs){
- 		return new Sample5(this.a * rhs.a,this.b * rhs.b,this.c * rhs.c,this.d * rhs.d,this.e * rhs.e);
+ 		return new Sample5(this.a / rhs.a,this.b / rhs.b,this.c / rhs.c,this.d / rhs.d,this.e / rhs.e);
  	}
  
  	public Sample5 mul(double d){
@@ -591,7 +591,7 @@ public class SampleInstances{
  	}
  
      public Sample6 div(Sample6 rhs){
- 		return new Sample6(this.a * rhs.a,this.b * rhs.b,this.c * rhs.c,this.d * rhs.d,this.e * rhs.e,this.f * rhs.f);
+ 		return new Sample6(this.a / rhs.a,this.b / rhs.b,this.c / rhs.c,this.d / rhs.d,this.e / rhs.e,this.f / rhs.f);
  	}
  
  	public Sample6 mul(double d){
@@ -903,7 +903,7 @@ public class SampleInstances{
  	}
  
      public Sample7 div(Sample7 rhs){
- 		return new Sample7(this.a * rhs.a,this.b * rhs.b,this.c * rhs.c,this.d * rhs.d,this.e * rhs.e,this.f * rhs.f,this.g * rhs.g);
+ 		return new Sample7(this.a / rhs.a,this.b / rhs.b,this.c / rhs.c,this.d / rhs.d,this.e / rhs.e,this.f / rhs.f,this.g / rhs.g);
  	}
  
  	public Sample7 mul(double d){
@@ -1433,4 +1433,6 @@ public class SampleInstances{
  	
  	
  };
-}	
+	
+}
+	

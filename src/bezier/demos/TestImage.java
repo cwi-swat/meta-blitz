@@ -3,7 +3,10 @@ package bezier.demos;
 
 import static bezier.points.Transformation.id;
 
+import java.awt.Color;
 import java.util.List;
+
+import com.sun.istack.internal.Pool.Impl;
 
 import bezier.composite.Path;
 import bezier.composite.Paths;
@@ -12,14 +15,20 @@ import bezier.image.FromShape;
 import bezier.image.Image;
 import bezier.image.functions.Constant;
 import bezier.image.functions.Div;
+import bezier.image.functions.DivSample;
 import bezier.image.functions.GiveX;
 import bezier.image.functions.ImageTransformation;
 import bezier.image.functions.Lerp;
+import bezier.image.functions.Lerp2D;
+import bezier.image.functions.Mask;
+import bezier.image.functions.MulAlpha;
 import bezier.image.functions.ProjectOnPath;
 import bezier.image.generated.Colors;
 import bezier.image.generated.ColorsAlpha;
 import bezier.image.generated.ImageSampleOpers;
+import bezier.image.generated.RasterInstances.Raster2;
 import bezier.image.generated.SampleInstances.Sample1;
+import bezier.image.generated.SampleInstances.Sample2;
 import bezier.image.generated.SampleInstances.Sample3;
 import bezier.image.generated.SampleInstances.Sample4;
 import bezier.points.Vec;
@@ -65,13 +74,17 @@ public class TestImage extends DemoBase {
 //	        drawOval(p.getAt(p.project(mouse)),10);
 //		  draw(ts2);
 		  Image<Sample1> img1 = FromShape.paths2img(ts);
-		  Image<Sample1> imgl = ProjectOnPath.projectLength(img1, p, lm);
+		   Raster2 imgl = ProjectOnPath.projectLength(img1, p);
+		  Sample2 max = imgl.getMax();
+		  Image<Sample2> normimgl = new DivSample<Sample2>(imgl, max);
 //		  
-		  Image<Sample3> img2 = 
-				  new Lerp<Sample3>(imgl,
-						  new Constant<Sample3>(Colors.black), new Constant<Sample3>(Colors.white));
-		  Image<Sample4> img3 = ImageSampleOpers.append31(img2,img1);
-		  draw(img3);
+		  Image<Sample4> img2 = new MulAlpha(img1, 
+				  new Lerp2D<Sample4>(normimgl,
+						  new Constant<Sample4>(ColorsAlpha.red), 
+						  new Constant<Sample4>(ColorsAlpha.green),
+						  new Constant<Sample4>(ColorsAlpha.transparent)));
+//		  Image<Sample4> img3 = ImageSampleOpers.append31(img2,img1);
+		  draw(img2);
 //		  }
 		  
 

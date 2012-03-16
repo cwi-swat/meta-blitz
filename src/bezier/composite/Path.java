@@ -15,7 +15,7 @@ import bezier.segment.Constants;
 import bezier.segment.LengthMap;
 import bezier.segment.TPair;
 import bezier.segment.curve.Curve;
-import bezier.segment.curve.CurveOperations;
+import bezier.segment.curve.CurveApproxTree;
 import bezier.segment.curve.TInterval;
 import bezier.util.BBox;
 import bezier.util.STuple;
@@ -205,16 +205,23 @@ public final class Path implements Area{
 		} 
 	}
 	
-	
 	public List<TPair> getIntersections(Path r){
 		if(!bbox.overlaps(r.bbox)){
 			return new ArrayList<TPair>();
 		}
 		List<TPair> result = new ArrayList<TPair>(30);
+		List<TPair> localResult = new ArrayList<TPair>(10);
+		
 		for(int i = 0 ; i < curves.size() ; i++){
+			TInterval til = new TInterval(i);
 			for(int j = 0; j < r.curves.size() ; j++){
-				CurveOperations.intersections(curves.get(i), new TInterval(i),
-						r.curves.get(j),new TInterval(j), result);
+				TInterval tir = new TInterval(j);
+				CurveApproxTree a = curves.get(i).getApproxTree();
+				CurveApproxTree b = r.curves.get(j).getApproxTree();
+				a.getIntersection(b, localResult);
+				for(TPair t : localResult){
+					result.add(new TPair(til.convertBack(t.tl),tir.convertBack(t.tr)));
+				}
 			}
 		}
 		return result;
@@ -240,7 +247,42 @@ public final class Path implements Area{
 			}
 		});
 		for(int i : indexesNearestFirst){
-			CurveOperations.project(p, curves.get(i), new TInterval(i), best);
+			TInterval ti = new TInterval(i);
+			BestProjection<Double> bestLocal = new BestProjection<Double>(best.distanceSquaredUpperbound);
+			curves.get(i).getApproxTree().project(p, bestLocal);
+			if(bestLocal.t != null){
+				best.update(ti.convertBack(bestLocal.t), bestLocal.distanceSquaredUpperbound);
+			}
+		}
+		return best.t;
+	}
+	
+	public ProjectPath getProjectPath(){
+		return new ProjectPath(curves);
+	}
+	
+	public Double projectLength(final Vec p, BestProjection<Double> best){
+		final List<Integer> indexesNearestFirst = Util.natListTill(curves.size());
+		final List<Double> distanceMiddles = new ArrayList<Double>(curves.size());
+		for(int i : indexesNearestFirst){
+			double dist = curves.get(i).getAt(0.5).distanceSquared(p);
+			distanceMiddles.add(dist);
+			best.update(i+0.5, dist);
+		}
+		Collections.sort(indexesNearestFirst,new Comparator<Integer>() {
+			@Override
+			public int compare(Integer o1, Integer o2) {
+				return Double.compare(
+						distanceMiddles.get(o1), distanceMiddles.get(o2));
+			}
+		});
+		for(int i : indexesNearestFirst){
+			TInterval ti = new TInterval(i);
+			BestProjection<Double> bestLocal = new BestProjection<Double>(best.distanceSquaredUpperbound);
+			curves.get(i).getApproxTree().project(p, bestLocal);
+			if(bestLocal.t != null){
+				best.update(ti.convertBack(bestLocal.t), bestLocal.distanceSquaredUpperbound);
+			}
 		}
 		return best.t;
 	}
@@ -268,8 +310,14 @@ public final class Path implements Area{
 			}
 		});
 		for(STuple<Integer> i : indexesNearestFirst){
-			CurveOperations.project(curves.get(i.l),new TInterval(i.l),
-					other.curves.get(i.r),new TInterval(i.r),best);
+			TInterval til = new TInterval(i.l);
+			TInterval tir = new TInterval(i.r);
+			BestProjection<TPair> bestLocal = new BestProjection<TPair>(best.distanceSquaredUpperbound);
+			curves.get(i.l).getApproxTree().project(other.curves.get(i.r).getApproxTree(), bestLocal);
+			if(bestLocal.t != null){
+				best.update(new TPair(til.convertBack(bestLocal.t.tl),tir.convertBack(bestLocal.t.tr)),
+						bestLocal.distanceSquaredUpperbound,bestLocal.v);
+			}
 		}
 		return best.t;
 	}
@@ -386,8 +434,6 @@ public final class Path implements Area{
 			}
 			return p;
 		}
-//		assert ts.size() % 2 == 0;
-//		double prev = ts.get(ts.size()-1);
 
 		boolean startInside =false ;
 		switch(segmentsStartInside(ts, other)){
