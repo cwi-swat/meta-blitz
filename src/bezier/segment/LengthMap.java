@@ -84,7 +84,7 @@ public class LengthMap{
 			return first.t;
 		} else {
 			LengthTPair second = lengthTPairs.get(i+1);
-			double extraPart = (first.length - length) / (second.length - first.length);
+			double extraPart = (length - first.length ) / (second.length - first.length);
 			double extraT = (second.t - first.t) * extraPart;
 			return first.t + extraT;
 		}
@@ -97,7 +97,7 @@ public class LengthMap{
 			return first.length;
 		} else {
 			LengthTPair second = lengthTPairs.get(i+1);
-			double extraPart = (first.t - t) / (second.t - first.t);
+			double extraPart = (t - first.t) / (second.t - first.t);
 			double extraLength = (second.length - first.length) * extraPart;
 			return first.length + extraLength;
 		}

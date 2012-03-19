@@ -4,6 +4,7 @@ import static bezier.util.Util.findQuadraticPolynomialRoots;
 
 import java.awt.geom.PathIterator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import bezier.composite.Path;
@@ -59,7 +60,7 @@ public final class CubicCurve extends NonLinearCurve {
 		double t2 = t*t;
 		return new Vec(ax*t2 + bx * t + cx, ay*t2 + by * t + cy);
 	}
-
+	
 	@Override
 	public Curve transform(Matrix m) {
 		return new CubicCurve(m.mul(p0), m.mul(p1), m.mul(p2), m.mul(p3));
@@ -159,34 +160,78 @@ public final class CubicCurve extends NonLinearCurve {
 	public String toString(){
 		return String.format("Cubic %s %s %s %s",p0,p1,p2,p3);
 	}
-
-
 	
+	private void projectOnSE(Path p, LengthMap lm , int start, int end,List<Vec> result){
+		if(start == end){
+			p.projectBorder(lm, start, p2,p3,result);
+					
+			return;
+		}
+		int get;
+
+		if(start < end){
+			get = start + 1;
+		} else {
+			get = end +1;
+		}
+		
+		double whereX = lm.findLength(get);
+
+		double where = findX(whereX);
+		STuple<Curve> split = split(where);
+		System.out.printf("where %f",where);
+		if(start < end){
+			((CubicCurve)split.l).projectOnSE(p, lm,start, start,result);
+			((CubicCurve)split.r).projectOnSE(p, lm,get, end,result);
+		} else {
+			((CubicCurve)split.l).projectOnSE(p, lm,end, end,result);
+			((CubicCurve)split.r).projectOnSE(p, lm,start, get,result);
+		}
+
+	}
 	
 	@Override
 	public List<Curve> projectOn(Path p, LengthMap lm) {
 		double tStart = lm.findT(p0.x);
 		double tEnd = lm.findT(p3.x);
-		int from = (int)tStart;
-		int till = (int)tEnd;
-		if(tEnd == till){
-			till --;
+		int start = (int)tStart;
+		int end = (int)tEnd;
+		if(start < end && end - tEnd == 0){
+			end--;
 		}
-		List<Curve> result = new ArrayList<Curve>();
-//		if(from != till){
-//			int splitAt = from+1;
-//			double splitMe = findX(lm.findT(splitAt));
-//			if(splitMe != 1.0 && splitMe!= 0.0){
-//				Tuple<Curve,Curve> s = split(splitMe);
-//	
-//				result.addAll(s.l.projectOn(p, lm));
-//				result.addAll(s.r.projectOn(p, lm));
-//				return result;
+		System.out.printf("S %d e %d\n",start,end);
+		if(end < start && start - tStart == 0){
+			start--;
+		}
+		List<Vec> result = new ArrayList<Vec>();
+//		if(start < end){
+//			if(tStart == start){
+//				p.projectBorder(lm, 0, p1.mirror(p0), p0, result);
+//				result.remove(0);
+//			} else {
+//				p.projectVec(p0, lm);
+//				p.projectVec(p1, lm);
 //			}
-//		} 
-			result.add(new CubicCurve(p.projectVec(p0,lm), p.projectVec(p1,lm), 
-					p.projectVec(p2,lm), p.projectVec(p3,lm)));
-			return result;
+//		} else {
+//			if(tEnd == end){
+//				p.projectBorder(lm, 0, p2, p3, result);
+//				result.remove(0);
+//			} else {
+//				p.projectVec(p3, lm);
+//				p.projectVec(p2, lm);
+//			}
+//		}
+		System.out.printf("Huh %d\n", result.size());
+		projectOnSE(p, lm, start, end,result);
+		List<CubicCurve> resultc = new ArrayList<CubicCurve>();
+		for(int i = 1 ; i < 3; i+=3){
+			resultc.add(new CubicCurve(result.get(i), result.get(i+1), result.get(i+2), result.get(i+3)));
+		}
+//		if(p.isClosed()){
+//			resultc.add(new CubicCurve(result.get(result.size()-2),result.get(result.size()-1),result.get(0),result.get(1)));
+//		}
+		
+		return (List)resultc;
 	}
 
 

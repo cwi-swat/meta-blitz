@@ -25,7 +25,7 @@ public abstract class NonLinearCurve implements Curve {
 	
 	public CurveApproxTree getApproxTree(){
 		if(approx == null){
-			approx = new CurveApproxTree(this);
+			approx = new CurveApproxTree(this, new TInterval());
 		} 
 		return approx;
 	}
@@ -140,5 +140,7 @@ public abstract class NonLinearCurve implements Curve {
 			prev = cur;
 		}
 	}
+	
+
 	
 }

@@ -51,15 +51,69 @@ public final class Path implements Area{
 	public Vec getArbPoint(){
 		return curves.get(0).getStartPoint();
 	}
+	
+	
+	private double getBorderTangentAngle(int n){
+		if(!isClosed()){
+			if(n == 0){
+				return 1.0;
+			} else if(n == curves.size()){
+				return 1.0;
+			}
+		}
+		Vec a =  curves.get(Util.mod(n-1,curves.size())).getTangentAt(1.0);
+		Vec b = curves.get(Util.mod(n,curves.size())).getTangentAt(0.0);
+		return a.dot(b);
+	}
+
+	Vec getBorderTangent(int n) {
+			if(!isClosed()){
+				if(n == 0){
+					return curves.get(0).getTangentAt(0).normalize();
+				} else if(n == curves.size()){
+					return curves.get(n-1).getTangentAt(1).normalize();
+				}
+			}
+			Vec a =  curves.get(Util.mod(n-1,curves.size())).getTangentAt(1.0).normalize();
+			Vec b = curves.get(Util.mod(n,curves.size())).getTangentAt(0.0).normalize();
+			double angle = a.dot(b);
+			System.out.printf("Angle %f\n",  1 + angle);
+			return a.add(b).div(1 + angle);
+	}
+	
+
+	public void projectBorder(LengthMap lm, int n, Vec p2, Vec p3, List<Vec> result) {
+		Vec a =  curves.get(Util.mod(n-1,curves.size())).getTangentAt(1.0).normalize();
+		Vec b = curves.get(Util.mod(n,curves.size())).getTangentAt(0.0).normalize();
+		double angle = a.dot(b);
+		Vec tan = a.add(b).div(1+ angle);
+		Vec pp3 = curves.get(Util.mod(n,curves.size())).getStartPoint().add(tan.mul(p3.y).perpendicularCW());
+		Vec pp2 = projectVec(p2,lm); //.interpolate(1.0/3.0, pp3);
+		Vec pp4 = projectVec(p2.mirror(p3),lm);//.sub(p2).mul(3).add(p3),lm).interpolate(1.0/3.0, pp3);
+		System.out.printf("%f angle\n",angle);
+		Vec npp2 = pp4.mirror(pp3).interpolate(angle * 0.5, pp2);
+		Vec npp4 = pp2.mirror(pp3).interpolate(angle * 0.5, pp4);
+		result.add(pp2);
+		result.add(pp3);
+		result.add(pp4);
+		
+		
+	}
 
 	public Vec getTangentAt(double t){
 		t = Math.min(curves.size(), t);
 		int n = (int)t;
-		if(n == curves.size() && n == t){
-			n = 0; t= 1;
+		double tn = t - n;
+		if(tn == 0){
+			if(!isClosed()){
+				if(n == 0){
+					return curves.get(0).getTangentAt(0);
+				} else if(n == curves.size()){
+					return curves.get(n-1).getTangentAt(1);
+				}
+			}
+			return curves.get(Util.mod(n-1,curves.size())).getTangentAt(1.0);
 		}
-
-		
 		return curves.get(n).getTangentAt(t-n);
 	}
 	
@@ -531,6 +585,7 @@ public final class Path implements Area{
 		return new Path(result);
 	}
 	
+	
 	public Vec projectVec(Vec v, LengthMap lm){
 		double toFind = v.x;
 		if(toFind > lm.totalLength()){
@@ -541,8 +596,8 @@ public final class Path implements Area{
 			} else {
 				toFind = lm.totalLength();
 				Vec start = getAt(lm.totalT());
-				Vec tan = getTangentAt(lm.totalT()).normalize();
-				Vec dir = tan.perpendicularCCW();
+				Vec tan = getNormalizedTangent(lm.totalT());
+				Vec dir = tan.perpendicularCW();
 				start = start.add(tan.mul(lm.totalLength() - toFind));
 				return start.add(dir.mul(v.y));  
 			}
@@ -554,19 +609,24 @@ public final class Path implements Area{
 			} else {
 				toFind = 0;
 				Vec start = getAt(0);
-				Vec tan = getTangentAt(0).normalize();
-				Vec dir = tan.perpendicularCCW();
+				Vec tan = getNormalizedTangent(0);
+				Vec dir = tan.perpendicularCW();
 				start = start.add(tan.mul(lm.totalLength() - toFind).negate());
 				return start.add(dir.mul(v.y));  
 			}
 		}
 		double t = lm.findT(toFind);
 		Vec start = getAt(t);
-		Vec dir = getTangentAt(t).normalize().perpendicularCCW();
-//		System.out.printf("Norm %f\n",dir.norm());
+		Vec dir = getNormalizedTangent(t).perpendicularCW();
 		return start.add(dir.mul(v.y));
 	}
 	
+
+	private Vec getNormalizedTangent(double totalT) {
+		return getTangentAt(totalT).normalize();
+	}
+
+
 	class PathPathIterator implements PathIterator{
 
 		int cur ;
@@ -622,4 +682,8 @@ public final class Path implements Area{
 	public PathIterator getPathIterator(){
 		return new PathPathIterator();
 	}
+
+	
+	
+
 }

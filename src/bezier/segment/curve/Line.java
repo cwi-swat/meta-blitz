@@ -249,7 +249,7 @@ public final class Line implements Curve{
 
 	@Override
 	public CurveApproxTree getApproxTree() {
-		return new CurveApproxTree(this);
+		return new CurveApproxTree(this, new TInterval());
 	}
 
 	public double length() {
