@@ -13,6 +13,7 @@ import bezier.composite.Paths;
 import bezier.font.FontFactory;
 import bezier.image.FromShape;
 import bezier.image.Image;
+import bezier.image.functions.Clamp;
 import bezier.image.functions.Constant;
 import bezier.image.functions.Div;
 import bezier.image.functions.DivSample;
@@ -23,9 +24,11 @@ import bezier.image.functions.Lerp2D;
 import bezier.image.functions.Mask;
 import bezier.image.functions.MulAlpha;
 import bezier.image.functions.ProjectOnPath;
+import bezier.image.functions.ProjectOnPaths;
 import bezier.image.generated.Colors;
 import bezier.image.generated.ColorsAlpha;
 import bezier.image.generated.ImageSampleOpers;
+import bezier.image.generated.RasterInstances.Raster1;
 import bezier.image.generated.RasterInstances.Raster2;
 import bezier.image.generated.SampleInstances.Sample1;
 import bezier.image.generated.SampleInstances.Sample2;
@@ -61,28 +64,29 @@ public class TestImage extends DemoBase {
 			if(!drag){
 				control = mouse.sub(middle).mul(2).add(middle);
 			}
-	        List<Curve> c = new QuadCurve(new Vec(0,size.y/2), 
-	        								control, 
-	        								new Vec(size.x,size.y/2)).makeMonotomous();
-	        Path p = new Path(c);
+//	        List<Curve> c = new QuadCurve(new Vec(0,size.y/2), 
+//	        								control, 
+//	        								new Vec(size.x,size.y/2)).makeMonotomous();
+//	        Path p = new Path(c);
 	        
-	        LengthMap lm = p.getLengthMap();
-	        ts = ts.transform(id.scale(lm.totalLength()/ts.bbox.width * 0.8));
-	        ts = ts.transform(id.translate(lm.totalLength()*0.1,0));
-	        ts = ts.projectOn(p, lm);
+//	        LengthMap lm = p.getLengthMap();
+//	        ts = ts.transform(id.scale(lm.totalLength()/ts.bbox.width * 0.8));
+//	        ts = ts.transform(id.translate(lm.totalLength()*0.1,0));
+			ts = ts.transform(id.scale(8,8).translate(100, 400));
+//	        ts = ts.projectOn(p, lm);
 //	        draw(p);
 //	        drawOval(p.getAt(p.project(mouse)),10);
 //		  draw(ts2);
 		  Image<Sample1> img1 = FromShape.paths2img(ts);
-		   Raster2 imgl = ProjectOnPath.projectLength(img1, p);
-		  Sample2 max = imgl.getMax();
-		  Image<Sample2> normimgl = new DivSample<Sample2>(imgl, max);
+		   Raster1 imgl = ProjectOnPaths.projectDist(img1, ts);
+		  Sample1 max = imgl.getMax();
+		  max = new Sample1(Math.max(0,Math.min(1.0, wheel / 100) * max.a));
+		  Image<Sample1> normimgl = new Clamp<Sample1>(new DivSample<Sample1>(imgl, max));
 //		  
 		  Image<Sample4> img2 = new MulAlpha(img1, 
-				  new Lerp2D<Sample4>(normimgl,
-						  new Constant<Sample4>(ColorsAlpha.red), 
-						  new Constant<Sample4>(ColorsAlpha.green),
-						  new Constant<Sample4>(ColorsAlpha.transparent)));
+				  new Lerp<Sample4>(normimgl,
+						  new Constant<Sample4>(ColorsAlpha.transparent), 
+						  new Constant<Sample4>(ColorsAlpha.black`)));
 //		  Image<Sample4> img3 = ImageSampleOpers.append31(img2,img1);
 		  draw(img2);
 //		  }

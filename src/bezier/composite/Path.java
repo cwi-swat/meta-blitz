@@ -16,6 +16,7 @@ import bezier.segment.LengthMap;
 import bezier.segment.TPair;
 import bezier.segment.curve.Curve;
 import bezier.segment.curve.CurveApproxTree;
+import bezier.segment.curve.Line;
 import bezier.segment.curve.TInterval;
 import bezier.util.BBox;
 import bezier.util.STuple;
@@ -303,6 +304,25 @@ public final class Path implements Area{
 		for(int i : indexesNearestFirst){
 			TInterval ti = new TInterval(i);
 			BestProjection<Double> bestLocal = new BestProjection<Double>(best.distanceSquaredUpperbound);
+			curves.get(i).getApproxTree().project(p, bestLocal);
+			if(bestLocal.t != null){
+				best.update(ti.convertBack(bestLocal.t), bestLocal.distanceSquaredUpperbound);
+			}
+		}
+		return best.t;
+	}
+	
+	public Double projectNoSort(final Vec p, BestProjection<Double> best){
+		int j =best.t.intValue();
+		TInterval ti = new TInterval(j);
+		BestProjection<Double> bestLocal = new BestProjection<Double>(best.t - j,best.distanceSquaredUpperbound);
+		curves.get(j).getApproxTree().project(p, bestLocal);
+		if(bestLocal.t != null){
+			best.update(ti.convertBack(bestLocal.t), bestLocal.distanceSquaredUpperbound);
+		}
+		for(int i = 0 ; i < curves.size() ; i++){
+			ti = new TInterval(i);
+			bestLocal = new BestProjection<Double>(best.t - i,best.distanceSquaredUpperbound);
 			curves.get(i).getApproxTree().project(p, bestLocal);
 			if(bestLocal.t != null){
 				best.update(ti.convertBack(bestLocal.t), bestLocal.distanceSquaredUpperbound);
@@ -684,6 +704,28 @@ public final class Path implements Area{
 	}
 
 	
-	
+	public List<Tuple<Double,Line>> getApproxLinesAndLength(){
+		double length = 0;
+		List<Tuple<Double,Line>> result = new ArrayList<Tuple<Double,Line>>();
+		for(Curve c : curves){
+			CurveApproxTree ct = c.getFullApproxLengthTree();
+			length = ct.expandFullyLength(length);
+			List<CurveApproxTree> leafs = new ArrayList<CurveApproxTree>();
+			ct.getLeafs(leafs);
+			for(CurveApproxTree n : leafs){
+				result.add(new Tuple<Double, Line>( n.ti.tLength, n.curve.getLine()));
+			}
+		}
+		return result;
+	}
+
+	public Path repeatX(int n) {
+		List<Curve> result = new ArrayList<Curve>();
+		result.addAll(this.curves);
+		for(int i = 1 ; i <n ; i++){
+			result.addAll(transform(Transformation.id.translate(getBBox().width * i, 0)).curves);
+		}
+		return new Path(result);
+	}
 
 }

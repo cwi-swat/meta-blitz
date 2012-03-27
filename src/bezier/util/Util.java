@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import bezier.image.functions.Constant;
+import bezier.segment.Constants;
+
 public class Util {
 
 	public static <T> int floorBinarySearch(List<T> elems, T toFind, Comparator<T> comp ){
@@ -138,6 +141,17 @@ public class Util {
 	}
 	
 	public static List<Double> findQuadraticPolynomialRoots(double a, double b, double c){
+		if(Math.abs(a) <=Constants.MAX_ERROR){
+			List<Double> res = new ArrayList<Double>(1);
+			if(b == 0){
+				if(c == 0){
+					res.add(0.0);
+				}
+				return res;
+			}
+			res.add(-c /b);
+			return res;
+		}
 		double discriminant = b*b - 4 * a * c;
 		if(discriminant <0){
 			return new ArrayList<Double>(0);
@@ -234,6 +248,14 @@ public class Util {
 			for(int j = 0; j < sizeb; j++){
 				result.add(new STuple<Integer>(i, j));
 			}
+		}
+		return result;
+	}
+
+	public static double[] reverse(double[] splitsX) {
+		double[] result = new double[splitsX.length];
+		for(int i = 0 ; i < splitsX.length; i++){
+			result[splitsX.length-1-i] = splitsX[i]; 
 		}
 		return result;
 	}

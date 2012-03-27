@@ -1,6 +1,9 @@
 package bezier.segment.curve;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 
 import bezier.points.Vec;
 import bezier.segment.BestProjection;
@@ -12,7 +15,7 @@ import bezier.util.STuple;
 public class CurveApproxTree {
 	
 	public final Curve curve;
-	TInterval ti;
+	public TInterval ti;
 	CurveApproxTree l , r;
 	
 	CurveApproxTree(Curve curve){
@@ -159,6 +162,19 @@ public class CurveApproxTree {
 			}
 		}
 	
+	}
+	
+	boolean isLeaf(){
+		return l == null;
+	}
+	
+	public void getLeafs(List<CurveApproxTree> leafs){
+		if(isLeaf()){
+			leafs.add(this);
+		} else {
+			l.getLeafs(leafs);
+			r.getLeafs(leafs);
+		}
 	}
 	
 }

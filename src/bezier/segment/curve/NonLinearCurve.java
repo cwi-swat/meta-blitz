@@ -141,6 +141,17 @@ public abstract class NonLinearCurve implements Curve {
 		}
 	}
 	
+	@Override
+	public double findTForX(double x) {
+		
+		Double d =  findX(x);
+		if(d == null){
+			System.out.printf("Cannot find %f %s\n",x,this);
+		}
+		return d;
+	}
+	
+	
 
 	
 }

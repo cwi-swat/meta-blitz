@@ -10,6 +10,7 @@ import java.util.List;
 import bezier.composite.Path;
 import bezier.points.Matrix;
 import bezier.points.Vec;
+import bezier.projectiondeform.CoordinateSystem;
 import bezier.segment.Constants;
 import bezier.segment.LengthMap;
 import bezier.util.BBox;
@@ -256,6 +257,12 @@ public final class CubicCurve extends NonLinearCurve {
 		coords[4] = (float)p3.x;
 		coords[5] = (float)p3.y;
 		return PathIterator.SEG_CUBICTO;
+	}
+
+
+	@Override
+	public Curve transform(CoordinateSystem sys) {
+		return new CubicCurve(sys.getAt(p0), sys.getAt(p1), sys.getAt(p2), sys.getAt(p3));
 	}
 	
 

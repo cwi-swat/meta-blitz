@@ -10,10 +10,12 @@ import bezier.image.generated.Colors;
 import bezier.image.generated.ColorsAlpha;
 import bezier.points.Transformation;
 import bezier.points.Vec;
+import bezier.projectiondeform.LinesCoordinateSystem;
 import bezier.segment.LengthMap;
 import bezier.segment.curve.CubicCurve;
 import bezier.segment.curve.Curve;
 import bezier.segment.curve.Line;
+import bezier.segment.curve.QuadCurve;
 
 public class ProjectOn extends DemoBase{
 
@@ -25,25 +27,33 @@ public class ProjectOn extends DemoBase{
 	
 	@Override
 	public void draw() {
-		Paths ts = FontFactory.text2Paths("o");
-		ts = new Paths(ts.get(0));
-		ts = ts.transform(Transformation.id.scale(5).rotate(wheel / 100.0 * Math.PI).translate(400,400)).makeMonotomous();
-		Paths rect = makeRectangle();
-		draw(ts,ColorsAlpha.red);
+		Paths ts = FontFactory.text2Paths("Atze");
+//		ts = new Paths(ts.get(0));
+		ts = ts.transform(Transformation.id.scale(5).rotate(0 / 100.0 * Math.PI).translate(400,400)).makeMonotomous();
+		Path rect = makeRectangle();
+//		draw(ts,ColorsAlpha.red);
+		List<Path> ps = new ArrayList<Path>();
 		for(Path t : ts.paths){
-			LengthMap lm = t.getLengthMap();
-			Paths rec2 = rect.transform(Transformation.id.scale(lm.totalLength(),0));
-			rec2 = rec2.projectOn(t,lm);
-			for(Path p : rec2.paths){
-				for(Curve c : p.curves){
-					CubicCurve cc= (CubicCurve)c;
-					drawOval(cc.p1,7);
-					drawOval(cc.p2,7);
-				}
-			}
-			draw(rec2);
+
+			LinesCoordinateSystem sys = LinesCoordinateSystem.create(t);
+			int rep = (int)(sys.totalLength() / 30);
+			Path r = rect.transform(Transformation.id.scale( sys.totalLength()/rep, wheel/40 )).makeMonotomous().repeatX(rep);
+			 r = sys.deform(r);
+//			 System.out.println(r.curves.size());
+			 ps.add(r);
 			
 		}
+//		 rect = makeRectangle2();
+//		for(Path t : ts.paths){
+//
+//			LinesCoordinateSystem sys = LinesCoordinateSystem.create(t);
+//			Path r = rect.transform(Transformation.id.scale( sys.totalLength(), wheel/40));
+//			 r = sys.deform(r);
+////			 System.out.println(r.curves.size());
+//			 ps.add(r);
+//			
+//		}
+		fill(new Paths(ps));
 
 //		CubicCurve c = new CubicCurve(new Vec(0,100),new Vec(100,200), new Vec(300,100), new Vec(450,150) );
 //		List<Double> ds = new ArrayList<Double>();
@@ -60,17 +70,34 @@ public class ProjectOn extends DemoBase{
 		
 	}
 	
-	Paths makeRectangle(){
-		Vec a, b,c ,d;
-		a = new Vec(0,-1); b = new Vec(0,1);
-		c = new Vec(1,1); d = new Vec(1,-1);
-		List<Path> curves = new ArrayList<Path>();
-		curves.add(new Path(new Line(b, c)));
-//		curves.add(new Line(b,c));
+	Path makeRectangle(){
+		Vec a, b,c ,d,e;
+		e = new Vec(0.25,2);
+		a = new Vec(0,0); b = new Vec(0.25,1);
+		c = new Vec(0.5,0); d = new Vec(0.75,-1);
+		e = new Vec(1,0);
+		List<Curve> curves = new ArrayList<Curve>();
+		curves.add(new QuadCurve(a,b, c));
+		curves.add(new QuadCurve(c, d, e));
+//		curves.add(new Line(a,d));
 //		curves.add(new Line(c,d));
 //		curves.add(new Line(a,d));
 //		curves.add(new Path(new Line(a, d)));
-		return new Paths(curves);
+		return new Path(curves);
+	}
+	
+	Path makeRectangle2(){
+		Vec a, b,c ,d;
+		
+		a = new Vec(0,-1); b = new Vec(0,1);
+		c = new Vec(1,1); d = new Vec(1,-1);
+		List<Curve> curves = new ArrayList<Curve>();
+//		curves.add(new Line(b, c));
+		curves.add(new Line(a,d));
+//		curves.add(new Line(c,d));
+//		curves.add(new Line(a,d));
+//		curves.add(new Path(new Line(a, d)));
+		return new Path(curves);
 	}
 
 	

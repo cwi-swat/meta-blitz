@@ -341,10 +341,14 @@ public class Paths implements Area{
 	
 
 	public TPaths project(final Vec p){
+		final BestProjection<TPaths> best = new BestProjection<TPaths>();
+		return project(p, best);
+	}
+
+	public TPaths project(final Vec p, final BestProjection<TPaths> best) {
 		if(paths.isEmpty()){
 			return null;
 		}
-		final BestProjection<TPaths> best = new BestProjection<TPaths>();
 		final List<Integer> indexesNearestFirst = Util.natListTill(paths.size());
 		final List<Double> distanceMiddles = new ArrayList<Double>(paths.size());
 		for(int i : indexesNearestFirst){
@@ -362,6 +366,26 @@ public class Paths implements Area{
 		for(int i : indexesNearestFirst){
 			BestProjection<Double> bestLocal = new BestProjection<Double>(best.distanceSquaredUpperbound);
 			paths.get(i).project(p,bestLocal);
+			if(bestLocal.t != null){
+				best.update(new TPaths(i,bestLocal.t) , bestLocal.distanceSquaredUpperbound);
+			}
+		}
+		return best.t;
+	}
+	
+	public TPaths projectNoSort(final Vec p, final BestProjection<TPaths> best) {
+		if(paths.isEmpty()){
+			return null;
+		}
+		BestProjection<Double> bestLocal = new BestProjection<Double>(best.t.t,best.distanceSquaredUpperbound);
+		paths.get(best.t.pathIndex).projectNoSort(p,bestLocal);
+		if(bestLocal.t != null){
+			best.update(new TPaths(best.t.pathIndex,bestLocal.t) , bestLocal.distanceSquaredUpperbound);
+		}
+		for(int i = 0 ; i < paths.size() ; i++){
+			if(i == best.t.pathIndex) continue;
+			bestLocal = new BestProjection<Double>(0.0,best.distanceSquaredUpperbound);
+			paths.get(i).projectNoSort(p,bestLocal);
 			if(bestLocal.t != null){
 				best.update(new TPaths(i,bestLocal.t) , bestLocal.distanceSquaredUpperbound);
 			}

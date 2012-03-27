@@ -7,6 +7,7 @@ import java.util.List;
 import bezier.composite.Path;
 import bezier.points.Matrix;
 import bezier.points.Vec;
+import bezier.projectiondeform.CoordinateSystem;
 import bezier.segment.Constants;
 import bezier.segment.LengthMap;
 import bezier.util.BBox;
@@ -151,6 +152,11 @@ public final class QuadCurve extends NonLinearCurve implements Curve{
 		coords[2] =(float) p2.x;
 		coords[3] = (float)p2.y;
 		return PathIterator.SEG_QUADTO;
+	}
+
+	@Override
+	public Curve transform(CoordinateSystem sys) {
+		return new QuadCurve(sys.getAt(p0), sys.getAt(p1),sys.getAt(p2));
 	}
 
 	

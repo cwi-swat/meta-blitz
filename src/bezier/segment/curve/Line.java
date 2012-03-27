@@ -7,6 +7,7 @@ import java.util.List;
 import bezier.composite.Path;
 import bezier.points.Matrix;
 import bezier.points.Vec;
+import bezier.projectiondeform.CoordinateSystem;
 import bezier.segment.LengthMap;
 import bezier.segment.TPair;
 import bezier.util.BBox;
@@ -260,5 +261,21 @@ public final class Line implements Curve{
 	public CurveApproxTree getFullApproxLengthTree() {
 		return new CurveApproxTree(this);
 	}
+
+	public Vec getNormal() {
+		return dir.perpendicularCCW().normalize();
+	}
+
+	@Override
+	public double findTForX(double x) {
+		return getTAtX(x);
+	}
+
+	@Override
+	public Curve transform(CoordinateSystem sys) {
+		return new Line(sys.getAt(start),sys.getAt(end));
+	}
+	
+	
 	
 }
