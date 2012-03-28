@@ -71,14 +71,20 @@ public class ProjectOn extends DemoBase{
 	}
 	
 	Path makeRectangle(){
-		Vec a, b,c ,d,e;
+		Vec a, b,c ,d,e,f;
 		e = new Vec(0.25,2);
 		a = new Vec(0,0); b = new Vec(0.25,1);
 		c = new Vec(0.5,0); d = new Vec(0.75,-1);
 		e = new Vec(1,0);
+		f = new Vec(0.5,2);
 		List<Curve> curves = new ArrayList<Curve>();
-		curves.add(new QuadCurve(a,b, c));
-		curves.add(new QuadCurve(c, d, e));
+//		curves.add(new Line(a,c));
+//		curves.add(new Line(c,e));
+//		curves.add(new QuadCurve(a,b, c));
+//		curves.add(new QuadCurve(c, d, e));
+//		curves.add(new Line(new Vec(0,1),new Vec(1,1)));
+		curves.add(new Line(a,f));
+		curves.add(new Line(f,e));
 //		curves.add(new Line(a,d));
 //		curves.add(new Line(c,d));
 //		curves.add(new Line(a,d));
@@ -86,19 +92,19 @@ public class ProjectOn extends DemoBase{
 		return new Path(curves);
 	}
 	
-	Path makeRectangle2(){
-		Vec a, b,c ,d;
-		
-		a = new Vec(0,-1); b = new Vec(0,1);
-		c = new Vec(1,1); d = new Vec(1,-1);
-		List<Curve> curves = new ArrayList<Curve>();
-//		curves.add(new Line(b, c));
-		curves.add(new Line(a,d));
-//		curves.add(new Line(c,d));
+//	Path makeRectangle2(){
+////		Vec a, b,c ,d;
+//		
+//		a = new Vec(0,-1); b = new Vec(0,1);
+//		c = new Vec(1,1); d = new Vec(1,-1);
+//		List<Curve> curves = new ArrayList<Curve>();
+////		curves.add(new Line(b, c));
 //		curves.add(new Line(a,d));
-//		curves.add(new Path(new Line(a, d)));
-		return new Path(curves);
-	}
+////		curves.add(new Line(c,d));
+////		curves.add(new Line(a,d));
+////		curves.add(new Path(new Line(a, d)));
+//		return new Path(curves);
+//	}
 
 	
 	

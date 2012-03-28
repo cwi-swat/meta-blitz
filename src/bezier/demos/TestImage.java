@@ -86,7 +86,7 @@ public class TestImage extends DemoBase {
 		  Image<Sample4> img2 = new MulAlpha(img1, 
 				  new Lerp<Sample4>(normimgl,
 						  new Constant<Sample4>(ColorsAlpha.transparent), 
-						  new Constant<Sample4>(ColorsAlpha.black`)));
+						  new Constant<Sample4>(ColorsAlpha.black)));
 //		  Image<Sample4> img3 = ImageSampleOpers.append31(img2,img1);
 		  draw(img2);
 //		  }
