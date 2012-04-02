@@ -1,25 +1,23 @@
-package bezier.segment.curve;
+package bezier.paths;
 
 import java.awt.geom.PathIterator;
-import java.util.ArrayList;
 import java.util.List;
 
-import bezier.composite.Path;
-import bezier.points.Matrix;
+import bezier.paths.util.ITransform;
+import bezier.paths.util.PathParameter;
+import bezier.paths.util.TPair;
 import bezier.points.Vec;
-import bezier.projectiondeform.CoordinateSystem;
-import bezier.segment.LengthMap;
-import bezier.segment.TPair;
 import bezier.util.BBox;
 import bezier.util.STuple;
 import bezier.util.Util;
 
 
-public final class Line implements Curve{
+public final class Line extends ConnectedPath{
 
 	public final Vec start, dir, end;
 	
-	public Line(Vec start, Vec end) {
+	public Line(int pathIndexTo,Vec start, Vec end, double tstart, double tend) {
+		super(pathIndexTo,tstart, tend);
 		this.start = start;
 		this.dir = end.sub(start);
 		this.end = end;
@@ -50,6 +48,10 @@ public final class Line implements Curve{
 		return null;
 	}
 	
+	public double distanceSquared(Vec p){
+		return getAt(closestT(p)).distanceSquared(p);
+	}
+	
 	public double closestT(Vec p){
 		return Util.clamp(closestTAll(p));
 	}
@@ -66,6 +68,11 @@ public final class Line implements Curve{
 			return t;
 		}
 		
+	}
+	
+	public double distanceSquared(Line r){
+		TPair cl = closestTs(r);
+		return getAt(cl.tl).distanceSquared(r.getAt(cl.tr));
 	}
 	
 	public TPair closestTs(Line r){
@@ -99,22 +106,15 @@ public final class Line implements Curve{
 		double t = (p.x - start.x) / (dir.x);
 		return t >= 0 || t < 1 && start.y + dir.y * t < p.y;
 	}
-
-
+	
 	public Vec getAt(double t){
 		return start.add(dir.mul(t));
 	}
 
-	
-	@Override
 	public Vec getTangentAt(double t) {
 		return dir;
 	}
 
-	@Override
-	public Curve transform(Matrix m) {
-		return new Line(m.mul(start), m.mul(end));
-	}
 	
 	private Double find(double sx,double dx, double xf){
 		if(dx == 0){
@@ -146,7 +146,6 @@ public final class Line implements Curve{
 		return find(start.y, dir.y, y);
 	}
 
-	@Override
 	public int nrBelow(Vec p) {
 		if(p.x == end.x){
 			return 0;
@@ -155,17 +154,14 @@ public final class Line implements Curve{
 		return fx != null &&  getAt(fx).y < p.y ? 1 :0;
 	}
 
-	@Override
-	public Curve reverse() {
-		return new Line(end,start);
+	public ConnectedPath reverse() {
+		return new Line(index,end,start,tEnd,tStart);
 	}
 
-	@Override
 	public Vec getStartPoint() {
 		return start;
 	}
 
-	@Override
 	public Vec getEndPoint() {
 		return end;
 	}
@@ -179,21 +175,6 @@ public final class Line implements Curve{
 	public Line getLine() {
 		return this;
 	}
-
-	@Override
-	public boolean overlapsWith(BBox r) {
-		return r.overlaps(this);
-	}
-
-	@Override
-	public boolean fastIntersectionCheck(Curve other) {
-		return other.fastIntersectionCheck(this);
-	}
-
-	@Override
-	public STuple<Curve> splitSimpler() {
-		throw new Error("Cannot make line simpler!");
-	}
 	
 	@Override
 	public String toString(){
@@ -201,80 +182,74 @@ public final class Line implements Curve{
 	}
 
 	@Override
-	public STuple<Curve> split(double t) {
-		Vec middle = getAt(t);
-		return new STuple<Curve>(new Line(start,middle), new Line(middle,end));
-	}
-
-	@Override
-	public BBox getBBox() {
+	public BBox makeBBox() {
 		return new BBox(start,end);
 	}
 
-	@Override
-	public List<Curve> makeMonotomous() {
-		List<Curve> c = new ArrayList<Curve>(1);
-		c.add(this);
-		return c;
+
+
+//	public CubicCurve lift() {
+//		Vec newControl1 = start.interpolate(2.0/6.0, end);
+//		Vec newControl2 = start.interpolate(4.0/6.0, end);
+//		CubicCurve lifted = new CubicCurve(start, newControl1, newControl2, end);
+//		return lifted;
+//	}
+
+
+	public ConnectedPath getWithAdjustedStartPoint(Vec newStartPoint) {
+		return new Line(index,newStartPoint,end,tStart,tEnd);
 	}
 
-	@Override
-	public void fillLengthMap(LengthMap map, double samplesPerDirect) {
-		map.add(1.0, dir.norm());
-	}
 
-	@Override
-	public List<Curve> projectOn(Path p, LengthMap lm) {
-		CubicCurve lifted = lift();
-		return lifted.projectOn(p, lm);
-	}
-
-	public CubicCurve lift() {
-		Vec newControl1 = end.interpolate(2.0/6.0, start);
-		Vec newControl2 = end.interpolate(4.0/6.0, start);
-		CubicCurve lifted = new CubicCurve(start, newControl1, newControl2, end);
-		return lifted;
-	}
-
-	@Override
-	public Curve getWithAdjustedStartPoint(Vec newStartPoint) {
-		return new Line(newStartPoint,end);
-	}
-
-	@Override
 	public int currentSegment(float[] coords) {
 		coords[0] =(float) end.x;
 		coords[1] = (float)end.y;
 		return PathIterator.SEG_LINETO;
 	}
 
-	@Override
-	public CurveApproxTree getApproxTree() {
-		return new CurveApproxTree(this, new TInterval());
-	}
-
 	public double length() {
 		return end.distance(start);
 	}
 
-	@Override
-	public CurveApproxTree getFullApproxLengthTree() {
-		return new CurveApproxTree(this);
-	}
 
 	public Vec getNormal() {
 		return dir.perpendicularCCW().normalize();
 	}
 
-	@Override
 	public double findTForX(double x) {
 		return getTAtX(x);
 	}
 
+
 	@Override
-	public Curve transform(CoordinateSystem sys) {
-		return new Line(sys.getAt(start),sys.getAt(end));
+	void expand() {
 	}
+
+	@Override
+	Path getLeftSimpler() {
+		throw new Error("Cannot make Line simpler!");
+	}
+
+	@Override
+	Path getRightSimpler() {
+		throw new Error("Cannot make Line simpler!");
+	}
+
+	public void intersectionLine(Line line, List<STuple<PathParameter>> result) {
+		addDoubleResult(intersection(line), line, result);
+	}
+
+	@Override
+	Path transform(ITransform m) {
+		return new Line(index,m.transform(start),m.transform(end),tStart,tEnd);
+	}
+
+	@Override
+	STuple<Path> splitSimpler() {
+		throw new Error("Cannot make line simpler!");
+	}
+
+
 	
 	
 	

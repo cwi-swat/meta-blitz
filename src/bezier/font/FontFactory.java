@@ -13,12 +13,12 @@ import javax.swing.UIManager;
 
 import bezier.composite.Path;
 import bezier.composite.Paths;
+import bezier.paths.CubicCurve;
+import bezier.paths.Line;
+import bezier.paths.QuadCurve;
 import bezier.points.Transformation;
 import bezier.points.Vec;
-import bezier.segment.curve.CubicCurve;
 import bezier.segment.curve.Curve;
-import bezier.segment.curve.Line;
-import bezier.segment.curve.QuadCurve;
 
 public class FontFactory {
 

@@ -6,10 +6,10 @@ import java.util.List;
 
 import bezier.composite.Path;
 import bezier.composite.Paths;
+import bezier.paths.Line;
 import bezier.points.Vec;
 import bezier.segment.Constants;
 import bezier.segment.curve.Curve;
-import bezier.segment.curve.Line;
 import bezier.util.STuple;
 import bezier.util.Tuple;
 import bezier.util.Util;

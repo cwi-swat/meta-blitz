@@ -7,23 +7,23 @@ import java.util.Comparator;
 import java.util.List;
 
 import bezier.demos.SetOperations;
+import bezier.paths.Line;
+import bezier.paths.util.BestProjection;
+import bezier.paths.util.TInterval;
+import bezier.paths.util.TPair;
 import bezier.points.Matrix;
 import bezier.points.Transformation;
 import bezier.points.Vec;
-import bezier.segment.BestProjection;
 import bezier.segment.Constants;
 import bezier.segment.LengthMap;
-import bezier.segment.TPair;
 import bezier.segment.curve.Curve;
 import bezier.segment.curve.CurveApproxTree;
-import bezier.segment.curve.Line;
-import bezier.segment.curve.TInterval;
 import bezier.util.BBox;
 import bezier.util.STuple;
 import bezier.util.Tuple;
 import bezier.util.Util;
 
-public final class Path implements Area{
+public class Path implements Area{
 	public final List<Curve> curves;
 	public final BBox bbox;
 
@@ -92,8 +92,8 @@ public final class Path implements Area{
 		Vec pp2 = projectVec(p2,lm); //.interpolate(1.0/3.0, pp3);
 		Vec pp4 = projectVec(p2.mirror(p3),lm);//.sub(p2).mul(3).add(p3),lm).interpolate(1.0/3.0, pp3);
 		System.out.printf("%f angle\n",angle);
-		Vec npp2 = pp4.mirror(pp3).interpolate(angle * 0.5, pp2);
-		Vec npp4 = pp2.mirror(pp3).interpolate(angle * 0.5, pp4);
+//		Vec npp2 = pp4.mirror(pp3).interpolate(angle * 0.5, pp2);
+//		Vec npp4 = pp2.mirror(pp3).interpolate(angle * 0.5, pp4);
 		result.add(pp2);
 		result.add(pp3);
 		result.add(pp4);

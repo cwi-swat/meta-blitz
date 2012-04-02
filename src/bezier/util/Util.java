@@ -242,6 +242,8 @@ public class Util {
 		return result;
 	}
 	
+
+	
 	public static List<STuple<Integer>> natPairs(int sizea, int sizeb){
 		List<STuple<Integer>> result = new ArrayList<STuple<Integer>>(sizea*sizeb);
 		for(int i = 0; i < sizea; i++){
@@ -259,4 +261,21 @@ public class Util {
 		}
 		return result;
 	}
+
+	public static List<Integer> getChoices(List<Integer> sortedY,
+			List<Integer> choices) {
+		boolean[] choicesb = new boolean[sortedY.size()];
+		for(int i : choices){
+			choicesb[i] = true;
+		}
+		List<Integer> result = new ArrayList<Integer>();
+		for(int i : sortedY){
+			if(choicesb[i]){
+				result.add(i);
+			}
+		}
+		return result;
+		
+	}
+
 }

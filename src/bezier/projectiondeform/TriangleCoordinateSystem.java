@@ -1,7 +1,7 @@
 package bezier.projectiondeform;
 
+import bezier.paths.Line;
 import bezier.points.Vec;
-import bezier.segment.curve.Line;
 
 public final class TriangleCoordinateSystem implements CoordinateSystem{
 	
@@ -29,7 +29,7 @@ public final class TriangleCoordinateSystem implements CoordinateSystem{
 		double relX = (loc.x - startX) / lengthX;
 		Vec l = start.add(dirA.mul(loc.y));
 		Vec r = end.add(dirB.mul(loc.y));
-		return r.interpolate(relX, l);
+		return l.interpolate(relX, r);
 	}
 	
 

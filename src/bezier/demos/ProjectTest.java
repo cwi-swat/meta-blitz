@@ -5,8 +5,8 @@ import bezier.composite.Paths;
 import bezier.composite.TPaths;
 import bezier.font.FontFactory;
 import bezier.image.generated.ColorsAlpha;
+import bezier.paths.Line;
 import bezier.points.Transformation;
-import bezier.segment.curve.Line;
 import bezier.util.STuple;
 
 public class ProjectTest extends DemoBase {

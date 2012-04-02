@@ -5,9 +5,9 @@ import static bezier.util.Util.getIntervalLocationExEnd;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
+import bezier.paths.Line;
 import bezier.points.Vec;
 import bezier.segment.Constants;
-import bezier.segment.curve.Line;
 public final class BBox {
 	
 	public final double x, y, width, height, xr , yd;
@@ -29,7 +29,7 @@ public final class BBox {
 		this.height = yd - y;
 	}
 	
-	public BBox(HasBBox[] curves) {
+	public BBox(Iterable<HasBBox> curves) {
 		double x = Double.MAX_VALUE, xr = Double.MIN_VALUE,
 				y = Double.MAX_VALUE, yd = Double.MIN_VALUE;
 		for(HasBBox v : curves){
@@ -146,19 +146,6 @@ public final class BBox {
 	public BBox union(BBox other){
 		return new BBox(Math.min(x,other.x),Math.min(y, other.y), 
 		        Math.max(xr, other.xr), Math.max(yd, other.yd));
-	}
-	
-	public static BBox merge(BBox ... bboxs){
-		double minx, miny, maxx, maxy;
-		minx = miny = Double.POSITIVE_INFINITY;
-		maxx = maxy = Double.NEGATIVE_INFINITY;
-		for(BBox b : bboxs){
-			minx = Math.min(minx, b.x);
-			miny = Math.min(miny, b.y);
-			maxx = Math.max(maxx, b.xr);
-			maxy = Math.max(maxy, b.yd);
-		}
-		return new BBox(minx,miny,maxx,maxy);
 	}
 	
 	public Vec middle(){

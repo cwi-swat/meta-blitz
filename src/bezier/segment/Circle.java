@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bezier.composite.Path;
+import bezier.paths.CubicCurve;
 import bezier.points.Transformation;
 import bezier.points.Vec;
-import bezier.segment.curve.CubicCurve;
 import bezier.segment.curve.Curve;
 
 import static java.lang.Math.*;
@@ -23,7 +23,7 @@ public class Circle {
 	}
 	
 	public static Vec getCircularCenter(Vec pointA, Vec pointB, double anglularLength){
-		Vec between = pointB.interpolate(0.5, pointA);
+		Vec between = pointA.interpolate(0.5, pointB);
 		double dist = pointA.distance(pointB);
 		double radius = ((dist/2) / tan(0.5*anglularLength));
 		return between.add(pointB.sub(pointA).normalize().mul(radius).perpendicularCW());

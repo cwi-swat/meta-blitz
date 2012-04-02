@@ -8,14 +8,14 @@ import bezier.composite.Paths;
 import bezier.font.FontFactory;
 import bezier.image.generated.Colors;
 import bezier.image.generated.ColorsAlpha;
+import bezier.paths.CubicCurve;
+import bezier.paths.Line;
+import bezier.paths.QuadCurve;
 import bezier.points.Transformation;
 import bezier.points.Vec;
 import bezier.projectiondeform.LinesCoordinateSystem;
 import bezier.segment.LengthMap;
-import bezier.segment.curve.CubicCurve;
 import bezier.segment.curve.Curve;
-import bezier.segment.curve.Line;
-import bezier.segment.curve.QuadCurve;
 
 public class ProjectOn extends DemoBase{
 

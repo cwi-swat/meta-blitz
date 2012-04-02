@@ -1,24 +1,21 @@
-package bezier.segment.curve;
+package bezier.paths;
 
-import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
 
-import bezier.composite.Path;
-import bezier.points.Matrix;
+import bezier.paths.util.ITransform;
 import bezier.points.Vec;
-import bezier.projectiondeform.CoordinateSystem;
 import bezier.segment.Constants;
-import bezier.segment.LengthMap;
 import bezier.util.BBox;
 import bezier.util.STuple;
 import bezier.util.Util;
 
-public final class QuadCurve extends NonLinearCurve implements Curve{
+public final class QuadCurve extends NonLinearBezier{
 	
 	public final Vec p0,p1,p2;
 
-	public QuadCurve(Vec p0, Vec p1, Vec p2) {
+	public QuadCurve(Vec p0,Vec p1, Vec p2, int indexTo,double tStart, double tEnd) {
+		super(indexTo,tStart,tEnd);
 		this.p0 = p0;
 		this.p1 = p1;
 		this.p2 = p2;
@@ -42,8 +39,8 @@ public final class QuadCurve extends NonLinearCurve implements Curve{
 	}
 
 	@Override
-	public Curve transform(Matrix m) {
-		return new QuadCurve( m.mul(p0), m.mul(p1), m.mul(p2));
+	public Path transform(ITransform m) {
+		return new QuadCurve(m.transform(p0), m.transform(p1), m.transform(p2), index,tStart,tEnd);
 	}
 	
 	Double find(double x0,double x1, double x2, double x){
@@ -66,17 +63,18 @@ public final class QuadCurve extends NonLinearCurve implements Curve{
 
 
 	@Override
-	public Curve reverse() {
-		return new QuadCurve(p2, p1, p0);
+	public ConnectedPath reverse() {
+		return new QuadCurve(p2,p1, p0, index,tEnd,tStart);
 	}
 
 	@Override
-	public  STuple<Curve> split(double t) {
-		Vec cl = p1.interpolate(t, p0);
-		Vec cr = p2.interpolate(t, p1);
-		Vec cm = cr.interpolate(t, cl);
-		return new  STuple<Curve>(new QuadCurve(p0,cl,cm),
-										new QuadCurve(cm, cr, p2));
+	public  STuple<NonLinearBezier> split(double t) {
+		Vec cl = p0.interpolate(t, p1);
+		Vec cr = p1.interpolate(t, p2);
+		Vec cm = cl.interpolate(t, cr);
+		double tMiddle = 0.5 * (tStart + tEnd);
+		return new  STuple<NonLinearBezier>(new QuadCurve(p0,cl,cm,index,tStart,tMiddle),
+										new QuadCurve(cm,cr, p2, index,tMiddle,tEnd));
 	}
 
 	@Override
@@ -96,8 +94,8 @@ public final class QuadCurve extends NonLinearCurve implements Curve{
 	}
 
 	@Override
-	Curve getSimplerApproximation() {
-		Line l = new Line(p0,p2);
+	Path getSimplerApproximation() {
+		Line l = new Line(index,p0,p2,tStart,tEnd);
 		if(getAt(0.5).distanceSquared(l.getAt(0.5)) <= Constants.HALF_MAX_ERROR_POW2){
 			return l;
 		} else {
@@ -127,37 +125,31 @@ public final class QuadCurve extends NonLinearCurve implements Curve{
 		return String.format("Quad %s %s %s",p0,p1,p2);
 	}
 
-	@Override
-	public List<Curve> projectOn(Path p, LengthMap lm) {
-		CubicCurve lifted = lift();
-		return lifted.projectOn(p, lm);
-	}
 
-	public CubicCurve lift() {
-		Vec newControl1 = p1.interpolate(2.0/3.0, p0 );
-		Vec newControl2 = p1.interpolate(2.0/3.0, p2 );
-		CubicCurve lifted = new CubicCurve(p0, newControl1, newControl2, p2);
-		return lifted;
-	}
+//	public CubicCurve lift() {
+//		Vec newControl1 = p0.interpolate(2.0/3.0, p1 );
+//		Vec newControl2 = p2.interpolate(2.0/3.0, p1 );
+//		CubicCurve lifted = new CubicCurve(p0, newControl1, newControl2, p2);
+//		return lifted;
+//	}
 
 	@Override
-	public Curve getWithAdjustedStartPoint(Vec newStartPoint) {
-		return new QuadCurve(newStartPoint, p1, p2);
+	public ConnectedPath getWithAdjustedStartPoint(Vec newStartPoint) {
+		return new QuadCurve(newStartPoint,p1, p2, index,tStart,tEnd);
 	}
 
-	@Override
-	public int currentSegment(float[] coords) {
-		coords[0] =(float) p1.x;
-		coords[1] = (float)p1.y;
-		coords[2] =(float) p2.x;
-		coords[3] = (float)p2.y;
-		return PathIterator.SEG_QUADTO;
-	}
+	
 
-	@Override
-	public Curve transform(CoordinateSystem sys) {
-		return new QuadCurve(sys.getAt(p0), sys.getAt(p1),sys.getAt(p2));
-	}
+//	@Override
+//	public int currentSegment(float[] coords) {
+//		coords[0] =(float) p1.x;
+//		coords[1] = (float)p1.y;
+//		coords[2] =(float) p2.x;
+//		coords[3] = (float)p2.y;
+//		return PathIterator.SEG_QUADTO;
+//	}
+
+	
 
 	
 

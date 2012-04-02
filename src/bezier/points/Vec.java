@@ -72,7 +72,7 @@ public final class Vec {
 	
 	public Vec interpolate(double t,Vec other){
 		double rt = 1.0 -t;
-		return new Vec(x * t + other.x * rt, y * t + other.y * rt);
+		return new Vec(x * rt + other.x * t, y * rt + other.y * t);
 	}
 	
 	public Vec negate(){

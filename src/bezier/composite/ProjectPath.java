@@ -5,11 +5,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import bezier.paths.util.BestProjection;
+import bezier.paths.util.TInterval;
 import bezier.points.Vec;
-import bezier.segment.BestProjection;
 import bezier.segment.curve.Curve;
 import bezier.segment.curve.CurveApproxTree;
-import bezier.segment.curve.TInterval;
 import bezier.util.Util;
 
 public class ProjectPath {

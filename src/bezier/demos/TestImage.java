@@ -34,10 +34,10 @@ import bezier.image.generated.SampleInstances.Sample1;
 import bezier.image.generated.SampleInstances.Sample2;
 import bezier.image.generated.SampleInstances.Sample3;
 import bezier.image.generated.SampleInstances.Sample4;
+import bezier.paths.QuadCurve;
 import bezier.points.Vec;
 import bezier.segment.LengthMap;
 import bezier.segment.curve.Curve;
-import bezier.segment.curve.QuadCurve;
 public class TestImage extends DemoBase {
 
 	private static final long serialVersionUID = 2620494065723135106L;

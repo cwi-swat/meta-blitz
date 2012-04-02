@@ -6,8 +6,8 @@ import bezier.image.Image;
 import bezier.image.PixelArea;
 import bezier.image.generated.RasterInstances.Raster1;
 import bezier.image.generated.SampleInstances.Sample1;
+import bezier.paths.util.BestProjection;
 import bezier.points.Vec;
-import bezier.segment.BestProjection;
 
 public class ProjectOnPaths {
 	public static Raster1 projectDist(Image<Sample1> mask, Paths p){

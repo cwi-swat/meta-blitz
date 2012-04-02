@@ -1,9 +1,9 @@
-package bezier.segment;
+package bezier.paths.util;
 
 import bezier.points.Vec;
 
 
-public class BestProjection<A>{
+public final class BestProjection<A>{
 	public A t;
 	public double distanceSquaredUpperbound;
 	public Vec v;

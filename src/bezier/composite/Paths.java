@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Set;
 
 import bezier.graphtheory.MutableGraph;
+import bezier.paths.util.BestProjection;
+import bezier.paths.util.TPair;
 import bezier.points.Matrix;
 import bezier.points.Transformation;
 import bezier.points.Vec;
-import bezier.segment.BestProjection;
 import bezier.segment.LengthMap;
-import bezier.segment.TPair;
 import bezier.util.BBox;
 import bezier.util.STuple;
 import bezier.util.Tuple;
