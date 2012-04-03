@@ -1,13 +1,10 @@
-package bezier.paths.leaf;
+package bezier.paths.simple;
 
 import java.awt.geom.PathIterator;
 import java.util.List;
 
-import bezier.paths.ConnectedPath;
+import bezier.paths.IConnectedPath;
 import bezier.paths.Path;
-import bezier.paths.Path.ReportType;
-import bezier.paths.awt.IAWTLeafPath;
-import bezier.paths.awt.IAWTNodePath;
 import bezier.paths.util.ITransform;
 import bezier.paths.util.PathParameter;
 import bezier.paths.util.TPair;
@@ -16,12 +13,16 @@ import bezier.util.BBox;
 import bezier.util.STuple;
 import bezier.util.Util;
 
-public final class Line extends ConnectedPath implements IAWTLeafPath{
+public final class Line extends SimplePath{
 
 	public final Vec start, dir, end;
 	
-	public Line(int pathIndexTo,Vec start, Vec end, double tstart, double tend) {
-		super(pathIndexTo,tstart, tend);
+	public Line(Vec start,Vec end){
+		this(start,end,0,1);
+	}
+	
+	public Line(Vec start,Vec end, double tstart, double tend) {
+		super(tstart, tend);
 		this.start = start;
 		this.dir = end.sub(start);
 		this.end = end;
@@ -150,16 +151,16 @@ public final class Line extends ConnectedPath implements IAWTLeafPath{
 		return find(start.y, dir.y, y);
 	}
 
-	public int nrBelow(Vec p) {
+	public boolean isBelow(Vec p) {
 		if(p.x == end.x){
-			return 0;
+			return false;
 		}
 		Double fx = findX(p.x);
-		return fx != null &&  getAt(fx).y < p.y ? 1 :0;
+		return fx != null &&  getAt(fx).y < p.y ;
 	}
 
-	public ConnectedPath reverse() {
-		return new Line(index,end,start,tEnd,tStart);
+	public IConnectedPath reverse() {
+		return new Line(end,start,tEnd,tStart);
 	}
 
 	public Vec getStartPoint() {
@@ -200,8 +201,8 @@ public final class Line extends ConnectedPath implements IAWTLeafPath{
 //	}
 
 
-	public ConnectedPath getWithAdjustedStartPoint(Vec newStartPoint) {
-		return new Line(index,newStartPoint,end,tStart,tEnd);
+	public IConnectedPath getWithAdjustedStartPoint(Vec newStartPoint) {
+		return new Line(newStartPoint,end,tStart,tEnd);
 	}
 
 
@@ -242,38 +243,20 @@ public final class Line extends ConnectedPath implements IAWTLeafPath{
 		throw new Error("Cannot make Line simpler!");
 	}
 
-	public void intersectionLine(Line line, ReportType type, List<STuple<PathParameter>> result) {
-		addDoubleResult(intersection(line), line,type, result);
+	public void intersectionLine(Line line, ReportType type, List<PathParameter> lres,List<PathParameter> rres) {
+		addDoubleResult(intersection(line), line,type, lres,rres);
 	}
 
 	@Override
 	public
 	Path transform(ITransform m) {
-		return new Line(index,m.transform(start),m.transform(end),tStart,tEnd);
+		return new Line(m.transform(start),m.transform(end),tStart,tEnd);
 	}
 
 	@Override
 	public
 	STuple<Path> splitSimpler() {
 		throw new Error("Cannot make line simpler!");
-	}
-
-	@Override
-	public
-	boolean isLeaf() {
-		return true;
-	}
-
-	@Override
-	public
-	IAWTLeafPath getLeaf() {
-		return this;
-	}
-
-	@Override
-	public
-	IAWTNodePath getNode() {
-		throw new Error("Cannot get Node of line!");
 	}
 
 

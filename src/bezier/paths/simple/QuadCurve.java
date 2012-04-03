@@ -1,10 +1,10 @@
-package bezier.paths.leaf;
+package bezier.paths.simple;
 
 import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
 
-import bezier.paths.ConnectedPath;
+import bezier.paths.IConnectedPath;
 import bezier.paths.Path;
 import bezier.paths.util.ITransform;
 import bezier.points.Vec;
@@ -17,8 +17,12 @@ public final class QuadCurve extends NonLinearBezier{
 	
 	public final Vec p0,p1,p2;
 
-	public QuadCurve(Vec p0,Vec p1, Vec p2, int indexTo,double tStart, double tEnd) {
-		super(indexTo,tStart,tEnd);
+	public QuadCurve(Vec p0,Vec p1, Vec p2){
+		this(p0,p1,p2,0,1);
+	}
+	
+	public QuadCurve(Vec p0,Vec p1, Vec p2, double tStart,double tEnd) {
+		super(tStart,tEnd);
 		this.p0 = p0;
 		this.p1 = p1;
 		this.p2 = p2;
@@ -43,7 +47,7 @@ public final class QuadCurve extends NonLinearBezier{
 
 	@Override
 	public Path transform(ITransform m) {
-		return new QuadCurve(m.transform(p0), m.transform(p1), m.transform(p2), index,tStart,tEnd);
+		return new QuadCurve(m.transform(p0), m.transform(p1), m.transform(p2), tStart,tEnd);
 	}
 	
 	Double find(double x0,double x1, double x2, double x){
@@ -66,8 +70,8 @@ public final class QuadCurve extends NonLinearBezier{
 
 
 	@Override
-	public ConnectedPath reverse() {
-		return new QuadCurve(p2,p1, p0, index,tEnd,tStart);
+	public IConnectedPath reverse() {
+		return new QuadCurve(p2,p1, p0, tEnd,tStart);
 	}
 
 	@Override
@@ -76,8 +80,8 @@ public final class QuadCurve extends NonLinearBezier{
 		Vec cr = p1.interpolate(t, p2);
 		Vec cm = cl.interpolate(t, cr);
 		double tMiddle = 0.5 * (tStart + tEnd);
-		return new  STuple<NonLinearBezier>(new QuadCurve(p0,cl,cm,index,tStart,tMiddle),
-										new QuadCurve(cm,cr, p2, index,tMiddle,tEnd));
+		return new  STuple<NonLinearBezier>(new QuadCurve(p0,cl,cm,tStart,tMiddle),
+										new QuadCurve(cm,cr, p2, tMiddle,tEnd));
 	}
 
 	@Override
@@ -99,7 +103,7 @@ public final class QuadCurve extends NonLinearBezier{
 
 	@Override
 	Path getSimplerApproximation() {
-		Line l = new Line(index,p0,p2,tStart,tEnd);
+		Line l = new Line(p0,p2,tStart,tEnd);
 		if(getAt(0.5).distanceSquared(l.getAt(0.5)) <= Constants.HALF_MAX_ERROR_POW2){
 			return l;
 		} else {
@@ -138,8 +142,8 @@ public final class QuadCurve extends NonLinearBezier{
 //	}
 
 	@Override
-	public ConnectedPath getWithAdjustedStartPoint(Vec newStartPoint) {
-		return new QuadCurve(newStartPoint,p1, p2, index,tStart,tEnd);
+	public IConnectedPath getWithAdjustedStartPoint(Vec newStartPoint) {
+		return new QuadCurve(newStartPoint,p1, p2, tStart,tEnd);
 	}
 
 	

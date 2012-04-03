@@ -5,7 +5,7 @@ import bezier.composite.Paths;
 import bezier.composite.TPaths;
 import bezier.font.FontFactory;
 import bezier.image.generated.ColorsAlpha;
-import bezier.paths.leaf.Line;
+import bezier.paths.simple.Line;
 import bezier.points.Transformation;
 import bezier.util.STuple;
 

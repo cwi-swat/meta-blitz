@@ -1,6 +1,6 @@
 package bezier.paths.util;
 
-import java.util.Arrays;
+
 
 public final class PathParameter {
 
@@ -11,6 +11,11 @@ public final class PathParameter {
 	public PathParameter(int index, double t) {
 		this.index = index;
 		this.t = t;
+	}
+
+
+	public PathParameter(double d) {
+		this(0,d);
 	}
 	
 }

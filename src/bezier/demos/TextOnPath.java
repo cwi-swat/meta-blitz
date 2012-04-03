@@ -5,7 +5,7 @@ import bezier.composite.Path;
 import bezier.composite.Paths;
 import bezier.font.FontFactory;
 import bezier.image.generated.ColorsAlpha;
-import bezier.paths.leaf.QuadCurve;
+import bezier.paths.simple.QuadCurve;
 import bezier.points.Vec;
 import bezier.segment.LengthMap;
 

@@ -1,4 +1,4 @@
-package bezier.paths.leaf;
+package bezier.paths.simple;
 
 import static bezier.util.Util.findQuadraticPolynomialRoots;
 
@@ -6,9 +6,11 @@ import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
 
-import bezier.paths.ConnectedPath;
+import bezier.paths.IConnectedPath;
 import bezier.paths.Path;
+import bezier.paths.compound.CompoundPath;
 import bezier.paths.util.ITransform;
+import bezier.paths.util.PathParameter;
 import bezier.points.Vec;
 import bezier.segment.Constants;
 import bezier.util.BBox;
@@ -17,8 +19,12 @@ public final class CubicCurve extends NonLinearBezier {
 
 	public final Vec p0,p1,p2,p3;
 
-	public CubicCurve(Vec p0, Vec p1, Vec p2, Vec p3, int indexTo, double tStart, double tEnd) {
-		super(indexTo,tStart,tEnd);
+	public CubicCurve(Vec p0, Vec p1, Vec p2, Vec p3){
+		this(p0,p1,p2,p3,0,1);
+	}
+	
+	public CubicCurve(Vec p0, Vec p1, Vec p2, Vec p3, double tStart, double tEnd) {
+		super(tStart,tEnd);
 		this.p0 = p0;
 		this.p1 = p1;
 		this.p2 = p2;
@@ -63,12 +69,12 @@ public final class CubicCurve extends NonLinearBezier {
 	
 	@Override
 	public Path transform(ITransform m) {
-		return new CubicCurve(m.transform(p0), m.transform(p1), m.transform(p2), m.transform(p3),index,tStart,tEnd);
+		return new CubicCurve(m.transform(p0), m.transform(p1), m.transform(p2), m.transform(p3),tStart,tEnd);
 	}
 
 	@Override
-	public ConnectedPath reverse() {
-		return new CubicCurve(p3,p2,p1,p0,index,tEnd,tStart);
+	public IConnectedPath reverse() {
+		return new CubicCurve(p3,p2,p1,p0,tEnd,tStart);
 	}
 
 	@Override
@@ -91,8 +97,8 @@ public final class CubicCurve extends NonLinearBezier {
 		l3 = r0 = l2.interpolate(t, r1);
 		double tMiddle = 0.5 * (tStart + tEnd);
 		return new  STuple<NonLinearBezier>(
-				new CubicCurve(l0,l1,l2,l3,index,tStart,tMiddle),
-				new CubicCurve(r0,r1,r2,r3,index,tMiddle,tEnd));
+				new CubicCurve(l0,l1,l2,l3,tStart,tMiddle),
+				new CubicCurve(r0,r1,r2,r3,tMiddle,tEnd));
 	}
 	
 	private static List<Double> getExtremes(double v0, double v1, double v2, double v3){
@@ -121,7 +127,7 @@ public final class CubicCurve extends NonLinearBezier {
 		Vec extendP1 = p0.interpolate(1.0/3.0, p1);
 		Vec extendP2 =  p3.interpolate(1.0/3.0, p2);
 		Vec middle = extendP1.interpolate(0.5, extendP2);
-		QuadCurve simpler = new QuadCurve(p0,middle,p3,index,tStart,tEnd);
+		QuadCurve simpler = new QuadCurve(p0,middle,p3,tStart,tEnd);
 		Vec fromCubic = getAt(Constants.T_MAX_DIFF_CUBIC_QUADRATIC);
 		Vec fromQuad = simpler.getAt(Constants.T_MAX_DIFF_CUBIC_QUADRATIC);
 		if(fromCubic.distanceSquared(fromQuad) <= Constants.HALF_MAX_ERROR_POW2){
@@ -167,13 +173,9 @@ public final class CubicCurve extends NonLinearBezier {
 
 
 	@Override
-	public ConnectedPath getWithAdjustedStartPoint(Vec newStartPoint) {
-		return new CubicCurve(newStartPoint, p1, p2, p3,index,tStart,tEnd);
+	public IConnectedPath getWithAdjustedStartPoint(Vec newStartPoint) {
+		return new CubicCurve(newStartPoint, p1, p2, p3,tStart,tEnd);
 	}
-
-
-	
-
 
 	@Override
 	public int currentSegmentAWT(float[] coords) {

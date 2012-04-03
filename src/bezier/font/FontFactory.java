@@ -13,9 +13,9 @@ import javax.swing.UIManager;
 
 import bezier.composite.Path;
 import bezier.composite.Paths;
-import bezier.paths.leaf.CubicCurve;
-import bezier.paths.leaf.Line;
-import bezier.paths.leaf.QuadCurve;
+import bezier.paths.simple.CubicCurve;
+import bezier.paths.simple.Line;
+import bezier.paths.simple.QuadCurve;
 import bezier.points.Transformation;
 import bezier.points.Vec;
 import bezier.segment.curve.Curve;

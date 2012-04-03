@@ -1,7 +1,9 @@
 package bezier.points;
 
+import bezier.paths.util.ITransform;
 
-public final class Transformation {
+
+public final class Transformation implements ITransform{
 	
 	public static Transformation id = new Transformation();
 	
@@ -61,5 +63,10 @@ public final class Transformation {
 	
 	public Transformation shearY(double x){
 		return new Transformation(Matrix.shearY(x).mul(to), back.mul(Matrix.shearY(-x)));
+	}
+
+	@Override
+	public Vec transform(Vec d) {
+		return to.mul(d);
 	}
 }

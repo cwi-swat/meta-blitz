@@ -83,15 +83,15 @@ public final class Vec {
 		return distanceSquared(other) <= Constants.MAX_ERROR_2_POW2;
 	}
 	
-	public double tanSquaredOfHalfAngle(Vec other){
-		Vec midTriangle = interpolate(0.5, other);
-		double opposite = midTriangle.distanceSquared(this);
-		double adjacent = midTriangle.normSquared();
-		if(adjacent == 0){
-			return 0;
-		}
-		return opposite/adjacent;
-	}
+//	public double tanSquaredOfHalfAngle(Vec other){
+//		Vec midTriangle = interpolate(0.5, other);
+//		double opposite = midTriangle.distanceSquared(this);
+//		double adjacent = midTriangle.normSquared();
+//		if(adjacent == 0){
+//			return 0;
+//		}
+//		return opposite/adjacent;
+//	}
 	
 	
 	public String toString(){

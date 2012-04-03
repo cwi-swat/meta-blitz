@@ -1,20 +1,18 @@
-package bezier.paths.leaf;
+package bezier.paths.simple;
 
 import static bezier.util.Util.clamp;
 
 import java.util.List;
 
-import bezier.paths.ConnectedPath;
+import bezier.paths.IConnectedPath;
 import bezier.paths.Path;
-import bezier.paths.awt.IAWTLeafPath;
-import bezier.paths.awt.IAWTNodePath;
 import bezier.points.Vec;
 import bezier.util.IntervalLocation;
 import bezier.util.STuple;
-public abstract class NonLinearBezier extends ConnectedPath implements IAWTLeafPath{
+public abstract class NonLinearBezier extends SimplePath{
 
-	public NonLinearBezier(int indexTo, double tStart, double tEnd) {
-		super(indexTo,tStart, tEnd);
+	public NonLinearBezier(double tStart, double tEnd) {
+		super(tStart, tEnd);
 	}
 	
 	
@@ -61,21 +59,22 @@ public abstract class NonLinearBezier extends ConnectedPath implements IAWTLeafP
 		throw new Error("Not a line!");
 	}
 
-	public int nrBelow(Vec p){
+	@Override
+	public boolean isBelow(Vec p){
 		getBBox();
 		if(bbox.xIntervalLocation(p.x) != IntervalLocation.INSIDE){
-			return 0;
+			return false;
 		}
 		switch(bbox.yIntervalLocation(p.y)){
-		case LEFT_OF: return 0;
+		case LEFT_OF: return false;
 		case INSIDE:
 			
 					 Double t = findX( p.x);
 					 if(t == null){
-						 return 0;
+						 return false;
 					 }
-					 return getAt(clamp(t)).y < p.y ? 1 :0;
-		case RIGHT_OF: return 1;
+					 return getAt(clamp(t)).y < p.y;
+		case RIGHT_OF: return true;
 		}
 		throw new Error("Unkown interval location");
 	}
@@ -102,22 +101,5 @@ public abstract class NonLinearBezier extends ConnectedPath implements IAWTLeafP
 	
 
 	abstract Path getSimplerApproximation();
-	
-	@Override
-	public
-	boolean isLeaf() {
-		return true;
-	}
 
-	@Override
-	public
-	IAWTLeafPath getLeaf() {
-		return this;
-	}
-
-	@Override
-	public
-	IAWTNodePath getNode() {
-		throw new Error("Cannot get Node of NonLinear Bezier!");
-	}
 }

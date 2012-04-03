@@ -263,8 +263,8 @@ public class Util {
 	}
 
 	public static List<Integer> getChoices(List<Integer> sortedY,
-			List<Integer> choices) {
-		boolean[] choicesb = new boolean[sortedY.size()];
+			List<Integer> choices, int max) {
+		boolean[] choicesb = new boolean[max];
 		for(int i : choices){
 			choicesb[i] = true;
 		}

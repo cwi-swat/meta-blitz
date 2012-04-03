@@ -1,6 +1,6 @@
 package bezier.projectiondeform;
 
-import bezier.paths.leaf.Line;
+import bezier.paths.simple.Line;
 import bezier.points.Vec;
 
 public final class TriangleCoordinateSystem implements CoordinateSystem{

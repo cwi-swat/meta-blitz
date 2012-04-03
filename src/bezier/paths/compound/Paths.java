@@ -1,4 +1,4 @@
-package bezier.paths.node;
+package bezier.paths.compound;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,12 +6,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Stack;
 
-import bezier.paths.ConnectedPath;
+import bezier.paths.IConnectedPath;
 import bezier.paths.Path;
-import bezier.paths.awt.IAWTLeafPath;
-import bezier.paths.awt.IAWTNodePath;
-import bezier.paths.awt.IAWTPath;
-import bezier.paths.leaf.Line;
+import bezier.paths.simple.Line;
 import bezier.paths.util.ITransform;
 import bezier.paths.util.PathParameter;
 import bezier.points.Vec;
@@ -20,22 +17,25 @@ import bezier.util.HasBBox;
 import bezier.util.STuple;
 import bezier.util.Util;
 
-public class LoosePaths extends Path implements IAWTNodePath{
+public class Paths extends CompoundPath{
 	
 
-	final List<ConnectedPath> paths;
+	final List<Append> paths;
+	final List<Integer> choices;
 	private List<Integer> sortedX, sortedY;
 	
-	public LoosePaths(List<ConnectedPath> paths,List<Integer> sortedX, List<Integer> sortedY,BBox b) {
-		this.paths = paths;
-		this.sortedX = sortedX;
-		this.sortedY = sortedY;
+	public Paths(Paths parent, List<Integer> choices,BBox b) {
+		this.paths = parent.paths;
+		this.sortedX = Util.getChoices(parent.sortedX, choices,paths.size());
+		this.sortedY =  Util.getChoices(parent.sortedY, choices,paths.size());
+		this.choices = choices;
 		this.bbox = b;
 	}
 
 	
-	public LoosePaths(List<ConnectedPath> paths) {
+	public Paths(List<Append> paths) {
 		this.paths = paths;
+		choices = Util.natListTill(paths.size());
 	}
 
 	void setSorteds(){
@@ -88,15 +88,15 @@ public class LoosePaths extends Path implements IAWTNodePath{
 
 	@Override
 	public  Path transform(ITransform m) {
-		List<ConnectedPath> ps = new ArrayList<ConnectedPath>(paths.size());
+		List<Append> ps = new ArrayList<Append>(paths.size());
 		for(Path p : ps){
-			ps.add((ConnectedPath)p.transform(m));
+			ps.add((Append)p.transform(m));
 		}
-		return new LoosePaths(ps);
+		return new Paths(ps);
 	}
 	
-	List<ConnectedPath> makeSubLoosePaths(List<Integer> indexes){
-		List<ConnectedPath> result = new ArrayList<ConnectedPath>(indexes.size());
+	List<Append> makeSubLoosePaths(List<Integer> indexes){
+		List<Append> result = new ArrayList<Append>(indexes.size());
 		for(int i : indexes){
 			result.add(paths.get(i));
 		}
@@ -111,57 +111,58 @@ public class LoosePaths extends Path implements IAWTNodePath{
 		int split = paths.size();
 		List<Integer> xsl = sortedX.subList(0, split);
 		List<Integer> xsr= sortedX.subList(split,paths.size());
-		List<ConnectedPath> lx = makeSubLoosePaths(xsl);
-		List<ConnectedPath> rx = makeSubLoosePaths(xsr);
+		List<Append> lx = makeSubLoosePaths(xsl);
+		List<Append> rx = makeSubLoosePaths(xsr);
 		List<HasBBox> lxb = (List)lx;
 		List<HasBBox> rxb = (List)rx;
 		BBox lxbb = new BBox(lxb);
 		BBox rxbb = new BBox(rxb);
 		List<Integer> ysl = sortedY.subList(0, split);
 		List<Integer> ysr= sortedY.subList(split,paths.size());
-		List<ConnectedPath> ly = makeSubLoosePaths(ysl);
-		List<ConnectedPath> ry = makeSubLoosePaths(ysr);
+		List<Append> ly = makeSubLoosePaths(ysl);
+		List<Append> ry = makeSubLoosePaths(ysr);
 		List<HasBBox> lyb = (List)ly;
 		List<HasBBox> ryb = (List)ry;
 		BBox lybb = new BBox(lxb);
 		BBox rybb = new BBox(rxb);
 		if(lxbb.area() + rxbb.area() < lybb.area() + rybb.area()){
 			return new STuple<Path>(
-					new LoosePaths(lx,xsl,Util.getChoices(sortedY,xsl), lxbb),
-					new LoosePaths(rx,xsr,Util.getChoices(sortedY,xsr), rxbb));
+					new Paths(this,xsl, lxbb),
+					new Paths(this,xsr, lxbb));
 		} else {
 			return new STuple<Path>(
-					new LoosePaths(ly,Util.getChoices(sortedX,ysl),ysl, lybb),
-					new LoosePaths(ry,Util.getChoices(sortedX,ysr),ysr, rybb));
+					new Paths(this,ysl, lybb),
+					new Paths(this,ysr, lybb));
 		}
 	}
 
 
+
 	@Override
-	public
-	boolean isLeaf() {
+	public boolean isInside(Vec p) {
 		return false;
 	}
 
 
-	@Override
-	public
-	IAWTLeafPath getLeaf() {
-		throw new Error("Loosepaths is not a leaf!");
+	public boolean isConnected(){
+		return false;
+	}
+	
+	public IConnectedPath getConnected(){
+		throw new Error("Not connected!");
 	}
 
 
 	@Override
-	public
-	IAWTNodePath getNode() {
-		return this;
+	public PathParameter convertBackCompound(PathParameter p) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
 	@Override
-	public void pushChildren(Stack<IAWTPath> stack) {
-		for(int i = paths.size()-1 ; i >= 0 ; i++){
-			stack.push(paths.get(i));
-		}
+	public boolean isCompoundLeaf() {
+		return choices.size() == 1;
 	}
+	
 }

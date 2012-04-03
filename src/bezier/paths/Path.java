@@ -1,15 +1,16 @@
 package bezier.paths;
 
-import java.awt.geom.PathIterator;
 import java.util.Iterator;
 import java.util.List;
 
-import bezier.paths.awt.AWTPathIterator;
-import bezier.paths.awt.IAWTPath;
-import bezier.paths.leaf.Line;
+import bezier.paths.compound.CompoundPath;
+import bezier.paths.simple.Line;
+import bezier.paths.simple.SimplePath;
 import bezier.paths.util.BestProjection;
+import bezier.paths.util.IPathParameterTransformer;
+import bezier.paths.util.IPathSelector;
 import bezier.paths.util.ITransform;
-import bezier.paths.util.LineIterator;
+import bezier.paths.util.PathIterator;
 import bezier.paths.util.PathParameter;
 import bezier.paths.util.TPair;
 import bezier.points.Vec;
@@ -18,10 +19,10 @@ import bezier.util.HasBBox;
 import bezier.util.MinMax;
 import bezier.util.STuple;
 
-public abstract class Path implements HasBBox, IAWTPath{
+public abstract class Path implements HasBBox{
 	
 	protected BBox bbox; 
-	private Path leftSimplified, rightSimplified;
+	private Path left, right;
 	
 	public abstract BBox makeBBox();
 	
@@ -31,28 +32,39 @@ public abstract class Path implements HasBBox, IAWTPath{
 		} 
 		return bbox;
 	}
+	
+
 	public abstract boolean isLine();
 	public abstract Line getLine();
+	public abstract boolean isSimple();
+	public abstract SimplePath getSimple();
+	public abstract boolean isConnected();
+	public abstract IConnectedPath getConnected();
+	public abstract CompoundPath getCompound();
 	public abstract Vec getAt(PathParameter t);
 	public abstract Vec getTangentAt(PathParameter t);	
 	public abstract Path transform(ITransform m);
 
 	public abstract STuple<Path> splitSimpler();
 
+	public boolean isCompoundLeaf(){
+		return !isSimple() && getCompound().isCompoundLeaf();
+	}
+	
 	public void expand() {
-		if(leftSimplified == null){
+		if(left == null){
 			STuple<Path> s = splitSimpler();
-			leftSimplified = s.l;
-			rightSimplified = s.r;
+			left = s.l;
+			right = s.r;
 		}
 	}
 
 	public Path getLeftSimpler() {
-		return leftSimplified;
+		return left;
 	}
 
 	public Path getRightSimpler() {
-		return rightSimplified;
+		return right;
 	}
 	
 	
@@ -60,19 +72,29 @@ public abstract class Path implements HasBBox, IAWTPath{
 		T, LENGTH;
 	}
 	
-	void intersections(Path other , ReportType type, List<STuple<PathParameter>> result){
+	public void intersections(Path other , ReportType type, List<PathParameter> lres, List<PathParameter> rres){
 		if(isLine() && other.isLine()){
-			getLine().intersectionLine(other.getLine(),type,result);
+			getLine().intersectionLine(other.getLine(),type,lres,rres);
 		} else if(fastOverlapTest(other)){
+			int lsizestart = lres.size();
+			int rsizestart = rres.size();
 			if(preferSplitMe(other)){
 				expand();
-				getLeftSimpler().intersections(other, type, result);
-				getRightSimpler().intersections(other, type, result);
+				getLeftSimpler().intersections(other, type, lres,rres);
+				getRightSimpler().intersections(other, type, lres,rres);
 			} else {
 				other.expand();
-				intersections(other.getLeftSimpler(), type,result);
-				intersections(other.getRightSimpler(), type,result);
+				intersections(other.getLeftSimpler(), type,lres,rres);
+				intersections(other.getRightSimpler(), type,lres,rres);
 			}
+			convertUpwards(this,lres, lsizestart);
+			convertUpwards(other,rres, rsizestart);
+		}
+	}
+
+	public void convertUpwards(Path p, List<PathParameter> lres, int lsizestart) {
+		if(isCompoundLeaf()){
+			p.getCompound().convertBackCompounds(lres.subList(lsizestart, lres.size()));
 		}
 	}
 
@@ -102,12 +124,12 @@ public abstract class Path implements HasBBox, IAWTPath{
 
 	
 
-	public void project(Vec p, ReportType type, BestProjection<PathParameter> best){
+	public void project(Vec p, IPathParameterTransformer trans,ReportType type, BestProjection<PathParameter> best){
 		if(isLine()){
 			double t = getLine().closestT(p);
 			Vec v = getLine().getAt(t);
 			double dist = v.distanceSquared(p);
-			best.update(getLine().convertTBack(t,type), dist,v);
+			best.update(trans.transform(getLine().convertTBackLeaf(t,type)), dist,v);
 		} else {
 			BBox b = getBBox();
 			double distSquaredLowerBound = b.getNearestPoint(p).distanceSquared(p);
@@ -119,30 +141,42 @@ public abstract class Path implements HasBBox, IAWTPath{
 				best.distanceSquaredUpperbound = distanceSquaredUpperBound;
 			}
 			expand();
+			PathParameter oldt = best.t;
 			if(getLeftSimpler().fastDistance(p) <=
 					getRightSimpler().fastDistance(p)){
-				getLeftSimpler().project(p, type, best);
-				getRightSimpler().project(p, type, best);
+				getLeftSimpler().project(p, trans, type, best);
+				getRightSimpler().project(p, trans, type, best);
 			} else {
-				getRightSimpler().project(p, type, best);
-				getLeftSimpler().project(p, type, best);
+				getRightSimpler().project(p,trans, type, best);
+				getLeftSimpler().project(p, trans, type, best);
 			}
+			convertUpwardsBestProjection(this,best, oldt);
 		}
 	}
 	
+
+	private void convertUpwardsBestProjection(Path path,
+			BestProjection<PathParameter> best, PathParameter oldt) {
+		if(isCompoundLeaf() && best.t != oldt){
+			best.t = getCompound().convertBackCompound(best.t);
+		}
+		
+	}
 
 	public void project(Path other, ReportType type, BestProjection<STuple<PathParameter>> best) {
 		if(isLine() && other.isLine()){
 			TPair res = getLine().closestTs(other.getLine());
 			double dist = getLine().getAt(res.tl).distanceSquared(other.getLine().getAt(res.tr)) ;
-			STuple<PathParameter> ress = new STuple<PathParameter>(getLine().convertTBack(res.tl,type)
-											,other.getLine().convertTBack(res.tr,type));
+			STuple<PathParameter> ress = new STuple<PathParameter>(getLine().convertTBackLeaf(res.tl,type)
+											,other.getLine().convertTBackLeaf(res.tr,type));
 			best.update(ress, dist);
 		} else {
 			MinMax mm = getBBox().minMaxDistSquared(other.getBBox());
 			if(mm.getMin() > best.distanceSquaredUpperbound){
 				return;
 			}
+			PathParameter oldtl = best.t.l;
+			PathParameter oldtr = best.t.r;
 			if(mm.getMax() < best.distanceSquaredUpperbound){
 				best.distanceSquaredUpperbound = mm.getMax();
 			}
@@ -165,9 +199,21 @@ public abstract class Path implements HasBBox, IAWTPath{
 					project(other.getLeftSimpler(),type,best);
 				}
 			}
+			convertUpwardsBestProjectionTup( other, best, oldtl, oldtr);
 		}
 	}
 	
+	private void convertUpwardsBestProjectionTup(Path other,
+			BestProjection<STuple<PathParameter>> best, PathParameter oldtl,PathParameter oldtr) {
+		if(isCompoundLeaf() && best.t.l != oldtl){
+			best.t = new STuple<PathParameter>(getCompound().convertBackCompound(best.t.l), best.t.r);
+		}
+		if(other.isCompoundLeaf() && best.t.r != oldtr){
+			best.t = new STuple<PathParameter>(best.t.l,other.getCompound().convertBackCompound(best.t.r));
+		}
+		
+	}
+
 	void expandFullyAndSetLengths(){
 		expandFullyAndSetLengths(0);
 	}
@@ -181,18 +227,51 @@ public abstract class Path implements HasBBox, IAWTPath{
 		} else {
 			expand();
 			length = getLeftSimpler().expandFullyAndSetLengths(length);
-			return  getRightSimpler().expandFullyAndSetLengths(length);
+			length =  getRightSimpler().expandFullyAndSetLengths(length);
+			return length;
 		}
 	}
 	
-	PathIterator getPathIterator(){
-		return new AWTPathIterator(this);
+	<T> Iterator<T> getIterator(IPathSelector<T> selector){
+		return new PathIterator<T>(this, selector);
 	}
 	
-	Iterator<Line> getLineAprroximationIterator(){
-		return new LineIterator(this);
+	public Iterator<Line> getLineIterator(){
+		return getIterator(new IPathSelector<Line>() {
+			@Override
+			public Line select(Path p) {
+				if(p.isLine()){
+					return p.getLine();
+				} else {
+					return null;
+				}
+			}
+		});
 	}
 	
-
-
+	public Iterator<IConnectedPath> getConnectedIterator(){
+		return getIterator(new IPathSelector<IConnectedPath>() {
+			@Override
+			public IConnectedPath select(Path p) {
+				if(p.isConnected()){
+					return p.getConnected();
+				} else {
+					return null;
+				}
+			}
+		});
+	}
+	
+	public Iterator<SimplePath> getSimpleIterator(){
+		return getIterator(new IPathSelector<SimplePath>() {
+			@Override
+			public SimplePath select(Path p) {
+				if(p.isSimple()){
+					return p.getSimple();
+				} else {
+					return null;
+				}
+			}
+		});
+	}
 }

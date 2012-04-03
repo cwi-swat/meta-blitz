@@ -4,14 +4,15 @@ import java.util.Iterator;
 import java.util.Stack;
 
 import bezier.paths.Path;
-import bezier.paths.leaf.Line;
+import bezier.paths.simple.Line;
 
 
-public class LineIterator implements Iterator<Line>{
+public class PathIterator<T> implements Iterator<T>{
 
 	Stack<Path> stack;
+	 IPathSelector<T> selector;
 	
-	public LineIterator(Path root) {
+	public PathIterator(Path root, IPathSelector<T> selector) {
 		stack = new Stack<Path>();
 		stack.push(root);
 	}
@@ -22,13 +23,13 @@ public class LineIterator implements Iterator<Line>{
 	}
 
 	@Override
-	public Line next() {
-		while(!stack.peek().isLine()){
+	public T next() {
+		while(selector.select(stack.peek()) == null){
 			Path p = stack.pop();
 			stack.push(p.getRightSimpler());
 			stack.push(p.getLeftSimpler());
 		}
-		return stack.pop().getLine();
+		return selector.select(stack.pop());
 	}
 
 	@Override
