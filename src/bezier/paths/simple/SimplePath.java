@@ -20,7 +20,7 @@ public abstract class SimplePath extends Path implements IConnectedPath{
 		this.tEnd = tEnd;
 	}
 	
-	public abstract boolean isBelow(Vec p);
+	public abstract int nrBelow(Vec p);
 	
 	public PathParameter convertTBackLeaf(double t, ReportType type){
 		switch(type){

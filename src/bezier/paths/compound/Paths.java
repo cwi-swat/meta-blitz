@@ -155,8 +155,7 @@ public class Paths extends CompoundPath{
 
 	@Override
 	public PathParameter convertBackCompound(PathParameter p) {
-		// TODO Auto-generated method stub
-		return null;
+		return new PathParameter(choices.get(0), p.t);
 	}
 
 

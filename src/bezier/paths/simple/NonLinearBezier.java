@@ -2,6 +2,7 @@ package bezier.paths.simple;
 
 import static bezier.util.Util.clamp;
 
+import java.util.Collections;
 import java.util.List;
 
 import bezier.paths.IConnectedPath;
@@ -11,46 +12,38 @@ import bezier.util.IntervalLocation;
 import bezier.util.STuple;
 public abstract class NonLinearBezier extends SimplePath{
 
-	public NonLinearBezier(double tStart, double tEnd) {
-		super(tStart, tEnd);
+
+	List<Double> xyRoots;
+	
+	public NonLinearBezier(double tStart, double tEnd){
+		this(tStart,tEnd,null);
+		this.xyRoots = getXYRoots();
 	}
 	
-	
+	public NonLinearBezier(double tStart, double tEnd, List<Double> xyRoots) {
+		super(tStart, tEnd);
+		this.xyRoots = xyRoots;
+	}
 	
 	public abstract STuple<NonLinearBezier> split(double t);
 	STuple<NonLinearBezier> split() { return split(0.5); }
 
-
 	abstract List<Double> getXYRoots();
 	
-//	public List<Curve> makeMonotomous(){
-//		List<Curve> result = new ArrayList<Curve>();
-//		List<Double> roots = getXYRoots();
-//		Collections.sort(roots);
-//		Path right = this;
-//		double offset = 0.0;
-////		if(roots.isEmpty()){
-////			result.add(this);
-////		} else {
-////			System.out.printf("Splitting at %f\n",roots.get(0));
-////			Tuple<Curve,Curve> split = right.split(roots.get(0));
-////			NonLinearCurve sl = (NonLinearCurve)split.l;
-////			NonLinearCurve sr = (NonLinearCurve)split.r;
-////			sl.makeMonotomous(result);
-////			
-////		}
-//		for(double root : roots){
-//			double relRoot = (root - offset) / (1.0 - offset);
-//			STuple<Curve> split = right.split(relRoot);
-////			System.out.printf("Splitting at %f\n", root);
-//			result.add(split.l);
-//			right = split.r;
-//			offset = root;
-//		}
-//		result.add(right);
-//		return result;
-//	}
-//	
+	public void setXYRoots(){
+		if(xyRoots == null){
+			xyRoots = getXYRoots();
+			Collections.sort(xyRoots);
+		}
+	}
+	
+	public STuple<NonLinearBezier> makeMonotomous(){
+		STuple<NonLinearBezier> result = split(xyRoots.get(0));
+		result.l.xyRoots = Collections.EMPTY_LIST;
+		result.r.xyRoots = xyRoots.subList(1, xyRoots.size());
+		return result;
+	} 
+	
 	public boolean isLine(){
 		return false;
 	}
@@ -60,21 +53,25 @@ public abstract class NonLinearBezier extends SimplePath{
 	}
 
 	@Override
-	public boolean isBelow(Vec p){
+	public int nrBelow(Vec p){
+		if(!isMonotomous()){
+			return getLeftSimpler().getSimple().nrBelow(p)
+					+ getRightSimpler().getSimple().nrBelow(p);
+		}
 		getBBox();
 		if(bbox.xIntervalLocation(p.x) != IntervalLocation.INSIDE){
-			return false;
+			return 0;
 		}
 		switch(bbox.yIntervalLocation(p.y)){
-		case LEFT_OF: return false;
+		case LEFT_OF: return 0;
 		case INSIDE:
 			
 					 Double t = findX( p.x);
 					 if(t == null){
-						 return false;
+						 return 0;
 					 }
-					 return getAt(clamp(t)).y < p.y;
-		case RIGHT_OF: return true;
+					 return getAt(clamp(t)).y < p.y ? 1 : 0;
+		case RIGHT_OF: return 1;
 		}
 		throw new Error("Unkown interval location");
 	}
@@ -89,14 +86,22 @@ public abstract class NonLinearBezier extends SimplePath{
 		}
 		return d;
 	}
+	
+	public boolean isMonotomous(){
+		return xyRoots.size() == 0;
+	}
 
 	@Override
 	public
 	STuple<Path> splitSimpler() {
-		STuple<NonLinearBezier> sp = split();
-		return new STuple<Path>(
-				sp.l.getSimplerApproximation(),
-				sp.r.getSimplerApproximation());
+		if(!isMonotomous()){
+			return (STuple)makeMonotomous();
+		} else {
+			STuple<NonLinearBezier> sp = split();
+			return new STuple<Path>(
+					sp.l.getSimplerApproximation(),
+					sp.r.getSimplerApproximation());
+		}
 	}
 	
 

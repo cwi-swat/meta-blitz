@@ -151,12 +151,12 @@ public final class Line extends SimplePath{
 		return find(start.y, dir.y, y);
 	}
 
-	public boolean isBelow(Vec p) {
+	public int nrBelow(Vec p) {
 		if(p.x == end.x){
-			return false;
+			return 0;
 		}
 		Double fx = findX(p.x);
-		return fx != null &&  getAt(fx).y < p.y ;
+		return fx != null &&  getAt(fx).y < p.y ? 1 : 0 ;
 	}
 
 	public IConnectedPath reverse() {

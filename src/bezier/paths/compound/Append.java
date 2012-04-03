@@ -90,9 +90,7 @@ public class Append extends CompoundPath implements IConnectedPath{
 				} 
 				i = straight.r+1;
 			} else {
-				if(c.isBelow(p)){
-					nr++;
-				}
+				nr+=c.nrBelow(p);
 				i++;
 			}
 		}
