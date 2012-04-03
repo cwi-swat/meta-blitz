@@ -1,8 +1,13 @@
-package bezier.paths;
+package bezier.paths.leaf;
 
 import java.awt.geom.PathIterator;
 import java.util.List;
 
+import bezier.paths.ConnectedPath;
+import bezier.paths.Path;
+import bezier.paths.Path.ReportType;
+import bezier.paths.awt.IAWTLeafPath;
+import bezier.paths.awt.IAWTNodePath;
 import bezier.paths.util.ITransform;
 import bezier.paths.util.PathParameter;
 import bezier.paths.util.TPair;
@@ -11,8 +16,7 @@ import bezier.util.BBox;
 import bezier.util.STuple;
 import bezier.util.Util;
 
-
-public final class Line extends ConnectedPath{
+public final class Line extends ConnectedPath implements IAWTLeafPath{
 
 	public final Vec start, dir, end;
 	
@@ -201,7 +205,7 @@ public final class Line extends ConnectedPath{
 	}
 
 
-	public int currentSegment(float[] coords) {
+	public int currentSegmentAWT(float[] coords) {
 		coords[0] =(float) end.x;
 		coords[1] = (float)end.y;
 		return PathIterator.SEG_LINETO;
@@ -222,31 +226,54 @@ public final class Line extends ConnectedPath{
 
 
 	@Override
+	public
 	void expand() {
 	}
 
 	@Override
+	public
 	Path getLeftSimpler() {
 		throw new Error("Cannot make Line simpler!");
 	}
 
 	@Override
+	public
 	Path getRightSimpler() {
 		throw new Error("Cannot make Line simpler!");
 	}
 
-	public void intersectionLine(Line line, List<STuple<PathParameter>> result) {
-		addDoubleResult(intersection(line), line, result);
+	public void intersectionLine(Line line, ReportType type, List<STuple<PathParameter>> result) {
+		addDoubleResult(intersection(line), line,type, result);
 	}
 
 	@Override
+	public
 	Path transform(ITransform m) {
 		return new Line(index,m.transform(start),m.transform(end),tStart,tEnd);
 	}
 
 	@Override
+	public
 	STuple<Path> splitSimpler() {
 		throw new Error("Cannot make line simpler!");
+	}
+
+	@Override
+	public
+	boolean isLeaf() {
+		return true;
+	}
+
+	@Override
+	public
+	IAWTLeafPath getLeaf() {
+		return this;
+	}
+
+	@Override
+	public
+	IAWTNodePath getNode() {
+		throw new Error("Cannot get Node of line!");
 	}
 
 

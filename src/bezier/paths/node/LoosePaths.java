@@ -1,10 +1,17 @@
-package bezier.paths;
+package bezier.paths.node;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Stack;
 
+import bezier.paths.ConnectedPath;
+import bezier.paths.Path;
+import bezier.paths.awt.IAWTLeafPath;
+import bezier.paths.awt.IAWTNodePath;
+import bezier.paths.awt.IAWTPath;
+import bezier.paths.leaf.Line;
 import bezier.paths.util.ITransform;
 import bezier.paths.util.PathParameter;
 import bezier.points.Vec;
@@ -13,7 +20,7 @@ import bezier.util.HasBBox;
 import bezier.util.STuple;
 import bezier.util.Util;
 
-public class LoosePaths extends Path{
+public class LoosePaths extends Path implements IAWTNodePath{
 	
 
 	final List<ConnectedPath> paths;
@@ -52,33 +59,35 @@ public class LoosePaths extends Path{
 	}
 	
 	@Override
-	BBox makeBBox() {
+	public BBox makeBBox() {
 		List<HasBBox> bbx = (List)paths;
 		return new BBox(bbx);
 	}
 
 	@Override
+	public
 	boolean isLine() {
 		return false;
 	}
 
 	@Override
+	public
 	Line getLine() {
 		return null;
 	}
 
 	@Override
-	Vec getAt(PathParameter t) {
+	public Vec getAt(PathParameter t) {
 		return paths.get(t.index).getAt(t);
 	}
 
 	@Override
-	Vec getTangentAt(PathParameter t) {
+	public Vec getTangentAt(PathParameter t) {
 		return paths.get(t.index).getTangentAt(t);
 	}
 
 	@Override
-	Path transform(ITransform m) {
+	public  Path transform(ITransform m) {
 		List<ConnectedPath> ps = new ArrayList<ConnectedPath>(paths.size());
 		for(Path p : ps){
 			ps.add((ConnectedPath)p.transform(m));
@@ -97,7 +106,7 @@ public class LoosePaths extends Path{
 
 
 	@Override
-	STuple<Path> splitSimpler() {
+	public  STuple<Path> splitSimpler() {
 		setSorteds();
 		int split = paths.size();
 		List<Integer> xsl = sortedX.subList(0, split);
@@ -127,4 +136,32 @@ public class LoosePaths extends Path{
 		}
 	}
 
+
+	@Override
+	public
+	boolean isLeaf() {
+		return false;
+	}
+
+
+	@Override
+	public
+	IAWTLeafPath getLeaf() {
+		throw new Error("Loosepaths is not a leaf!");
+	}
+
+
+	@Override
+	public
+	IAWTNodePath getNode() {
+		return this;
+	}
+
+
+	@Override
+	public void pushChildren(Stack<IAWTPath> stack) {
+		for(int i = paths.size()-1 ; i >= 0 ; i++){
+			stack.push(paths.get(i));
+		}
+	}
 }

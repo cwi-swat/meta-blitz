@@ -34,7 +34,7 @@ import bezier.image.generated.SampleInstances.Sample1;
 import bezier.image.generated.SampleInstances.Sample2;
 import bezier.image.generated.SampleInstances.Sample3;
 import bezier.image.generated.SampleInstances.Sample4;
-import bezier.paths.QuadCurve;
+import bezier.paths.leaf.QuadCurve;
 import bezier.points.Vec;
 import bezier.segment.LengthMap;
 import bezier.segment.curve.Curve;

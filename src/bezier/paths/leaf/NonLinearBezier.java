@@ -1,14 +1,17 @@
-package bezier.paths;
+package bezier.paths.leaf;
 
 import static bezier.util.Util.clamp;
 
 import java.util.List;
 
+import bezier.paths.ConnectedPath;
+import bezier.paths.Path;
+import bezier.paths.awt.IAWTLeafPath;
+import bezier.paths.awt.IAWTNodePath;
 import bezier.points.Vec;
 import bezier.util.IntervalLocation;
 import bezier.util.STuple;
-
-public abstract class NonLinearBezier extends ConnectedPath{
+public abstract class NonLinearBezier extends ConnectedPath implements IAWTLeafPath{
 
 	public NonLinearBezier(int indexTo, double tStart, double tEnd) {
 		super(indexTo,tStart, tEnd);
@@ -89,6 +92,7 @@ public abstract class NonLinearBezier extends ConnectedPath{
 	}
 
 	@Override
+	public
 	STuple<Path> splitSimpler() {
 		STuple<NonLinearBezier> sp = split();
 		return new STuple<Path>(
@@ -98,4 +102,22 @@ public abstract class NonLinearBezier extends ConnectedPath{
 	
 
 	abstract Path getSimplerApproximation();
+	
+	@Override
+	public
+	boolean isLeaf() {
+		return true;
+	}
+
+	@Override
+	public
+	IAWTLeafPath getLeaf() {
+		return this;
+	}
+
+	@Override
+	public
+	IAWTNodePath getNode() {
+		throw new Error("Cannot get Node of NonLinear Bezier!");
+	}
 }

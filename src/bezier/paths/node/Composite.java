@@ -1,8 +1,16 @@
-package bezier.paths;
+package bezier.paths.node;
 
+import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
+import bezier.paths.ConnectedPath;
+import bezier.paths.Path;
+import bezier.paths.awt.IAWTLeafPath;
+import bezier.paths.awt.IAWTNodePath;
+import bezier.paths.awt.IAWTPath;
+import bezier.paths.leaf.Line;
 import bezier.paths.util.ITransform;
 import bezier.points.Vec;
 import bezier.util.BBox;
@@ -11,7 +19,7 @@ import bezier.util.STuple;
 import bezier.util.Tuple;
 import bezier.util.Util;
 
-public class Composite extends ConnectedPath{
+public class Composite extends ConnectedPath implements IAWTNodePath{
 
 	List<ConnectedPath> curves;
 	
@@ -106,7 +114,7 @@ public class Composite extends ConnectedPath{
 	}
 
 	@Override
-	Path transform(ITransform m) {
+	public  Path transform(ITransform m) {
 		List<ConnectedPath> result = new ArrayList<ConnectedPath>(curves.size());
 		for(ConnectedPath p : curves){
 			result.add((ConnectedPath)p.transform(m));
@@ -115,7 +123,7 @@ public class Composite extends ConnectedPath{
 	}
 
 	@Override
-	ConnectedPath reverse() {
+	public ConnectedPath reverse() {
 		List<ConnectedPath> result = new ArrayList<ConnectedPath>(curves.size());
 		for(int i = curves.size()-1; i >= 0 ; i--){
 			result.add(curves.get(i).reverse());
@@ -124,7 +132,7 @@ public class Composite extends ConnectedPath{
 	}
 
 	@Override
-	ConnectedPath getWithAdjustedStartPoint(Vec newStart) {
+	public  ConnectedPath getWithAdjustedStartPoint(Vec newStart) {
 		List<ConnectedPath> result = new ArrayList<ConnectedPath>(curves.size());
 		result.add(curves.get(0).getWithAdjustedStartPoint(newStart));
 		result.addAll(curves.subList(1, curves.size()));
@@ -132,7 +140,7 @@ public class Composite extends ConnectedPath{
 	}
 
 	@Override
-	BBox makeBBox() {
+	public BBox makeBBox() {
 		List<HasBBox> hasBB = (List) curves;
 		return new BBox(hasBB);
 	}
@@ -148,11 +156,84 @@ public class Composite extends ConnectedPath{
 	}
 
 	@Override
-	STuple<Path> splitSimpler() {
+	public  STuple<Path> splitSimpler() {
 		int split = curves.size()/2;
 		return new STuple<Path>(
 				createComposite(curves.subList(0, split),index),
 				createComposite(curves.subList(split,curves.size()),index));
+	}
+
+	@Override
+	public
+	boolean isLeaf() {
+		return false;
+	}
+
+	@Override
+	public
+	IAWTLeafPath getLeaf() {
+		throw new Error("Cannot get Node of path!");
+	}
+
+	@Override
+	public
+	IAWTNodePath getNode() {
+		return this;
+	}
+
+	@Override
+	public void pushChildren(Stack<IAWTPath> stack) {
+		stack.push(new StartAWT());
+		for(int i = curves.size()-1 ; i >= 0 ; i++){
+			stack.push(curves.get(i));
+		}
+		stack.push(new EndAWT());
+	}
+	
+	class StartAWT implements IAWTLeafPath, IAWTPath{
+		@Override
+		public int currentSegmentAWT(float[] coords) {
+			coords[0] = (float)curves.get(0).getStartPoint().x;
+			coords[1] = (float)curves.get(0).getStartPoint().y;
+			return PathIterator.SEG_MOVETO;
+		}
+
+		@Override
+		public boolean isLeaf() {
+			return true;
+		}
+
+		@Override
+		public IAWTLeafPath getLeaf() {
+			return this;
+		}
+
+		@Override
+		public IAWTNodePath getNode() {
+			throw new Error("Not a node!");
+		}
+	}
+	
+	class EndAWT implements IAWTLeafPath,IAWTPath{
+		@Override
+		public int currentSegmentAWT(float[] coords) {
+			return PathIterator.SEG_CLOSE;
+		}
+		
+		@Override
+		public boolean isLeaf() {
+			return true;
+		}
+
+		@Override
+		public IAWTLeafPath getLeaf() {
+			return this;
+		}
+
+		@Override
+		public IAWTNodePath getNode() {
+			throw new Error("Not a node!");
+		}
 	}
 
 }

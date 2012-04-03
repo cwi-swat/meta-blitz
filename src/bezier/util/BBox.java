@@ -5,7 +5,7 @@ import static bezier.util.Util.getIntervalLocationExEnd;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
-import bezier.paths.Line;
+import bezier.paths.leaf.Line;
 import bezier.points.Vec;
 import bezier.segment.Constants;
 public final class BBox {

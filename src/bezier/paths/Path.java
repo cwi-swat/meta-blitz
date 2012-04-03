@@ -1,9 +1,15 @@
 package bezier.paths;
 
+import java.awt.geom.PathIterator;
+import java.util.Iterator;
 import java.util.List;
 
+import bezier.paths.awt.AWTPathIterator;
+import bezier.paths.awt.IAWTPath;
+import bezier.paths.leaf.Line;
 import bezier.paths.util.BestProjection;
 import bezier.paths.util.ITransform;
+import bezier.paths.util.LineIterator;
 import bezier.paths.util.PathParameter;
 import bezier.paths.util.TPair;
 import bezier.points.Vec;
@@ -12,12 +18,12 @@ import bezier.util.HasBBox;
 import bezier.util.MinMax;
 import bezier.util.STuple;
 
-public abstract class Path implements HasBBox {
+public abstract class Path implements HasBBox, IAWTPath{
 	
 	protected BBox bbox; 
 	private Path leftSimplified, rightSimplified;
 	
-	abstract BBox makeBBox();
+	public abstract BBox makeBBox();
 	
 	public BBox getBBox(){
 		if(bbox == null){
@@ -25,16 +31,15 @@ public abstract class Path implements HasBBox {
 		} 
 		return bbox;
 	}
-	abstract boolean isLine();
-	abstract Line getLine();
-	abstract Vec getAt(PathParameter t);
-	abstract Vec getTangentAt(PathParameter t);	
-	abstract Path transform(ITransform m);
+	public abstract boolean isLine();
+	public abstract Line getLine();
+	public abstract Vec getAt(PathParameter t);
+	public abstract Vec getTangentAt(PathParameter t);	
+	public abstract Path transform(ITransform m);
 
-	abstract STuple<Path> splitSimpler();
-	
+	public abstract STuple<Path> splitSimpler();
 
-	void expand() {
+	public void expand() {
 		if(leftSimplified == null){
 			STuple<Path> s = splitSimpler();
 			leftSimplified = s.l;
@@ -42,29 +47,31 @@ public abstract class Path implements HasBBox {
 		}
 	}
 
-	Path getLeftSimpler() {
+	public Path getLeftSimpler() {
 		return leftSimplified;
 	}
 
-	Path getRightSimpler() {
+	public Path getRightSimpler() {
 		return rightSimplified;
 	}
 	
-
 	
+	public static enum ReportType{
+		T, LENGTH;
+	}
 	
-	void intersections(Path other , List<STuple<PathParameter>> result){
+	void intersections(Path other , ReportType type, List<STuple<PathParameter>> result){
 		if(isLine() && other.isLine()){
-			getLine().intersectionLine(other.getLine(),result);
+			getLine().intersectionLine(other.getLine(),type,result);
 		} else if(fastOverlapTest(other)){
 			if(preferSplitMe(other)){
 				expand();
-				getLeftSimpler().intersections(other, result);
-				getRightSimpler().intersections(other, result);
+				getLeftSimpler().intersections(other, type, result);
+				getRightSimpler().intersections(other, type, result);
 			} else {
 				other.expand();
-				intersections(other.getLeftSimpler(),result);
-				intersections(other.getRightSimpler(),result);
+				intersections(other.getLeftSimpler(), type,result);
+				intersections(other.getRightSimpler(), type,result);
 			}
 		}
 	}
@@ -95,12 +102,12 @@ public abstract class Path implements HasBBox {
 
 	
 
-	public void project(Vec p, BestProjection<PathParameter> best){
+	public void project(Vec p, ReportType type, BestProjection<PathParameter> best){
 		if(isLine()){
 			double t = getLine().closestT(p);
 			Vec v = getLine().getAt(t);
 			double dist = v.distanceSquared(p);
-			best.update(getLine().convertTBack(t), dist,v);
+			best.update(getLine().convertTBack(t,type), dist,v);
 		} else {
 			BBox b = getBBox();
 			double distSquaredLowerBound = b.getNearestPoint(p).distanceSquared(p);
@@ -114,22 +121,22 @@ public abstract class Path implements HasBBox {
 			expand();
 			if(getLeftSimpler().fastDistance(p) <=
 					getRightSimpler().fastDistance(p)){
-				getLeftSimpler().project(p, best);
-				getRightSimpler().project(p, best);
+				getLeftSimpler().project(p, type, best);
+				getRightSimpler().project(p, type, best);
 			} else {
-				getRightSimpler().project(p, best);
-				getLeftSimpler().project(p, best);
+				getRightSimpler().project(p, type, best);
+				getLeftSimpler().project(p, type, best);
 			}
 		}
 	}
 	
 
-	public void project(Path other, BestProjection<STuple<PathParameter>> best) {
+	public void project(Path other, ReportType type, BestProjection<STuple<PathParameter>> best) {
 		if(isLine() && other.isLine()){
 			TPair res = getLine().closestTs(other.getLine());
 			double dist = getLine().getAt(res.tl).distanceSquared(other.getLine().getAt(res.tr)) ;
-			STuple<PathParameter> ress = new STuple<PathParameter>(getLine().convertTBack(res.tl)
-											,other.getLine().convertTBack(res.tr));
+			STuple<PathParameter> ress = new STuple<PathParameter>(getLine().convertTBack(res.tl,type)
+											,other.getLine().convertTBack(res.tr,type));
 			best.update(ress, dist);
 		} else {
 			MinMax mm = getBBox().minMaxDistSquared(other.getBBox());
@@ -142,24 +149,50 @@ public abstract class Path implements HasBBox {
 			if(preferSplitMe(other)){
 				expand();
 				if(getLeftSimpler().fastDistance(other) < getRightSimpler().fastDistance( other)){
-					getLeftSimpler().project(other,best);
-					getRightSimpler().project(other,best);
+					getLeftSimpler().project(other,type,best);
+					getRightSimpler().project(other,type,best);
 				} else {
-					getRightSimpler().project(other,best);
-					getLeftSimpler().project(other,best);
+					getRightSimpler().project(other,type,best);
+					getLeftSimpler().project(other,type,best);
 				}
 			} else{
 				other.expand();
 				if(fastDistance(other.getLeftSimpler()) < fastDistance(other.getRightSimpler())){
-					project(other.getLeftSimpler(),best);
-					project(other.getRightSimpler(),best);
+					project(other.getLeftSimpler(),type,best);
+					project(other.getRightSimpler(),type,best);
 				} else {
-					project(other.getRightSimpler(),best);
-					project(other.getLeftSimpler(),best);
+					project(other.getRightSimpler(),type,best);
+					project(other.getLeftSimpler(),type,best);
 				}
 			}
 		}
-	
 	}
+	
+	void expandFullyAndSetLengths(){
+		expandFullyAndSetLengths(0);
+	}
+	
+	double expandFullyAndSetLengths(double length){
+		if(isLine()){
+			getLine().lengthStart = length;
+			getLine().length = getLine().length();
+			length += getLine().length;
+			return length;
+		} else {
+			expand();
+			length = getLeftSimpler().expandFullyAndSetLengths(length);
+			return  getRightSimpler().expandFullyAndSetLengths(length);
+		}
+	}
+	
+	PathIterator getPathIterator(){
+		return new AWTPathIterator(this);
+	}
+	
+	Iterator<Line> getLineAprroximationIterator(){
+		return new LineIterator(this);
+	}
+	
+
 
 }

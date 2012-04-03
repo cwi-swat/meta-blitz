@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bezier.composite.Path;
-import bezier.paths.CubicCurve;
+import bezier.paths.leaf.CubicCurve;
 import bezier.points.Transformation;
 import bezier.points.Vec;
 import bezier.segment.curve.Curve;

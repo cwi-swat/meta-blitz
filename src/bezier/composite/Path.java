@@ -7,7 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import bezier.demos.SetOperations;
-import bezier.paths.Line;
+import bezier.paths.leaf.Line;
 import bezier.paths.util.BestProjection;
 import bezier.paths.util.TInterval;
 import bezier.paths.util.TPair;

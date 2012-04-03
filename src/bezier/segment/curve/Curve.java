@@ -3,7 +3,7 @@ package bezier.segment.curve;
 import java.util.List;
 
 import bezier.composite.Path;
-import bezier.paths.Line;
+import bezier.paths.leaf.Line;
 import bezier.points.Matrix;
 import bezier.points.Vec;
 import bezier.projectiondeform.CoordinateSystem;

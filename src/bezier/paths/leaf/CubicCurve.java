@@ -1,10 +1,13 @@
-package bezier.paths;
+package bezier.paths.leaf;
 
 import static bezier.util.Util.findQuadraticPolynomialRoots;
 
+import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
 
+import bezier.paths.ConnectedPath;
+import bezier.paths.Path;
 import bezier.paths.util.ITransform;
 import bezier.points.Vec;
 import bezier.segment.Constants;
@@ -69,6 +72,7 @@ public final class CubicCurve extends NonLinearBezier {
 	}
 
 	@Override
+	public
 	BBox makeBBox() {
 		return new BBox(p0,p3);
 	}
@@ -171,16 +175,16 @@ public final class CubicCurve extends NonLinearBezier {
 	
 
 
-//	@Override
-//	public int currentSegment(float[] coords) {
-//		coords[0] = (float)p1.x;
-//		coords[1] = (float)p1.y;
-//		coords[2] = (float)p2.x;
-//		coords[3] = (float)p2.y;
-//		coords[4] = (float)p3.x;
-//		coords[5] = (float)p3.y;
-//		return PathIterator.SEG_CUBICTO;
-//	}
+	@Override
+	public int currentSegmentAWT(float[] coords) {
+		coords[0] = (float)p1.x;
+		coords[1] = (float)p1.y;
+		coords[2] = (float)p2.x;
+		coords[3] = (float)p2.y;
+		coords[4] = (float)p3.x;
+		coords[5] = (float)p3.y;
+		return PathIterator.SEG_CUBICTO;
+	}
 
 
 
