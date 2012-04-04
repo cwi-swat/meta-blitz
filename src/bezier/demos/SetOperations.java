@@ -6,7 +6,7 @@ import java.util.List;
 
 import bezier.composite.Paths;
 import bezier.image.generated.ColorsAlpha;
-import bezier.paths.factory.FontFactory;
+import bezier.paths.factory.TextFactory;
 import bezier.points.Vec;
 
 public class SetOperations extends DemoBase{
@@ -51,8 +51,8 @@ public class SetOperations extends DemoBase{
 	
 	@Override
 	public void draw() {
-		  Paths ts = FontFactory.text2Paths("tz");
-		  Paths ts2 = FontFactory.text2Paths(lastLine);
+		  Paths ts = TextFactory.text2Paths("tz");
+		  Paths ts2 = TextFactory.text2Paths(lastLine);
 		
 		  ts2 = ts2.transform(id.translate(25,400).scale(5));
 //		  if(dump){

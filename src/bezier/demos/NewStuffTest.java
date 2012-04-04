@@ -2,10 +2,10 @@ package bezier.demos;
 
 import bezier.paths.Path;
 import bezier.paths.compound.Paths;
-import bezier.paths.factory.FontFactory;
+import bezier.paths.factory.CircleFactory;
+import bezier.paths.factory.TextFactory;
 import bezier.points.Transformation;
 import bezier.points.Vec;
-import bezier.segment.Circle;
 
 public class NewStuffTest extends DemoBase {
 	public static void main(String[] args) {
@@ -19,7 +19,7 @@ public class NewStuffTest extends DemoBase {
 		
 		@Override
 		public void draw() {
-			Path p = FontFactory.text2Paths("Hallo");
+			Path p = TextFactory.text2Paths("Hallo");
 			p = p.transform(Transformation.id.translate(100,100).scale(2));
 			draw(p);
 			

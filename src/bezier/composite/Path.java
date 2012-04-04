@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import bezier.demos.SetOperations;
+import bezier.paths.Constants;
 import bezier.paths.simple.Line;
 import bezier.paths.util.BestProjection;
 import bezier.paths.util.TInterval;
@@ -14,7 +15,6 @@ import bezier.paths.util.TPair;
 import bezier.points.Matrix;
 import bezier.points.Transformation;
 import bezier.points.Vec;
-import bezier.segment.Constants;
 import bezier.segment.LengthMap;
 import bezier.segment.curve.Curve;
 import bezier.segment.curve.CurveApproxTree;

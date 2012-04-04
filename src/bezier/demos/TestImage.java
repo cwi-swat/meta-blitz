@@ -33,7 +33,7 @@ import bezier.image.generated.SampleInstances.Sample1;
 import bezier.image.generated.SampleInstances.Sample2;
 import bezier.image.generated.SampleInstances.Sample3;
 import bezier.image.generated.SampleInstances.Sample4;
-import bezier.paths.factory.FontFactory;
+import bezier.paths.factory.TextFactory;
 import bezier.paths.simple.QuadCurve;
 import bezier.points.Vec;
 import bezier.segment.LengthMap;
@@ -57,7 +57,7 @@ public class TestImage extends DemoBase {
 	
 	@Override
 	public void draw() {
-		  Paths ts = FontFactory.text2Paths("blabla");
+		  Paths ts = TextFactory.text2Paths("blabla");
 	        double yDiff = ts.bbox.y + ts.bbox.height / 2.0;
 	        ts = ts.transform(id.translate(-ts.bbox.x,-yDiff));
 	        Vec middle = size.div(2);

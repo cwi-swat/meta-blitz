@@ -1,6 +1,7 @@
 package bezier.paths;
 
 import java.awt.Shape;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,7 +11,6 @@ import bezier.paths.compound.CompoundPath;
 import bezier.paths.simple.Line;
 import bezier.paths.simple.SimplePath;
 import bezier.paths.util.BestProjection;
-import bezier.paths.util.IPathParameterTransformer;
 import bezier.paths.util.IPathSelector;
 import bezier.paths.util.ITransform;
 import bezier.paths.util.PathIterator;
@@ -50,11 +50,12 @@ public abstract class Path implements HasBBox{
 
 	public abstract STuple<Path> splitSimpler();
 
-	public boolean isCompoundLeaf(){
-		return !isSimple() && getCompound().isCompoundLeaf();
-	}
 	
 	public boolean isInside(Vec p){
+		return false;
+	}
+	
+	public boolean isEmpty(){
 		return false;
 	}
 	
@@ -79,30 +80,38 @@ public abstract class Path implements HasBBox{
 		T, LENGTH;
 	}
 	
-	public void intersections(Path other , ReportType type, List<PathParameter> lres, List<PathParameter> rres){
+	public STuple<List<PathParameter>> intersections(Path other ){
+		List<PathParameter> lres = new ArrayList<PathParameter>();
+		List<PathParameter> rres = new ArrayList<PathParameter>();
+		if(!isEmpty() && !other.isEmpty()){
+			intersections(other, ReportType.T, new PathParameter(0), new PathParameter(0), lres, rres);
+		}
+		return new STuple<List<PathParameter>>(lres, rres);
+	}
+	
+	public void intersections(Path other , ReportType type, PathParameter lParent,
+			PathParameter rParent, List<PathParameter> lres, List<PathParameter> rres){
 		if(isLine() && other.isLine()){
-			getLine().intersectionLine(other.getLine(),type,lres,rres);
+			getLine().intersectionLine(other.getLine(),type,lParent,rParent,lres,rres);
 		} else if(fastOverlapTest(other)){
-			int lsizestart = lres.size();
-			int rsizestart = rres.size();
 			if(preferSplitMe(other)){
 				expand();
-				getLeftSimpler().intersections(other, type, lres,rres);
-				getRightSimpler().intersections(other, type, lres,rres);
+				getLeftSimpler().intersections(other, type, getLeftParentPath(lParent),rParent, lres,rres);
+				getRightSimpler().intersections(other, type, getRightParentPath(lParent),rParent, lres,rres);
 			} else {
 				other.expand();
-				intersections(other.getLeftSimpler(), type,lres,rres);
-				intersections(other.getRightSimpler(), type,lres,rres);
+				intersections(other.getLeftSimpler(), type,lParent,other.getLeftParentPath(rParent), lres,rres);
+				intersections(other.getRightSimpler(), type,lParent,other.getRightParentPath(rParent), lres,rres);
 			}
-			convertUpwards(this,lres, lsizestart);
-			convertUpwards(other,rres, rsizestart);
 		}
 	}
 
-	public void convertUpwards(Path p, List<PathParameter> lres, int lsizestart) {
-		if(isCompoundLeaf()){
-			p.getCompound().convertBackCompounds(lres.subList(lsizestart, lres.size()));
-		}
+	public PathParameter getLeftParentPath(PathParameter original) {
+		return original;
+	}
+	
+	public PathParameter getRightParentPath(PathParameter original) {
+		return original;
 	}
 
 	private boolean fastOverlapTest(Path other) {
@@ -129,14 +138,22 @@ public abstract class Path implements HasBBox{
 		return getBBox().getMiddle().distanceSquared(r.getBBox().getMiddle());
 	}
 
-	
+	public PathParameter project(Vec v){
+		BestProjection<PathParameter> best = new BestProjection<PathParameter>();
+		if(!isEmpty()){
+			project(v, ReportType.T, new PathParameter(0), best);
+		}
+		return best.t;
+	}
 
-	public void project(Vec p, IPathParameterTransformer trans,ReportType type, BestProjection<PathParameter> best){
+
+	
+	public void project(Vec p, ReportType type, PathParameter parentPath, BestProjection<PathParameter> best){
 		if(isLine()){
 			double t = getLine().closestT(p);
 			Vec v = getLine().getAt(t);
 			double dist = v.distanceSquared(p);
-			best.update(trans.transform(getLine().convertTBackLeaf(t,type)), dist,v);
+			best.update(getLine().convertTBackLeaf(t,type,parentPath), dist,v);
 		} else {
 			BBox b = getBBox();
 			double distSquaredLowerBound = b.getNearestPoint(p).distanceSquared(p);
@@ -148,77 +165,63 @@ public abstract class Path implements HasBBox{
 				best.distanceSquaredUpperbound = distanceSquaredUpperBound;
 			}
 			expand();
-			PathParameter oldt = best.t;
 			if(getLeftSimpler().fastDistance(p) <=
 					getRightSimpler().fastDistance(p)){
-				getLeftSimpler().project(p, trans, type, best);
-				getRightSimpler().project(p, trans, type, best);
+				getLeftSimpler().project(p,  type, getLeftParentPath(parentPath), best);
+				getRightSimpler().project(p,  type, getRightParentPath(parentPath), best);
 			} else {
-				getRightSimpler().project(p,trans, type, best);
-				getLeftSimpler().project(p, trans, type, best);
+				getRightSimpler().project(p, type, getRightParentPath(parentPath), best);
+				getLeftSimpler().project(p,  type, getLeftParentPath(parentPath), best);
 			}
-			convertUpwardsBestProjection(this,best, oldt);
 		}
+	}
+
+
+	public STuple<PathParameter> project(Path other){
+		BestProjection<STuple<PathParameter>> best = new BestProjection<STuple<PathParameter>>();
+		if(!isEmpty() && !other.isEmpty()){
+			project(other,ReportType.T,new PathParameter(0),new PathParameter(0),best);
+		}
+		return best.t;
 	}
 	
-
-	private void convertUpwardsBestProjection(Path path,
-			BestProjection<PathParameter> best, PathParameter oldt) {
-		if(isCompoundLeaf() && best.t != oldt){
-			best.t = getCompound().convertBackCompound(best.t);
-		}
-		
-	}
-
-	public void project(Path other, ReportType type, BestProjection<STuple<PathParameter>> best) {
+	public void project(Path other, ReportType type,PathParameter lParent,
+			PathParameter rParent, BestProjection<STuple<PathParameter>> best) {
 		if(isLine() && other.isLine()){
 			TPair res = getLine().closestTs(other.getLine());
 			double dist = getLine().getAt(res.tl).distanceSquared(other.getLine().getAt(res.tr)) ;
-			STuple<PathParameter> ress = new STuple<PathParameter>(getLine().convertTBackLeaf(res.tl,type)
-											,other.getLine().convertTBackLeaf(res.tr,type));
+			STuple<PathParameter> ress = new STuple<PathParameter>(getLine().convertTBackLeaf(res.tl,type,lParent)
+											,other.getLine().convertTBackLeaf(res.tr,type,rParent));
 			best.update(ress, dist);
 		} else {
 			MinMax mm = getBBox().minMaxDistSquared(other.getBBox());
 			if(mm.getMin() > best.distanceSquaredUpperbound){
 				return;
 			}
-			PathParameter oldtl = best.t.l;
-			PathParameter oldtr = best.t.r;
 			if(mm.getMax() < best.distanceSquaredUpperbound){
 				best.distanceSquaredUpperbound = mm.getMax();
 			}
 			if(preferSplitMe(other)){
 				expand();
 				if(getLeftSimpler().fastDistance(other) < getRightSimpler().fastDistance( other)){
-					getLeftSimpler().project(other,type,best);
-					getRightSimpler().project(other,type,best);
+					getLeftSimpler().project(other,type,getLeftParentPath(lParent),rParent,best);
+					getRightSimpler().project(other,type,getRightParentPath(lParent),rParent,best);
 				} else {
-					getRightSimpler().project(other,type,best);
-					getLeftSimpler().project(other,type,best);
+					getRightSimpler().project(other,type,getRightParentPath(lParent),rParent,best);
+					getLeftSimpler().project(other,type,getLeftParentPath(lParent),rParent,best);
 				}
 			} else{
 				other.expand();
 				if(fastDistance(other.getLeftSimpler()) < fastDistance(other.getRightSimpler())){
-					project(other.getLeftSimpler(),type,best);
-					project(other.getRightSimpler(),type,best);
+					project(other.getLeftSimpler(),type,lParent,other.getLeftParentPath(rParent),best);
+					project(other.getRightSimpler(),type,lParent,other.getRightParentPath(rParent),best);
 				} else {
-					project(other.getRightSimpler(),type,best);
-					project(other.getLeftSimpler(),type,best);
+					project(other.getRightSimpler(),type,lParent,other.getRightParentPath(rParent),best);
+					project(other.getLeftSimpler(),type,lParent,other.getLeftParentPath(rParent),best);
 				}
 			}
-			convertUpwardsBestProjectionTup( other, best, oldtl, oldtr);
+
 		}
-	}
-	
-	private void convertUpwardsBestProjectionTup(Path other,
-			BestProjection<STuple<PathParameter>> best, PathParameter oldtl,PathParameter oldtr) {
-		if(isCompoundLeaf() && best.t.l != oldtl){
-			best.t = new STuple<PathParameter>(getCompound().convertBackCompound(best.t.l), best.t.r);
-		}
-		if(other.isCompoundLeaf() && best.t.r != oldtr){
-			best.t = new STuple<PathParameter>(best.t.l,other.getCompound().convertBackCompound(best.t.r));
-		}
-		
 	}
 
 	void expandFullyAndSetLengths(){

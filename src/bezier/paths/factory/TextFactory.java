@@ -25,7 +25,7 @@ import bezier.paths.simple.SimplePath;
 import bezier.points.Transformation;
 import bezier.points.Vec;
 
-public class FontFactory {
+public class TextFactory {
 
 	
 	public static List<String> getAvailableFontNames(){
@@ -51,7 +51,7 @@ public class FontFactory {
         	 Vec cur;
         	switch(p.currentSegment(curs)){
         		case PathIterator.SEG_CLOSE:
-        			result.add(Factory.append(curves));
+        			result.add(PathFactory.append(curves));
         			curves = new ArrayList<SimplePath>();
         		break;
         		case PathIterator.SEG_MOVETO:
@@ -60,7 +60,7 @@ public class FontFactory {
         		case PathIterator.SEG_LINETO: {  
         			cur = new Vec(curs[0],curs[1]);
         			if(!cur.isEqError(prev)){
-        				curves.add(Factory.createLine(prev, cur));
+        				curves.add(PathFactory.createLine(prev, cur));
         				prev = cur;
         			}
         		break;
@@ -68,7 +68,7 @@ public class FontFactory {
         		case PathIterator.SEG_QUADTO: {
         			cur = new Vec(curs[2],curs[3]);
         			Vec control = new Vec(curs[0],curs[1]);
-        			curves.add(Factory.createQuad(prev, control , cur));
+        			curves.add(PathFactory.createQuad(prev, control , cur));
         			prev = cur;
         		break;
         		}
@@ -76,15 +76,14 @@ public class FontFactory {
         			cur = new Vec(curs[4],curs[5]);
         			Vec control1 = new Vec(curs[0],curs[1]);
         			Vec control2 = new Vec(curs[2],curs[3]);
-        			curves.add(Factory.createCubic(prev, control1 , control2, cur));
+        			curves.add(PathFactory.createCubic(prev, control1 , control2, cur));
         			prev = cur;
         			break;
         		}
         	}
         	p.next();
         }
-        Path res = Factory.join(result);
-        return res.transform(Transformation.id.translate(-res.getBBox().x,-res.getBBox().y));
+        return PathFactory.join(result);
 	}
 	
 

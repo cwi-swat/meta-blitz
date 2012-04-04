@@ -164,7 +164,7 @@ public class KDTreeUtil{
 		} else {
 			judged = judge(yEvents, all, bestY.x);
 		}
-		System.out.printf("All %d Left %d inside %d Right %d\n",all.size(),judged.left.size(), judged.inside.size(), judged.right.size());
+//		System.out.printf("All %d Left %d inside %d Right %d\n",all.size(),judged.left.size(), judged.inside.size(), judged.right.size());
 		int halfInside= judged.inside.size() / 2;
 		int i = 0;
 		for(A a : judged.inside){

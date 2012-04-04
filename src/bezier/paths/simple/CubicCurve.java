@@ -6,13 +6,13 @@ import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
 
+import bezier.paths.Constants;
 import bezier.paths.IConnectedPath;
 import bezier.paths.Path;
 import bezier.paths.compound.CompoundPath;
 import bezier.paths.util.ITransform;
 import bezier.paths.util.PathParameter;
 import bezier.points.Vec;
-import bezier.segment.Constants;
 import bezier.util.BBox;
 import bezier.util.STuple;
 public final class CubicCurve extends NonLinearBezier {

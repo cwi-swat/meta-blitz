@@ -1,6 +1,6 @@
 package bezier.points;
 
-import bezier.segment.Constants;
+import bezier.paths.Constants;
 
 public final class Vec {
 	public final double x, y;

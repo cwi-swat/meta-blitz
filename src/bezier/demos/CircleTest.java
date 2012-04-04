@@ -1,9 +1,9 @@
 package bezier.demos;
 
-import bezier.composite.Path;
+import bezier.paths.Path;
+import bezier.paths.factory.CircleFactory;
 import bezier.points.Transformation;
 import bezier.points.Vec;
-import bezier.segment.Circle;
 
 public class CircleTest extends DemoBase {
 
@@ -19,16 +19,10 @@ public class CircleTest extends DemoBase {
 		@Override
 		public void draw() {
 			double angularLength = wheel / 500;
-//			System.out.println(angularLength);
-			
-			Path circle = Circle.makeCircularArc(new Vec(500,500), mouse, angularLength);
-//			System.out.println(circle);
+			Path circle = CircleFactory.makeCircularArc(new Vec(500,500), mouse, angularLength);
 			drawOval(new Vec(500,500),5);
-			if(!circle.curves.isEmpty()){
-				drawOval(Circle.getCircularCenter(new Vec(500,500), mouse, angularLength),5);
-//				circle = circle.transform(Transformation.id.scale(200).translate(300, 300));
-				draw(circle);
-			}
+			drawOval(CircleFactory.getCircularCenter(new Vec(500,500), mouse, angularLength),5);
+			draw(circle);
 			
 		}
 

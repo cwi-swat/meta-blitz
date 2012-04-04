@@ -5,9 +5,9 @@ import java.util.Iterator;
 import bezier.paths.compound.CompoundPath;
 import bezier.paths.simple.Line;
 import bezier.paths.simple.SimplePath;
+import bezier.paths.util.BestProjection;
 import bezier.paths.util.IPathSelector;
 import bezier.paths.util.ITransform;
-import bezier.paths.util.PathIterator;
 import bezier.paths.util.PathParameter;
 import bezier.points.Vec;
 import bezier.util.BBox;
@@ -108,4 +108,10 @@ public class EmptyPath extends Path {
 		};
 	}
 
+	
+	public boolean isEmpty(){
+		return true;
+	}
+	
+	
 }

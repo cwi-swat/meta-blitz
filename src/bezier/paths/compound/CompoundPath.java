@@ -26,16 +26,7 @@ public abstract class CompoundPath extends Path {
 	public CompoundPath getCompound() {
 		return this;
 	}
-
-	public void convertBackCompounds(List<PathParameter> lps){
-		for(int i = 0 ; i < lps.size() ; i++){
-			lps.set(i,convertBackCompound(lps.get(i)));
-		}
-	}
 	
-	public abstract PathParameter convertBackCompound(PathParameter p);
-	
-	public abstract boolean isCompoundLeaf();
 	public abstract boolean isInside(Vec p);
 	
 }

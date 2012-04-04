@@ -4,7 +4,7 @@ import static bezier.points.Transformation.id;
 import bezier.composite.Path;
 import bezier.composite.Paths;
 import bezier.image.generated.ColorsAlpha;
-import bezier.paths.factory.FontFactory;
+import bezier.paths.factory.TextFactory;
 import bezier.paths.simple.QuadCurve;
 import bezier.points.Vec;
 import bezier.segment.LengthMap;
@@ -19,7 +19,7 @@ public class TextOnPath extends DemoBase{
 
 	@Override
 	public void draw() {
-        Paths ts = FontFactory.text2Paths(lastLine);
+        Paths ts = TextFactory.text2Paths(lastLine);
         double yDiff = ts.bbox.y + ts.bbox.height / 2.0;
         ts = ts.transform(id.translate(-ts.bbox.x,-yDiff));
         Vec middle = size.div(2);

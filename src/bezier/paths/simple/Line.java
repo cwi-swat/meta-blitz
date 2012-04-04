@@ -244,8 +244,8 @@ public final class Line extends SimplePath{
 		throw new Error("Cannot make Line simpler!");
 	}
 
-	public void intersectionLine(Line line, ReportType type, List<PathParameter> lres,List<PathParameter> rres) {
-		addDoubleResult(intersection(line), line,type, lres,rres);
+	public void intersectionLine(Line line, ReportType type, PathParameter lParent, PathParameter rParent, List<PathParameter> lres,List<PathParameter> rres) {
+		addDoubleResult(intersection(line), line,type,lParent,rParent, lres,rres);
 	}
 
 	@Override

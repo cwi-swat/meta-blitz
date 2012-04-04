@@ -3,6 +3,7 @@ package bezier.paths.factory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -16,7 +17,7 @@ import bezier.paths.simple.QuadCurve;
 import bezier.paths.simple.SimplePath;
 import bezier.points.Vec;
 
-public class Factory {
+public class PathFactory {
 	
 	public static Line createLine(Vec start, Vec end){
 		return new Line(start, end); 
@@ -48,7 +49,21 @@ public class Factory {
 		return join(new HashSet<Path>(Arrays.asList(paths)));
 	}
 	
+	private static void removeEmpties(Set<Path> paths){
+		if(paths.size() == 0){
+			return;
+		}
+		Iterator<Path> it = paths.iterator();
+		while(it.hasNext()){
+			if(it.next() instanceof EmptyPath){
+				it.remove();
+			}
+		}
+		
+	}
+	
 	public static Path join(Set<Path>  paths){
+		removeEmpties(paths);
 		if(paths.size() == 0){
 			return new EmptyPath();
 		} else if(paths.size() == 1){

@@ -109,7 +109,7 @@ public class Append extends CompoundPath implements IConnectedPath{
 
 	public Vec getTangentAt(double t){
 		int n = (int) t;
-		if(n % curves.size() == 0){
+		if(n!= 0 && n % curves.size() == 0){
 			n--; 
 		}
 		n = Util.mod(n, curves.size());
@@ -120,7 +120,7 @@ public class Append extends CompoundPath implements IConnectedPath{
 	
 	public Vec getAt(double t){
 		int n = (int) t;
-		if(n % curves.size() == 0){
+		if(n!= 0 && n % curves.size() == 0){
 			n--; 
 		}
 		n = Util.mod(n, curves.size());
@@ -136,7 +136,6 @@ public class Append extends CompoundPath implements IConnectedPath{
 		}
 		return new Append(result);
 	}
-
 	@Override
 	public IConnectedPath reverse() {
 		List<SimplePath> result = new ArrayList<SimplePath>(curves.size());
@@ -217,14 +216,19 @@ public class Append extends CompoundPath implements IConnectedPath{
 		return this;
 	}
 
-	@Override
-	public PathParameter convertBackCompound(PathParameter pathParameter) {
-		return new PathParameter(this,startIndex + pathParameter.t);
+	
+	public PathParameter getLeftParentPath(PathParameter original) {
+		if(getLeftSimpler().isSimple()){
+			return new PathParameter(original.connected,startIndex);
+		} 
+		return original;
 	}
-
-	@Override
-	public boolean isCompoundLeaf() {
-		return startIndex == endIndex -1;
+	
+	public PathParameter getRightParentPath(PathParameter original) {
+		if(getRightSimpler().isSimple()){
+			return new PathParameter(original.connected,endIndex-1);
+		}
+		return original;
 	}
 
 }

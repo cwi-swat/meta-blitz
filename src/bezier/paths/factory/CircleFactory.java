@@ -1,17 +1,19 @@
-package bezier.segment;
+package bezier.paths.factory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import bezier.composite.Path;
+import bezier.paths.EmptyPath;
+import bezier.paths.Path;
 import bezier.paths.simple.CubicCurve;
+import bezier.paths.simple.SimplePath;
 import bezier.points.Transformation;
 import bezier.points.Vec;
 import bezier.segment.curve.Curve;
 
 import static java.lang.Math.*;
 
-public class Circle {
+public class CircleFactory {
 	
 	
 	public static Path makeCircle(Vec center, double diameter){
@@ -61,16 +63,16 @@ public class Circle {
 		double prevRad = startAngle;
 		Vec prevPoint = getCircleVec(prevRad);
 		double rad = prevRad ;
-		List<Curve> result = new ArrayList<Curve>();
+		List<SimplePath> result = new ArrayList<SimplePath>();
 		for(int i = 0 ; i < segs ; i++){
 			rad+=radInc;
 			
 			Vec curPoint = getCircleVec(rad);
-			result.add(new CubicCurve(prevPoint, prevPoint.add(prevPoint.perpendicularCCW().mul(kappa)),
+			result.add(PathFactory.createCubic(prevPoint, prevPoint.add(prevPoint.perpendicularCCW().mul(kappa)),
 					curPoint.add(curPoint.perpendicularCW().mul(kappa)),curPoint));
 			prevPoint = curPoint;
 		}
-		return new Path(result);
+		return PathFactory.append(result);
 	}
 	
 	private static Vec getCircleVec(double d) {

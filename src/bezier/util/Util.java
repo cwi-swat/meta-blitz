@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import bezier.image.functions.Constant;
-import bezier.segment.Constants;
+import bezier.paths.Constants;
 
 public class Util {
 

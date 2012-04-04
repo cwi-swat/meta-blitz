@@ -35,7 +35,6 @@ public class Paths extends CompoundPath{
 	}
 	
 	public Paths(Set<Path> paths, List<Event<Path>> xEvents, List<Event<Path>> yEvents){
-		System.out.printf("paths %d\n",paths.size());
 		this.paths = paths;
 		this.xEvents = xEvents;
 		this.yEvents = yEvents;
@@ -101,18 +100,6 @@ public class Paths extends CompoundPath{
 		throw new Error("Not connected!");
 	}
 
-
-	@Override
-	public PathParameter convertBackCompound(PathParameter p) {
-		return new PathParameter(paths.iterator().next(), p.t);
-	}
-
-	@Override
-	public boolean isCompoundLeaf() {
-		return false;
-	}
-
-	
 	private Path create(Set<Path> paths, List<Event<Path>> eventX, List<Event<Path>> eventsY){
 		if(paths.size() == 1){
 			return paths.iterator().next();
@@ -128,5 +115,20 @@ public class Paths extends CompoundPath{
 				create(splitJudge.left,splitJudge.leftX,splitJudge.leftY),
 				create(splitJudge.right,splitJudge.rightX,splitJudge.rightY));
 	}	
+
+
+	public PathParameter getLeftParentPath(PathParameter original) {
+		if(getLeftSimpler().isConnected()){
+			return new PathParameter(getLeftSimpler(),0);
+		}
+		return original;
+	}
+	
+	public PathParameter getRightParentPath(PathParameter original) {
+		if(getRightSimpler().isConnected()){
+			return new PathParameter(getRightSimpler(),0);
+		}
+		return original;
+	}
 	
 }

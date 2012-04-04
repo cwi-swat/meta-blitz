@@ -7,7 +7,7 @@ import bezier.composite.Path;
 import bezier.composite.Paths;
 import bezier.image.generated.Colors;
 import bezier.image.generated.ColorsAlpha;
-import bezier.paths.factory.FontFactory;
+import bezier.paths.factory.TextFactory;
 import bezier.paths.simple.CubicCurve;
 import bezier.paths.simple.Line;
 import bezier.paths.simple.QuadCurve;
@@ -27,7 +27,7 @@ public class ProjectOn extends DemoBase{
 	
 	@Override
 	public void draw() {
-		Paths ts = FontFactory.text2Paths("Atze");
+		Paths ts = TextFactory.text2Paths("Atze");
 //		ts = new Paths(ts.get(0));
 		ts = ts.transform(Transformation.id.scale(5).rotate(0 / 100.0 * Math.PI).translate(400,400)).makeMonotomous();
 		Path rect = makeRectangle();

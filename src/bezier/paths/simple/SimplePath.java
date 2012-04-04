@@ -22,18 +22,19 @@ public abstract class SimplePath extends Path implements IConnectedPath{
 	
 	public abstract int nrBelow(Vec p);
 	
-	public PathParameter convertTBackLeaf(double t, ReportType type){
+	public PathParameter convertTBackLeaf(double t, ReportType type, PathParameter lParent){
 		switch(type){
-		case T: return new PathParameter(t * (tEnd - tStart) + tStart);
-		case LENGTH: return new PathParameter(t * (length) + lengthStart);
+		case T: return new PathParameter(lParent.connected, lParent.t + t * (tEnd - tStart) + tStart);
+		case LENGTH: return new PathParameter(lParent.connected, lParent.t * (length) + lengthStart);
 		}
 		throw new Error(String.format("Unkown report type : %s",type));
 	}
 	
-	protected void addDoubleResult(TPair localRes, Line other, ReportType type, List<PathParameter> lres,List<PathParameter> rres){
+	protected void addDoubleResult(TPair localRes, Line other, ReportType type, 
+			PathParameter lParent, PathParameter rParent, List<PathParameter> lres,List<PathParameter> rres){
 		if(localRes != null){
-			PathParameter llres = convertTBackLeaf(localRes.tl,type);
-			PathParameter lrres = other.convertTBackLeaf(localRes.tr,type);
+			PathParameter llres = convertTBackLeaf(localRes.tl,type,lParent);
+			PathParameter lrres = other.convertTBackLeaf(localRes.tr,type,rParent);
 
 			lres.add(llres);
 			rres.add(lrres);

@@ -22,4 +22,7 @@ public final class PathParameter {
 		this(null,d);
 	}
 	
+	public String toString(){
+		return String.format("PP(%s %f)", connected,t);
+	}
 }
