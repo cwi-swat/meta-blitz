@@ -10,7 +10,6 @@ import com.sun.istack.internal.Pool.Impl;
 
 import bezier.composite.Path;
 import bezier.composite.Paths;
-import bezier.font.FontFactory;
 import bezier.image.FromShape;
 import bezier.image.Image;
 import bezier.image.functions.Clamp;
@@ -34,6 +33,7 @@ import bezier.image.generated.SampleInstances.Sample1;
 import bezier.image.generated.SampleInstances.Sample2;
 import bezier.image.generated.SampleInstances.Sample3;
 import bezier.image.generated.SampleInstances.Sample4;
+import bezier.paths.factory.FontFactory;
 import bezier.paths.simple.QuadCurve;
 import bezier.points.Vec;
 import bezier.segment.LengthMap;

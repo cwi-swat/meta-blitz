@@ -1,10 +1,9 @@
 package bezier.paths.compound;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Stack;
+import java.util.Set;
 
 import bezier.paths.IConnectedPath;
 import bezier.paths.Path;
@@ -14,53 +13,42 @@ import bezier.paths.util.PathParameter;
 import bezier.points.Vec;
 import bezier.util.BBox;
 import bezier.util.HasBBox;
+import bezier.util.KDTreeUtil;
+import bezier.util.KDTreeUtil.Event;
 import bezier.util.STuple;
+import bezier.util.KDTreeUtil.SplitJudgment;
 import bezier.util.Util;
+import static bezier.util.KDTreeUtil.*;
 
 public class Paths extends CompoundPath{
 	
 
-	final List<Append> paths;
-	final List<Integer> choices;
-	private List<Integer> sortedX, sortedY;
-	
-	public Paths(Paths parent, List<Integer> choices,BBox b) {
-		this.paths = parent.paths;
-		this.sortedX = Util.getChoices(parent.sortedX, choices,paths.size());
-		this.sortedY =  Util.getChoices(parent.sortedY, choices,paths.size());
-		this.choices = choices;
-		this.bbox = b;
-	}
+	final Set<Path> paths;
+	final List<Event<Path>> xEvents,yEvents;
 
-	
-	public Paths(List<Append> paths) {
+
+	public Paths(Set<Path> paths) {
 		this.paths = paths;
-		choices = Util.natListTill(paths.size());
-	}
-
-	void setSorteds(){
-		if(sortedX != null){
-			return;
-		}
-		sortedX = Util.natListTill(paths.size());
-		sortedY = Util.natListTill(paths.size());
-		Collections.sort(sortedX, new Comparator<Integer>() {
-			@Override
-			public int compare(Integer o1, Integer o2) {
-				return Double.compare(paths.get(o1).getBBox().x, paths.get(o2).getBBox().x);
-			}
-		});
-		Collections.sort(sortedY, new Comparator<Integer>() {
-			@Override
-			public int compare(Integer o1, Integer o2) {
-				return Double.compare(paths.get(o1).getBBox().y, paths.get(o2).getBBox().y);
-			}
-		});
+		Iterable<Path> iPaths = (Set)paths;
+		STuple<List<Event<Path>>> events = KDTreeUtil.makeEvents(iPaths);
+		xEvents = events.l; yEvents = events.r;
 	}
 	
+	public Paths(Set<Path> paths, List<Event<Path>> xEvents, List<Event<Path>> yEvents){
+		System.out.printf("paths %d\n",paths.size());
+		this.paths = paths;
+		this.xEvents = xEvents;
+		this.yEvents = yEvents;
+	}
+	
+	
+	public Paths(Path[] paths) {
+		this(new HashSet<Path>(Arrays.asList(paths)));
+	}
+
 	@Override
 	public BBox makeBBox() {
-		List<HasBBox> bbx = (List)paths;
+		Iterable<HasBBox> bbx = (Set)paths;
 		return new BBox(bbx);
 	}
 
@@ -78,69 +66,30 @@ public class Paths extends CompoundPath{
 
 	@Override
 	public Vec getAt(PathParameter t) {
-		return paths.get(t.index).getAt(t);
+		return t.connected.getConnected().getAt(t.t);
 	}
 
 	@Override
 	public Vec getTangentAt(PathParameter t) {
-		return paths.get(t.index).getTangentAt(t);
+		return t.connected.getConnected().getTangentAt(t.t);
 	}
 
 	@Override
 	public  Path transform(ITransform m) {
-		List<Append> ps = new ArrayList<Append>(paths.size());
-		for(Path p : ps){
+		Set<Path> ps = new HashSet<Path>(paths.size());
+		for(Path p : paths){
 			ps.add((Append)p.transform(m));
 		}
 		return new Paths(ps);
-	}
-	
-	List<Append> makeSubLoosePaths(List<Integer> indexes){
-		List<Append> result = new ArrayList<Append>(indexes.size());
-		for(int i : indexes){
-			result.add(paths.get(i));
-		}
-		return result;
-	}
-	
-
-
-	@Override
-	public  STuple<Path> splitSimpler() {
-		setSorteds();
-		int split = paths.size();
-		List<Integer> xsl = sortedX.subList(0, split);
-		List<Integer> xsr= sortedX.subList(split,paths.size());
-		List<Append> lx = makeSubLoosePaths(xsl);
-		List<Append> rx = makeSubLoosePaths(xsr);
-		List<HasBBox> lxb = (List)lx;
-		List<HasBBox> rxb = (List)rx;
-		BBox lxbb = new BBox(lxb);
-		BBox rxbb = new BBox(rxb);
-		List<Integer> ysl = sortedY.subList(0, split);
-		List<Integer> ysr= sortedY.subList(split,paths.size());
-		List<Append> ly = makeSubLoosePaths(ysl);
-		List<Append> ry = makeSubLoosePaths(ysr);
-		List<HasBBox> lyb = (List)ly;
-		List<HasBBox> ryb = (List)ry;
-		BBox lybb = new BBox(lxb);
-		BBox rybb = new BBox(rxb);
-		if(lxbb.area() + rxbb.area() < lybb.area() + rybb.area()){
-			return new STuple<Path>(
-					new Paths(this,xsl, lxbb),
-					new Paths(this,xsr, lxbb));
-		} else {
-			return new STuple<Path>(
-					new Paths(this,ysl, lybb),
-					new Paths(this,ysr, lybb));
-		}
 	}
 
 
 
 	@Override
 	public boolean isInside(Vec p) {
-		return false;
+		expand();
+		return Util.xor(!getLeftSimpler().isSimple() && getLeftSimpler().getCompound().isInside(p), 
+			(!getRightSimpler().isSimple() && getRightSimpler().getCompound().isInside(p)));
 	}
 
 
@@ -155,13 +104,29 @@ public class Paths extends CompoundPath{
 
 	@Override
 	public PathParameter convertBackCompound(PathParameter p) {
-		return new PathParameter(choices.get(0), p.t);
+		return new PathParameter(paths.iterator().next(), p.t);
 	}
-
 
 	@Override
 	public boolean isCompoundLeaf() {
-		return choices.size() == 1;
+		return false;
 	}
+
+	
+	private Path create(Set<Path> paths, List<Event<Path>> eventX, List<Event<Path>> eventsY){
+		if(paths.size() == 1){
+			return paths.iterator().next();
+		} else {
+			return new Paths(paths,eventX,eventsY);
+		}
+	}
+
+	@Override
+	public STuple<Path> splitSimpler() {
+		SplitJudgment<Path> splitJudge = KDTreeUtil.judgeSplit(paths,xEvents,yEvents, new LeastOverlap<Path>());
+		return new STuple<Path>(
+				create(splitJudge.left,splitJudge.leftX,splitJudge.leftY),
+				create(splitJudge.right,splitJudge.rightX,splitJudge.rightY));
+	}	
 	
 }

@@ -12,8 +12,8 @@ import bezier.image.generated.RasterInstances;
 import bezier.image.generated.RasterInstances.Raster1;
 import bezier.image.generated.SampleInstances;
 import bezier.image.generated.SampleInstances.Sample1;
+import bezier.paths.awt.DummyAWTSHape;
 import bezier.points.Transformation;
-import bezier.util.DummySWTSHape;
 
 public class FromShape {
 
@@ -32,7 +32,7 @@ public class FromShape {
 	                RenderingHints.VALUE_ANTIALIAS_ON);
 	   	g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g.setColor(new Color(ICC_ColorSpace.getInstance(ICC_ColorSpace.CS_GRAY), new float[]{1.0f}, 1.0f));
-		g.fill(new DummySWTSHape(p.transform(Transformation.id.translate(-x,-y)).getPathIterator()));
+		g.fill(new DummyAWTSHape(p.transform(Transformation.id.translate(-x,-y)).getPathIterator()));
 		g.dispose();
 		double[] data = new double[w * h];
 		bi.getRaster().getPixels(0, 0, w, h, data);

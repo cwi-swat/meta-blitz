@@ -1,4 +1,4 @@
-package bezier.font;
+package bezier.paths.factory;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
@@ -7,18 +7,23 @@ import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.UIManager;
 
-import bezier.composite.Path;
-import bezier.composite.Paths;
+import bezier.paths.Path;
+import bezier.paths.compound.Append;
+import bezier.paths.compound.CompoundPath;
+import bezier.paths.compound.Paths;
 import bezier.paths.simple.CubicCurve;
 import bezier.paths.simple.Line;
 import bezier.paths.simple.QuadCurve;
+import bezier.paths.simple.SimplePath;
 import bezier.points.Transformation;
 import bezier.points.Vec;
-import bezier.segment.curve.Curve;
 
 public class FontFactory {
 
@@ -33,22 +38,21 @@ public class FontFactory {
 	    return result;
 	}
 	
-	public static Paths text2Paths(String font, String text){
+	public static Path text2Paths(String font, String text){
 		Font f = new Font(font, Font.PLAIN, 50);
 		FontRenderContext ctx = new FontRenderContext(new AffineTransform(), true, true);
 		GlyphVector v = f.createGlyphVector(ctx, text);
 	    PathIterator p  = v.getOutline().getPathIterator(new AffineTransform());
 	    double[] curs = new double[6];
 	    Vec prev = new Vec(100,100);
-	    List<Path> result = new ArrayList<Path>();
-	    List<Curve> curves = new ArrayList<Curve>();
+	    Set<Path> result = new HashSet<Path>();
+	    List<SimplePath> curves = new ArrayList<SimplePath>();
         while(!p.isDone()){
         	 Vec cur;
         	switch(p.currentSegment(curs)){
         		case PathIterator.SEG_CLOSE:
-        			result.add(new Path(new ArrayList<Curve>(curves)));
-        			curves.clear();
-
+        			result.add(Factory.append(curves));
+        			curves = new ArrayList<SimplePath>();
         		break;
         		case PathIterator.SEG_MOVETO:
         			prev = new Vec(curs[0],curs[1]); 
@@ -56,15 +60,15 @@ public class FontFactory {
         		case PathIterator.SEG_LINETO: {  
         			cur = new Vec(curs[0],curs[1]);
         			if(!cur.isEqError(prev)){
-        			curves.add(new Line(prev, cur));
-        			prev = cur;
+        				curves.add(Factory.createLine(prev, cur));
+        				prev = cur;
         			}
         		break;
         		}
         		case PathIterator.SEG_QUADTO: {
         			cur = new Vec(curs[2],curs[3]);
         			Vec control = new Vec(curs[0],curs[1]);
-        			curves.add(new QuadCurve(prev, control , cur));
+        			curves.add(Factory.createQuad(prev, control , cur));
         			prev = cur;
         		break;
         		}
@@ -72,20 +76,19 @@ public class FontFactory {
         			cur = new Vec(curs[4],curs[5]);
         			Vec control1 = new Vec(curs[0],curs[1]);
         			Vec control2 = new Vec(curs[2],curs[3]);
-        			curves.add(new CubicCurve(prev, control1 , control2, cur));
+        			curves.add(Factory.createCubic(prev, control1 , control2, cur));
         			prev = cur;
         			break;
         		}
         	}
         	p.next();
         }
-        
-        Paths res = new Paths(result);
-        return res.transform(Transformation.id.translate(-res.bbox.x,-res.bbox.y));
+        Path res = Factory.join(result);
+        return res.transform(Transformation.id.translate(-res.getBBox().x,-res.getBBox().y));
 	}
 	
 
-	public static Paths text2Paths(String text){
+	public static Path text2Paths(String text){
 		return text2Paths(defaultFontName(),text);
 	}
 	

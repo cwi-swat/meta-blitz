@@ -17,7 +17,7 @@ public abstract class NonLinearBezier extends SimplePath{
 	
 	public NonLinearBezier(double tStart, double tEnd){
 		this(tStart,tEnd,null);
-		this.xyRoots = getXYRoots();
+
 	}
 	
 	public NonLinearBezier(double tStart, double tEnd, List<Double> xyRoots) {
@@ -55,6 +55,7 @@ public abstract class NonLinearBezier extends SimplePath{
 	@Override
 	public int nrBelow(Vec p){
 		if(!isMonotomous()){
+			expand();
 			return getLeftSimpler().getSimple().nrBelow(p)
 					+ getRightSimpler().getSimple().nrBelow(p);
 		}
@@ -88,12 +89,14 @@ public abstract class NonLinearBezier extends SimplePath{
 	}
 	
 	public boolean isMonotomous(){
+		setXYRoots();
 		return xyRoots.size() == 0;
 	}
 
 	@Override
 	public
 	STuple<Path> splitSimpler() {
+		setXYRoots();
 		if(!isMonotomous()){
 			return (STuple)makeMonotomous();
 		} else {

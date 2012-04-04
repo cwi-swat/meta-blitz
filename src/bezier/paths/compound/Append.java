@@ -1,7 +1,10 @@
 package bezier.paths.compound;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import bezier.paths.IConnectedPath;
 import bezier.paths.Path;
@@ -15,6 +18,7 @@ import bezier.util.HasBBox;
 import bezier.util.STuple;
 import bezier.util.Tuple;
 import bezier.util.Util;
+import bezier.util.KDTreeUtil.Event;
 
 public class Append extends CompoundPath implements IConnectedPath{
 
@@ -33,6 +37,10 @@ public class Append extends CompoundPath implements IConnectedPath{
 		this.curves = curves;
 		startIndex = 0;
 		endIndex = curves.size();
+	}
+	
+	public Append(SimplePath[] curves) {
+		this(Arrays.asList(curves));
 	}
 	
 	public boolean isLine(){
@@ -162,12 +170,21 @@ public class Append extends CompoundPath implements IConnectedPath{
 		}
 	}
 
+
+	private Path create(List<SimplePath> curves, int start, int end){
+		if(end - start   == 1){
+			return curves.get(start);
+		} else {
+			return new Append(curves,start,end);
+		}
+	}
+	
 	@Override
 	public  STuple<Path> splitSimpler() {
-		int split = curves.size()/2;
+		int split = (startIndex + endIndex)/ 2;
 		return new STuple<Path>(
-				new Append(curves,0,split),
-				new Append(curves,split,curves.size()));
+				create(curves,startIndex,split),
+				create(curves,split,endIndex));
 	}
 
 	@Override
@@ -202,12 +219,12 @@ public class Append extends CompoundPath implements IConnectedPath{
 
 	@Override
 	public PathParameter convertBackCompound(PathParameter pathParameter) {
-		return new PathParameter(startIndex + pathParameter.t);
+		return new PathParameter(this,startIndex + pathParameter.t);
 	}
 
 	@Override
 	public boolean isCompoundLeaf() {
-		return startIndex == endIndex +1;
+		return startIndex == endIndex -1;
 	}
 
 }

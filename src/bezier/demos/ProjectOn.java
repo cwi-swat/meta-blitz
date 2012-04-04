@@ -5,9 +5,9 @@ import java.util.List;
 
 import bezier.composite.Path;
 import bezier.composite.Paths;
-import bezier.font.FontFactory;
 import bezier.image.generated.Colors;
 import bezier.image.generated.ColorsAlpha;
+import bezier.paths.factory.FontFactory;
 import bezier.paths.simple.CubicCurve;
 import bezier.paths.simple.Line;
 import bezier.paths.simple.QuadCurve;

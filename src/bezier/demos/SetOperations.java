@@ -5,8 +5,8 @@ import static bezier.points.Transformation.id;
 import java.util.List;
 
 import bezier.composite.Paths;
-import bezier.font.FontFactory;
 import bezier.image.generated.ColorsAlpha;
+import bezier.paths.factory.FontFactory;
 import bezier.points.Vec;
 
 public class SetOperations extends DemoBase{

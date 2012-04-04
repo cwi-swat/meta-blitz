@@ -79,5 +79,5 @@ public abstract class SimplePath extends Path implements IConnectedPath{
 		return getTangentAt(t.t);
 	}
 
-	 abstract int currentSegmentAWT(float[] coords);
+	 public abstract int currentSegmentAWT(float[] coords);
 }

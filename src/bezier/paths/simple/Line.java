@@ -207,6 +207,7 @@ public final class Line extends SimplePath{
 
 
 	public int currentSegmentAWT(float[] coords) {
+		
 		coords[0] =(float) end.x;
 		coords[1] = (float)end.y;
 		return PathIterator.SEG_LINETO;

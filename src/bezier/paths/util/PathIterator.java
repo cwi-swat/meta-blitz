@@ -15,6 +15,8 @@ public class PathIterator<T> implements Iterator<T>{
 	public PathIterator(Path root, IPathSelector<T> selector) {
 		stack = new Stack<Path>();
 		stack.push(root);
+//		System.out.printf("Root is%s\n",root);
+		this.selector = selector;
 	}
 
 	@Override
@@ -26,10 +28,15 @@ public class PathIterator<T> implements Iterator<T>{
 	public T next() {
 		while(selector.select(stack.peek()) == null){
 			Path p = stack.pop();
+			p.expand();
+//			System.out.printf("adding %s\n",p.getRightSimpler());
+//			System.out.printf("adding %s\n",p.getLeftSimpler());
 			stack.push(p.getRightSimpler());
 			stack.push(p.getLeftSimpler());
 		}
-		return selector.select(stack.pop());
+		T s = selector.select(stack.pop());;
+
+		return s;
 	}
 
 	@Override

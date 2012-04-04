@@ -278,4 +278,8 @@ public class Util {
 		
 	}
 
+	public static boolean xor(boolean b, boolean c) {
+		return (b && !c) || (!b && c);
+	}
+
 }

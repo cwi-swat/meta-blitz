@@ -27,7 +27,6 @@ public abstract class CompoundPath extends Path {
 		return this;
 	}
 
-
 	public void convertBackCompounds(List<PathParameter> lps){
 		for(int i = 0 ; i < lps.size() ; i++){
 			lps.set(i,convertBackCompound(lps.get(i)));

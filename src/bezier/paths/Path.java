@@ -1,8 +1,11 @@
 package bezier.paths;
 
+import java.awt.Shape;
 import java.util.Iterator;
 import java.util.List;
 
+import bezier.paths.awt.AWTPathIterator;
+import bezier.paths.awt.DummyAWTSHape;
 import bezier.paths.compound.CompoundPath;
 import bezier.paths.simple.Line;
 import bezier.paths.simple.SimplePath;
@@ -49,6 +52,10 @@ public abstract class Path implements HasBBox{
 
 	public boolean isCompoundLeaf(){
 		return !isSimple() && getCompound().isCompoundLeaf();
+	}
+	
+	public boolean isInside(Vec p){
+		return false;
 	}
 	
 	public void expand() {
@@ -273,5 +280,9 @@ public abstract class Path implements HasBBox{
 				}
 			}
 		});
+	}
+	
+	public Shape getAWTShape(){
+		return new DummyAWTSHape(new AWTPathIterator(getConnectedIterator()));
 	}
 }

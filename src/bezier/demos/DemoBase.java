@@ -18,17 +18,16 @@ import java.awt.image.BufferedImage;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
-import bezier.composite.Path;
-import bezier.composite.Paths;
 import bezier.image.Image;
 import bezier.image.functions.Mul;
 import bezier.image.generated.ColorsAlpha;
 import bezier.image.generated.RasterInstances;
 import bezier.image.generated.RasterInstances.Raster4;
 import  bezier.image.generated.SampleInstances.Sample4;
+import bezier.paths.Path;
+import bezier.paths.awt.DummyAWTSHape;
 import bezier.points.Vec;
 import bezier.segment.curve.Curve;
-import bezier.util.DummySWTSHape;
 
 
 public abstract class DemoBase  extends JComponent implements KeyListener,MouseWheelListener,MouseListener, MouseMotionListener, WindowListener{
@@ -163,14 +162,6 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 		}
 	}
 	
-	public void fill(Paths p){
-		draw(p,ColorsAlpha.transparent,ColorsAlpha.black);
-	}
-	
-	public void fill(Paths p,Sample4 inside){
-		draw(p,ColorsAlpha.transparent,inside);
-	}
-	
 	public void fill(Path p){
 		draw(p,ColorsAlpha.transparent,ColorsAlpha.black);
 	}
@@ -179,32 +170,24 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 		draw(p,ColorsAlpha.transparent,inside);
 	}
 	
-	public void draw(Paths p){
+	public void draw(Path p){
 		draw(p,ColorsAlpha.black);
 	}
 	
-	public void draw(Paths p, Sample4 border){
+	public void draw(Path p, Sample4 border){
 		draw(p,border,ColorsAlpha.transparent);
 	}
 	
-	public void draw(Paths p, Sample4 border, Sample4 inside){
+	public void draw(Path p, Sample4 border, Sample4 inside){
 		
 		if(inside.last() > 0){
 			g.setColor(fromSample(inside));
-			g.fill(new DummySWTSHape(p.getPathIterator()));
+			g.fill(p.getAWTShape());
 		}
 		if(border.last() > 0){
 			g.setColor(fromSample(border));
-			g.draw(new DummySWTSHape(p.getPathIterator()));
+			g.draw(p.getAWTShape());
 		}
-	}
-	
-	public void draw(Curve c, Sample4 border){
-		draw(new Path(c),border, ColorsAlpha.transparent);
-	}
-	
-	public void draw(Curve c){
-		draw(new Path(c),ColorsAlpha.black, ColorsAlpha.transparent);
 	}
 	
 	public void draw(Image<Sample4> img){
@@ -222,18 +205,6 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 	}
 	
 
-	
-	public void draw(Path p){
-		draw(p,ColorsAlpha.black);
-	}
-	
-	public void draw(Path p, Sample4 border){
-		draw(p,border,ColorsAlpha.transparent);
-	}
-	
-	public void draw(Path p, Sample4 border, Sample4 inside){
-		draw(new Paths(p),border,inside);
-	}
 	
 	public abstract void draw();
 	

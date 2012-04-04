@@ -4,8 +4,8 @@ import bezier.composite.Path;
 import bezier.composite.Paths;
 import bezier.composite.TPaths;
 import bezier.demos.SetOperations.SetOperationChoices;
-import bezier.font.FontFactory;
 import bezier.image.generated.ColorsAlpha;
+import bezier.paths.factory.FontFactory;
 import bezier.points.Transformation;
 
 public class ProjectPointTest extends DemoBase {
