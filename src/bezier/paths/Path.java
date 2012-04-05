@@ -90,8 +90,15 @@ public abstract class Path implements HasBBox{
 
 	public List<Vec> intersectionPoints(Path ts2) {
 		List<Vec> result = new ArrayList<Vec>();
-		for(PathParameter p : intersections(ts2).l){
+		STuple<List<PathParameter>> in = intersections(ts2);
+		for(PathParameter p : in.r){
 			result.add(getAt(p));
+		}
+		for(int i = 0 ; i < in.l.size(); i++){
+			if(!result.get(i).isEqError(ts2.getAt(in.l.get(i)))){
+				System.out.printf("Distance to big %f\n", result.get(i).distance(ts2.getAt(in.l.get(i))));
+			}
+//			assert result.get(i).isEqError(ts2.getAt(in.r.get(i)));
 		}
 		return result;
 	}
@@ -101,11 +108,12 @@ public abstract class Path implements HasBBox{
 		List<PathParameter> lres = new ArrayList<PathParameter>();
 		List<PathParameter> rres = new ArrayList<PathParameter>();
 		if(!isEmpty() && !other.isEmpty()){
-			intersections(other, ReportType.T, new PathParameter(0), new PathParameter(0), lres, rres);
+			intersections(other, ReportType.T, getRootPathParameter(), other.getRootPathParameter(), lres, rres);
 		}
 		return new STuple<List<PathParameter>>(lres, rres);
 	}
 	
+
 	public void intersections(Path other , ReportType type, PathParameter lParent,
 			PathParameter rParent, List<PathParameter> lres, List<PathParameter> rres){
 		if(isLine() && other.isLine()){
@@ -123,6 +131,9 @@ public abstract class Path implements HasBBox{
 		}
 	}
 
+
+	public abstract PathParameter getRootPathParameter() ;
+	
 	public PathParameter getLeftParentPath(PathParameter original) {
 		return original;
 	}
@@ -333,7 +344,7 @@ public abstract class Path implements HasBBox{
 	private Set<ConnectedPath> getConnectedFromPathParameters(List<PathParameter> l){
 		Set<ConnectedPath> result = new HashSet<ConnectedPath>();
 		for(PathParameter p : l){
-			result.add(p.connected.getConnected());
+			result.add(p.connected);
 		}
 		return result;
 	}
@@ -342,14 +353,12 @@ public abstract class Path implements HasBBox{
 	private Map<ConnectedPath, List<Double>> getPathParametersPerConnectedPath(List<PathParameter> ps){
 		Map<ConnectedPath, List<Double>> res = new HashMap<ConnectedPath, List<Double>>();
 		for(PathParameter p : ps){
-			ConnectedPath con = p.connected.getConnected();
-			if(res.containsKey(con)){
-				res.get(con).add(p.t);
-			} else {
-				List<Double> newList = new ArrayList<Double>();
-				newList.add(p.t);
-				res.put(con, newList);
+			ConnectedPath con = p.connected;
+			assert con != null;
+			if(!res.containsKey(con)){
+				res.put(con, new ArrayList<Double>());
 			}
+			res.get(con).add(p.t);
 		}
 		for(List<Double> l : res.values()){
 			Collections.sort(l);
@@ -358,9 +367,16 @@ public abstract class Path implements HasBBox{
 	}
 	
 	private Set<ConnectedPath> getSegments(boolean shouldBeInside, Path r, List<PathParameter> intersections){
-		Set<ConnectedPath> res = getConnectedSet();
+		Set<ConnectedPath> all = getConnectedSet();
 		Set<ConnectedPath> intersectionConnectedL = getConnectedFromPathParameters(intersections);
-		res.removeAll(intersectionConnectedL); // now contains connected paths with no intersection
+		all.removeAll(intersectionConnectedL); // now contains connected paths with no intersection
+		Set<ConnectedPath> res = new HashSet<ConnectedPath>();
+		for(ConnectedPath p : all){
+			if(r.isInside(p.getStartPoint()) == shouldBeInside){
+				res.add(p);
+			}
+		}
+		int before = res.size();
 		Map<ConnectedPath, List<Double>> paramPer = getPathParametersPerConnectedPath(intersections);
 		for(ConnectedPath p : paramPer.keySet()){
 			res.addAll(p.getSegments(paramPer.get(p), r, shouldBeInside));
@@ -414,6 +430,10 @@ public abstract class Path implements HasBBox{
 				segments.add(merged);
 			}
 		} 
+//		for(ConnectedPath p : closedPaths){
+//			System.out.printf("%s",p);
+//		}
+//		
 		if(!segments.isEmpty()){
 			System.out.println("Left over segments:");
 			for(Path p : segments){

@@ -51,8 +51,8 @@ public class SetOperations extends DemoBase{
 	
 	@Override
 	public void draw() {
-		  Path ts = TextFactory.text2Paths("tz");
-		  Path ts2 = TextFactory.text2Paths("Hallo");
+		  Path ts = TextFactory.text2Paths("Atze");
+		  Path ts2 = TextFactory.text2Paths(lastLine);
 		
 		  ts2 = ts2.transform(id.scale(5).translate(200,500));
 //		  if(dump){
@@ -71,17 +71,18 @@ public class SetOperations extends DemoBase{
 		  case SUBTRACT_L: res = ts2.substract(ts); break;
 		  case INTERSECTION: res = ts.intersection(ts2); break;
 		  }
-//		  Shapes sres = new Shapes(res);
-//		  System.out.print(res);
+////		  Shapes sres = new Shapes(res);
+////		  System.out.print(res);
 		  draw(res,ColorsAlpha.black,ColorsAlpha.green.lerp(0.5, ColorsAlpha.black));
+//		  draw(ts); draw(ts2);
 		  List<Vec> inters2 = ts.intersectionPoints(ts2);
 		  for(Vec v : inters2){
 			  drawOval(v, 10);
 		  }
-		  if(dump){
-			  System.out.println(res);
-			  dump = false;
-		  }
+//		  if(dump){
+//			  System.out.println(res);
+//			  dump = false;
+//		  }
 //		  Tuple<Intersections, Intersections> inters = ts.getIntersections(ts2);
 //	      for(int i = 0 ; i < inters.l.intersectionsPerPath.size();i++){
 //	    	  List<Double> rs = inters.l.getFor(i);

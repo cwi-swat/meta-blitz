@@ -16,6 +16,15 @@ public class EmptyPath extends ConnectedPath {
 
 	public EmptyPath(){}
 	
+	public boolean isClosed(){
+		return true;
+	}
+	
+	@Override
+	public boolean isInside(Vec p) {
+		return false;
+	}
+	
 	@Override
 	public BBox makeBBox() {
 		return new BBox(0, 0, 0, 0);

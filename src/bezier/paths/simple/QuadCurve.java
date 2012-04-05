@@ -79,7 +79,7 @@ public final class QuadCurve extends NonLinearBezier{
 		Vec cl = p0.interpolate(t, p1);
 		Vec cr = p1.interpolate(t, p2);
 		Vec cm = cl.interpolate(t, cr);
-		double tMiddle = 0.5 * (tStart + tEnd);
+		double tMiddle = t * (tEnd - tStart) + tStart;
 		return new  STuple<NonLinearBezier>(new QuadCurve(p0,cl,cm,tStart,tMiddle),
 										new QuadCurve(cm,cr, p2, tMiddle,tEnd));
 	}

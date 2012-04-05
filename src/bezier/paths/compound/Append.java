@@ -11,6 +11,7 @@ import bezier.paths.simple.SimplePath;
 import bezier.paths.util.ITransform;
 import bezier.paths.util.PathParameter;
 import bezier.points.Vec;
+import bezier.segment.curve.Curve;
 import bezier.util.BBox;
 import bezier.util.HasBBox;
 import bezier.util.STuple;
@@ -237,24 +238,21 @@ public class Append extends ConnectedPath implements ICompoundPath{
 		int startn = (int)start;
 		int endn = (int)end;
 		if(endn == end){
-			end--;
+			endn--;
 		}
 		if(startn == endn && start < end){
 			return curves.get(startn).getSubPath(start-startn, end-endn);
 		}
 		List<SimplePath> result = new ArrayList<SimplePath>();
 		result.add(curves.get(startn).getSubPath(start - startn,1.0).getSimple());
-		for(int i = startn+1; i < Util.mod(endn-1,curves.size()); i++){
-			result.add(curves.get(i));
+		for(int i = startn+1; Util.mod(i,curves.size()) != endn; i++){
+			result.add(curves.get(Util.mod(i,curves.size())));
 		}
 		result.add(curves.get(endn).getSubPath(0, end - endn).getSimple());
 		return new Append(result);
 	}
 	
-	public Vec getBetween(PathParameter tl, PathParameter tr) {
-		assert tl.connected == tr.connected && tl.connected == this;
-		double start = tl.t;
-		double end = tr.t;
+	public Vec getBetween(double start, double end) {
 		if(start < end){
 			return getAt((start + end)/2);
 		} else {
@@ -282,5 +280,16 @@ public class Append extends ConnectedPath implements ICompoundPath{
 	public ICompoundPath getCompound() {
 		return this;
 	}
+	public String toString(){
+		StringBuffer b = new StringBuffer();
+		b.append("Append:\n");
+		for(Path c : curves){
+			b.append(c.toString());
+			b.append('\n');
+		}
+		b.append('\n');
+		return b.toString();
+	}
+	
 
 }

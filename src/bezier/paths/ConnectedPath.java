@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import bezier.paths.factory.PathFactory;
+import bezier.paths.util.PathParameter;
 import bezier.points.Vec;
 import bezier.util.STuple;
 import bezier.util.Tuple;
@@ -40,9 +41,9 @@ public abstract class ConnectedPath extends Path{
 	
 	ConnectedPath append(ConnectedPath r) {
 		if(canAppend(r)){
-			return PathFactory.append(this,r);
+			return PathFactory.append(this,r.getWithAdjustedStartPoint(getEndPoint()));
 		} else {
-			return PathFactory.append(this,r.reverse());
+			return PathFactory.append(this,r.reverse().getWithAdjustedStartPoint(getEndPoint()));
 		}
 	}
 	
@@ -55,6 +56,26 @@ public abstract class ConnectedPath extends Path{
 	@Override
 	public boolean isInside(Vec p) {
 		return isClosed() && nrBelow(p) % 2 == 1;
+	}
+	
+	public PathParameter getRootPathParameter(){
+		return new PathParameter(this,0);
+	}
+	
+	@Override
+	public PathParameter getLeftParentPath(PathParameter original) {
+		if(original.connected == null){
+			return new PathParameter(this, original.t);
+		}
+		return original;
+	}
+	
+	@Override
+	public PathParameter getRightParentPath(PathParameter original) {
+		if(original.connected == null){
+			return new PathParameter(this, original.t);
+		}
+		return original;
 	}
 	
 	// below: set operation stuff
@@ -115,18 +136,15 @@ public abstract class ConnectedPath extends Path{
 			case OUTSIDE: startInside = false ; break;
 			case UNSURE: System.err.printf("getSegments : Cannot be sure!!!\n"); break;
 		}
-		int first; 
-		int last; 
-		if(startInside == shouldBeInside){
-			first = 0;
-			last = ts.size()-1;
-		} else {
-			first = 1;
-			last = ts.size();
-		}
+		assert ts.size() % 2 == 0;
+		int first = startInside == shouldBeInside ? 0 : 1;
 		Set<ConnectedPath> segments = new HashSet<ConnectedPath>();
-		for(int i = first; i <= last; i+=2){
-			segments.add(getConnected().getSubPath(ts.get(i % ts.size()), ts.get((i+1) % ts.size())).getConnected());
+		for(int i = first; i < first + ts.size() ; i+=2){
+			ConnectedPath p = getSubPath(ts.get(i % ts.size()), ts.get((i+1) % ts.size()));
+			if(!p.isEmpty() && p.getStartPoint().distanceSquared(p.getEndPoint()) > Constants.MAX_ERROR_POW2){
+				segments.add(p);
+			}
+			
 		}
 		return segments;
 	}
@@ -135,7 +153,7 @@ public abstract class ConnectedPath extends Path{
 	List<ConnectedPath> findConnecting(Set<ConnectedPath> others){
 		List<ConnectedPath> res = new ArrayList<ConnectedPath>();
 		for(ConnectedPath q : others){
-			if(this != q && getConnected().canAppend(q) || getConnected().canAppendReversed(q)){
+			if(this != q && (getConnected().canAppend(q) || getConnected().canAppendReversed(q))){
 				res.add(q);
 			}
 		}

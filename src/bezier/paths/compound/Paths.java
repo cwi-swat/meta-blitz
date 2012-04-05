@@ -31,12 +31,14 @@ public class Paths extends Path implements ICompoundPath{
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Paths(Set<Path> paths) {
 		this.paths = paths;
+		assert paths.size() != 0 && paths.size() != 1;
 		Iterable<Path> iPaths = (Set)paths;
 		STuple<List<Event<Path>>> events = KDTreeUtil.makeEvents(iPaths);
 		xEvents = events.l; yEvents = events.r;
 	}
 	
 	public Paths(Set<Path> paths, List<Event<Path>> xEvents, List<Event<Path>> yEvents){
+		assert paths.size() != 0;
 		this.paths = paths;
 		this.xEvents = xEvents;
 		this.yEvents = yEvents;
@@ -130,6 +132,10 @@ public class Paths extends Path implements ICompoundPath{
 		return original;
 	}
 
+	public PathParameter getRootPathParameter() {
+		return new PathParameter(0);
+	}
+	
 	@Override
 	public Path getSubPath(PathParameter start, PathParameter end) {
 		assert start.connected == end.connected;
@@ -159,4 +165,14 @@ public class Paths extends Path implements ICompoundPath{
 		return paths;
 	}
 	
+	public String toString(){
+		StringBuffer b = new StringBuffer();
+		b.append("Join:\n");
+		for(Path c : paths){
+			b.append(c.toString());
+			b.append('\n');
+		}
+		b.append('\n');
+		return b.toString();
+	}
 }

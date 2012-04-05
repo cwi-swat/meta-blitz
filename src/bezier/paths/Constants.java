@@ -6,13 +6,13 @@ public class Constants {
 	public static final double MAX_ERROR = 0.2;
 //	public static final double HALF_MAX_ERROR = 0.5 * MAX_ERROR;
 //	public static final double MAX_ERROR_2 = 2 * MAX_ERROR;
-//	public static final double MAX_ERROR_SIDE = MAX_ERROR / Math.sqrt(2.0);
-//	public static final double MAX_ERROR_SIDE_HALF = 0.5 * MAX_ERROR_SIDE;
+	public static final double MAX_ERROR_SIDE = MAX_ERROR / Math.sqrt(2.0);
+	public static final double MAX_ERROR_SIDE_HALF = 0.5 * MAX_ERROR_SIDE;
 //	public static final double MAX_ERROR_SIDE_HALF_POW2 = MAX_ERROR_SIDE_HALF * MAX_ERROR_SIDE_HALF;
 //	public static final double MAX_ERROR_SIDE_HALF_POW2_HALF = MAX_ERROR_SIDE_HALF_POW2/2.0;
 //	public static final double MAX_ERROR_SQRT = Math.sqrt(MAX_ERROR /2.0);
 	public static final double MAX_ERROR_POW2 = MAX_ERROR * MAX_ERROR;
-	public static final double HALF_MAX_ERROR_POW2 = MAX_ERROR_POW2/16.0;
+	public static final double HALF_MAX_ERROR_POW2 = MAX_ERROR_POW2/32.0;
 //	public static final double MAX_WIDTH = 5 * Math.sqrt(MAX_ERROR / 2.0);
 //	public static final double MAX_ERROR_AREA_POW2 = MAX_ERROR_POW2 * MAX_ERROR_POW2;
 //	public static final double MAX_ERROR_HEIGHT = MAX_ERROR / (Math.sqrt(4+ 2*Math.sqrt(2))) / 4;
