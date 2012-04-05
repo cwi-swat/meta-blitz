@@ -2,7 +2,7 @@ package bezier.paths;
 
 import java.util.Iterator;
 
-import bezier.paths.compound.CompoundPath;
+import bezier.paths.compound.ICompoundPath;
 import bezier.paths.simple.Line;
 import bezier.paths.simple.SimplePath;
 import bezier.paths.util.IPathSelector;
@@ -12,7 +12,7 @@ import bezier.points.Vec;
 import bezier.util.BBox;
 import bezier.util.STuple;
 
-public class EmptyPath extends Path {
+public class EmptyPath extends ConnectedPath {
 
 	public EmptyPath(){}
 	
@@ -52,13 +52,13 @@ public class EmptyPath extends Path {
 	}
 
 	@Override
-	public IConnectedPath getConnected() {
+	public ConnectedPath getConnected() {
 		
 		return null;
 	}
 
 	@Override
-	public CompoundPath getCompound() {
+	public ICompoundPath getCompound() {
 		
 		return null;
 	}
@@ -115,6 +115,47 @@ public class EmptyPath extends Path {
 	@Override
 	public Path getSubPath(PathParameter start, PathParameter end) {
 		throw new Error("Cannot get subpath of emtpy path!");
+	}
+
+	@Override
+	public Vec getStartPoint() {
+		throw new Error("Empty path!");
+	}
+
+	@Override
+	public Vec getEndPoint() {
+		throw new Error("Empty path!");
+	}
+
+	@Override
+	public Vec getAt(double t) {
+		throw new Error("Empty path!");
+	}
+
+	@Override
+	public Vec getTangentAt(double t) {
+		throw new Error("Empty path!");
+	}
+
+	@Override
+	public ConnectedPath reverse() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ConnectedPath getWithAdjustedStartPoint(Vec newStart) {
+		throw new Error("Empty path!");
+	}
+
+	@Override
+	public ConnectedPath getSubPath(double start, double end) {
+		throw new Error("Empty path!");
+	}
+
+	@Override
+	public int nrBelow(Vec p) {
+		return 0;
 	}
 	
 	

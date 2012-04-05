@@ -2,14 +2,14 @@ package bezier.paths.simple;
 
 import java.util.List;
 
-import bezier.paths.IConnectedPath;
+import bezier.paths.ConnectedPath;
 import bezier.paths.Path;
-import bezier.paths.compound.CompoundPath;
+import bezier.paths.compound.ICompoundPath;
 import bezier.paths.util.PathParameter;
 import bezier.paths.util.TPair;
 import bezier.points.Vec;
 
-public abstract class SimplePath extends Path implements IConnectedPath{
+public abstract class SimplePath extends ConnectedPath{
 
 	public final double tStart, tEnd;
 	public double length; // optional
@@ -19,8 +19,6 @@ public abstract class SimplePath extends Path implements IConnectedPath{
 		this.tStart = tStart;
 		this.tEnd = tEnd;
 	}
-	
-	public abstract int nrBelow(Vec p);
 	
 	public PathParameter convertTBackLeaf(double t, ReportType type, PathParameter lParent){
 		switch(type){
@@ -41,12 +39,6 @@ public abstract class SimplePath extends Path implements IConnectedPath{
 		}
 	}
 	
-	public boolean isClosed(){
-		return getStartPoint().isEqError(getEndPoint());
-	}
-	
-
-
 	@Override
 	public boolean isSimple() {
 		return true;
@@ -55,10 +47,6 @@ public abstract class SimplePath extends Path implements IConnectedPath{
 	public boolean isConnected(){
 		return true;
 	}
-	
-	public IConnectedPath getConnected(){
-		return this;
-	}
 
 	@Override
 	public SimplePath getSimple() {
@@ -66,7 +54,7 @@ public abstract class SimplePath extends Path implements IConnectedPath{
 	}
 
 	@Override
-	public CompoundPath getCompound() {
+	public ICompoundPath getCompound() {
 		throw new Error("Not compund!");
 	}
 
@@ -86,6 +74,8 @@ public abstract class SimplePath extends Path implements IConnectedPath{
 	public Path getSubPath(PathParameter start, PathParameter end) {
 		return getSubPath(start.t, end.t);
 	}
-
-	public abstract Path getSubPath(double start, double end) ;
+	
+	public Path getPath(){
+		return this;
+	}
 }

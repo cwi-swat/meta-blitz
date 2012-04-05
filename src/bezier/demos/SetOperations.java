@@ -4,8 +4,8 @@ import static bezier.points.Transformation.id;
 
 import java.util.List;
 
-import bezier.composite.Paths;
 import bezier.image.generated.ColorsAlpha;
+import bezier.paths.Path;
 import bezier.paths.factory.TextFactory;
 import bezier.points.Vec;
 
@@ -51,21 +51,20 @@ public class SetOperations extends DemoBase{
 	
 	@Override
 	public void draw() {
-		  Paths ts = TextFactory.text2Paths("tz");
-		  Paths ts2 = TextFactory.text2Paths(lastLine);
+		  Path ts = TextFactory.text2Paths("tz");
+		  Path ts2 = TextFactory.text2Paths("Hallo");
 		
-		  ts2 = ts2.transform(id.translate(25,400).scale(5));
+		  ts2 = ts2.transform(id.scale(5).translate(200,500));
 //		  if(dump){
 //			  System.out.println(ts2);
 //		  }
 		  ts = ts.transform(id.scale(5).rotate(wheel / 100.0 * Math.PI));
-		  ts = ts.transform(id.translate(mouse.sub(ts.bbox.middle()))).makeMonotomous();
-		  ts2 = ts2.makeMonotomous();
+		  ts = ts.transform(id.translate(mouse.sub(ts.getBBox().middle())));
 //		  if(dump){
 //			  System.out.println(ts2);
 //			  dump = false;
 //		  }
-		  Paths res = null;
+		  Path res = null;
 		  switch(currentChoice){
 		  case UNION: res = ts.union(ts2); break;
 		  case SUBTRACT_R: res = ts.substract(ts2); break;
@@ -75,7 +74,7 @@ public class SetOperations extends DemoBase{
 //		  Shapes sres = new Shapes(res);
 //		  System.out.print(res);
 		  draw(res,ColorsAlpha.black,ColorsAlpha.green.lerp(0.5, ColorsAlpha.black));
-		  List<Vec> inters2 = ts.getIntersectionPoints(ts2);
+		  List<Vec> inters2 = ts.intersectionPoints(ts2);
 		  for(Vec v : inters2){
 			  drawOval(v, 10);
 		  }

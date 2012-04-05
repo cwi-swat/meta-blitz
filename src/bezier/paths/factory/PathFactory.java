@@ -1,11 +1,13 @@
 package bezier.paths.factory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import bezier.paths.ConnectedPath;
 import bezier.paths.EmptyPath;
 import bezier.paths.Path;
 import bezier.paths.compound.Append;
@@ -30,17 +32,27 @@ public class PathFactory {
 		return new CubicCurve(start, controll, controlr, end); 
 	}
 	
-	public static Path append(SimplePath ...paths ){
+	public static ConnectedPath append(ConnectedPath ...paths ){
 		return append(Arrays.asList(paths));
 	}
 	
-	public static Path append(List<SimplePath> paths ){
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static ConnectedPath append(List<ConnectedPath> paths ){
+		removeEmpties((List)paths);
 		if(paths.size() == 0){
 			return new EmptyPath();
 		} else if(paths.size() == 1){
 			return paths.get(0);
 		} else {
-			return new Append(paths);
+			List<SimplePath> add = new ArrayList<SimplePath>();
+			for(ConnectedPath p: paths){
+				if(p instanceof Append){
+					add.addAll(((Append)p).getPaths());
+				} else {
+					add.add(p.getSimple());
+				}
+			}
+			return new Append(add);
 		}
 	}
 	
@@ -48,10 +60,7 @@ public class PathFactory {
 		return join(new HashSet<Path>(Arrays.asList(paths)));
 	}
 	
-	private static void removeEmpties(Set<Path> paths){
-		if(paths.size() == 0){
-			return;
-		}
+	private static void removeEmpties(Iterable<Path> paths){
 		Iterator<Path> it = paths.iterator();
 		while(it.hasNext()){
 			if(it.next() instanceof EmptyPath){
@@ -68,7 +77,15 @@ public class PathFactory {
 		} else if(paths.size() == 1){
 			return paths.iterator().next();
 		} else {
-			return new Paths(paths);
+			Set<Path> add = new HashSet<Path>();
+			for(Path p: paths){
+				if(p instanceof Paths){
+					add.addAll(((Paths)p).getPaths());
+				} else {
+					add.add(p);
+				}
+			}
+			return new Paths(add);
 		}
 	}
 

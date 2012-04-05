@@ -4,8 +4,8 @@ import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
 
+import bezier.paths.ConnectedPath;
 import bezier.paths.Constants;
-import bezier.paths.IConnectedPath;
 import bezier.paths.Path;
 import bezier.paths.util.ITransform;
 import bezier.points.Vec;
@@ -70,7 +70,7 @@ public final class QuadCurve extends NonLinearBezier{
 
 
 	@Override
-	public IConnectedPath reverse() {
+	public ConnectedPath reverse() {
 		return new QuadCurve(p2,p1, p0, tEnd,tStart);
 	}
 
@@ -142,7 +142,7 @@ public final class QuadCurve extends NonLinearBezier{
 //	}
 
 	@Override
-	public IConnectedPath getWithAdjustedStartPoint(Vec newStartPoint) {
+	public ConnectedPath getWithAdjustedStartPoint(Vec newStartPoint) {
 		return new QuadCurve(newStartPoint,p1, p2, tStart,tEnd);
 	}
 

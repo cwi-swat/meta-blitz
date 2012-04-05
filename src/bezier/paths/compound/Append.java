@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import bezier.paths.IConnectedPath;
+import bezier.paths.ConnectedPath;
 import bezier.paths.Path;
 import bezier.paths.simple.Line;
 import bezier.paths.simple.SimplePath;
@@ -17,7 +17,7 @@ import bezier.util.STuple;
 import bezier.util.Tuple;
 import bezier.util.Util;
 
-public class Append extends CompoundPath implements IConnectedPath{
+public class Append extends ConnectedPath implements ICompoundPath{
 
 	List<SimplePath> curves;
 	int startIndex, endIndex;
@@ -38,6 +38,10 @@ public class Append extends CompoundPath implements IConnectedPath{
 	
 	public Append(SimplePath[] curves) {
 		this(Arrays.asList(curves));
+	}
+	
+	public List<SimplePath> getPaths(){
+		return curves;
 	}
 	
 	public boolean isLine(){
@@ -134,7 +138,7 @@ public class Append extends CompoundPath implements IConnectedPath{
 		return new Append(result);
 	}
 	@Override
-	public IConnectedPath reverse() {
+	public ConnectedPath reverse() {
 		List<SimplePath> result = new ArrayList<SimplePath>(curves.size());
 		for(int i = curves.size()-1; i >= 0 ; i--){
 			result.add((SimplePath)curves.get(i).reverse());
@@ -143,7 +147,7 @@ public class Append extends CompoundPath implements IConnectedPath{
 	}
 
 	@Override
-	public  IConnectedPath getWithAdjustedStartPoint(Vec newStart) {
+	public  ConnectedPath getWithAdjustedStartPoint(Vec newStart) {
 		List<SimplePath> result = new ArrayList<SimplePath>(curves.size());
 		result.add((SimplePath)curves.get(0).getWithAdjustedStartPoint(newStart));
 		result.addAll(curves.subList(1, curves.size()));
@@ -199,18 +203,13 @@ public class Append extends CompoundPath implements IConnectedPath{
 	public Vec getTangentAt(PathParameter t) {
 		return getTangentAt(t.t);
 	}
-
-	@Override
-	public boolean isInside(Vec p) {
-		return isClosed() && nrBelow(p) % 2 == 1;
-	}
 	
 
 	public boolean isConnected(){
 		return true;
 	}
 	
-	public IConnectedPath getConnected(){
+	public ConnectedPath getConnected(){
 		return this;
 	}
 
@@ -230,11 +229,11 @@ public class Append extends CompoundPath implements IConnectedPath{
 	}
 
 	@Override
-	public Path getSubPath(PathParameter start, PathParameter end) {
+	public ConnectedPath getSubPath(PathParameter start, PathParameter end) {
 		return getSubPath(start.t, end.t);
 	}
 
-	public Path getSubPath(double start, double end) {
+	public ConnectedPath getSubPath(double start, double end) {
 		int startn = (int)start;
 		int endn = (int)end;
 		if(endn == end){
@@ -250,6 +249,38 @@ public class Append extends CompoundPath implements IConnectedPath{
 		}
 		result.add(curves.get(endn).getSubPath(0, end - endn).getSimple());
 		return new Append(result);
+	}
+	
+	public Vec getBetween(PathParameter tl, PathParameter tr) {
+		assert tl.connected == tr.connected && tl.connected == this;
+		double start = tl.t;
+		double end = tr.t;
+		if(start < end){
+			return getAt((start + end)/2);
+		} else {
+			end += curves.size();
+			double between = Util.mod((start + end)/2,curves.size());
+			return getAt(between);
+		}
+	}
+	
+	public Path getPath(){
+		return this;
+	}
+
+	@Override
+	public boolean isSimple() {
+		return false;
+	}
+
+	@Override
+	public SimplePath getSimple() {
+		throw new Error("Not simple!");
+	}
+
+	@Override
+	public ICompoundPath getCompound() {
+		return this;
 	}
 
 }

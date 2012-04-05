@@ -3,7 +3,7 @@ package bezier.paths.awt;
 import java.awt.geom.PathIterator;
 import java.util.Iterator;
 
-import bezier.paths.IConnectedPath;
+import bezier.paths.ConnectedPath;
 import bezier.paths.Path;
 import bezier.paths.simple.SimplePath;
 import bezier.points.Vec;
@@ -16,13 +16,13 @@ public class AWTPathIterator implements PathIterator{
 		TAIL,
 	}
 	
-	Iterator<IConnectedPath> connectedPaths;
+	Iterator<ConnectedPath> connectedPaths;
 	Iterator<SimplePath> current;
 	SimplePath now;
 	Vec start;
 	State state;
 	
-	public AWTPathIterator(Iterator<IConnectedPath> connectedPaths) {
+	public AWTPathIterator(Iterator<ConnectedPath> connectedPaths) {
 		this.connectedPaths = connectedPaths;
 		state = State.TAIL;
 	}

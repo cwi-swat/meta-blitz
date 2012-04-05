@@ -1,13 +1,15 @@
 package bezier.paths.compound;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import bezier.paths.IConnectedPath;
+import bezier.paths.ConnectedPath;
 import bezier.paths.Path;
 import bezier.paths.simple.Line;
+import bezier.paths.simple.SimplePath;
 import bezier.paths.util.ITransform;
 import bezier.paths.util.PathParameter;
 import bezier.points.Vec;
@@ -17,10 +19,9 @@ import bezier.util.KDTreeUtil;
 import bezier.util.KDTreeUtil.Event;
 import bezier.util.STuple;
 import bezier.util.KDTreeUtil.SplitJudgment;
-import bezier.util.Util;
 import static bezier.util.KDTreeUtil.*;
 
-public class Paths extends CompoundPath{
+public class Paths extends Path implements ICompoundPath{
 	
 
 	final Set<Path> paths;
@@ -67,12 +68,12 @@ public class Paths extends CompoundPath{
 
 	@Override
 	public Vec getAt(PathParameter t) {
-		return t.connected.getConnected().getAt(t.t);
+		return t.connected.getAt(t.t);
 	}
 
 	@Override
 	public Vec getTangentAt(PathParameter t) {
-		return t.connected.getConnected().getTangentAt(t.t);
+		return t.connected.getTangentAt(t.t);
 	}
 
 	@Override
@@ -89,17 +90,13 @@ public class Paths extends CompoundPath{
 	@Override
 	public boolean isInside(Vec p) {
 		expand();
-		return Util.xor(!getLeftSimpler().isSimple() && getLeftSimpler().getCompound().isInside(p), 
-			(!getRightSimpler().isSimple() && getRightSimpler().getCompound().isInside(p)));
+		return (!getLeftSimpler().isSimple() && getLeftSimpler().getCompound().isInside(p)) ^ // xor! 
+			(!getRightSimpler().isSimple() && getRightSimpler().getCompound().isInside(p));
 	}
 
 
 	public boolean isConnected(){
 		return false;
-	}
-	
-	public IConnectedPath getConnected(){
-		throw new Error("Not connected!");
 	}
 
 	private Path create(Set<Path> paths, List<Event<Path>> eventX, List<Event<Path>> eventsY){
@@ -121,14 +118,14 @@ public class Paths extends CompoundPath{
 
 	public PathParameter getLeftParentPath(PathParameter original) {
 		if(getLeftSimpler().isConnected()){
-			return new PathParameter(getLeftSimpler(),0);
+			return new PathParameter(getLeftSimpler().getConnected(),0);
 		}
 		return original;
 	}
 	
 	public PathParameter getRightParentPath(PathParameter original) {
 		if(getRightSimpler().isConnected()){
-			return new PathParameter(getRightSimpler(),0);
+			return new PathParameter(getRightSimpler().getConnected(),0);
 		}
 		return original;
 	}
@@ -137,6 +134,29 @@ public class Paths extends CompoundPath{
 	public Path getSubPath(PathParameter start, PathParameter end) {
 		assert start.connected == end.connected;
 		return start.connected.getSubPath(start, end);
+	}
+
+	@Override
+	public boolean isSimple() {
+		return false;
+	}
+
+	@Override
+	public SimplePath getSimple() {
+		throw new Error("Paths is not simple!!");
+	}
+
+	@Override
+	public ICompoundPath getCompound() {
+		return this;
+	}
+	
+	public ConnectedPath getConnected(){
+		throw new Error("Paths is not connected!!");
+	}
+
+	public Set<Path> getPaths() {
+		return paths;
 	}
 	
 }

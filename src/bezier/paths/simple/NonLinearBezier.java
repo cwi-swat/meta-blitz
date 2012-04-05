@@ -5,6 +5,7 @@ import static bezier.util.Util.clamp;
 import java.util.Collections;
 import java.util.List;
 
+import bezier.paths.ConnectedPath;
 import bezier.paths.Path;
 import bezier.points.Vec;
 import bezier.util.IntervalLocation;
@@ -111,9 +112,9 @@ public abstract class NonLinearBezier extends SimplePath{
 	abstract Path getSimplerApproximation();
 
 	@Override
-	public Path getSubPath(double start, double end) {
+	public ConnectedPath getSubPath(double start, double end) {
 		if(end < start){
-			return (Path)getSubPath(end,start).getConnected().reverse();
+			return getSubPath(end,start).reverse();
 		}
 		if(start == 0){
 			if(end == 1){

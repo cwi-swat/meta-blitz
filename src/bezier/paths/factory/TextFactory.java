@@ -13,8 +13,8 @@ import java.util.Set;
 
 import javax.swing.UIManager;
 
+import bezier.paths.ConnectedPath;
 import bezier.paths.Path;
-import bezier.paths.simple.SimplePath;
 import bezier.points.Vec;
 
 public class TextFactory {
@@ -38,13 +38,13 @@ public class TextFactory {
 	    double[] curs = new double[6];
 	    Vec prev = new Vec(100,100);
 	    Set<Path> result = new HashSet<Path>();
-	    List<SimplePath> curves = new ArrayList<SimplePath>();
+	    List<ConnectedPath> curves = new ArrayList<ConnectedPath>();
         while(!p.isDone()){
         	 Vec cur;
         	switch(p.currentSegment(curs)){
         		case PathIterator.SEG_CLOSE:
         			result.add(PathFactory.append(curves));
-        			curves = new ArrayList<SimplePath>();
+        			curves = new ArrayList<ConnectedPath>();
         		break;
         		case PathIterator.SEG_MOVETO:
         			prev = new Vec(curs[0],curs[1]); 

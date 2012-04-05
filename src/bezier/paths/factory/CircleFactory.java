@@ -8,8 +8,8 @@ import static java.lang.Math.tan;
 import java.util.ArrayList;
 import java.util.List;
 
+import bezier.paths.ConnectedPath;
 import bezier.paths.Path;
-import bezier.paths.simple.SimplePath;
 import bezier.points.Transformation;
 import bezier.points.Vec;
 
@@ -63,7 +63,7 @@ public class CircleFactory {
 		double prevRad = startAngle;
 		Vec prevPoint = getCircleVec(prevRad);
 		double rad = prevRad ;
-		List<SimplePath> result = new ArrayList<SimplePath>();
+		List<ConnectedPath> result = new ArrayList<ConnectedPath>();
 		for(int i = 0 ; i < segs ; i++){
 			rad+=radInc;
 			

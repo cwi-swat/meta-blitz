@@ -140,6 +140,16 @@ public class Util {
 		}
 	}
 	
+
+	public static double mod(double a, int b) {
+		double res = a % b;
+		if(res < 0){
+			return b + a;
+		} else {
+			return res;
+		}
+	}
+	
 	public static List<Double> findQuadraticPolynomialRoots(double a, double b, double c){
 		if(Math.abs(a) <=Constants.MAX_ERROR){
 			List<Double> res = new ArrayList<Double>(1);
@@ -278,8 +288,5 @@ public class Util {
 		
 	}
 
-	public static boolean xor(boolean b, boolean c) {
-		return (b && !c) || (!b && c);
-	}
 
 }

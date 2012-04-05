@@ -3,7 +3,7 @@ package bezier.paths.simple;
 import java.awt.geom.PathIterator;
 import java.util.List;
 
-import bezier.paths.IConnectedPath;
+import bezier.paths.ConnectedPath;
 import bezier.paths.Path;
 import bezier.paths.factory.PathFactory;
 import bezier.paths.util.ITransform;
@@ -160,7 +160,7 @@ public final class Line extends SimplePath{
 		return fx != null &&  getAt(fx).y < p.y ? 1 : 0 ;
 	}
 
-	public IConnectedPath reverse() {
+	public ConnectedPath reverse() {
 		return new Line(end,start,tEnd,tStart);
 	}
 
@@ -202,7 +202,7 @@ public final class Line extends SimplePath{
 //	}
 
 
-	public IConnectedPath getWithAdjustedStartPoint(Vec newStartPoint) {
+	public ConnectedPath getWithAdjustedStartPoint(Vec newStartPoint) {
 		return new Line(newStartPoint,end,tStart,tEnd);
 	}
 
@@ -262,7 +262,7 @@ public final class Line extends SimplePath{
 	}
 
 	@Override
-	public Path getSubPath(double start, double end) {
+	public ConnectedPath getSubPath(double start, double end) {
 		return PathFactory.createLine(getAt(start),getAt(end));
 	}
 

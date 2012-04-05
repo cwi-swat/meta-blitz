@@ -2,12 +2,18 @@ package bezier.paths;
 
 import java.awt.Shape;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import bezier.paths.awt.AWTPathIterator;
 import bezier.paths.awt.DummyAWTSHape;
-import bezier.paths.compound.CompoundPath;
+import bezier.paths.compound.ICompoundPath;
+import bezier.paths.factory.PathFactory;
 import bezier.paths.simple.Line;
 import bezier.paths.simple.SimplePath;
 import bezier.paths.util.BestProjection;
@@ -42,8 +48,8 @@ public abstract class Path implements HasBBox{
 	public abstract boolean isSimple();
 	public abstract SimplePath getSimple();
 	public abstract boolean isConnected();
-	public abstract IConnectedPath getConnected();
-	public abstract CompoundPath getCompound();
+	public abstract ConnectedPath getConnected();
+	public abstract ICompoundPath getCompound();
 	public abstract Vec getAt(PathParameter t);
 	public abstract Vec getTangentAt(PathParameter t);	
 	public abstract Path transform(ITransform m);
@@ -80,6 +86,16 @@ public abstract class Path implements HasBBox{
 	public static enum ReportType{
 		T, LENGTH;
 	}
+	
+
+	public List<Vec> intersectionPoints(Path ts2) {
+		List<Vec> result = new ArrayList<Vec>();
+		for(PathParameter p : intersections(ts2).l){
+			result.add(getAt(p));
+		}
+		return result;
+	}
+	
 	
 	public STuple<List<PathParameter>> intersections(Path other ){
 		List<PathParameter> lres = new ArrayList<PathParameter>();
@@ -260,10 +276,10 @@ public abstract class Path implements HasBBox{
 		});
 	}
 	
-	public Iterator<IConnectedPath> getConnectedIterator(){
-		return getIterator(new IPathSelector<IConnectedPath>() {
+	public Iterator<ConnectedPath> getConnectedIterator(){
+		return getIterator(new IPathSelector<ConnectedPath>() {
 			@Override
-			public IConnectedPath select(Path p) {
+			public ConnectedPath select(Path p) {
 				if(p.isConnected()){
 					return p.getConnected();
 				} else {
@@ -271,6 +287,15 @@ public abstract class Path implements HasBBox{
 				}
 			}
 		});
+	}
+	
+	public Set<ConnectedPath> getConnectedSet(){
+		Set<ConnectedPath> result = new HashSet<ConnectedPath>();
+		Iterator<ConnectedPath> it = getConnectedIterator();
+		while(it.hasNext()){
+			result.add(it.next());
+		}
+		return result;
 	}
 	
 	public Iterator<SimplePath> getSimpleIterator(){
@@ -289,4 +314,117 @@ public abstract class Path implements HasBBox{
 	public Shape getAWTShape(){
 		return new DummyAWTSHape(new AWTPathIterator(getConnectedIterator()));
 	}
+	
+	// Below: set operation stuff
+	
+
+	public Path union(Path r){
+		return merge(false,r,false);
+	}
+
+	public Path substract(Path r){
+		return merge(false,r,true);
+	}
+	
+	public Path intersection(Path r){
+		return merge(true,r,true);
+	}
+
+	private Set<ConnectedPath> getConnectedFromPathParameters(List<PathParameter> l){
+		Set<ConnectedPath> result = new HashSet<ConnectedPath>();
+		for(PathParameter p : l){
+			result.add(p.connected.getConnected());
+		}
+		return result;
+	}
+	
+	
+	private Map<ConnectedPath, List<Double>> getPathParametersPerConnectedPath(List<PathParameter> ps){
+		Map<ConnectedPath, List<Double>> res = new HashMap<ConnectedPath, List<Double>>();
+		for(PathParameter p : ps){
+			ConnectedPath con = p.connected.getConnected();
+			if(res.containsKey(con)){
+				res.get(con).add(p.t);
+			} else {
+				List<Double> newList = new ArrayList<Double>();
+				newList.add(p.t);
+				res.put(con, newList);
+			}
+		}
+		for(List<Double> l : res.values()){
+			Collections.sort(l);
+		}
+		return res;
+	}
+	
+	private Set<ConnectedPath> getSegments(boolean shouldBeInside, Path r, List<PathParameter> intersections){
+		Set<ConnectedPath> res = getConnectedSet();
+		Set<ConnectedPath> intersectionConnectedL = getConnectedFromPathParameters(intersections);
+		res.removeAll(intersectionConnectedL); // now contains connected paths with no intersection
+		Map<ConnectedPath, List<Double>> paramPer = getPathParametersPerConnectedPath(intersections);
+		for(ConnectedPath p : paramPer.keySet()){
+			res.addAll(p.getSegments(paramPer.get(p), r, shouldBeInside));
+		}
+		return res;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Path merge(boolean shouldBeInside, Path r, boolean shouldBeInsideR){
+		STuple<List<PathParameter>> intersections = intersections(r);
+		Set<ConnectedPath> leftSegs = getSegments(shouldBeInside, r, intersections.l);
+		Set<ConnectedPath> rightSegs = r.getSegments(shouldBeInsideR, this, intersections.r);
+		leftSegs.addAll(rightSegs);
+		return PathFactory.join((Set)mergeSegments(leftSegs));
+
+		
+	}
+	
+	private static STuple<ConnectedPath> findUniquelyConnectingPair(Set<ConnectedPath> segments){
+		for(ConnectedPath p : segments){
+			List<ConnectedPath> possibilities = p.findConnecting(segments);
+			if(possibilities.size()==1){
+				return new STuple<ConnectedPath>(p,possibilities.get(0));
+			} else {
+				for(ConnectedPath q : possibilities){
+					if(p.willMakeClosed(q) || p.willMakeClosedReversed(q)){
+						return new STuple<ConnectedPath>(p, q);
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
+	
+	public Set<ConnectedPath> mergeSegments(Set<ConnectedPath> segments){
+		Set<ConnectedPath> closedPaths = new HashSet<ConnectedPath>();
+		for(ConnectedPath p : segments){
+			if(p.isClosed()){
+				closedPaths.add(p);
+			}
+		}
+		segments.removeAll(closedPaths);
+		STuple<ConnectedPath> cp;
+		while((cp = findUniquelyConnectingPair(segments)) != null){
+			segments.remove(cp.l); segments.remove(cp.r);
+			ConnectedPath merged = cp.l.append(cp.r);
+			if(merged.isClosed()){
+				closedPaths.add(merged);
+			} else {
+				segments.add(merged);
+			}
+		} 
+		if(!segments.isEmpty()){
+			System.out.println("Left over segments:");
+			for(Path p : segments){
+				System.out.println(p);
+			}
+		}
+		return closedPaths;
+	}
+
+	
+	
+
+	
 }
