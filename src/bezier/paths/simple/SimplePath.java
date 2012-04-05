@@ -81,4 +81,11 @@ public abstract class SimplePath extends Path implements IConnectedPath{
 	}
 
 	 public abstract int currentSegmentAWT(float[] coords);
+	 
+	@Override
+	public Path getSubPath(PathParameter start, PathParameter end) {
+		return getSubPath(start.t, end.t);
+	}
+
+	public abstract Path getSubPath(double start, double end) ;
 }

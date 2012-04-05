@@ -2,9 +2,7 @@ package bezier.paths.compound;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import bezier.paths.IConnectedPath;
 import bezier.paths.Path;
@@ -18,7 +16,6 @@ import bezier.util.HasBBox;
 import bezier.util.STuple;
 import bezier.util.Tuple;
 import bezier.util.Util;
-import bezier.util.KDTreeUtil.Event;
 
 public class Append extends CompoundPath implements IConnectedPath{
 
@@ -153,6 +150,7 @@ public class Append extends CompoundPath implements IConnectedPath{
 		return new Append(result);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public BBox makeBBox() {
 		List<HasBBox> hasBB = (List) curves;
@@ -229,6 +227,29 @@ public class Append extends CompoundPath implements IConnectedPath{
 			return new PathParameter(original.connected,endIndex-1);
 		}
 		return original;
+	}
+
+	@Override
+	public Path getSubPath(PathParameter start, PathParameter end) {
+		return getSubPath(start.t, end.t);
+	}
+
+	public Path getSubPath(double start, double end) {
+		int startn = (int)start;
+		int endn = (int)end;
+		if(endn == end){
+			end--;
+		}
+		if(startn == endn && start < end){
+			return curves.get(startn).getSubPath(start-startn, end-endn);
+		}
+		List<SimplePath> result = new ArrayList<SimplePath>();
+		result.add(curves.get(startn).getSubPath(start - startn,1.0).getSimple());
+		for(int i = startn+1; i < Util.mod(endn-1,curves.size()); i++){
+			result.add(curves.get(i));
+		}
+		result.add(curves.get(endn).getSubPath(0, end - endn).getSimple());
+		return new Append(result);
 	}
 
 }

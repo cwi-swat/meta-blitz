@@ -1,17 +1,17 @@
 package bezier.paths.factory;
 
+import static java.lang.Math.atan2;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.tan;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import bezier.paths.EmptyPath;
 import bezier.paths.Path;
-import bezier.paths.simple.CubicCurve;
 import bezier.paths.simple.SimplePath;
 import bezier.points.Transformation;
 import bezier.points.Vec;
-import bezier.segment.curve.Curve;
-
-import static java.lang.Math.*;
 
 public class CircleFactory {
 	

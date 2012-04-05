@@ -7,7 +7,6 @@ import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,14 +14,7 @@ import java.util.Set;
 import javax.swing.UIManager;
 
 import bezier.paths.Path;
-import bezier.paths.compound.Append;
-import bezier.paths.compound.CompoundPath;
-import bezier.paths.compound.Paths;
-import bezier.paths.simple.CubicCurve;
-import bezier.paths.simple.Line;
-import bezier.paths.simple.QuadCurve;
 import bezier.paths.simple.SimplePath;
-import bezier.points.Transformation;
 import bezier.points.Vec;
 
 public class TextFactory {

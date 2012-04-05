@@ -5,7 +5,6 @@ import static bezier.util.Util.clamp;
 import java.util.Collections;
 import java.util.List;
 
-import bezier.paths.IConnectedPath;
 import bezier.paths.Path;
 import bezier.points.Vec;
 import bezier.util.IntervalLocation;
@@ -37,6 +36,7 @@ public abstract class NonLinearBezier extends SimplePath{
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public STuple<NonLinearBezier> makeMonotomous(){
 		STuple<NonLinearBezier> result = split(xyRoots.get(0));
 		result.l.xyRoots = Collections.EMPTY_LIST;
@@ -93,9 +93,9 @@ public abstract class NonLinearBezier extends SimplePath{
 		return xyRoots.size() == 0;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public
-	STuple<Path> splitSimpler() {
+	public STuple<Path> splitSimpler() {
 		setXYRoots();
 		if(!isMonotomous()){
 			return (STuple)makeMonotomous();
@@ -110,4 +110,23 @@ public abstract class NonLinearBezier extends SimplePath{
 
 	abstract Path getSimplerApproximation();
 
+	@Override
+	public Path getSubPath(double start, double end) {
+		if(end < start){
+			return (Path)getSubPath(end,start).getConnected().reverse();
+		}
+		if(start == 0){
+			if(end == 1){
+				return this;
+			} 
+			return split(end).l;
+		}
+		if(end == 1){
+			return split(start).r;
+		}
+		NonLinearBezier subr = split(start).r;
+		double leftOver = 1.0 - start;
+		double newEnd = (end - start)/leftOver; 
+		return subr.split(newEnd).l;
+	}
 }

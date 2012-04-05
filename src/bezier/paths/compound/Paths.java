@@ -27,6 +27,7 @@ public class Paths extends CompoundPath{
 	final List<Event<Path>> xEvents,yEvents;
 
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Paths(Set<Path> paths) {
 		this.paths = paths;
 		Iterable<Path> iPaths = (Set)paths;
@@ -45,6 +46,7 @@ public class Paths extends CompoundPath{
 		this(new HashSet<Path>(Arrays.asList(paths)));
 	}
 
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	public BBox makeBBox() {
 		Iterable<HasBBox> bbx = (Set)paths;
@@ -129,6 +131,12 @@ public class Paths extends CompoundPath{
 			return new PathParameter(getRightSimpler(),0);
 		}
 		return original;
+	}
+
+	@Override
+	public Path getSubPath(PathParameter start, PathParameter end) {
+		assert start.connected == end.connected;
+		return start.connected.getSubPath(start, end);
 	}
 	
 }

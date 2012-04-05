@@ -157,6 +157,8 @@ public final class QuadCurve extends NonLinearBezier{
 		return PathIterator.SEG_QUADTO;
 	}
 
+
+
 	
 
 	

@@ -4,7 +4,6 @@ import java.util.Iterator;
 import java.util.Stack;
 
 import bezier.paths.Path;
-import bezier.paths.simple.Line;
 
 
 public class PathIterator<T> implements Iterator<T>{

@@ -1,8 +1,6 @@
 package bezier.paths.util;
 
-import bezier.paths.IConnectedPath;
 import bezier.paths.Path;
-import bezier.paths.compound.Append;
 
 
 

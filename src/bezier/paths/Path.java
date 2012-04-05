@@ -48,6 +48,7 @@ public abstract class Path implements HasBBox{
 	public abstract Vec getTangentAt(PathParameter t);	
 	public abstract Path transform(ITransform m);
 
+	public abstract Path getSubPath(PathParameter start, PathParameter end);
 	public abstract STuple<Path> splitSimpler();
 
 	

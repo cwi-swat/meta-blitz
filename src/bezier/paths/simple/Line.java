@@ -5,6 +5,7 @@ import java.util.List;
 
 import bezier.paths.IConnectedPath;
 import bezier.paths.Path;
+import bezier.paths.factory.PathFactory;
 import bezier.paths.util.ITransform;
 import bezier.paths.util.PathParameter;
 import bezier.paths.util.TPair;
@@ -258,6 +259,11 @@ public final class Line extends SimplePath{
 	public
 	STuple<Path> splitSimpler() {
 		throw new Error("Cannot make line simpler!");
+	}
+
+	@Override
+	public Path getSubPath(double start, double end) {
+		return PathFactory.createLine(getAt(start),getAt(end));
 	}
 
 
