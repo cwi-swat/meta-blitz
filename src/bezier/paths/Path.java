@@ -87,46 +87,30 @@ public abstract class Path implements HasBBox{
 		T, LENGTH;
 	}
 	
-
-	public List<Vec> intersectionPoints(Path ts2) {
-		List<Vec> result = new ArrayList<Vec>();
-		STuple<List<PathParameter>> in = intersections(ts2);
-		for(PathParameter p : in.r){
-			result.add(getAt(p));
-		}
-		for(int i = 0 ; i < in.l.size(); i++){
-			if(!result.get(i).isEqError(ts2.getAt(in.l.get(i)))){
-				System.out.printf("Distance to big %f\n", result.get(i).distance(ts2.getAt(in.l.get(i))));
-			}
-//			assert result.get(i).isEqError(ts2.getAt(in.r.get(i)));
-		}
-		return result;
-	}
 	
 	
-	public STuple<List<PathParameter>> intersections(Path other ){
-		List<PathParameter> lres = new ArrayList<PathParameter>();
-		List<PathParameter> rres = new ArrayList<PathParameter>();
-		if(!isEmpty() && !other.isEmpty()){
-			intersections(other, ReportType.T, getRootPathParameter(), other.getRootPathParameter(), lres, rres);
-		}
-		return new STuple<List<PathParameter>>(lres, rres);
-	}
 	
 
-	public void intersections(Path other , ReportType type, PathParameter lParent,
-			PathParameter rParent, List<PathParameter> lres, List<PathParameter> rres){
+	public void intersections(Path other , PathParameter lParent,
+			PathParameter rParent, Intersections res){
 		if(isLine() && other.isLine()){
-			getLine().intersectionLine(other.getLine(),type,lParent,rParent,lres,rres);
+			TPair t = getLine().intersection(other.getLine());
+			if(t != null){
+				res.add(new Intersection(
+						new ApproxCurvePosition(getLine(), t.tl, lParent),
+						new ApproxCurvePosition(other.getLine(), t.tr, rParent)
+						)
+				);
+			}
 		} else if(fastOverlapTest(other)){
 			if(preferSplitMe(other)){
 				expand();
-				getLeftSimpler().intersections(other, type, getLeftParentPath(lParent),rParent, lres,rres);
-				getRightSimpler().intersections(other, type, getRightParentPath(lParent),rParent, lres,rres);
+				getLeftSimpler().intersections(other,getLeftParentPath(lParent),rParent, res);
+				getRightSimpler().intersections(other, getRightParentPath(lParent),rParent, res);
 			} else {
 				other.expand();
-				intersections(other.getLeftSimpler(), type,lParent,other.getLeftParentPath(rParent), lres,rres);
-				intersections(other.getRightSimpler(), type,lParent,other.getRightParentPath(rParent), lres,rres);
+				intersections(other.getLeftSimpler(), lParent,other.getLeftParentPath(rParent), res);
+				intersections(other.getRightSimpler(), lParent,other.getRightParentPath(rParent), res);
 			}
 		}
 	}
@@ -430,9 +414,6 @@ public abstract class Path implements HasBBox{
 				segments.add(merged);
 			}
 		} 
-//		for(ConnectedPath p : closedPaths){
-//			System.out.printf("%s",p);
-//		}
 //		
 		if(!segments.isEmpty()){
 			System.out.println("Left over segments:");

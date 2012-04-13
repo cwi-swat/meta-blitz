@@ -134,9 +134,22 @@ public abstract class ConnectedPath extends Path{
 		switch(segmentsStartInside(ts, other)){
 			case INSIDE: startInside = true; break;
 			case OUTSIDE: startInside = false ; break;
-			case UNSURE: System.err.printf("getSegments : Cannot be sure!!!\n"); break;
+			case UNSURE: 
+				if(ts.size() == 2){
+					startInside = ts.get(1)-ts.get(0) < 0.5;
+				} else {
+					System.err.printf("getSegments : Cannot be sure!!!\n"); 
+				} break;
 		}
-		assert ts.size() % 2 == 0;
+//		assert ts.size() % 2 == 0;
+		if(ts.size() %2 != 0){
+			Vec prev = getAt(ts.get(ts.size()-1));
+			for(double d : ts){
+				if(getAt(d).isEqError(prev)){
+					System.out.printf("To similar!");
+				}
+			}
+		}
 		int first = startInside == shouldBeInside ? 0 : 1;
 		Set<ConnectedPath> segments = new HashSet<ConnectedPath>();
 		for(int i = first; i < first + ts.size() ; i+=2){

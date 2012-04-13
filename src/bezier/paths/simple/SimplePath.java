@@ -20,6 +20,11 @@ public abstract class SimplePath extends ConnectedPath{
 		this.tEnd = tEnd;
 	}
 	
+
+	public PathParameter convertTBack(double t, PathParameter lParent){
+		return new PathParameter(lParent.connected, lParent.t + t * (tEnd - tStart) + tStart);
+	}
+	
 	public PathParameter convertTBackLeaf(double t, ReportType type, PathParameter lParent){
 		switch(type){
 		case T: return new PathParameter(lParent.connected, lParent.t + t * (tEnd - tStart) + tStart);

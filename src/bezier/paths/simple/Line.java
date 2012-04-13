@@ -192,16 +192,6 @@ public final class Line extends SimplePath{
 		return new BBox(start,end);
 	}
 
-
-
-//	public CubicCurve lift() {
-//		Vec newControl1 = start.interpolate(2.0/6.0, end);
-//		Vec newControl2 = start.interpolate(4.0/6.0, end);
-//		CubicCurve lifted = new CubicCurve(start, newControl1, newControl2, end);
-//		return lifted;
-//	}
-
-
 	public ConnectedPath getWithAdjustedStartPoint(Vec newStartPoint) {
 		return new Line(newStartPoint,end,tStart,tEnd);
 	}
