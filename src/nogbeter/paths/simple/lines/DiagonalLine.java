@@ -227,7 +227,10 @@ public class DiagonalLine extends ActualLine {
 	}
 
 	public double minDistance(BBox b){
-		b.
+		double prox = Util.clamp(getTAtX(b.x));
+		double proxr = Util.clamp(getTAtX(b.xr));
+		double proy = Util.clamp(getTAtY(b.y));
+		double proyd = Util.clamp(getTAtY(b.yd));
 	}
 
 
