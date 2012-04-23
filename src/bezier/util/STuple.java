@@ -40,4 +40,8 @@ public final class STuple<A>{
 		return true;
 	}
 	
+	public STuple<A> flip(){
+		return new STuple<A>(r, l);
+	}
+	
 }

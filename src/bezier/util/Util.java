@@ -2,6 +2,7 @@ package bezier.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -10,6 +11,22 @@ import bezier.paths.Constants;
 
 public class Util {
 
+	public static Tuple emptyTupleList = new Tuple(Collections.unmodifiableList(Collections.EMPTY_LIST),Collections.unmodifiableList(Collections.EMPTY_LIST));
+	
+	public static <A,B> Tuple<List<A>,List<B>> appendTupList(Tuple<List<A>,List<B>>  lhs, Tuple<List<A>,List<B>> rhs){
+		Tuple<List<A>,List<B>> res = new Tuple<List<A>,List<B>>(new ArrayList<A>(lhs.l),new ArrayList<B>(rhs.r));
+		res.l.addAll(rhs.l);
+		res.r.addAll(rhs.r);
+		return res;
+	}
+	
+	public static <A,B> Tuple<List<A>,List<B>> tupleListFromTuple(Tuple<A,B> r){
+		return new Tuple<List<A>, List<B>>(Collections.singletonList(r.l), Collections.singletonList(r.r));
+	}
+	
+	public static <A,B> Tuple<List<A>,List<B>> tupleListFromArgs(A l, B r){
+		return new Tuple<List<A>, List<B>>(Collections.singletonList(l), Collections.singletonList(r));
+	}
 	public static <T> int floorBinarySearch(List<T> elems, T toFind, Comparator<T> comp ){
 		int min = -1;
 		int max = elems.size();
@@ -54,6 +71,14 @@ public class Util {
 	
 	public static boolean isBetween(double x, double low, double high){
 		return x >= low && x <= high;
+	}
+	
+	public static boolean isBetweenMaybeFlip(double x, double low, double high){
+		if(low > high){
+			return isBetween(x,high,low);
+		} else {
+			return isBetween(x, low, high);
+		}
 	}
 	
 	public static IntervalLocation getIntervalLocation(double x, double low, double high){
@@ -286,6 +311,17 @@ public class Util {
 		}
 		return result;
 		
+	}
+
+	public static IntervalLocation intervalIntervalLocation(double x, double endX,
+			double x2, double xr) {
+		if(intervalsOverlap(x, endX, x2, xr)){
+			return IntervalLocation.INSIDE;
+		} else if(endX < x2){
+			return IntervalLocation.LEFT_OF;
+		} else {
+			return IntervalLocation.RIGHT_OF;
+		}
 	}
 	
 

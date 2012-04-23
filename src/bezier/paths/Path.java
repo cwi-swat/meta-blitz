@@ -88,7 +88,9 @@ public abstract class Path implements HasBBox{
 	}
 	
 	
-	
+	public abstract STuple<List<ApproxCurvePosition>> intersectionsLine(Line other);
+	public abstract STuple<List<ApproxCurvePosition>> intersectionsSimple(SimplePath other);
+	public abstract STuple<List<ApproxCurvePosition>> intersections(Path other);
 	
 
 	public void intersections(Path other , PathParameter lParent,

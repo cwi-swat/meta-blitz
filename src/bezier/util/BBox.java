@@ -199,4 +199,16 @@ public final class BBox {
 	public boolean isInside(Vec p){
 		return Util.isBetween(p.x, x,xr) && Util.isBetween(p.y, y , yd);
 	}
+	
+	public static BBox fromPoints(Vec ...vecs){
+		double x = Double.MAX_VALUE, xr = Double.MIN_VALUE,
+				y = Double.MAX_VALUE, yd = Double.MIN_VALUE;
+		for(Vec v : vecs){
+			x = Math.min(v.x, x);
+			xr = Math.max(v.x, xr);
+			y = Math.min(v.y, y);
+			yd = Math.max(v.y, yd);
+		}
+		return new BBox(x,y,xr,yd);
+	}
 }
