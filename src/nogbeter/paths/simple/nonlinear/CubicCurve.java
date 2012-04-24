@@ -5,24 +5,23 @@ import static bezier.util.Util.findQuadraticPolynomialRoots;
 import java.util.ArrayList;
 import java.util.List;
 
+import nogbeter.paths.BestProject;
 import nogbeter.paths.ConnectedPath;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathFactory;
+import nogbeter.util.BBox;
+import nogbeter.util.InclusiveInterval;
 import bezier.paths.Constants;
 import bezier.points.Vec;
-import bezier.util.BBox;
 import bezier.util.STuple;
 
 public class CubicCurve extends NonLinearCurve{
 
 	public final Vec p0,p1,p2,p3;
 
-	public CubicCurve(Vec p0, Vec p1, Vec p2, Vec p3){
-		this(p0,p1,p2,p3,0,1);
-	}
 	
-	public CubicCurve(Vec p0, Vec p1, Vec p2, Vec p3, double tStart,double tEnd) {
-		super(tStart,tEnd);
+	public CubicCurve(Vec p0, Vec p1, Vec p2, Vec p3, InclusiveInterval tInterval) {
+		super(tInterval);
 		this.p0 = p0;
 		this.p1 = p1;
 		this.p2 = p2;
@@ -88,7 +87,7 @@ public class CubicCurve extends NonLinearCurve{
 		Vec extendP1 = p0.interpolate(1.0/3.0, p1);
 		Vec extendP2 =  p3.interpolate(1.0/3.0, p2);
 		Vec middle = extendP1.interpolate(0.5, extendP2);
-		SimplePath simpler = new QuadCurve(p0,middle,p3,tStart,tEnd);
+		SimplePath simpler = new QuadCurve(p0,middle,p3,tInterval);
 		Vec fromCubic = getAt(Constants.T_MAX_DIFF_CUBIC_QUADRATIC);
 		Vec fromQuad = simpler.getAt(Constants.T_MAX_DIFF_CUBIC_QUADRATIC);
 		if(fromCubic.distanceSquared(fromQuad) <= Constants.HALF_MAX_ERROR_POW2){
@@ -110,21 +109,12 @@ public class CubicCurve extends NonLinearCurve{
 		l2 = l1.interpolate(t, inter);
 		r1 = inter.interpolate(t, r2);
 		l3 = r0 = l2.interpolate(t, r1);
-		double midT = tMid(t);
+		STuple<InclusiveInterval> st = tInterval.split();
 		return new  STuple<NonLinearCurve>(
-				new CubicCurve(l0,l1,l2,l3,tStart,midT),
-				new CubicCurve(r0,r1,r2,r3,midT,tEnd));
+				new CubicCurve(l0,l1,l2,l3,st.l),
+				new CubicCurve(r0,r1,r2,r3,st.r));
 	}
 
-	@Override
-	public Vec getStartPoint() {
-		return p0;
-	}
-
-	@Override
-	public Vec getEndPoint() {
-		return p3;
-	}
 
 	@Override
 	public Vec getAt(double t) {
@@ -151,10 +141,6 @@ public class CubicCurve extends NonLinearCurve{
 		return new Vec(ax*t2 + bx * t + cx, ay*t2 + by * t + cy);
 	}
 
-	@Override
-	public ConnectedPath reverse() {
-		return SimplePathFactory.createCubic(p3, p2, p1, p0);
-	}
 
 	@Override
 	public ConnectedPath getWithAdjustedStartPoint(Vec newStart) {
@@ -164,14 +150,8 @@ public class CubicCurve extends NonLinearCurve{
 	@Override
 	public
 	BBox makeBBox() {
-		if(isMonotomous()){
-			return new BBox(p0,p2);
-		} else {
-			return BBox.fromPoints(p0,p1,p2,p3);
-		}
+		return BBox.fromPoints(p0,p1,p2,p3);
 	}
 
-	
-	
-	
+
 }

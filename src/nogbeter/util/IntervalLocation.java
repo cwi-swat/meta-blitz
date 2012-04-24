@@ -1,4 +1,4 @@
-package bezier.util;
+package nogbeter.util;
 
 public enum IntervalLocation {
 	LEFT_OF, INSIDE, RIGHT_OF;

@@ -20,13 +20,6 @@ public class Util {
 		return res;
 	}
 	
-	public static <A,B> Tuple<List<A>,List<B>> tupleListFromTuple(Tuple<A,B> r){
-		return new Tuple<List<A>, List<B>>(Collections.singletonList(r.l), Collections.singletonList(r.r));
-	}
-	
-	public static <A,B> Tuple<List<A>,List<B>> tupleListFromArgs(A l, B r){
-		return new Tuple<List<A>, List<B>>(Collections.singletonList(l), Collections.singletonList(r));
-	}
 	public static <T> int floorBinarySearch(List<T> elems, T toFind, Comparator<T> comp ){
 		int min = -1;
 		int max = elems.size();
@@ -67,30 +60,6 @@ public class Util {
 			}
 		}
 		return max;
-	}
-	
-	public static boolean isBetween(double x, double low, double high){
-		return x >= low && x <= high;
-	}
-	
-	public static boolean isBetweenMaybeFlip(double x, double low, double high){
-		if(low > high){
-			return isBetween(x,high,low);
-		} else {
-			return isBetween(x, low, high);
-		}
-	}
-	
-	public static IntervalLocation getIntervalLocation(double x, double low, double high){
-		if(x < low) return IntervalLocation.LEFT_OF;
-		else if(x > high) return IntervalLocation.RIGHT_OF;
-		else return IntervalLocation.INSIDE;
-	}
-	
-	public static IntervalLocation getIntervalLocationExEnd(double x, double low, double high){
-		if(x < low) return IntervalLocation.LEFT_OF;
-		else if(x >= high) return IntervalLocation.RIGHT_OF;
-		else return IntervalLocation.INSIDE;
 	}
 	
 	public static double[] merge(double[] l, double[] r){
@@ -219,29 +188,9 @@ public class Util {
 			return t;
 		}
 	}
-	
 
-	public static double getFarthestPoint(double x, double low, double high){
-		if(x < low){
-			return high;
-		} else if(x > high){
-			return low;
-		} else if( x - low > high - x){
-			return low;
-		} else {
-			return high;
-		}
-	}
 	
-	public static double getClosestPoint(double x, double low, double high){
-		if(x < low){
-			return low;
-		} else if(x > high){
-			return high;
-		} else {
-			return x;
-		}
-	}
+	
 	
 	public static boolean intervalsOverlap(double as, double ae, double bs, double be){
 		if(as > ae){
@@ -313,16 +262,8 @@ public class Util {
 		
 	}
 
-	public static IntervalLocation intervalIntervalLocation(double x, double endX,
-			double x2, double xr) {
-		if(intervalsOverlap(x, endX, x2, xr)){
-			return IntervalLocation.INSIDE;
-		} else if(endX < x2){
-			return IntervalLocation.LEFT_OF;
-		} else {
-			return IntervalLocation.RIGHT_OF;
-		}
-	}
+
+
 	
 
 

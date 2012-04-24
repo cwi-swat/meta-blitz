@@ -9,11 +9,11 @@ import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathFactory;
 import nogbeter.paths.simple.lines.DiagonalLine;
 import nogbeter.paths.simple.lines.HorizontalLine;
-import nogbeter.paths.simple.lines.LineApprox;
 import nogbeter.paths.simple.lines.VerticalLine;
+import nogbeter.util.BBox;
+import nogbeter.util.InclusiveInterval;
 import bezier.paths.Constants;
 import bezier.points.Vec;
-import bezier.util.BBox;
 import bezier.util.STuple;
 import bezier.util.Tuple;
 import bezier.util.Util;
@@ -23,12 +23,9 @@ public class QuadCurve extends NonLinearCurve{
 	
 	public final Vec p0,p1,p2;
 	
-	public QuadCurve(Vec p0,Vec p1, Vec p2){
-		this(p0,p1,p2,0,1);
-	}
 	
-	public QuadCurve(Vec p0,Vec p1, Vec p2, double tStart,double tEnd) {
-		super(tStart,tEnd);
+	public QuadCurve(Vec p0,Vec p1, Vec p2, InclusiveInterval tInterval) {
+		super(tInterval);
 		this.p0 = p0;
 		this.p1 = p1;
 		this.p2 = p2;
@@ -85,9 +82,9 @@ public class QuadCurve extends NonLinearCurve{
 		Vec cl = p0.interpolate(t, p1);
 		Vec cr = p1.interpolate(t, p2);
 		Vec cm = cl.interpolate(t, cr);
-		double midT = tMid(t);
-		return new STuple<NonLinearCurve>( new QuadCurve(p0,cl,cm,tStart,midT),
-				 new QuadCurve(cm,cr,p2,midT,tEnd));
+		STuple<InclusiveInterval> st = tInterval.split();
+		return new STuple<NonLinearCurve>( new QuadCurve(p0,cl,cm,st.l),
+				 new QuadCurve(cm,cr,p2,st.r));
 	}
 
 
@@ -95,22 +92,12 @@ public class QuadCurve extends NonLinearCurve{
 	@Override
 	protected
 	SimplePath getSimplerApproximation() {
-		SimplePath l = new LineApprox(SimplePathFactory.createLine(p0, p2),tStart,tEnd);
+		SimplePath l = SimplePathFactory.createLine(p0, p2,tInterval);
 		if(getAt(0.5).distanceSquared(l.getAt(0.5)) <= Constants.HALF_MAX_ERROR_POW2){
 			return l;
 		} else {
 			return this;
 		}
-	}
-
-	@Override
-	public Vec getStartPoint() {
-		return p0;
-	}
-
-	@Override
-	public Vec getEndPoint() {
-		return p2;
 	}
 
 	@Override
@@ -131,11 +118,6 @@ public class QuadCurve extends NonLinearCurve{
 	}
 
 	@Override
-	public SimplePath reverse() {
-		return new QuadCurve(p2,p1, p0);
-	}
-
-	@Override
 	public SimplePath getWithAdjustedStartPoint(Vec newStartPoint) {
 		return SimplePathFactory.createQuad(newStartPoint,p1,p2);
 	}
@@ -143,11 +125,7 @@ public class QuadCurve extends NonLinearCurve{
 	@Override
 	public
 	BBox makeBBox() {
-		if(isMonotomous()){
-			return new BBox(p0,p2);
-		} else {
-			return BBox.fromPoints(p0,p1,p2);
-		}
+		return BBox.fromPoints(p0,p1,p2);
 	}
 
 
