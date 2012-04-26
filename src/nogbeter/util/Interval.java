@@ -6,13 +6,14 @@ import bezier.util.STuple;
 
 
 
-public class InclusiveInterval {
+public class Interval {
 	
-	public static final InclusiveInterval interval01 = new InclusiveInterval(0, 1);
+	public static final Interval interval01 = new Interval(0, 1);
+	public static final Interval emptyInterval = null;
 	
 	public final double low, high;
 
-	public InclusiveInterval(double a, double b) {
+	public Interval(double a, double b) {
 		if(a > b){
 			double tmp = a;
 			a = b;
@@ -54,11 +55,11 @@ public class InclusiveInterval {
 		}
 	}
 	
-	public boolean overlapsWith(InclusiveInterval other){
+	public boolean overlapsWith(Interval other){
 		return !(other.high < low || other.low > high);
 	}
 	
-	public IntervalLocation intervalIntervalLocation(InclusiveInterval other) {
+	public IntervalLocation intervalIntervalLocation(Interval other) {
 		if(overlapsWith(other)){
 			return IntervalLocation.INSIDE;
 		} else if(other.high < low){
@@ -68,17 +69,36 @@ public class InclusiveInterval {
 		}
 	}
 	
-	public InclusiveInterval intersection(InclusiveInterval other){
-		return new InclusiveInterval(	Math.max(low, other.low),
-										Math.min(high,other.high));
+	
+	public Interval intersection(Interval other){
+		double nLow = Math.max(low, other.low);
+		double nHigh = Math.max(high, other.high);
+		if(nHigh < nLow) {
+			return null;
+		}
+		return new Interval(nLow,nHigh);
 	}
 	
-	public InclusiveInterval union(InclusiveInterval other){
-		return new InclusiveInterval(	Math.min(low, other.low),
+	public Interval union(Interval other){
+		return new Interval(	Math.min(low, other.low),
 										Math.max(high,other.high));
 	}
 	
-	public double minDistance(InclusiveInterval other){
+	public double minDistance(double x){
+		return x - getClosestPoint(x);
+	}
+	
+	public STuple<Double> closestPoints(Interval other){
+		switch(intervalIntervalLocation(other)){
+		case INSIDE: double x= intersection(other).low;
+					 return new STuple<Double>(x, x);
+		case LEFT_OF: return new STuple<Double>(low, other.high);
+		case RIGHT_OF: return new STuple<Double>(high, other.low);
+		}
+		throw new Error("No such interval location");
+	}
+	
+	public double minDistance(Interval other){
 		switch(intervalIntervalLocation(other)){
 		case INSIDE: return 0;
 		case LEFT_OF: return low - other.high;
@@ -99,18 +119,18 @@ public class InclusiveInterval {
 		return (high - low) * factor + low;
 	}
 	
-	public STuple<InclusiveInterval> split(double factor){
+	public STuple<Interval> split(double factor){
 		double mid = getAtFactor(factor);
-		return new STuple<InclusiveInterval>(
-				new InclusiveInterval(low, mid),
-				new InclusiveInterval(mid, high));
+		return new STuple<Interval>(
+				new Interval(low, mid),
+				new Interval(mid, high));
 	}
 	
-	public STuple<InclusiveInterval> split(){
+	public STuple<Interval> split(){
 		return split(0.5);
 	}
 	
-	public static InclusiveInterval fromPoints(Iterator<Double> points){
+	public static Interval fromPoints(Iterator<Double> points){
 		double min = Double.POSITIVE_INFINITY;
 		double max = Double.NEGATIVE_INFINITY;
 		while(points.hasNext()){
@@ -118,11 +138,16 @@ public class InclusiveInterval {
 			min = Math.min(min, p);
 			max = Math.max(max, p);
 		}
-		return new InclusiveInterval(min,max);
+		return new Interval(min,max);
 	}
 	
 	public double getFactorForPoint(double p){
 		return (p - low)/(high - low);
+	}
+
+	public static boolean overlap(Interval a, Interval b) {
+		return a != emptyInterval && b != emptyInterval && 
+				a.overlapsWith(b);
 	}
 
 }

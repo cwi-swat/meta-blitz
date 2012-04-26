@@ -10,13 +10,13 @@ import bezier.paths.simple.Line;
 import bezier.points.Vec;
 public final class BBox {
 	
-	public final InclusiveInterval xInterval, yInterval;
+	public final Interval xInterval, yInterval;
 	
 	public BBox(double x, double y, double xr, double yd){
-		this(new InclusiveInterval(x, xr), new InclusiveInterval(y, yd));
+		this(new Interval(x, xr), new Interval(y, yd));
 	}
 
-	public BBox(InclusiveInterval xInterval, InclusiveInterval yInterval) {
+	public BBox(Interval xInterval, Interval yInterval) {
 		this.xInterval = xInterval;
 		this.yInterval = yInterval;
 	}
@@ -117,8 +117,8 @@ public final class BBox {
 	}
 	
 	public static BBox fromPoints(Iterator<Vec> vecs){
-		return new BBox(	InclusiveInterval.fromPoints(new VecXIterator(vecs)),
-							InclusiveInterval.fromPoints(new VecYIterator(vecs)));
+		return new BBox(	Interval.fromPoints(new VecXIterator(vecs)),
+							Interval.fromPoints(new VecYIterator(vecs)));
 	}
 	
 	public static BBox fromPoints(Vec ... vecs){

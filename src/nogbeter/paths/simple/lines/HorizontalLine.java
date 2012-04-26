@@ -5,17 +5,23 @@ import java.util.List;
 import nogbeter.paths.BestProject;
 import nogbeter.paths.Path;
 import nogbeter.paths.simple.nonlinear.NonLinearCurve;
-import nogbeter.util.InclusiveInterval;
+import nogbeter.util.BBox;
+import nogbeter.util.Interval;
 import bezier.points.Vec;
+import bezier.util.STuple;
 import bezier.util.Tuple;
 import bezier.util.Util;
 
+import static bezier.util.Util.*;
+import static java.lang.Math.min;
+import static nogbeter.util.Interval.emptyInterval;
+
 public abstract class HorizontalLine extends ActualLine {
 
-	public final InclusiveInterval xInterval;
+	public final Interval xInterval;
 	public final double y;
 
-	public HorizontalLine(InclusiveInterval xInterval, double y, InclusiveInterval tinterval) {
+	public HorizontalLine(Interval xInterval, double y, Interval tinterval) {
 		super(tinterval);
 		this.xInterval = xInterval;
 		this.y = y;
@@ -58,9 +64,9 @@ public abstract class HorizontalLine extends ActualLine {
 		if(lhs.getBBox().yInterval.isInside(y) 
 			&& lhs.getBBox().xInterval.overlapsWith(xInterval)){
 			double lt = lhs.findTForY(y);
-			if(InclusiveInterval.interval01.isInside(lt)){
+			if(Interval.interval01.isInside(lt)){
 				double rt = getTForX(lhs.getAt(lt).x);
-				if(InclusiveInterval.interval01.isInside(rt)){
+				if(Interval.interval01.isInside(rt)){
 					return makeIntersectionResult(lhs,lt,rt);
 				}
 			}
@@ -69,12 +75,59 @@ public abstract class HorizontalLine extends ActualLine {
 	}
 	
 	@Override
-	public void project(BestProject<Double> best, Vec p) {
+	public BestProject<Double> project(BestProject best, Vec p) {
 		double x = xInterval.getClosestPoint(p.x);
 		double dist = new Vec(x,y).distanceSquared(p);
-		updateBestProject(best,dist,getTForX(x));
-		
+		return best.choose(new BestProject<Double>(dist,
+				tInterval.getAtFactor(getTForX(x))));
 	}
 	
+	@Override
+	public <OPathParam> BestProject<Tuple<Double, OPathParam>> project(
+			BestProject best, Path<OPathParam> other) {
+		return other.projectLHorLine(best, this);
+	}
+
+	@Override
+	public BestProject<Tuple<Double, Double>> projectLDiaLine(BestProject best,
+			DiagonalLine lhs) {
+		return lhs.projectLHorLine(best, this).flip();
+	}
+
+	@Override
+	public BestProject<Tuple<Double, Double>> projectLHorLine(BestProject best,
+			HorizontalLine lhs) {
+		STuple<Double> closestX = lhs.xInterval.closestPoints(xInterval);
+		double xDist = square(closestX.l - closestX.r);
+		double yDist = square(y - lhs.y);
+		return best.choose(
+				makeBestProject(xDist + yDist, lhs,
+						lhs.getTForX(closestX.l), getTForX(closestX.r)));
+	}
+
+	@Override
+	public BestProject<Tuple<Double, Double>> projectLVerLine(BestProject best,
+			VerticalLine lhs) {
+		double tl = clamp(lhs.getTForY(y)); double tr = clamp(getTForX(lhs.x));
+		Vec l = lhs.getAt(tl); Vec r = getAt(tr);
+			return best.choose(
+					makeBestProject(l.distanceSquared(r),lhs ,tl,tr));
+	}
+
+
+
+	@Override
+	double distanceSquared(Vec v) {
+		double xDist = square(xInterval.minDistance(v.x));
+		double yDist = square(v.y - y);
+		return xDist + yDist;
+	}
+	
+	double minDistSquaredTo(BBox b){
+		double xDist = xInterval.minDistance(b.xInterval);
+		double yDist = b.yInterval.minDistance(y);
+		return xDist*xDist + yDist*yDist;
+	}
+
 
 }

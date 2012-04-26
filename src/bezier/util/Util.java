@@ -262,6 +262,10 @@ public class Util {
 		
 	}
 
+	public static double square(double d) {
+		return d * d;
+	}
+
 
 
 	

@@ -1,12 +1,12 @@
 package nogbeter.paths.simple.lines;
 
 import bezier.points.Vec;
-import nogbeter.util.InclusiveInterval;
+import nogbeter.util.Interval;
 
 public class VerticalDULine extends VerticalLine{
 
-	public VerticalDULine(double x, InclusiveInterval yInterval,
-			InclusiveInterval tinterval) {
+	public VerticalDULine(double x, Interval yInterval,
+			Interval tinterval) {
 		super(x, yInterval, tinterval);
 	}
 

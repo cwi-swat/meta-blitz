@@ -39,31 +39,34 @@ public abstract class Path<PathParam> {
 	public abstract Tuple<List<Double>, List<PathParam>> intersectionLNonLinear(
 			NonLinearCurve lhs);
 
-	public BestProject<PathParam> project(Vec p) {
-		BestProject<PathParam> best = new BestProject<PathParam>();
-		project(best,p);
-		return best;
+	public BestProject<PathParam> project(Vec p) {;
+		return project(BestProject.noBestYet,p);
 	}
 	
-	public abstract void project(BestProject<PathParam> best, Vec p);
+	public abstract BestProject<PathParam> project(BestProject best, Vec p);
 
-//	public <OPathParam> BestProject<Tuple<PathParam, OPathParam>> project(
-//			Path<OPathParam> other) {
-//		return project(other, Double.MAX_VALUE);
-//	}
-//
-//	public abstract <OPathParam> BestProject<Tuple<PathParam, OPathParam>> project(
-//			Path<OPathParam> other, double bestDist);
-//
-//	public abstract BestProject<Tuple<Double, PathParam>> projectLDiaLine(
-//			DiagonalLine other, double bestDist);
-//
-//	public abstract BestProject<Tuple<Double, PathParam>> projectLHorLine(
-//			HorizontalLine other, double bestDist);
-//
-//	public abstract BestProject<Tuple<Double, PathParam>> projectLVerLine(
-//			VerticalLine other, double bestDist);
-//
-//	public abstract BestProject<Tuple<Double, PathParam>> projectLNonLinear(
-//			NonLinearCurve other, double bestDist);
+	public <OPathParam> BestProject<Tuple<PathParam, OPathParam>> project(
+			Path<OPathParam> other) {
+		return project(BestProject.noBestYet,other);
+	}
+
+	public abstract <OPathParam> BestProject<Tuple<PathParam, OPathParam>> project(
+			BestProject best,
+			Path<OPathParam> other);
+	
+	public abstract BestProject<Tuple<Double, PathParam>> projectLDiaLine(
+			BestProject best,
+			DiagonalLine lhs);
+	
+	public abstract BestProject<Tuple<Double, PathParam>> projectLHorLine(
+			BestProject best,
+			HorizontalLine lhs);
+	
+	public abstract BestProject<Tuple<Double, PathParam>> projectLVerLine(
+			BestProject best,
+			VerticalLine lhs);
+	
+	public abstract BestProject<Tuple<Double, PathParam>> projectLNonLinear(
+			BestProject best,
+			NonLinearCurve lhs);
 }

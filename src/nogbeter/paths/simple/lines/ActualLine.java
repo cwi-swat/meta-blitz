@@ -9,7 +9,7 @@ import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathFactory;
 import nogbeter.paths.simple.nonlinear.NonLinearCurve;
 import nogbeter.util.BBox;
-import nogbeter.util.InclusiveInterval;
+import nogbeter.util.Interval;
 import bezier.points.Vec;
 import bezier.util.STuple;
 import bezier.util.Tuple;
@@ -18,7 +18,7 @@ import bezier.util.Util;
 
 public abstract class ActualLine extends SimplePath {
 
-	public ActualLine(InclusiveInterval tInterval) {
+	public ActualLine(Interval tInterval) {
 		super(tInterval);
 	}
 	
@@ -32,10 +32,32 @@ public abstract class ActualLine extends SimplePath {
 	
 	public STuple<SimplePath> splitSimpler(){
 		Vec middle = getAt(0.5);
-		STuple<InclusiveInterval> tintervals = tInterval.split();
+		STuple<Interval> tintervals = tInterval.split();
 		return new STuple<SimplePath>(SimplePathFactory.createLine(getStartPoint(), middle,tintervals.l),
 				SimplePathFactory.createLine(middle, getEndPoint(),tintervals.r));
 	}
+	
+	abstract double minDistSquaredTo(BBox b);
+	
+	@Override
+	public BestProject<Tuple<Double, Double>> projectLNonLinear(
+			BestProject best, NonLinearCurve lhs) {
+		if(best.distSquared > minDistSquaredTo(lhs.getBBox())){
+			STuple<SimplePath> sp = lhs.splitSimpler();
+			if(distanceSquared(sp.l.getBBox().getMiddle()) <
+					distanceSquared(sp.r.getBBox().getMiddle())){
+				best = sp.l.project(best, this);
+				return sp.r.project(best, this);
+			} else {
+				best = sp.r.project(best, this);
+				return sp.l.project(best, this);
+			}
+		} else {
+			return best;
+		}
+	}
+
+	abstract double distanceSquared(Vec v) ;
 	
 //	
 //	public BestProject<Tuple<Double,Double>> projectLNonLinear(NonLinearCurve other, double bestDist){

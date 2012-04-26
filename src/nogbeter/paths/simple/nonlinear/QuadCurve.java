@@ -11,7 +11,7 @@ import nogbeter.paths.simple.lines.DiagonalLine;
 import nogbeter.paths.simple.lines.HorizontalLine;
 import nogbeter.paths.simple.lines.VerticalLine;
 import nogbeter.util.BBox;
-import nogbeter.util.InclusiveInterval;
+import nogbeter.util.Interval;
 import bezier.paths.Constants;
 import bezier.points.Vec;
 import bezier.util.STuple;
@@ -24,7 +24,7 @@ public class QuadCurve extends NonLinearCurve{
 	public final Vec p0,p1,p2;
 	
 	
-	public QuadCurve(Vec p0,Vec p1, Vec p2, InclusiveInterval tInterval) {
+	public QuadCurve(Vec p0,Vec p1, Vec p2, Interval tInterval) {
 		super(tInterval);
 		this.p0 = p0;
 		this.p1 = p1;
@@ -82,7 +82,7 @@ public class QuadCurve extends NonLinearCurve{
 		Vec cl = p0.interpolate(t, p1);
 		Vec cr = p1.interpolate(t, p2);
 		Vec cm = cl.interpolate(t, cr);
-		STuple<InclusiveInterval> st = tInterval.split();
+		STuple<Interval> st = tInterval.split();
 		return new STuple<NonLinearCurve>( new QuadCurve(p0,cl,cm,st.l),
 				 new QuadCurve(cm,cr,p2,st.r));
 	}

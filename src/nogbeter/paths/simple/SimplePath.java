@@ -8,12 +8,12 @@ import bezier.util.Tuple;
 import nogbeter.paths.BestProject;
 import nogbeter.paths.ConnectedPath;
 import nogbeter.paths.simple.lines.VerticalLine;
-import nogbeter.util.InclusiveInterval;
+import nogbeter.util.Interval;
 
 public abstract class SimplePath extends ConnectedPath{
-	public final InclusiveInterval tInterval;
+	public final Interval tInterval;
 	
-	public SimplePath(InclusiveInterval tInterval) {
+	public SimplePath(Interval tInterval) {
 		this.tInterval = tInterval;
 	}
 	
@@ -28,10 +28,11 @@ public abstract class SimplePath extends ConnectedPath{
 				Collections.singletonList(tInterval.getAtFactor(tr)));
 	}
 	
-	protected void updateBestProject(BestProject<Double> best, double distSquared, double t){
-		if(best.distSquared > distSquared){
-			best.distSquared = distSquared;
-			best.t = tInterval.getAtFactor(t);
-		}
+	public BestProject<Tuple<Double, Double>> makeBestProject(double dist,SimplePath lhs,
+			double tl, double tr) {
+		return new BestProject<Tuple<Double,Double>>(dist,
+				new Tuple<Double, Double>(
+						lhs.tInterval.getAtFactor(tl), 
+						tInterval.getAtFactor(tr)));
 	}
 }

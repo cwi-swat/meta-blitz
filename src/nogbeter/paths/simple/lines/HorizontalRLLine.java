@@ -1,12 +1,12 @@
 package nogbeter.paths.simple.lines;
 
 import bezier.points.Vec;
-import nogbeter.util.InclusiveInterval;
+import nogbeter.util.Interval;
 
 public class HorizontalRLLine extends HorizontalLine{
 
-	public HorizontalRLLine(InclusiveInterval xInterval, double y,
-			InclusiveInterval tinterval) {
+	public HorizontalRLLine(Interval xInterval, double y,
+			Interval tinterval) {
 		super(xInterval, y, tinterval);
 	}
 

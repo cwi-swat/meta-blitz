@@ -17,14 +17,17 @@ import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.lines.DiagonalLine;
 import nogbeter.paths.simple.lines.HorizontalLine;
 import nogbeter.paths.simple.lines.VerticalLine;
-import nogbeter.util.InclusiveInterval;
+import nogbeter.util.BBox;
+import nogbeter.util.Interval;
+
+import static bezier.util.Util.*;
 
 public abstract class NonLinearCurve extends SimplePath {
 
 	STuple<SimplePath> simpler;
 
 
-	public NonLinearCurve(InclusiveInterval tInterval) {
+	public NonLinearCurve(Interval tInterval) {
 		super(tInterval);
 	}
 
@@ -136,24 +139,89 @@ public abstract class NonLinearCurve extends SimplePath {
 	}
 	
 	@Override
-	public void project(BestProject<Double> best, Vec p) {
+	public BestProject<Double> project(BestProject best, Vec p) {
 		if(getBBox().getNearestPoint(p).distanceSquared(p) > best.distSquared){
-			return;
+			return best;
 		}
 		STuple<SimplePath> sp = splitSimpler();
 		if (sp.l.getBBox().avgDistSquared(p) < 
 			sp.r.getBBox().avgDistSquared(p)) {
-			projectSimpler(best,p,sp.l,sp.r);
+			return projectSimpler(best,p,sp.l,sp.r);
 		} else {
-			projectSimpler(best,p,sp.r,sp.l);
+			return projectSimpler(best,p,sp.r,sp.l);
 		}
 		
 	}
 
-	private void projectSimpler(BestProject<Double> best, Vec p, SimplePath fst,
+	private  BestProject<Double> projectSimpler(BestProject<Double> best, Vec p, SimplePath fst,
 			SimplePath snd) {
-		fst.project(best, p);
-		snd.project(best,p);
+		best = fst.project(best, p);
+		return snd.project(best,p);
+	}
+	
+	@Override
+	public <OPathParam> BestProject<Tuple<Double, OPathParam>> project(
+			BestProject best, Path<OPathParam> other) {
+		return other.projectLNonLinear(best, this);
 	}
 
+	@Override
+	public BestProject<Tuple<Double, Double>> projectLDiaLine(BestProject best,
+			DiagonalLine lhs) {
+		return  lhs.projectLNonLinear(best, this).flip();
+	}
+
+	@Override
+	public BestProject<Tuple<Double, Double>> projectLHorLine(BestProject best,
+			HorizontalLine lhs) {
+		return  lhs.projectLNonLinear(best, this).flip();
+	}
+
+	@Override
+	public BestProject<Tuple<Double, Double>> projectLVerLine(BestProject best,
+			VerticalLine lhs) {
+		return  lhs.projectLNonLinear(best, this).flip();
+	}
+
+	@Override
+	public BestProject<Tuple<Double, Double>> projectLNonLinear(
+			BestProject best, NonLinearCurve lhs) {
+		if(best.distSquared > minDistTo(lhs.getBBox())){
+			if (getBBox().diagonalLengthSquared() > lhs.getBBox()
+					.diagonalLengthSquared()) {
+				STuple<SimplePath> sp = splitSimpler();
+				if(sp.l.getBBox().avgDistSquared(lhs.getBBox().getMiddle()) <
+						sp.l.getBBox().avgDistSquared(lhs.getBBox().getMiddle())){
+					return projectSimpler(best, lhs, sp.l, sp.r);
+				} else {
+					return projectSimpler(best, lhs, sp.r, sp.l);
+				}
+			} else {
+				STuple<SimplePath> sp = lhs.splitSimpler();
+				if(sp.l.getBBox().avgDistSquared(getBBox().getMiddle()) <
+						sp.l.getBBox().avgDistSquared(getBBox().getMiddle())){
+					return projectSimpler(best, this, sp.l, sp.r).flip();
+				} else {
+					return projectSimpler(best, this, sp.r, sp.l).flip();
+				}
+			}
+		} else {
+			return best;
+		}
+	}
+	
+	private  BestProject<Tuple<Double, Double>> projectSimpler(
+			BestProject<Tuple<Double, Double>> best, Path p, SimplePath fst,
+			SimplePath snd) {
+		best = p.project(best, fst);
+		return p.project(best,snd);
+	}
+
+	double minDistTo(BBox br){
+		BBox bl = getBBox();
+		double xDist = square(bl.xInterval.minDistance(br.xInterval));
+		double yDist = square(bl.yInterval.minDistance(br.yInterval));
+		return xDist + yDist;
+	}
+	
 }

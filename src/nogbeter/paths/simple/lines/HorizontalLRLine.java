@@ -6,12 +6,12 @@ import nogbeter.paths.BestProject;
 import nogbeter.paths.Path;
 import nogbeter.paths.simple.nonlinear.NonLinearCurve;
 import nogbeter.util.BBox;
-import nogbeter.util.InclusiveInterval;
+import nogbeter.util.Interval;
 
 public class HorizontalLRLine extends HorizontalLine{
 
-	public HorizontalLRLine(InclusiveInterval xInterval, double y,
-			InclusiveInterval tinterval) {
+	public HorizontalLRLine(Interval xInterval, double y,
+			Interval tinterval) {
 		super(xInterval, y, tinterval);
 	}
 
@@ -29,4 +29,5 @@ public class HorizontalLRLine extends HorizontalLine{
 	public Vec getTangentAt(double t) {
 		return new Vec(0,-1);
 	}
+
 }
