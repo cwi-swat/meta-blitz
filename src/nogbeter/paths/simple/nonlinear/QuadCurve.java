@@ -10,6 +10,7 @@ import nogbeter.util.Interval;
 import bezier.paths.Constants;
 import bezier.points.Vec;
 import bezier.util.STuple;
+import bezier.util.Tuple;
 import bezier.util.Util;
 
 public class QuadCurve extends Curve{
@@ -72,12 +73,12 @@ public class QuadCurve extends Curve{
 
 	@Override
 	public
-	STuple<Curve> split(double t) {
+	Tuple<QuadCurve,QuadCurve> split(double t) {
 		Vec cl = p0.interpolate(t, p1);
 		Vec cr = p1.interpolate(t, p2);
 		Vec cm = cl.interpolate(t, cr);
 		STuple<Interval> st = tInterval.split();
-		return new STuple<Curve>( new QuadCurve(p0,cl,cm,st.l),
+		return new Tuple<QuadCurve,QuadCurve>( new QuadCurve(p0,cl,cm,st.l),
 				 new QuadCurve(cm,cr,p2,st.r));
 	}
 

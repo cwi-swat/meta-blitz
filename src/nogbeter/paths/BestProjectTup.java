@@ -4,6 +4,8 @@ import bezier.util.Tuple;
 
 public class BestProjectTup<L,R> extends BestProject<Tuple<L,R>>{
 	
+	public static final BestProjectTup noBestYet = new BestProjectTup(Double.POSITIVE_INFINITY,null);
+	
 	public BestProjectTup(double distSquared, Tuple<L, R> t) {
 		super(distSquared,t);
 	}

@@ -3,30 +3,20 @@ package nogbeter.paths.simple.nonlinear;
 import java.util.Collections;
 import java.util.List;
 
-import javax.print.attribute.standard.MediaSize.Other;
-
-import bezier.points.Vec;
-import bezier.util.STuple;
-import bezier.util.Tuple;
-import bezier.util.Util;
-
-import nogbeter.paths.BestProject;
 import nogbeter.paths.BestProjectTup;
-import nogbeter.paths.ConnectedPath;
 import nogbeter.paths.Path;
-import nogbeter.paths.SplittablePath;
+import nogbeter.paths.PathIndex;
 import nogbeter.paths.simple.SimplePath;
+import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.lines.DiagonalLine;
 import nogbeter.paths.simple.lines.HorizontalLine;
 import nogbeter.paths.simple.lines.VerticalLine;
-import nogbeter.util.BBox;
 import nogbeter.util.Interval;
+import bezier.util.Tuple;
 
-import static bezier.util.Util.*;
+public abstract class Curve extends SimplePath {
 
-public abstract class Curve extends SimplePath implements SplittablePath<Double> {
-
-	STuple<Path<Double>> simpler;
+	Tuple<SimplePath,SimplePath> simpler;
 
 
 	public Curve(Interval tInterval) {
@@ -44,14 +34,12 @@ public abstract class Curve extends SimplePath implements SplittablePath<Double>
 		}
 	}
 
-	public Path<Double> getPath() { return this; }
-	
 	@SuppressWarnings("unchecked")
-	public STuple<SimplePath> makeMonotomous() {
-		STuple<Curve> result = split(xyRoots.get(0));
+	public Tuple<Curve,Curve> makeMonotomous() {
+		Tuple<Curve,Curve> result = split(xyRoots.get(0));
 		result.l.xyRoots = Collections.EMPTY_LIST;
 		result.r.xyRoots = xyRoots.subList(1, xyRoots.size());
-		return (STuple) result;
+		return result;
 	}
 
 	abstract Double findX(double x);
@@ -80,14 +68,14 @@ public abstract class Curve extends SimplePath implements SplittablePath<Double>
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public STuple<Path<Double>> splitSimpler() {
+	public Tuple<SimplePath,SimplePath> splitSimpler() {
 		if (simpler == null) {
 			setXYRoots();
 			if (!isMonotomous()) {
-				return (STuple) makeMonotomous();
+				return (Tuple) makeMonotomous();
 			} else {
-				STuple<Curve> sp = split();
-				simpler = new STuple<Path<Double>>(
+				Tuple<Curve,Curve> sp = split();
+				simpler = new Tuple<SimplePath,SimplePath>(
 						sp.l.getSimplerApprox(),
 						sp.r.getSimplerApprox());
 			}
@@ -97,136 +85,97 @@ public abstract class Curve extends SimplePath implements SplittablePath<Double>
 
 	abstract SimplePath getSimplerApprox();
 
-	abstract STuple<Curve> split(double t);
+	abstract <Sub extends Curve> Tuple<Sub,Sub> split(double t);
 
-	STuple<Curve> split() {
+	<Sub extends Curve> Tuple<Sub,Sub> split() {
 		return split(0.5);
 	}
 
 	@Override
-	public <OPathParam> Tuple<List<Double>, List<OPathParam>> intersection(
-			Path<OPathParam> other) {
+	public <RPP,RLS extends Path,RRS extends Path> Tuple<List<SimplePathIndex>, List<RPP>> intersection(
+			Path<RPP,RLS,RRS> other) {
 		return other.intersectionLCurve(this);
 	}
 
 	@Override
-	public Tuple<List<Double>, List<Double>> intersectionLDiaLine(
+	public Tuple<List<SimplePathIndex>, List<SimplePathIndex>> intersectionLDiaLine(
 			DiagonalLine lhs) {
 		return lhs.intersectionLCurve(this).flip();
 	}
 
 	@Override
-	public Tuple<List<Double>, List<Double>> intersectionLHorLine(
+	public Tuple<List<SimplePathIndex>, List<SimplePathIndex>> intersectionLHorLine(
 			HorizontalLine lhs) {
 		return lhs.intersectionLCurve(this).flip();
 	}
 
 	@Override
-	public Tuple<List<Double>, List<Double>> intersectionLVerLine(
+	public Tuple<List<SimplePathIndex>, List<SimplePathIndex>> intersectionLVerLine(
 			VerticalLine lhs) {
 		return lhs.intersectionLCurve(this).flip();
 	}
 
-	@Override
-	public  <OPathParam> Tuple<List<OPathParam>, List<Double>> intersectionLSplittable(
-			SplittablePath<OPathParam> lhs){
-		if (getBBox().diagonalLengthSquared() > lhs.getBBox()
-				.diagonalLengthSquared()) {
-			STuple<Path<Double>> simp = splitSimpler();
-			return Util.appendTupList(lhs.getPath().intersection(simp.l),
-									  lhs.getPath().intersection(simp.r));
-		} else {
-			STuple<Path<OPathParam>> simp = lhs.splitSimpler();
-			return Util.appendTupList(simp.l.intersection(this),
-									  simp.r.intersection(this));
-		}
-	}
-	
-	@Override
-	public BestProject<Double> project(BestProject<Double> best, Vec p) {
-		if(getBBox().getNearestPoint(p).distanceSquared(p) > best.distSquared){
-			return best;
-		}
-		STuple<Path<Double>> sp = splitSimpler();
-		if (sp.l.getBBox().avgDistSquared(p) < 
-			sp.r.getBBox().avgDistSquared(p)) {
-			return projectSimpler(best,p,sp.l,sp.r);
-		} else {
-			return projectSimpler(best,p,sp.r,sp.l);
-		}
-		
-	}
 
-	private  BestProject<Double> projectSimpler(BestProject<Double> best, Vec p, Path<Double> fst,
-			Path<Double> snd) {
-		best = fst.project(best, p);
-		return snd.project(best,p);
-	}
 	
 	@Override
-	public <OPathParam> BestProjectTup<Double, OPathParam> project(
-			BestProjectTup<Double, OPathParam> best, Path<OPathParam> other) {
+	public <RPP,RLS extends Path,RRS extends Path>  BestProjectTup<SimplePathIndex, RPP> project(
+			double best, Path<RPP,RLS,RRS> other) {
 		return other.projectLCurve(best, this);
 	}
 
 	@Override
-	public BestProjectTup<Double, Double> projectLDiaLine(BestProjectTup<Double, Double> best,
+	public BestProjectTup<SimplePathIndex, SimplePathIndex> projectLDiaLine(double best,
 			DiagonalLine lhs) {
 		return  lhs.projectLCurve(best, this).flip();
 	}
 
 	@Override
-	public BestProjectTup<Double, Double> projectLHorLine(BestProjectTup<Double, Double> best,
+	public BestProjectTup<SimplePathIndex, SimplePathIndex> projectLHorLine(double best,
 			HorizontalLine lhs) {
 		return  lhs.projectLCurve(best, this).flip();
 	}
 
 	@Override
-	public BestProjectTup<Double, Double> projectLVerLine(BestProjectTup<Double, Double> best,
+	public BestProjectTup<SimplePathIndex, SimplePathIndex> projectLVerLine(double best,
 			VerticalLine lhs) {
 		return  lhs.projectLCurve(best, this).flip();
 	}
 
 	@Override
-	public <OPathParam> BestProjectTup<OPathParam, Double> projectLSplittable(
-			BestProjectTup<OPathParam, Double> best, SplittablePath<OPathParam> lhs) {
-		if(best.distSquared > minDistTo(lhs.getBBox())){
-			if (getBBox().diagonalLengthSquared() > lhs.getBBox()
-					.diagonalLengthSquared()) {
-				STuple<Path<Double>> sp = splitSimpler();
-				if(sp.l.getBBox().avgDistSquared(lhs.getBBox().getMiddle()) <
-						sp.l.getBBox().avgDistSquared(lhs.getBBox().getMiddle())){
-					return projectSimplerTup(best, lhs.getPath(), sp.l, sp.r);
-				} else {
-					return projectSimplerTup(best, lhs.getPath(), sp.r, sp.l);
-				}
-			} else {
-				STuple<Path<OPathParam>> sp = lhs.splitSimpler();
-				if(sp.l.getBBox().avgDistSquared(getBBox().getMiddle()) <
-						sp.l.getBBox().avgDistSquared(getBBox().getMiddle())){
-					return projectSimplerTup(best.flip(), this, sp.l, sp.r).flip();
-				} else {
-					return projectSimplerTup(best.flip(), this, sp.r, sp.l).flip();
-				}
-			}
-		} else {
-			return best;
-		}
-	}
-	
-	private static <LPathParam,RPathParam> BestProjectTup<LPathParam, RPathParam> projectSimplerTup(
-			BestProjectTup<LPathParam,RPathParam> best, Path<LPathParam> p, 
-			Path<RPathParam> fst,
-			Path<RPathParam> snd) {
-		best = p.project(best, fst);
-		return p.project(best,snd);
+	public <LPI> Tuple<List<LPI>, List<SimplePathIndex>> prependRightListRhs(
+			Tuple<List<LPI>, List<? extends PathIndex>> intersections) {
+		return (Tuple)intersections;
 	}
 
-	double minDistTo(BBox br){
-		BBox bl = getBBox();
-		double xDist = square(bl.xInterval.minDistance(br.xInterval));
-		double yDist = square(bl.yInterval.minDistance(br.yInterval));
-		return xDist + yDist;
+	@Override
+	public <LPI> Tuple<List<LPI>, List<SimplePathIndex>> prependLeftListRhs(
+			Tuple<List<LPI>, List<? extends PathIndex>> intersections) {
+		return (Tuple)intersections;
 	}
+
+	@Override
+	public <LPI> BestProjectTup<LPI, SimplePathIndex> prependLeftBestTupRhs(
+			BestProjectTup<LPI,? extends PathIndex> projectSimplerTup) {
+		return (BestProjectTup)projectSimplerTup;
+	}
+
+	@Override
+	public <LPI> BestProjectTup<LPI, SimplePathIndex> prependRightBestTupRhs(
+			BestProjectTup<LPI,? extends PathIndex> projectSimplerTup) {
+		return (BestProjectTup)projectSimplerTup;
+	}
+	
+	@Override
+	public <LPI> BestProjectTup<SimplePathIndex, LPI> prependLeftBestTupLhs(
+			BestProjectTup<? extends PathIndex, LPI> projectSimplerTup) {
+		return (BestProjectTup)projectSimplerTup;
+	}
+
+	@Override
+	public <LPI> BestProjectTup<SimplePathIndex, LPI> prependRightBestTupLhs(
+			BestProjectTup<? extends PathIndex, LPI> projectSimplerTup) {
+		return (BestProjectTup)projectSimplerTup;
+	}
+	
 	
 }

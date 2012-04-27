@@ -1,17 +1,13 @@
 package nogbeter.paths.simple.lines;
 
-import static bezier.util.Util.clamp;
-
 import static bezier.util.Util.square;
 
 import java.util.List;
 
 import nogbeter.paths.BestProject;
 import nogbeter.paths.BestProjectTup;
-import nogbeter.paths.ConnectedPath;
 import nogbeter.paths.Path;
-import nogbeter.paths.SplittablePath;
-import nogbeter.paths.simple.SimplePath;
+import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.nonlinear.Curve;
 import nogbeter.util.BBox;
 import nogbeter.util.Interval;
@@ -35,19 +31,20 @@ public abstract class VerticalLine extends Line {
 	abstract double getTForY(double y);
 	
 	@Override
-	public <OPathParam> Tuple<List<Double>, List<OPathParam>> intersection(
-			Path<OPathParam> other) {
+	public <RPP,RLS extends Path,RRS extends Path> 
+		Tuple<List<SimplePathIndex>, List<RPP>> intersection(
+			Path<RPP,RLS,RRS> other) {
 		return other.intersectionLVerLine(this);
 	}
 
 	@Override
-	public Tuple<List<Double>, List<Double>> intersectionLDiaLine(
+	public Tuple<List<SimplePathIndex>, List<SimplePathIndex>> intersectionLDiaLine(
 			DiagonalLine lhs) {
 		return lhs.intersectionLVerLine(this).flip();
 	}
 
 	@Override
-	public Tuple<List<Double>, List<Double>> intersectionLHorLine(
+	public Tuple<List<SimplePathIndex>, List<SimplePathIndex>> intersectionLHorLine(
 			HorizontalLine lhs) {
 		if(yInterval.isInside(lhs.y) && lhs.xInterval.isInside(x)){
 			return makeIntersectionResult(lhs,lhs.getTForX(x), getTForY(lhs.y));
@@ -57,13 +54,13 @@ public abstract class VerticalLine extends Line {
 	}
 
 	@Override
-	public Tuple<List<Double>, List<Double>> intersectionLVerLine(
+	public Tuple<List<SimplePathIndex>, List<SimplePathIndex>> intersectionLVerLine(
 			VerticalLine lhs) {
 		return Util.emptyTupleList;
 	}
 	
 	@Override
-	public Tuple<List<Double>, List<Double>> intersectionLCurve(
+	public Tuple<List<SimplePathIndex>, List<SimplePathIndex>> intersectionLCurve(
 			Curve lhs) {
 		if(overlaps(lhs.getBBox())){
 			double lt = lhs.findTForX(x);
@@ -83,40 +80,40 @@ public abstract class VerticalLine extends Line {
 	}
 
 	@Override
-	public BestProject<Double> project(BestProject<Double> best, Vec p) {
+	public BestProject<SimplePathIndex> project(double best, Vec p) {
 		double y = yInterval.getClosestPoint(p.y);
 		double dist = new Vec(x,y).distanceSquared(p);
-		return best.choose(new BestProject<Double>(dist,
-				tInterval.getAtFactor(getTForY(y))));
+		return new BestProject<SimplePathIndex>(dist,
+				makeGlobalPathIndexFromLocal(getTForY(y)));
 	}
 	
 	@Override
-	public <OPathParam> BestProjectTup<Double, OPathParam> project(
-			BestProjectTup<Double, OPathParam> best, Path<OPathParam> other) {
+	public <RPP,RLS extends Path,RRS extends Path> 
+			BestProjectTup<SimplePathIndex, RPP>  project(
+			double best, Path<RPP,RLS,RRS> other) {
 		return other.projectLVerLine(best, this);
 	}
 
 	@Override
-	public BestProjectTup<Double, Double> projectLDiaLine(BestProjectTup<Double, Double> best,
+	public BestProjectTup<SimplePathIndex, SimplePathIndex> projectLDiaLine(double best,
 			DiagonalLine lhs) {
 		return lhs.projectLVerLine(best, this).flip();
 	}
 
 	@Override
-	public BestProjectTup<Double, Double> projectLHorLine(BestProjectTup<Double, Double> best,
+	public BestProjectTup<SimplePathIndex, SimplePathIndex> projectLHorLine(double best,
 			HorizontalLine lhs) {
 		return lhs.projectLVerLine(best, this).flip();
 	}
 
 	@Override
-	public BestProjectTup<Double, Double> projectLVerLine(BestProjectTup<Double, Double> best,
+	public BestProjectTup<SimplePathIndex, SimplePathIndex> projectLVerLine(double best,
 			VerticalLine lhs) {
 		STuple<Double> closestY = lhs.yInterval.closestPoints(yInterval);
 		double xDist = square(closestY.l - closestY.r);
 		double yDist = square(x - lhs.x);
-		return best.choose(
-				makeBestProject(xDist + yDist, lhs,
-						lhs.getTForY(closestY.l), getTForY(closestY.r)));
+		return makeBestProject(xDist + yDist, lhs,
+						lhs.getTForY(closestY.l), getTForY(closestY.r));
 	}
 
 

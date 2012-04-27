@@ -5,14 +5,11 @@ import static bezier.util.Util.findQuadraticPolynomialRoots;
 import java.util.ArrayList;
 import java.util.List;
 
-import nogbeter.paths.BestProject;
-import nogbeter.paths.ConnectedPath;
-import nogbeter.paths.Path;
+import nogbeter.paths.BestProjectTup;
 import nogbeter.paths.PathFactory;
+import nogbeter.paths.PathIndex;
 import nogbeter.paths.simple.SimplePath;
-import nogbeter.paths.simple.lines.DiagonalLine;
-import nogbeter.paths.simple.lines.HorizontalLine;
-import nogbeter.paths.simple.lines.VerticalLine;
+import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.util.BBox;
 import nogbeter.util.Interval;
 import bezier.paths.Constants;
@@ -103,7 +100,7 @@ public class CubicCurve extends Curve{
 	}
 
 	@Override
-	STuple<Curve> split(double t) {
+	Tuple<CubicCurve,CubicCurve> split(double t) {
 		Vec l0, l1, l2, l3;
 		Vec r0, r1, r2, r3;
 		l0 = p0;
@@ -115,7 +112,7 @@ public class CubicCurve extends Curve{
 		r1 = inter.interpolate(t, r2);
 		l3 = r0 = l2.interpolate(t, r1);
 		STuple<Interval> st = tInterval.split();
-		return new  STuple<Curve>(
+		return new  Tuple<CubicCurve,CubicCurve>(
 				new CubicCurve(l0,l1,l2,l3,st.l),
 				new CubicCurve(r0,r1,r2,r3,st.r));
 	}
@@ -148,7 +145,7 @@ public class CubicCurve extends Curve{
 
 
 	@Override
-	public ConnectedPath getWithAdjustedStartPoint(Vec newStart) {
+	public CubicCurve getWithAdjustedStartPoint(Vec newStart) {
 		return PathFactory.createCubic(newStart,p1,p2,p3);
 	}
 
@@ -157,4 +154,8 @@ public class CubicCurve extends Curve{
 	BBox makeBBox() {
 		return BBox.fromPoints(p0,p1,p2,p3);
 	}
+
+	
+
+
 }

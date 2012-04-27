@@ -1,7 +1,7 @@
 package nogbeter.paths.simple.lines;
 
-import bezier.points.Vec;
 import nogbeter.util.Interval;
+import bezier.points.Vec;
 
 public class VerticalUDLine extends VerticalLine{
 

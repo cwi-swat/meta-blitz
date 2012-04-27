@@ -266,6 +266,10 @@ public class Util {
 		return d * d;
 	}
 
+	public static double divD(int start, int length) {
+		return (double)start/(double)length;
+	}
+
 
 
 	

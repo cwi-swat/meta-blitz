@@ -1,26 +1,24 @@
 package nogbeter.paths.simple.lines;
 
-import java.util.Collections;
+import static bezier.util.Util.square;
+import static java.lang.Math.min;
+import static nogbeter.util.Interval.emptyInterval;
+import static nogbeter.util.Interval.interval01;
+
 import java.util.List;
 
 import nogbeter.paths.BestProject;
 import nogbeter.paths.BestProjectTup;
-import nogbeter.paths.ConnectedPath;
 import nogbeter.paths.Path;
-import nogbeter.paths.SplittablePath;
+import nogbeter.paths.PathIndex;
 import nogbeter.paths.simple.SimplePath;
-import nogbeter.paths.simple.nonlinear.Curve;
-import nogbeter.paths.simple.nonlinear.QuadCurve;
+import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.util.BBox;
 import nogbeter.util.Interval;
 import bezier.points.Vec;
 import bezier.util.STuple;
 import bezier.util.Tuple;
 import bezier.util.Util;
-
-import static nogbeter.util.Interval.*;
-import static java.lang.Math.*;
-import static bezier.util.Util.*;
 
 
 public class DiagonalLine extends Line {
@@ -147,13 +145,14 @@ public class DiagonalLine extends Line {
 	}
 
 	@Override
-	public <OPathParam> Tuple<List<Double>, List<OPathParam>> intersection(
-			Path<OPathParam> other) {
+	public  <RPP,RLS extends Path,RRS extends Path> 
+			Tuple<List<SimplePathIndex>, List<RPP>> intersection(
+			Path<RPP,RLS,RRS> other) {
 		return other.intersectionLDiaLine(this);
 	}
 
 	@Override
-	public Tuple<List<Double>, List<Double>> intersectionLDiaLine(
+	public Tuple<List<SimplePathIndex>, List<SimplePathIndex>> intersectionLDiaLine(
 			DiagonalLine lhs) {
 		Tuple<Double, Double> res = lhs.intersection(this);
 		if (res != null) {
@@ -164,7 +163,7 @@ public class DiagonalLine extends Line {
 	}
 
 	@Override
-	public Tuple<List<Double>, List<Double>> intersectionLHorLine(
+	public Tuple<List<SimplePathIndex>, List<SimplePathIndex>> intersectionLHorLine(
 			HorizontalLine lhs) {
 		double t = getTAtY(lhs.y);
 		if(interval01.isInside(t)){
@@ -177,7 +176,7 @@ public class DiagonalLine extends Line {
 	}
 
 	@Override
-	public Tuple<List<Double>, List<Double>> intersectionLVerLine(
+	public Tuple<List<SimplePathIndex>, List<SimplePathIndex>> intersectionLVerLine(
 			VerticalLine lhs) {
 		double t = getTAtX(lhs.x);
 		if(interval01.isInside(t)){
@@ -211,13 +210,13 @@ public class DiagonalLine extends Line {
 	}
 
 	@Override
-	public BestProject<Double> project(BestProject<Double> best, Vec p) {
+	public BestProject<SimplePathIndex> project(double best, Vec p) {
 		double t = closestT(p);
 		double dist = getAtLocal(t).distanceSquared(p);
-		return best.choose(new BestProject<Double>(dist, tInterval.getAtFactor(t)));
+		return new BestProject<SimplePathIndex>(dist, makeGlobalPathIndexFromLocal(t));
 	}
 
-	public BestProjectTup<Double, Double> projectLPoint(
+	public BestProjectTup<SimplePathIndex, SimplePathIndex> projectLPoint(
 			SimplePath lhs, double lt, double x, double y) {
 		Vec v = new Vec(x,y);
 		double tr = closestT(v);
@@ -256,44 +255,45 @@ public class DiagonalLine extends Line {
 
 
 	@Override
-	public <OPathParam> BestProjectTup<Double, OPathParam> project(
-			BestProjectTup<Double, OPathParam> best, Path<OPathParam> other) {
+	public <RPP,RLS extends Path,RRS extends Path>  BestProjectTup<SimplePathIndex, RPP> project(
+			double best, Path<RPP,RLS,RRS>other) {
 		return other.projectLDiaLine(best, this);
 	}
 
 	@Override
-	public BestProjectTup<Double, Double> projectLDiaLine(
-			BestProjectTup<Double, Double> best, DiagonalLine lhs) {
+	public BestProjectTup<SimplePathIndex, SimplePathIndex> projectLDiaLine(
+			double best, DiagonalLine lhs) {
 		Tuple<Double,Double> tp = lhs.closestTs(this);
 		double dist = lhs.getAtLocal(tp.l).distanceSquared(getAtLocal(tp.r));
-		if(dist < best.distSquared){
+		if(dist < best){
 			return makeBestProject(dist,lhs, tp.l, tp.r);
 		} else {
-			return best;
+			return BestProjectTup.noBestYet;
 		}
 	}
 
 
 	@Override
-	public BestProjectTup<Double, Double> projectLHorLine(
-			BestProjectTup<Double, Double> best, HorizontalLine lhs) {
+	public BestProjectTup<SimplePathIndex, SimplePathIndex> projectLHorLine(
+			double best, HorizontalLine lhs) {
 		Interval txInterval = new Interval(
 				getTAtX(lhs.xInterval.low),
 				getTAtX(lhs.xInterval.high)).intersection(interval01);
+		BestProjectTup<SimplePathIndex, SimplePathIndex> res = BestProjectTup.noBestYet;
 		if(txInterval != null){
 			Vec lowv = getAtLocal(txInterval.low); Vec highv = getAtLocal(txInterval.high);
 			double lowDist = lowv.y - lhs.y; double highDist = highv.y - lhs.y;
 			if(lowDist < highDist){
-				best = best.choose(
+				res = res.choose(
 						makeBestProject(square(lowDist), lhs, lhs.getTForX(lowv.x), txInterval.low)
 						);
 			} else {
-				best = best.choose(
+				res = res.choose(
 						makeBestProject(square(lowDist), lhs, lhs.getTForX(highv.x), txInterval.high)
 					);
 			}
 		} 
-		return best.choose(
+		return res.choose(
 				projectLPoint(lhs, lhs.getTForX(lhs.xInterval.low), lhs.xInterval.low, lhs.y))
 				.choose(
 				projectLPoint(lhs, lhs.getTForX(lhs.xInterval.high),lhs.xInterval.high, lhs.y)
@@ -301,30 +301,34 @@ public class DiagonalLine extends Line {
 	}
 
 	@Override
-	public BestProjectTup<Double, Double> projectLVerLine(
-			BestProjectTup<Double, Double> best, VerticalLine lhs) {
+	public BestProjectTup<SimplePathIndex, SimplePathIndex> projectLVerLine(
+			double best, VerticalLine lhs) {
 		Interval tyInterval = new Interval(
 				getTAtX(lhs.yInterval.low),
 				getTAtX(lhs.yInterval.high)).intersection(interval01);
+		BestProjectTup<SimplePathIndex, SimplePathIndex> res = BestProjectTup.noBestYet;
 		if(tyInterval != null){
 			Vec lowv = getAtLocal(tyInterval.low); Vec highv = getAtLocal(tyInterval.high);
 			double lowDist = lowv.x - lhs.x; double highDist = highv.x - lhs.x;
 			if(lowDist < highDist){
-				best = best.choose(
+				res = res.choose(
 						makeBestProject(square(lowDist), lhs, lhs.getTForY(lowv.x), tyInterval.low)
 					);
 			} else {
-				best = best.choose(
+				res = res.choose(
 						makeBestProject(square(lowDist), lhs, lhs.getTForY(highv.x), tyInterval.high)
 					);
 			}
 		} 
-		return best.choose(
+		return res.choose(
 				projectLPoint(lhs, lhs.getTForY(lhs.yInterval.low), lhs.x, lhs.yInterval.low))
 				.choose(
 				projectLPoint(lhs, lhs.getTForY(lhs.yInterval.high), lhs.x, lhs.yInterval.high)
 			);
 	}
+
+
+	
 
 
 }

@@ -1,12 +1,7 @@
 package nogbeter.paths.simple.lines;
 
-import bezier.points.Vec;
-import bezier.util.Tuple;
-import nogbeter.paths.BestProject;
-import nogbeter.paths.Path;
-import nogbeter.paths.simple.nonlinear.Curve;
-import nogbeter.util.BBox;
 import nogbeter.util.Interval;
+import bezier.points.Vec;
 
 public class HorizontalLRLine extends HorizontalLine{
 

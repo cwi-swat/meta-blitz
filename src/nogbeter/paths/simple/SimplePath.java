@@ -8,15 +8,18 @@ import bezier.util.STuple;
 import bezier.util.Tuple;
 import nogbeter.paths.BestProject;
 import nogbeter.paths.BestProjectTup;
-import nogbeter.paths.ConnectedPath;
+import nogbeter.paths.IConnectedPath;
+import nogbeter.paths.Path;
+import nogbeter.paths.PathIndex;
 import nogbeter.paths.simple.lines.VerticalLine;
 import nogbeter.util.Interval;
 
-public abstract class SimplePath extends ConnectedPath{
+public abstract class SimplePath extends Path<SimplePathIndex,SimplePath,SimplePath> implements IConnectedPath<SimplePath>{
 
+	public final Interval tInterval;
 	
 	public SimplePath(Interval tInterval) {
-		super(tInterval);
+		this.tInterval=tInterval;
 	}
 	
 	public Vec getStartPoint(){
@@ -30,25 +33,30 @@ public abstract class SimplePath extends ConnectedPath{
 	public abstract Vec getAtLocal(double t);
 	public abstract Vec getTangentAtLocal(double t);
 	
-	public Vec getAt(double t){
-		return getAtLocal(tInterval.getFactorForPoint(t));
+	public Vec getAt(SimplePathIndex t){
+		return getAtLocal(tInterval.getFactorForPoint(t.t));
 	}
 	
-	public Vec getTangentAt(double t){
-		return getTangentAtLocal(tInterval.getFactorForPoint(t));
+	public Vec getTangentAt(SimplePathIndex t){
+		return getTangentAtLocal(tInterval.getFactorForPoint(t.t));
 	}
-
-	protected Tuple<List<Double>, List<Double>> makeIntersectionResult(
+	
+	
+	protected Tuple<List<SimplePathIndex>, List<SimplePathIndex>> makeIntersectionResult(
 			SimplePath lhs, double tl, double tr) {
-		return new Tuple<List<Double>, List<Double>>(
-				Collections.singletonList(lhs.tInterval.getAtFactor(tl)),
-				Collections.singletonList(tInterval.getAtFactor(tr)));
+		return new Tuple<List<SimplePathIndex>, List<SimplePathIndex>>(
+				Collections.singletonList(lhs.makeGlobalPathIndexFromLocal(tl)),
+				Collections.singletonList(makeGlobalPathIndexFromLocal(tr)));
 	}
 	
-	public BestProjectTup<Double, Double> makeBestProject(double dist,SimplePath lhs,
+	public SimplePathIndex makeGlobalPathIndexFromLocal(double t){
+		return new SimplePathIndex(tInterval.getAtFactor(t));
+	}
+	
+	public BestProjectTup<SimplePathIndex, SimplePathIndex> makeBestProject(double dist,SimplePath lhs,
 			double tl, double tr) {
-		return new BestProjectTup<Double,Double>(dist,
-						lhs.tInterval.getAtFactor(tl), 
-						tInterval.getAtFactor(tr));
+		return new BestProjectTup<SimplePathIndex,SimplePathIndex>(dist,
+						lhs.makeGlobalPathIndexFromLocal(tl), 
+						makeGlobalPathIndexFromLocal(tr));
 	}
 }
