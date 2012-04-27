@@ -1,27 +1,28 @@
-package nogbeter.paths.simple;
+package nogbeter.paths;
 
 import bezier.points.Vec;
-import nogbeter.paths.ConnectedPath;
+import nogbeter.paths.compound.Append;
+import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.lines.DiagonalLine;
 import nogbeter.paths.simple.lines.HorizontalLRLine;
 import nogbeter.paths.simple.lines.HorizontalLine;
-import nogbeter.paths.simple.lines.ActualLine;
+import nogbeter.paths.simple.lines.Line;
 import nogbeter.paths.simple.lines.HorizontalRLLine;
 import nogbeter.paths.simple.lines.VerticalDULine;
 import nogbeter.paths.simple.lines.VerticalLine;
 import nogbeter.paths.simple.lines.VerticalUDLine;
 import nogbeter.paths.simple.nonlinear.CubicCurve;
-import nogbeter.paths.simple.nonlinear.NonLinearCurve;
+import nogbeter.paths.simple.nonlinear.Curve;
 import nogbeter.paths.simple.nonlinear.QuadCurve;
 import nogbeter.util.Interval;
 
-public class SimplePathFactory {
+public class PathFactory {
 
-	public static ActualLine createLine(Vec start, Vec end) {
+	public static Line createLine(Vec start, Vec end) {
 		return createLine(start, end, Interval.interval01);
 	}
 
-	public static ActualLine createLine(Vec start, Vec end,
+	public static Line createLine(Vec start, Vec end,
 			Interval interval) {
 		if (start.x == end.x) {
 			if (start.y < end.y) {
@@ -60,6 +61,10 @@ public class SimplePathFactory {
 	public static SimplePath createCubic(Vec p0, Vec p1, Vec p2, Vec p3,
 			Interval interval) {
 		return new CubicCurve(p0, p1, p2, p3, interval);
+	}
+	
+	public static Append createAppends(SimplePath ... paths){
+		return null;
 	}
 
 }

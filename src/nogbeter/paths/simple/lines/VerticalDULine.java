@@ -17,12 +17,12 @@ public class VerticalDULine extends VerticalLine{
 	}
 
 	@Override
-	public Vec getAt(double t) {
+	public Vec getAtLocal(double t) {
 		return new Vec(x,yInterval.getAtFactor(1.0 -t));
 	}
 
 	@Override
-	public Vec getTangentAt(double t) {
+	public Vec getTangentAtLocal(double t) {
 		return new Vec(1,0);
 	}
 	

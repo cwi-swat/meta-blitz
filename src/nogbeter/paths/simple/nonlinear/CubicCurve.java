@@ -8,8 +8,8 @@ import java.util.List;
 import nogbeter.paths.BestProject;
 import nogbeter.paths.ConnectedPath;
 import nogbeter.paths.Path;
+import nogbeter.paths.PathFactory;
 import nogbeter.paths.simple.SimplePath;
-import nogbeter.paths.simple.SimplePathFactory;
 import nogbeter.paths.simple.lines.DiagonalLine;
 import nogbeter.paths.simple.lines.HorizontalLine;
 import nogbeter.paths.simple.lines.VerticalLine;
@@ -20,7 +20,7 @@ import bezier.points.Vec;
 import bezier.util.STuple;
 import bezier.util.Tuple;
 
-public class CubicCurve extends NonLinearCurve{
+public class CubicCurve extends Curve{
 
 	public final Vec p0,p1,p2,p3;
 
@@ -88,13 +88,13 @@ public class CubicCurve extends NonLinearCurve{
 	}
 
 	@Override
-	SimplePath getSimplerApproximation() {
+	SimplePath getSimplerApprox() {
 		Vec extendP1 = p0.interpolate(1.0/3.0, p1);
 		Vec extendP2 =  p3.interpolate(1.0/3.0, p2);
 		Vec middle = extendP1.interpolate(0.5, extendP2);
 		SimplePath simpler = new QuadCurve(p0,middle,p3,tInterval);
-		Vec fromCubic = getAt(Constants.T_MAX_DIFF_CUBIC_QUADRATIC);
-		Vec fromQuad = simpler.getAt(Constants.T_MAX_DIFF_CUBIC_QUADRATIC);
+		Vec fromCubic = getAtLocal(Constants.T_MAX_DIFF_CUBIC_QUADRATIC);
+		Vec fromQuad = simpler.getAtLocal(Constants.T_MAX_DIFF_CUBIC_QUADRATIC);
 		if(fromCubic.distanceSquared(fromQuad) <= Constants.HALF_MAX_ERROR_POW2){
 			return simpler;
 		} else {
@@ -103,7 +103,7 @@ public class CubicCurve extends NonLinearCurve{
 	}
 
 	@Override
-	STuple<NonLinearCurve> split(double t) {
+	STuple<Curve> split(double t) {
 		Vec l0, l1, l2, l3;
 		Vec r0, r1, r2, r3;
 		l0 = p0;
@@ -115,14 +115,14 @@ public class CubicCurve extends NonLinearCurve{
 		r1 = inter.interpolate(t, r2);
 		l3 = r0 = l2.interpolate(t, r1);
 		STuple<Interval> st = tInterval.split();
-		return new  STuple<NonLinearCurve>(
+		return new  STuple<Curve>(
 				new CubicCurve(l0,l1,l2,l3,st.l),
 				new CubicCurve(r0,r1,r2,r3,st.r));
 	}
 
 
 	@Override
-	public Vec getAt(double t) {
+	public Vec getAtLocal(double t) {
 		double rt = 1.0 - t;
 		double rt2 = rt*rt;
 		double rt3 = rt2*rt;
@@ -135,7 +135,7 @@ public class CubicCurve extends NonLinearCurve{
 	}
 
 	@Override
-	public Vec getTangentAt(double t) {
+	public Vec getTangentAtLocal(double t) {
 		double ax = (p3.x - 3*p2.x + 3*p1.x - p0.x)*3;
 		double bx = (p2.x - 2 * p1.x +  p0.x)*6;
 		double cx = (p1.x - p0.x)*3;
@@ -149,7 +149,7 @@ public class CubicCurve extends NonLinearCurve{
 
 	@Override
 	public ConnectedPath getWithAdjustedStartPoint(Vec newStart) {
-		return SimplePathFactory.createCubic(newStart,p1,p2,p3);
+		return PathFactory.createCubic(newStart,p1,p2,p3);
 	}
 
 	@Override

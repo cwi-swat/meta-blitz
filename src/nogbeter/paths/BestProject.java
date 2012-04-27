@@ -34,11 +34,5 @@ public class BestProject<A>{
 		}
 	}
 	
-	public BestProject flip(){
-		if(t == null || !(t instanceof Tuple)){
-			return this;
-		} else {
-			return new BestProject(distSquared,((Tuple)t).flip());
-		}
-	}
+	
 }

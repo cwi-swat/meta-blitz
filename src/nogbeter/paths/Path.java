@@ -5,7 +5,7 @@ import java.util.List;
 import nogbeter.paths.simple.lines.DiagonalLine;
 import nogbeter.paths.simple.lines.HorizontalLine;
 import nogbeter.paths.simple.lines.VerticalLine;
-import nogbeter.paths.simple.nonlinear.NonLinearCurve;
+import nogbeter.paths.simple.nonlinear.Curve;
 import nogbeter.paths.simple.nonlinear.QuadCurve;
 import nogbeter.util.BBox;
 import bezier.points.Vec;
@@ -36,37 +36,44 @@ public abstract class Path<PathParam> {
 	public abstract Tuple<List<Double>, List<PathParam>> intersectionLVerLine(
 			VerticalLine lhs);
 
-	public abstract Tuple<List<Double>, List<PathParam>> intersectionLNonLinear(
-			NonLinearCurve lhs);
+	public Tuple<List<Double>, List<PathParam>> intersectionLCurve(
+			Curve lhs){
+		return intersectionLSplittable(lhs);
+	}
+	
+	public abstract <OPathParam> Tuple<List<OPathParam>, List<PathParam>> intersectionLSplittable(
+			SplittablePath<OPathParam> lhs);
 
 	public BestProject<PathParam> project(Vec p) {;
 		return project(BestProject.noBestYet,p);
 	}
 	
-	public abstract BestProject<PathParam> project(BestProject best, Vec p);
+	public abstract BestProject<PathParam> project(BestProject<PathParam> best, Vec p);
 
-	public <OPathParam> BestProject<Tuple<PathParam, OPathParam>> project(
-			Path<OPathParam> other) {
-		return project(BestProject.noBestYet,other);
-	}
 
-	public abstract <OPathParam> BestProject<Tuple<PathParam, OPathParam>> project(
-			BestProject best,
+	public abstract <OPathParam> BestProjectTup<PathParam, OPathParam> project(
+			BestProjectTup<PathParam, OPathParam> best,
 			Path<OPathParam> other);
 	
-	public abstract BestProject<Tuple<Double, PathParam>> projectLDiaLine(
-			BestProject best,
+	public abstract BestProjectTup<Double, PathParam> projectLDiaLine(
+			BestProjectTup<Double, PathParam> best,
 			DiagonalLine lhs);
 	
-	public abstract BestProject<Tuple<Double, PathParam>> projectLHorLine(
-			BestProject best,
+	public abstract BestProjectTup<Double, PathParam> projectLHorLine(
+			BestProjectTup<Double, PathParam> best,
 			HorizontalLine lhs);
 	
-	public abstract BestProject<Tuple<Double, PathParam>> projectLVerLine(
-			BestProject best,
+	public abstract BestProjectTup<Double, PathParam> projectLVerLine(
+			BestProjectTup<Double, PathParam> best,
 			VerticalLine lhs);
 	
-	public abstract BestProject<Tuple<Double, PathParam>> projectLNonLinear(
-			BestProject best,
-			NonLinearCurve lhs);
+	public BestProjectTup<Double, PathParam> projectLCurve(
+			BestProjectTup<Double, PathParam> best,
+			Curve lhs){
+		return projectLSplittable(best, lhs);
+	}
+	
+	public abstract <OPathParam> BestProjectTup<OPathParam, PathParam> projectLSplittable(
+			BestProjectTup<OPathParam, PathParam> best,
+			SplittablePath<OPathParam> lhs);
 }

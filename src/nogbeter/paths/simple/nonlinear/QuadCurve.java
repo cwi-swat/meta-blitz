@@ -3,22 +3,16 @@ package nogbeter.paths.simple.nonlinear;
 import java.util.ArrayList;
 import java.util.List;
 
-import nogbeter.paths.ConnectedPath;
-import nogbeter.paths.Path;
+import nogbeter.paths.PathFactory;
 import nogbeter.paths.simple.SimplePath;
-import nogbeter.paths.simple.SimplePathFactory;
-import nogbeter.paths.simple.lines.DiagonalLine;
-import nogbeter.paths.simple.lines.HorizontalLine;
-import nogbeter.paths.simple.lines.VerticalLine;
 import nogbeter.util.BBox;
 import nogbeter.util.Interval;
 import bezier.paths.Constants;
 import bezier.points.Vec;
 import bezier.util.STuple;
-import bezier.util.Tuple;
 import bezier.util.Util;
 
-public class QuadCurve extends NonLinearCurve{
+public class QuadCurve extends Curve{
 
 	
 	public final Vec p0,p1,p2;
@@ -78,12 +72,12 @@ public class QuadCurve extends NonLinearCurve{
 
 	@Override
 	public
-	STuple<NonLinearCurve> split(double t) {
+	STuple<Curve> split(double t) {
 		Vec cl = p0.interpolate(t, p1);
 		Vec cr = p1.interpolate(t, p2);
 		Vec cm = cl.interpolate(t, cr);
 		STuple<Interval> st = tInterval.split();
-		return new STuple<NonLinearCurve>( new QuadCurve(p0,cl,cm,st.l),
+		return new STuple<Curve>( new QuadCurve(p0,cl,cm,st.l),
 				 new QuadCurve(cm,cr,p2,st.r));
 	}
 
@@ -91,9 +85,9 @@ public class QuadCurve extends NonLinearCurve{
 
 	@Override
 	protected
-	SimplePath getSimplerApproximation() {
-		SimplePath l = SimplePathFactory.createLine(p0, p2,tInterval);
-		if(getAt(0.5).distanceSquared(l.getAt(0.5)) <= Constants.HALF_MAX_ERROR_POW2){
+	SimplePath getSimplerApprox() {
+		SimplePath l = PathFactory.createLine(p0, p2,tInterval);
+		if(getAtLocal(0.5).distanceSquared(l.getAtLocal(0.5)) <= Constants.HALF_MAX_ERROR_POW2){
 			return l;
 		} else {
 			return this;
@@ -101,7 +95,7 @@ public class QuadCurve extends NonLinearCurve{
 	}
 
 	@Override
-	public Vec getAt(double t) {
+	public Vec getAtLocal(double t) {
 		double ot = 1.0 -t;
 		double t2 = t * t;
 		double ot2 = ot * ot;
@@ -110,7 +104,7 @@ public class QuadCurve extends NonLinearCurve{
 	}
 
 	@Override
-	public Vec getTangentAt(double t) {
+	public Vec getTangentAtLocal(double t) {
 		double ot =2*(1-t);
 		double t21 = 2*t;
 		return new Vec(ot * (p1.x - p0.x) + t21 * (p2.x - p1.x),
@@ -119,7 +113,7 @@ public class QuadCurve extends NonLinearCurve{
 
 	@Override
 	public SimplePath getWithAdjustedStartPoint(Vec newStartPoint) {
-		return SimplePathFactory.createQuad(newStartPoint,p1,p2);
+		return PathFactory.createQuad(newStartPoint,p1,p2);
 	}
 
 	@Override

@@ -17,12 +17,12 @@ public class HorizontalRLLine extends HorizontalLine{
 	}
 
 	@Override
-	public Vec getAt(double t) {
+	public Vec getAtLocal(double t) {
 		return new Vec(xInterval.getAtFactor(1.0 - t),y);
 	}
 
 	@Override
-	public Vec getTangentAt(double t) {
+	public Vec getTangentAtLocal(double t) {
 		return new Vec(0,1);
 	}
 	

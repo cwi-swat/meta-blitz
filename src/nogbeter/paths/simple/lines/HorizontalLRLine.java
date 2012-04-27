@@ -4,7 +4,7 @@ import bezier.points.Vec;
 import bezier.util.Tuple;
 import nogbeter.paths.BestProject;
 import nogbeter.paths.Path;
-import nogbeter.paths.simple.nonlinear.NonLinearCurve;
+import nogbeter.paths.simple.nonlinear.Curve;
 import nogbeter.util.BBox;
 import nogbeter.util.Interval;
 
@@ -21,12 +21,12 @@ public class HorizontalLRLine extends HorizontalLine{
 	}
 
 	@Override
-	public Vec getAt(double t) {
+	public Vec getAtLocal(double t) {
 		return new Vec(xInterval.getAtFactor(t),y);
 	}
 
 	@Override
-	public Vec getTangentAt(double t) {
+	public Vec getTangentAtLocal(double t) {
 		return new Vec(0,-1);
 	}
 
