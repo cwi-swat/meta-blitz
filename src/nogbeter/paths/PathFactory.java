@@ -45,7 +45,7 @@ public class PathFactory {
 		return new CubicCurve(p0, p1, p2, p3, interval);
 	}
 	
-	public static ConnectedPath createAppends(SimplePath ... paths){
+	public static Path createAppends(SimplePath ... paths){
 		return Append.createAppends(paths);
 	}
 
