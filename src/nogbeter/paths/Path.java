@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import nogbeter.paths.compound.CompoundSplitIndex;
-import nogbeter.paths.compound.SplittableCompound;
+import nogbeter.paths.compound.SplittableCompoundPath;
 import nogbeter.paths.compound.CompoundSplitIndex.SplitChoice;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.lines.DiagonalLine;

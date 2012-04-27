@@ -7,7 +7,7 @@ import nogbeter.paths.Path;
 import nogbeter.paths.PathFactory;
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.compound.CompoundSplitIndex;
-import nogbeter.paths.compound.SplittableCompound;
+import nogbeter.paths.compound.SplittableCompoundPath;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.util.BBox;

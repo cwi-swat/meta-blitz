@@ -16,13 +16,13 @@ import nogbeter.paths.simple.lines.HorizontalLine;
 import nogbeter.paths.simple.lines.VerticalLine;
 import nogbeter.util.BBox;
 
-public abstract class SplittableCompound<LSimp extends Path, RSimp extends Path>
+public abstract class SplittableCompoundPath<LSimp extends Path, RSimp extends Path>
 		extends Path<CompoundSplitIndex, LSimp, RSimp> {
 
 	public final LSimp left;
 	public final RSimp right;
 
-	public SplittableCompound(LSimp left, RSimp right) {
+	public SplittableCompoundPath(LSimp left, RSimp right) {
 		this.left = left;
 		this.right = right;
 	}

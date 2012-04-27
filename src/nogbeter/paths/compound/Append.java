@@ -6,7 +6,7 @@ import nogbeter.paths.Path;
 import nogbeter.paths.simple.SimplePath;
 
 public class Append<LSimp extends Path,RSimp extends Path> 
-			extends SplittableCompound<LSimp,RSimp> 
+			extends SplittableCompoundPath<LSimp,RSimp> 
 			implements IConnectedPath<Append<LSimp,RSimp>>{
 
 	public Append(LSimp left, RSimp right) {
