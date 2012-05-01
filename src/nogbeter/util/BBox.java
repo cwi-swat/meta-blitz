@@ -1,14 +1,13 @@
 package nogbeter.util;
 
-import java.awt.Shape;
-import java.awt.geom.Rectangle2D;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import bezier.paths.Constants;
-import bezier.paths.simple.Line;
 import bezier.points.Vec;
 public final class BBox {
+	
+	public static BBox emptyBBox = 
+			new BBox(Interval.emptyInterval,Interval.emptyInterval);
 	
 	public final Interval xInterval, yInterval;
 	

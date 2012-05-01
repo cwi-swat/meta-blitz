@@ -11,6 +11,8 @@ import nogbeter.paths.BestProject;
 import nogbeter.paths.BestProjectTup;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
+import nogbeter.paths.compound.SetIndex;
+import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.util.BBox;
@@ -187,6 +189,13 @@ public class DiagonalLine extends Line {
 		}
 		return Util.emptyTupleList;
 	}
+	
+
+	@Override
+	public Tuple<List<SetIndex>, List<SimplePathIndex>> intersectionLSet(
+			ShapeSet lhs) {
+		return lhs.intersectionLDiaLine(this).flip();
+	}
 
 
 	STuple<Interval> getTIntervalsBBox(BBox b){
@@ -326,6 +335,14 @@ public class DiagonalLine extends Line {
 				projectLPoint(lhs, lhs.getTForY(lhs.yInterval.high), lhs.x, lhs.yInterval.high)
 			);
 	}
+
+	@Override
+	public BestProjectTup<SetIndex, SimplePathIndex> projectLSet(double best,
+			ShapeSet lhs) {
+		return lhs.projectLDiaLine(best, this).flip();
+	}
+
+
 
 
 	

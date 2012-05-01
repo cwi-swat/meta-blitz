@@ -6,6 +6,8 @@ import java.util.List;
 import nogbeter.paths.BestProjectTup;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
+import nogbeter.paths.compound.SetIndex;
+import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.lines.DiagonalLine;
@@ -114,6 +116,12 @@ public abstract class Curve extends SimplePath {
 			VerticalLine lhs) {
 		return lhs.intersectionLCurve(this).flip();
 	}
+	
+	@Override
+	public Tuple<List<SetIndex>, List<SimplePathIndex>> intersectionLSet(
+			ShapeSet lhs) {
+		return lhs.intersectionLCurve(this).flip();
+	}
 
 
 	
@@ -139,6 +147,12 @@ public abstract class Curve extends SimplePath {
 	public BestProjectTup<SimplePathIndex, SimplePathIndex> projectLVerLine(double best,
 			VerticalLine lhs) {
 		return  lhs.projectLCurve(best, this).flip();
+	}
+	
+	@Override
+	public BestProjectTup<SetIndex, SimplePathIndex> projectLSet(double best,
+			ShapeSet lhs) {
+		return lhs.projectLCurve(best, this).flip();
 	}
 
 	@Override

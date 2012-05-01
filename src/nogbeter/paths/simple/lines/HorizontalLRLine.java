@@ -1,5 +1,9 @@
 package nogbeter.paths.simple.lines;
 
+import nogbeter.paths.BestProjectTup;
+import nogbeter.paths.compound.SetIndex;
+import nogbeter.paths.compound.ShapeSet;
+import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.util.Interval;
 import bezier.points.Vec;
 
@@ -24,5 +28,6 @@ public class HorizontalLRLine extends HorizontalLine{
 	public Vec getTangentAtLocal(double t) {
 		return new Vec(0,-1);
 	}
+
 
 }

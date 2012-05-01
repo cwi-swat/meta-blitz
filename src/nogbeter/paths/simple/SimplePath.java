@@ -42,6 +42,7 @@ public abstract class SimplePath extends Path<SimplePathIndex,SimplePath,SimpleP
 	}
 	
 	
+	
 	protected Tuple<List<SimplePathIndex>, List<SimplePathIndex>> makeIntersectionResult(
 			SimplePath lhs, double tl, double tr) {
 		return new Tuple<List<SimplePathIndex>, List<SimplePathIndex>>(

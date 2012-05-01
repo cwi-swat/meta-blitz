@@ -49,5 +49,9 @@ public class PathFactory {
 		return Append.createAppends(paths);
 	}
 
+	public static Path createShape(Path border, Path ... inside){
+		
+	}
+	
 }
 

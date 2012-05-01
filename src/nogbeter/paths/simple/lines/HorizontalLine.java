@@ -8,6 +8,8 @@ import java.util.List;
 import nogbeter.paths.BestProject;
 import nogbeter.paths.BestProjectTup;
 import nogbeter.paths.Path;
+import nogbeter.paths.compound.SetIndex;
+import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.nonlinear.Curve;
 import nogbeter.util.BBox;
@@ -56,6 +58,12 @@ public abstract class HorizontalLine extends Line {
 		} else {
 			return Util.emptyTupleList;
 		}
+	}
+	
+	@Override
+	public Tuple<List<SetIndex>, List<SimplePathIndex>> intersectionLSet(
+			ShapeSet lhs) {
+		return lhs.intersectionLHorLine(this).flip();
 	}
 	
 	@Override
@@ -120,6 +128,13 @@ public abstract class HorizontalLine extends Line {
 	}
 
 
+
+	@Override
+	public BestProjectTup<SetIndex, SimplePathIndex> projectLSet(double best,
+			ShapeSet lhs) {
+		return lhs.projectLHorLine(best, this).flip();
+	}
+	
 
 	@Override
 	double distanceSquared(Vec v) {

@@ -7,6 +7,8 @@ import java.util.List;
 import nogbeter.paths.BestProject;
 import nogbeter.paths.BestProjectTup;
 import nogbeter.paths.Path;
+import nogbeter.paths.compound.SetIndex;
+import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.nonlinear.Curve;
 import nogbeter.util.BBox;
@@ -57,6 +59,13 @@ public abstract class VerticalLine extends Line {
 	public Tuple<List<SimplePathIndex>, List<SimplePathIndex>> intersectionLVerLine(
 			VerticalLine lhs) {
 		return Util.emptyTupleList;
+	}
+	
+	
+	@Override
+	public Tuple<List<SetIndex>, List<SimplePathIndex>> intersectionLSet(
+			ShapeSet lhs) {
+		return lhs.intersectionLVerLine(this).flip();
 	}
 	
 	@Override
@@ -116,6 +125,11 @@ public abstract class VerticalLine extends Line {
 						lhs.getTForY(closestY.l), getTForY(closestY.r));
 	}
 
+	@Override
+	public BestProjectTup<SetIndex, SimplePathIndex> projectLSet(double best,
+			ShapeSet lhs) {
+		return lhs.projectLVerLine(best, this).flip();
+	}
 
 
 	@Override

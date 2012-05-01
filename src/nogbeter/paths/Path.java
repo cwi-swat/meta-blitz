@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import nogbeter.paths.compound.CompoundSplitIndex;
+import nogbeter.paths.compound.SetIndex;
+import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.compound.SplittableCompoundPath;
 import nogbeter.paths.compound.CompoundSplitIndex.SplitChoice;
 import nogbeter.paths.simple.SimplePathIndex;
@@ -56,6 +58,8 @@ public abstract class Path<PathParam,LSimp extends Path,RSimp extends Path> {
 		return intersectionLSplittable(lhs);
 	}
 	
+	public abstract Tuple<List<SetIndex>, List<PathParam>> intersectionLSet(
+			ShapeSet lhs);
 
 	public <LPI,LLSimp extends Path,LRSimp extends Path> Tuple<List<LPI>, List<PathParam>> 
 			intersectionLSplittable(
@@ -78,20 +82,6 @@ public abstract class Path<PathParam,LSimp extends Path,RSimp extends Path> {
 
 	public abstract <LPI> Tuple<List<LPI>, List<PathParam>> prependLeftListRhs(
 			Tuple<List<LPI>, List<? extends PathIndex>> intersections) ;
-//		if(intersection.r.isEmpty()){
-//			return (Tuple)intersection;
-//		} else {
-//			return new Tuple<List<LPI>, List<PathParam>>(intersection.l,prependLeftList(intersection.r));
-//		}
-//	}
-
-//	private List<PathParam> prependLeftList(List<? extends PathIndex> r) {
-//		List<PathParam> res = new LinkedList<PathParam>();
-//		for(PathIndex pi : r){
-//			res.add(new CompoundSplitIndex(SplitChoice.Left,pi));
-//		}
-//		return res;
-//	}
 
 	public BestProject<PathParam> project(Vec p) {;
 		return project(Double.POSITIVE_INFINITY,p);
@@ -142,6 +132,10 @@ public abstract class Path<PathParam,LSimp extends Path,RSimp extends Path> {
 		return projectLSplittable(best,lhs);
 	}
 	
+	public abstract BestProjectTup<SetIndex, PathParam> projectLSet(
+			double best,
+			ShapeSet lhs);
+	
 	public <LPI,LLS extends Path,LRS extends Path> BestProjectTup<LPI, PathParam> 
 			projectLSplittable(
 			double best, Path<LPI,LLS,LRS> lhs) {
@@ -182,7 +176,7 @@ public abstract class Path<PathParam,LSimp extends Path,RSimp extends Path> {
 	public abstract <LPI> BestProjectTup<PathParam,LPI> prependRightBestTupLhs(
 			BestProjectTup<? extends PathIndex,LPI> projectSimplerTup);
 
-	double minDistTo(BBox br){
+	protected double minDistTo(BBox br){
 		BBox bl = getBBox();
 		double xDist = square(bl.xInterval.minDistance(br.xInterval));
 		double yDist = square(bl.yInterval.minDistance(br.yInterval));

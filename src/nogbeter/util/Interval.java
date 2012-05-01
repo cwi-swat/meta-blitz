@@ -9,7 +9,9 @@ import bezier.util.STuple;
 public class Interval {
 	
 	public static final Interval interval01 = new Interval(0, 1);
-	public static final Interval emptyInterval = null;
+	public static final Interval emptyInterval = 
+			new Interval(	Double.POSITIVE_INFINITY,
+							Double.NEGATIVE_INFINITY);
 	
 	public final double low, high;
 

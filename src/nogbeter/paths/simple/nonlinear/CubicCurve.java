@@ -8,6 +8,8 @@ import java.util.List;
 import nogbeter.paths.BestProjectTup;
 import nogbeter.paths.PathFactory;
 import nogbeter.paths.PathIndex;
+import nogbeter.paths.compound.SetIndex;
+import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.util.BBox;
@@ -154,6 +156,9 @@ public class CubicCurve extends Curve{
 	BBox makeBBox() {
 		return BBox.fromPoints(p0,p1,p2,p3);
 	}
+
+
+
 
 	
 

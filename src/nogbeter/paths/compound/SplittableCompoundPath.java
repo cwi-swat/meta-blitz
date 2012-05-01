@@ -82,6 +82,13 @@ public abstract class SplittableCompoundPath<LSimp extends Path, RSimp extends P
 			VerticalLine lhs) {
 		return lhs.intersectionLSplittable(this).flip();
 	}
+	
+
+	@Override
+	public Tuple<List<SetIndex>, List<CompoundSplitIndex>> intersectionLSet(
+			ShapeSet lhs) {
+		return lhs.intersectionLSplittable(this).flip();
+	}
 
 	@Override
 	public <RPP, RLS extends Path, RRS extends Path> BestProjectTup<CompoundSplitIndex, RPP> project(
@@ -107,6 +114,12 @@ public abstract class SplittableCompoundPath<LSimp extends Path, RSimp extends P
 		return lhs.projectLSplittable(best, this).flip();
 	}
 
+	@Override
+	public BestProjectTup<SetIndex, CompoundSplitIndex> projectLSet(
+			double best, ShapeSet lhs) {
+		return lhs.projectLSplittable(best, this).flip();
+	}
+	
 	@Override
 	public <LPI> Tuple<List<LPI>, List<CompoundSplitIndex>> prependLeftListRhs(
 			Tuple<List<LPI>, List<? extends PathIndex>> intersections) {

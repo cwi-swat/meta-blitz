@@ -1,6 +1,9 @@
 package nogbeter.paths.compound;
 
+import java.util.List;
+
 import bezier.points.Vec;
+import bezier.util.Tuple;
 import nogbeter.paths.IConnectedPath;
 import nogbeter.paths.Path;
 import nogbeter.paths.simple.SimplePath;
@@ -33,6 +36,7 @@ public class Append<LSimp extends Path,RSimp extends Path>
 		Path newL = ((IConnectedPath)left).getWithAdjustedStartPoint(newStartPoint);
 		return new Append(newL,right);
 	}
+
 	
 	
 
