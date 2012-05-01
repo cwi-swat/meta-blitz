@@ -1,5 +1,6 @@
 package nogbeter.paths.simple.lines;
 
+import java.awt.geom.PathIterator;
 import java.util.List;
 
 import nogbeter.paths.BestProjectTup;
@@ -140,5 +141,11 @@ public abstract class Line extends SimplePath {
 	}
 	
 
+	@Override
+	public int awtCurSeg(float[] coords) {
+		Vec end = getEndPoint();
+		coords[0] = (float)end.x; coords[1] = (float)end.y;
+		return PathIterator.SEG_LINETO;
+	}
 	
 }

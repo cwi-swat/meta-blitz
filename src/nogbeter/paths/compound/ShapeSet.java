@@ -1,6 +1,7 @@
 package nogbeter.paths.compound;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,6 +23,10 @@ public class ShapeSet extends Path<SetIndex, Path, Path>{
 	
 	public ShapeSet(List<Path> shapes) {
 		this.shapes = shapes;
+	}
+	
+	public ShapeSet(Path[] shapes) {
+		this(Arrays.asList(shapes));
 	}
 
 	@Override
@@ -191,7 +196,34 @@ public class ShapeSet extends Path<SetIndex, Path, Path>{
 		throw new Error("Must implement this method because of lack of mixins!");
 	}
 
+	public int nrChildren(){
+		return shapes.size();
+	}
+	
+	public Path getChild(int i){
+		return shapes.get(i);
+	}
+	
+
+	@Override
+	public Path getWithAdjustedStartPoint(
+			Vec newStartPoint) {
+		throw new Error("Must implement , no mixins");
+	}
+
+	@Override
+	public Vec getStartPoint() {
+		throw new Error("Must implement , no mixins");
+	}
+
+	@Override
+	public Vec getEndPoint() {
+		throw new Error("Must implement , no mixins");
+	}
 
 
-
+	public boolean isClosed(){
+		return false;
+	}
+	
 }

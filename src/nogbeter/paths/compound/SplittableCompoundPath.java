@@ -200,4 +200,15 @@ public abstract class SplittableCompoundPath<LSimp extends Path, RSimp extends P
 					projectSimplerTup.t.r);
 		}
 	}
+	
+	public int nrChildren(){
+		return 2;
+	}
+	
+	public Path getChild(int i){
+		return i == 0 ? left : right;
+	}
+	
+
+	
 }

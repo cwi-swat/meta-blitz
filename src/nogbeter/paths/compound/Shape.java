@@ -1,5 +1,6 @@
 package nogbeter.paths.compound;
 
+import bezier.points.Vec;
 import nogbeter.paths.BestProjectTup;
 import nogbeter.paths.Path;
 import nogbeter.util.BBox;
@@ -23,6 +24,26 @@ public class Shape<LSimp extends Path, RSimp extends Path> extends SplittableCom
 	@Override
 	public BBox makeBBox() {
 		return getBorder().getBBox();
+	}
+
+	@Override
+	public Path<CompoundSplitIndex, LSimp, RSimp> getWithAdjustedStartPoint(
+			Vec newStartPoint) {
+		throw new Error("Must implement , no mixins");
+	}
+
+	@Override
+	public Vec getStartPoint() {
+		throw new Error("Must implement , no mixins");
+	}
+
+	@Override
+	public Vec getEndPoint() {
+		throw new Error("Must implement , no mixins");
+	}
+	
+	public boolean isClosed(){
+		return false;
 	}
 
 

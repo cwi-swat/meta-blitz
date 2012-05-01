@@ -2,6 +2,7 @@ package nogbeter.paths.simple.nonlinear;
 
 import static bezier.util.Util.findQuadraticPolynomialRoots;
 
+import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,9 +159,16 @@ public class CubicCurve extends Curve{
 	}
 
 
-
-
-	
+	@Override
+	public int awtCurSeg(float[] coords) {
+		coords[0] = (float)p1.x;
+		coords[1] = (float)p1.y;
+		coords[2] = (float)p2.x;
+		coords[3] = (float)p2.y;
+		coords[4] = (float)p3.x;
+		coords[5] = (float)p3.y;
+		return PathIterator.SEG_QUADTO;
+	}
 
 
 }

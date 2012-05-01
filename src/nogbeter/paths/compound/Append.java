@@ -4,13 +4,11 @@ import java.util.List;
 
 import bezier.points.Vec;
 import bezier.util.Tuple;
-import nogbeter.paths.IConnectedPath;
 import nogbeter.paths.Path;
 import nogbeter.paths.simple.SimplePath;
 
 public class Append<LSimp extends Path,RSimp extends Path> 
-			extends SplittableCompoundPath<LSimp,RSimp> 
-			implements IConnectedPath<Append<LSimp,RSimp>>{
+			extends SplittableCompoundPath<LSimp,RSimp> {
 
 	public Append(LSimp left, RSimp right) {
 		super(left, right);
@@ -33,8 +31,18 @@ public class Append<LSimp extends Path,RSimp extends Path>
 
 	@Override
 	public Append<LSimp, RSimp> getWithAdjustedStartPoint(Vec newStartPoint) {
-		Path newL = ((IConnectedPath)left).getWithAdjustedStartPoint(newStartPoint);
+		Path newL = left.getWithAdjustedStartPoint(newStartPoint);
 		return new Append(newL,right);
+	}
+
+	@Override
+	public Vec getStartPoint() {
+		return left.getStartPoint();
+	}
+
+	@Override
+	public Vec getEndPoint() {
+		return right.getEndPoint();
 	}
 
 	

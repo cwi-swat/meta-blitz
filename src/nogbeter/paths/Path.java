@@ -2,14 +2,18 @@ package nogbeter.paths;
 
 import static bezier.util.Util.square;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import nogbeter.paths.compound.Append;
 import nogbeter.paths.compound.CompoundSplitIndex;
 import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.compound.SplittableCompoundPath;
 import nogbeter.paths.compound.CompoundSplitIndex.SplitChoice;
+import nogbeter.paths.iterators.PathIterator;
+import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.lines.DiagonalLine;
 import nogbeter.paths.simple.lines.HorizontalLine;
@@ -189,5 +193,19 @@ public abstract class Path<PathParam,LSimp extends Path,RSimp extends Path> {
 			Path snd) {
 		BestProjectTup fstb = p.project(best, fst);
 		return fstb.choose(p.project(fstb.distSquared,snd));
+	}
+	
+	public abstract int nrChildren();
+	public abstract Path getChild(int i);
+	
+
+	public abstract Path<PathParam,LSimp,RSimp> 
+		getWithAdjustedStartPoint(Vec newStartPoint);
+	
+	public abstract Vec getStartPoint();
+	public abstract Vec getEndPoint();
+	
+	public boolean isClosed(){
+		return getStartPoint().isEqError(getEndPoint());
 	}
 }

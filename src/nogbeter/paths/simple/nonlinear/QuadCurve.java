@@ -1,5 +1,6 @@
 package nogbeter.paths.simple.nonlinear;
 
+import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,6 +122,15 @@ public class QuadCurve extends Curve{
 	public
 	BBox makeBBox() {
 		return BBox.fromPoints(p0,p1,p2);
+	}
+
+	@Override
+	public int awtCurSeg(float[] coords) {
+		coords[0] = (float)p1.x;
+		coords[1] = (float)p1.y;
+		coords[2] = (float)p2.x;
+		coords[3] = (float)p2.y;
+		return PathIterator.SEG_QUADTO;
 	}
 
 

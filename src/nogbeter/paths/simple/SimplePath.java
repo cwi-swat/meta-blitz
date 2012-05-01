@@ -1,6 +1,7 @@
 package nogbeter.paths.simple;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import bezier.points.Vec;
@@ -8,13 +9,12 @@ import bezier.util.STuple;
 import bezier.util.Tuple;
 import nogbeter.paths.BestProject;
 import nogbeter.paths.BestProjectTup;
-import nogbeter.paths.IConnectedPath;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.simple.lines.VerticalLine;
 import nogbeter.util.Interval;
 
-public abstract class SimplePath extends Path<SimplePathIndex,SimplePath,SimplePath> implements IConnectedPath<SimplePath>{
+public abstract class SimplePath extends Path<SimplePathIndex,SimplePath,SimplePath>{
 
 	public final Interval tInterval;
 	
@@ -60,4 +60,14 @@ public abstract class SimplePath extends Path<SimplePathIndex,SimplePath,SimpleP
 						lhs.makeGlobalPathIndexFromLocal(tl), 
 						makeGlobalPathIndexFromLocal(tr));
 	}
+	
+	public int nrChildren(){
+		return 0;
+	}
+	
+	public Path getChild(int i){
+		return null;
+	}
+
+	public abstract int awtCurSeg(float[] coords) ;
 }

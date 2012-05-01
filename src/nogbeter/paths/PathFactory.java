@@ -2,6 +2,8 @@ package nogbeter.paths;
 
 import bezier.points.Vec;
 import nogbeter.paths.compound.Append;
+import nogbeter.paths.compound.Shape;
+import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.lines.DiagonalLine;
 import nogbeter.paths.simple.lines.HorizontalLRLine;
@@ -48,9 +50,13 @@ public class PathFactory {
 	public static Path createAppends(SimplePath ... paths){
 		return Append.createAppends(paths);
 	}
+	
+	public static Path createSet(Path ... paths){
+		return new ShapeSet(paths);
+	}
 
 	public static Path createShape(Path border, Path ... inside){
-		
+		return new Shape(border,createSet(inside));
 	}
 	
 }

@@ -5,6 +5,7 @@ import static java.lang.Math.min;
 import static nogbeter.util.Interval.emptyInterval;
 import static nogbeter.util.Interval.interval01;
 
+import java.awt.geom.PathIterator;
 import java.util.List;
 
 import nogbeter.paths.BestProject;
@@ -341,6 +342,8 @@ public class DiagonalLine extends Line {
 			ShapeSet lhs) {
 		return lhs.projectLDiaLine(best, this).flip();
 	}
+
+
 
 
 

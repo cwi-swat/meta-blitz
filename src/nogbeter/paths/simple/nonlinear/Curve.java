@@ -1,6 +1,7 @@
 package nogbeter.paths.simple.nonlinear;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import nogbeter.paths.BestProjectTup;
@@ -190,6 +191,7 @@ public abstract class Curve extends SimplePath {
 			BestProjectTup<? extends PathIndex, LPI> projectSimplerTup) {
 		return (BestProjectTup)projectSimplerTup;
 	}
+	
 	
 	
 }
