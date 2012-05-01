@@ -43,14 +43,16 @@ public class AWTPathIterator implements PathIterator{
 	@Override
 	public void next() {
 		switch(state){
-
 		case HEAD : state = State.BODY; 
+			cur = curSimple.next();
+			break;
 		case BODY:
 			if(curSimple.hasNext()){
 				cur = curSimple.next();
 			} else {
 				state = State.TAIL;
 			}
+			break;
 		case TAIL : 
 			state = State.HEAD; 
 			Path close = closed.next();
