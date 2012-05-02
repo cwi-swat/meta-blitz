@@ -121,7 +121,7 @@ public class ShapeSet extends Path<SetIndex, Path, Path>{
 		BestProject<SetIndex> res = new BestProject(best);
 		for(int i = 0 ; i < shapes.size() ; i++){
 			Path path = shapes.get(i);
-			res = res.choose(path.project(best,p).transform(PITransformers.setTrans(i)));
+			res = res.choose(path.project(res.distSquared,p).transform(PITransformers.setTrans(i)));
 		}
 		return res;
 	}

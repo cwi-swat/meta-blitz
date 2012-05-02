@@ -30,9 +30,9 @@ public class BestProjectTup<L extends PathIndex,R extends PathIndex>{
 	
 	public BestProjectTup<L,R> choose(BestProjectTup<L,R> rhs){
 		if(distSquared < rhs.distSquared){
-			return rhs;
-		} else {
 			return this;
+		} else {
+			return rhs;
 		}
 	}
 	

@@ -32,9 +32,9 @@ public class BestProject<A extends PathIndex>{
 
 	public BestProject<A> choose(BestProject<A> rhs){
 		if(distSquared < rhs.distSquared){
-			return rhs;
-		} else {
 			return this;
+		} else {
+			return rhs;
 		}
 	}
 	
@@ -45,7 +45,11 @@ public class BestProject<A extends PathIndex>{
 		} else {
 			return new BestProject<LPI>(distSquared, trans.transform(t));
 		}
-}
+	}
+	
+	public String toString(){
+		return "BestProject("+distSquared + "," + t + ")";
+	}
 	
 	
 }

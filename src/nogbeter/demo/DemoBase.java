@@ -115,6 +115,11 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 		}
 	}
 	
+
+	public void drawLine(Vec at, Vec mouse) {
+		g.drawLine(round(at.x), round(at.y),round(mouse.x), round(mouse.y));
+	}
+	
 	public void fillRect(Vec location, double w){
 		fillRect(location, w, w);
 	}
