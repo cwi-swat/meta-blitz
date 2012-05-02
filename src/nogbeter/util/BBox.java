@@ -20,28 +20,6 @@ public final class BBox {
 		this.yInterval = yInterval;
 	}
 
-	
-//	
-//	public BBox(Iterable<HasBBox> curves) {
-//		double x = Double.MAX_VALUE, xr = Double.MIN_VALUE,
-//				y = Double.MAX_VALUE, yd = Double.MIN_VALUE;
-//		for(HasBBox v : curves){
-//			BBox b = v.getBBox();
-//			x = Math.min(b.x, x);
-//			xr = Math.max(b.xr, xr);
-//			y = Math.min(b.y, y);
-//			yd = Math.max(b.yd, yd);
-//		}
-//		this.x = x; this.y = y;
-//		this.xr = xr;
-//		this.yd = yd;
-//		this.width = xr - x;
-//		this.height = yd - y;
-//	}
-
-
-
-
 	public boolean overlaps(BBox other){
 		return xInterval.overlapsWith(other.xInterval)
 				&& yInterval.overlapsWith(other.yInterval);

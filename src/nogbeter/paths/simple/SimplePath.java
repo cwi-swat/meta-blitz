@@ -7,14 +7,20 @@ import java.util.List;
 import bezier.points.Vec;
 import bezier.util.STuple;
 import bezier.util.Tuple;
-import nogbeter.paths.BestProject;
-import nogbeter.paths.BestProjectTup;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
+import nogbeter.paths.SplittablePath;
+import nogbeter.paths.compound.SplitIndex;
+import nogbeter.paths.results.intersections.IIntersections;
+import nogbeter.paths.results.intersections.Intersections;
+import nogbeter.paths.results.project.BestProject;
+import nogbeter.paths.results.project.BestProjectTup;
+import nogbeter.paths.results.transformers.IPathIndexTransformer;
+import nogbeter.paths.results.transformers.PITransformers;
 import nogbeter.paths.simple.lines.VerticalLine;
 import nogbeter.util.Interval;
 
-public abstract class SimplePath extends Path<SimplePathIndex,SimplePath,SimplePath>{
+public abstract class SimplePath extends SplittablePath<SimplePathIndex,SimplePath,SimplePath>{
 
 	public final Interval tInterval;
 	
@@ -43,11 +49,11 @@ public abstract class SimplePath extends Path<SimplePathIndex,SimplePath,SimpleP
 	
 	
 	
-	protected Tuple<List<SimplePathIndex>, List<SimplePathIndex>> makeIntersectionResult(
+	protected IIntersections<SimplePathIndex,SimplePathIndex> makeIntersectionResult(
 			SimplePath lhs, double tl, double tr) {
-		return new Tuple<List<SimplePathIndex>, List<SimplePathIndex>>(
-				Collections.singletonList(lhs.makeGlobalPathIndexFromLocal(tl)),
-				Collections.singletonList(makeGlobalPathIndexFromLocal(tr)));
+		SimplePathIndex l = lhs.makeGlobalPathIndexFromLocal(tl);
+		SimplePathIndex r = makeGlobalPathIndexFromLocal(tr);
+		return new Intersections<SimplePathIndex, SimplePathIndex>(l, r);
 	}
 	
 	public SimplePathIndex makeGlobalPathIndexFromLocal(double t){
@@ -70,4 +76,14 @@ public abstract class SimplePath extends Path<SimplePathIndex,SimplePath,SimpleP
 	}
 
 	public abstract int awtCurSeg(float[] coords) ;
+	
+	@Override
+	public IPathIndexTransformer<SimplePathIndex> getLeftTransformer() {
+		return PITransformers.unit;
+	}
+
+	@Override
+	public IPathIndexTransformer<SimplePathIndex> getRightTransformer() {
+		return PITransformers.unit;
+	}
 }

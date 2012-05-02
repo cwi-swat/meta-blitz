@@ -5,10 +5,11 @@ import java.util.List;
 import bezier.points.Vec;
 import bezier.util.Tuple;
 import nogbeter.paths.Path;
+import nogbeter.paths.results.transformers.IPathIndexTransformer;
 import nogbeter.paths.simple.SimplePath;
 
 public class Append<LSimp extends Path,RSimp extends Path> 
-			extends SplittableCompoundPath<LSimp,RSimp> {
+			extends CompoundSplittablePath<LSimp,RSimp> {
 
 	public Append(LSimp left, RSimp right) {
 		super(left, right);
@@ -43,6 +44,18 @@ public class Append<LSimp extends Path,RSimp extends Path>
 	@Override
 	public Vec getEndPoint() {
 		return right.getEndPoint();
+	}
+
+	@Override
+	public IPathIndexTransformer<SplitIndex> getLeftTransformer() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IPathIndexTransformer<SplitIndex> getRightTransformer() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

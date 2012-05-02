@@ -1,10 +1,14 @@
-package nogbeter.paths;
+package nogbeter.paths.results.project;
 
-import bezier.util.Tuple;
+import nogbeter.paths.PathIndex;
+import nogbeter.paths.results.intersections.Intersection;
+import nogbeter.paths.results.transformers.IPathIndexTransformer;
+import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
 
 
 
-public class BestProject<A>{
+
+public class BestProject<A extends PathIndex>{
 
 	public static final BestProject noBestYet = new BestProject();
 	
@@ -33,6 +37,15 @@ public class BestProject<A>{
 			return this;
 		}
 	}
+	
+	public<LPI extends PathIndex>
+	BestProject<LPI> transform(IPathIndexTransformer<LPI> trans){
+		if(trans.doesNothing()){
+			return (BestProject<LPI>)this;
+		} else {
+			return new BestProject<LPI>(distSquared, trans.transform(t));
+		}
+}
 	
 	
 }

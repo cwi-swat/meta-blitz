@@ -49,7 +49,9 @@ public class PathIterator<P extends Path> implements Iterator<Path>{
 
 	@Override
 	public P next() {
-		return (P)paths.pop().p;
+		P res =  (P)paths.pop().p;
+		toNext();
+		return res;
 	}
 
 	@Override

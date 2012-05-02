@@ -6,14 +6,18 @@ import static nogbeter.util.Interval.emptyInterval;
 import static nogbeter.util.Interval.interval01;
 
 import java.awt.geom.PathIterator;
-import java.util.List;
 
-import nogbeter.paths.BestProject;
-import nogbeter.paths.BestProjectTup;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeSet;
+import nogbeter.paths.compound.SplitIndex;
+import nogbeter.paths.results.intersections.IIntersections;
+import nogbeter.paths.results.intersections.Intersections;
+import nogbeter.paths.results.project.BestProject;
+import nogbeter.paths.results.project.BestProjectTup;
+import nogbeter.paths.results.transformers.IPathIndexTransformer;
+import nogbeter.paths.results.transformers.PITransformers;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.util.BBox;
@@ -148,25 +152,25 @@ public class DiagonalLine extends Line {
 	}
 
 	@Override
-	public  <RPP,RLS extends Path,RRS extends Path> 
-			Tuple<List<SimplePathIndex>, List<RPP>> intersection(
+	public  <RPP extends PathIndex ,RLS extends Path,RRS extends Path> 
+			IIntersections<SimplePathIndex, RPP> intersection(
 			Path<RPP,RLS,RRS> other) {
 		return other.intersectionLDiaLine(this);
 	}
 
 	@Override
-	public Tuple<List<SimplePathIndex>, List<SimplePathIndex>> intersectionLDiaLine(
+	public IIntersections<SimplePathIndex, SimplePathIndex> intersectionLDiaLine(
 			DiagonalLine lhs) {
 		Tuple<Double, Double> res = lhs.intersection(this);
 		if (res != null) {
 			return makeIntersectionResult(lhs,res.l,res.r);
 		} else {
-			return Util.emptyTupleList;
+			return Intersections.NoIntersections;
 		}
 	}
 
 	@Override
-	public Tuple<List<SimplePathIndex>, List<SimplePathIndex>> intersectionLHorLine(
+	public IIntersections<SimplePathIndex, SimplePathIndex> intersectionLHorLine(
 			HorizontalLine lhs) {
 		double t = getTAtY(lhs.y);
 		if(interval01.isInside(t)){
@@ -175,11 +179,11 @@ public class DiagonalLine extends Line {
 				return makeIntersectionResult(lhs,lhs.getTForX(res.x), t);
 			} 
 		}
-		return Util.emptyTupleList;
+		return Intersections.NoIntersections;
 	}
 
 	@Override
-	public Tuple<List<SimplePathIndex>, List<SimplePathIndex>> intersectionLVerLine(
+	public IIntersections<SimplePathIndex, SimplePathIndex> intersectionLVerLine(
 			VerticalLine lhs) {
 		double t = getTAtX(lhs.x);
 		if(interval01.isInside(t)){
@@ -188,12 +192,12 @@ public class DiagonalLine extends Line {
 				return makeIntersectionResult(lhs,lhs.getTForY(res.y), t);
 			}
 		}
-		return Util.emptyTupleList;
+		return Intersections.NoIntersections;
 	}
 	
 
 	@Override
-	public Tuple<List<SetIndex>, List<SimplePathIndex>> intersectionLSet(
+	public IIntersections<SetIndex, SimplePathIndex> intersectionLSet(
 			ShapeSet lhs) {
 		return lhs.intersectionLDiaLine(this).flip();
 	}
@@ -210,7 +214,7 @@ public class DiagonalLine extends Line {
 		);
 	}
 	
-	boolean overlaps(BBox b) {
+	public boolean overlaps(BBox b) {
 		// this requires some drawing to see....
 		// project x end points onto line and y endpoints to
 		// if these t-intervals overlap, then the line
@@ -235,7 +239,7 @@ public class DiagonalLine extends Line {
 	}
 
 
-	double minDistSquaredTo(BBox b){
+	public double minDistSquaredTo(BBox b){
 		STuple<Interval> tIntervals = getTIntervalsBBox(b);
 		if(Interval.overlap(tIntervals.l,tIntervals.r)){
 			return 0;
@@ -265,7 +269,7 @@ public class DiagonalLine extends Line {
 
 
 	@Override
-	public <RPP,RLS extends Path,RRS extends Path>  BestProjectTup<SimplePathIndex, RPP> project(
+	public <RPP extends PathIndex,RLS extends Path,RRS extends Path>  BestProjectTup<SimplePathIndex, RPP> project(
 			double best, Path<RPP,RLS,RRS>other) {
 		return other.projectLDiaLine(best, this);
 	}
@@ -342,13 +346,4 @@ public class DiagonalLine extends Line {
 			ShapeSet lhs) {
 		return lhs.projectLDiaLine(best, this).flip();
 	}
-
-
-
-
-
-
-	
-
-
 }

@@ -8,15 +8,22 @@ import java.util.List;
 import bezier.points.Vec;
 import bezier.util.Tuple;
 import bezier.util.Util;
-import nogbeter.paths.BestProjectTup;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
+import nogbeter.paths.SplittablePath;
+import nogbeter.paths.results.intersections.IIntersections;
+import nogbeter.paths.results.intersections.Intersections;
+import nogbeter.paths.results.project.BestProject;
+import nogbeter.paths.results.project.BestProjectTup;
+import nogbeter.paths.results.transformers.IPathIndexTransformer;
+import nogbeter.paths.results.transformers.PITransformers;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.lines.DiagonalLine;
 import nogbeter.paths.simple.lines.HorizontalLine;
 import nogbeter.paths.simple.lines.VerticalLine;
 import nogbeter.util.BBox;
 
+import static nogbeter.paths.results.transformers.TupleTransformers.*;
 public class ShapeSet extends Path<SetIndex, Path, Path>{
 
 	public final List<Path> shapes;
@@ -54,100 +61,90 @@ public class ShapeSet extends Path<SetIndex, Path, Path>{
 	}
 
 	@Override
-	public <RPP, RLSimp extends Path, RRSimp extends Path> Tuple<List<SetIndex>, List<RPP>> intersection(
+	public <RPP extends PathIndex, RLSimp extends Path, RRSimp extends Path> IIntersections<SetIndex, RPP> intersection(
 			Path<RPP, RLSimp, RRSimp> other) {
 		return other.intersectionLSet(this);
 	}
 
-	private <PPI,LS extends Path,RS extends Path> 
-	Tuple<List<PPI>, List<SetIndex>> intersections(Path<PPI,LS,RS> lhs){
-		
-		Tuple<List<PPI>, List<SetIndex>> res = 
-				new Tuple<List<PPI>, List<SetIndex>>(
-						Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+	private <PPI extends PathIndex,LS extends Path,RS extends Path> 
+	IIntersections<PPI,SetIndex>  intersections(Path<PPI,LS,RS> lhs){
+		IIntersections<PPI,SetIndex> res = Intersections.NoIntersections;
 		if(lhs.getBBox().overlaps(getBBox())){
 			for(int i = 0 ; i < shapes.size() ; i++){
 				Path p = shapes.get(i);
-				res = Util.appendTupList(res,prependIndexListRhs(i,lhs.intersection(p)));
+				res = res.append(lhs.intersection(p).transform(setRight(i)));
 			}
 		}
 		return res;
 	}
-	
-	private <PPI> Tuple<List<PPI>, List<SetIndex>> prependIndexListRhs(
-			int i, Tuple<List<PPI>, List<PathIndex>> intersections) {
-		List<SetIndex> resr = new ArrayList<SetIndex>(intersections.r.size());
-		for(PathIndex p : intersections.r){
-			resr.add(new SetIndex(i, p));
-		}
-		return new Tuple<List<PPI>, List<SetIndex>>(intersections.l, resr);
-	}
 
 	@Override
-	public Tuple<List<SimplePathIndex>, List<SetIndex>> intersectionLDiaLine(
+	public IIntersections<SimplePathIndex, SetIndex> intersectionLDiaLine(
 			DiagonalLine lhs) {
 		return intersections(lhs);
 	}
 
 	@Override
-	public Tuple<List<SimplePathIndex>, List<SetIndex>> intersectionLHorLine(
+	public IIntersections<SimplePathIndex, SetIndex> intersectionLHorLine(
 			HorizontalLine lhs) {
 		return intersections(lhs);
 	}
 
 	@Override
-	public Tuple<List<SimplePathIndex>, List<SetIndex>> intersectionLVerLine(
+	public IIntersections<SimplePathIndex, SetIndex> intersectionLVerLine(
 			VerticalLine lhs) {
 		return intersections(lhs);
 	}
 	
 
 	@Override
-	public Tuple<List<SetIndex>, List<SetIndex>> intersectionLSet(ShapeSet lhs) {
+	public IIntersections<SetIndex, SetIndex> intersectionLSet(ShapeSet lhs) {
 		return intersection(lhs);
 	}
+	
 
 	@Override
-	public <LPI> Tuple<List<LPI>, List<SetIndex>> prependRightListRhs(
-			Tuple<List<LPI>, List<? extends PathIndex>> intersections) {
-		throw new Error("Must implement this method because of lack of mixins!");
+	public <PPI extends PathIndex,LS extends Path,RS extends Path> 
+		IIntersections<PPI,SetIndex> intersectionLSplittable(SplittablePath<PPI, LS, RS> lhs) {
+		return intersections(lhs);
+	}
+
+
+	@Override
+	public BestProject<SetIndex> project(double best, Vec p) {
+
+
+		if(getBBox().getNearestPoint(p).distanceSquared(p) > best){
+			return BestProject.noBestYet;
+		}
+		BestProject<SetIndex> res = new BestProject(best);
+		for(int i = 0 ; i < shapes.size() ; i++){
+			Path path = shapes.get(i);
+			res = res.choose(path.project(best,p).transform(PITransformers.setTrans(i)));
+		}
+		return res;
 	}
 
 	@Override
-	public <LPI> Tuple<List<LPI>, List<SetIndex>> prependLeftListRhs(
-			Tuple<List<LPI>, List<? extends PathIndex>> intersections) {
-		throw new Error("Must implement this method because of lack of mixins!");
-	}
-
-	@Override
-	public <RPP, RLS extends Path, RRS extends Path> BestProjectTup<SetIndex, RPP> project(
+	public <RPP extends PathIndex, RLS extends Path, RRS extends Path> BestProjectTup<SetIndex, RPP> project(
 			double best, Path<RPP, RLS, RRS> other) {
-		// TODO Auto-generated method stub
-		return null;
+		return other.projectLSet(best, this);
 	}
 
 
-	private <RPP, LS extends Path, RS extends Path>
+	private <RPP extends PathIndex, LS extends Path, RS extends Path>
 	BestProjectTup<RPP,SetIndex>  projects(double best, Path<RPP,LS,RS> lhs){
 		
-		BestProjectTup<RPP,SetIndex> res = BestProjectTup.noBestYet;
+		BestProjectTup<RPP,SetIndex> res = new BestProjectTup(best);
 		if(minDistTo(lhs.getBBox()) < best){
 			for(int i = 0 ; i < shapes.size() ; i++){
 				Path p = shapes.get(i);
-				res = res.choose(prependIndexBestRhs(i,lhs.project(best,p)));
-				best = Math.min(best, res.distSquared);
+				res = res.choose(lhs.project(best,p).transform(setRight(i)));
 			}
 		}
 		return res;
 	}
 	
-	
-	private <RPP, P extends PathIndex> BestProjectTup<RPP, SetIndex> prependIndexBestRhs(int i,
-			BestProjectTup<RPP,P> project) {
-		return new BestProjectTup<RPP, SetIndex>(project.distSquared, project.t.l, 
-				new SetIndex(i, project.t.r));
-	}
-
 	@Override
 	public BestProjectTup<SimplePathIndex, SetIndex> projectLDiaLine(
 			double best, DiagonalLine lhs) {
@@ -171,29 +168,30 @@ public class ShapeSet extends Path<SetIndex, Path, Path>{
 			ShapeSet lhs) {
 		return projects(best,lhs);
 	}
+	
 
 	@Override
-	public <LPI> BestProjectTup<LPI, SetIndex> prependLeftBestTupRhs(
-			BestProjectTup<LPI, ? extends PathIndex> projectSimplerTup) {
-		throw new Error("Must implement this method because of lack of mixins!");
-	}
-
-	@Override
-	public <LPI> BestProjectTup<LPI, SetIndex> prependRightBestTupRhs(
-			BestProjectTup<LPI, ? extends PathIndex> projectSimplerTup) {
-		throw new Error("Must implement this method because of lack of mixins!");
-	}
-
-	@Override
-	public <LPI> BestProjectTup<SetIndex, LPI> prependLeftBestTupLhs(
-			BestProjectTup<? extends PathIndex, LPI> projectSimplerTup) {
-		throw new Error("Must implement this method because of lack of mixins!");
-	}
-
-	@Override
-	public <LPI> BestProjectTup<SetIndex, LPI> prependRightBestTupLhs(
-			BestProjectTup<? extends PathIndex, LPI> projectSimplerTup) {
-		throw new Error("Must implement this method because of lack of mixins!");
+	public <LPI extends PathIndex, LLS extends Path, LRS extends Path> BestProjectTup<LPI, SetIndex> projectLSplittable(
+			double best, Path<LPI, LLS, LRS> lhs) {
+		if(minDistTo(lhs.getBBox()) > best){
+			return BestProjectTup.noBestYet;
+		}
+		// each shape is bigger that half the split right (heurisitic), 
+		// lets iterate
+		if(getBBox().area()/shapes.size() > lhs.getBBox().area()/2.0 ){
+			return projects(best, lhs);
+		} else {
+			Tuple<LLS,LRS> sp = lhs.splitSimpler();
+			if(sp.l.getBBox().avgDistSquared(getBBox().getMiddle()) <
+					sp.l.getBBox().avgDistSquared(getBBox().getMiddle())){
+				BestProjectTup<LPI, SetIndex> res = sp.l.project(best, this).transform(leftLeft());
+				return res.choose(sp.r.project(res.distSquared, this).transform(leftRight()));
+			} else {
+				BestProjectTup<LPI, SetIndex> res = sp.r.project(best, this).transform(leftRight());
+				return res.choose(sp.l.project(res.distSquared, this).transform(leftLeft()));
+			}
+		}
+		
 	}
 
 	public int nrChildren(){
@@ -225,5 +223,9 @@ public class ShapeSet extends Path<SetIndex, Path, Path>{
 	public boolean isClosed(){
 		return false;
 	}
+
+
+
+
 	
 }

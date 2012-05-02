@@ -1,8 +1,8 @@
 package nogbeter.paths.simple.lines;
 
-import nogbeter.paths.BestProjectTup;
 import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeSet;
+import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.util.Interval;
 import bezier.points.Vec;

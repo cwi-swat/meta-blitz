@@ -10,4 +10,5 @@ public class SimplePathIndex extends PathIndex {
 		super(null);
 		this.t = t;
 	}
+
 }

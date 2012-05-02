@@ -4,11 +4,12 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import nogbeter.paths.BestProjectTup;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeSet;
+import nogbeter.paths.results.intersections.IIntersections;
+import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.lines.DiagonalLine;
@@ -95,31 +96,31 @@ public abstract class Curve extends SimplePath {
 	}
 
 	@Override
-	public <RPP,RLS extends Path,RRS extends Path> Tuple<List<SimplePathIndex>, List<RPP>> intersection(
+	public <RPP extends PathIndex,RLS extends Path,RRS extends Path> IIntersections<SimplePathIndex, RPP> intersection(
 			Path<RPP,RLS,RRS> other) {
 		return other.intersectionLCurve(this);
 	}
 
 	@Override
-	public Tuple<List<SimplePathIndex>, List<SimplePathIndex>> intersectionLDiaLine(
+	public IIntersections<SimplePathIndex, SimplePathIndex> intersectionLDiaLine(
 			DiagonalLine lhs) {
 		return lhs.intersectionLCurve(this).flip();
 	}
 
 	@Override
-	public Tuple<List<SimplePathIndex>, List<SimplePathIndex>> intersectionLHorLine(
+	public IIntersections<SimplePathIndex, SimplePathIndex> intersectionLHorLine(
 			HorizontalLine lhs) {
 		return lhs.intersectionLCurve(this).flip();
 	}
 
 	@Override
-	public Tuple<List<SimplePathIndex>, List<SimplePathIndex>> intersectionLVerLine(
+	public IIntersections<SimplePathIndex, SimplePathIndex> intersectionLVerLine(
 			VerticalLine lhs) {
 		return lhs.intersectionLCurve(this).flip();
 	}
 	
 	@Override
-	public Tuple<List<SetIndex>, List<SimplePathIndex>> intersectionLSet(
+	public IIntersections<SetIndex, SimplePathIndex> intersectionLSet(
 			ShapeSet lhs) {
 		return lhs.intersectionLCurve(this).flip();
 	}
@@ -127,7 +128,7 @@ public abstract class Curve extends SimplePath {
 
 	
 	@Override
-	public <RPP,RLS extends Path,RRS extends Path>  BestProjectTup<SimplePathIndex, RPP> project(
+	public <RPP extends PathIndex,RLS extends Path,RRS extends Path>  BestProjectTup<SimplePathIndex, RPP> project(
 			double best, Path<RPP,RLS,RRS> other) {
 		return other.projectLCurve(best, this);
 	}
@@ -156,42 +157,6 @@ public abstract class Curve extends SimplePath {
 		return lhs.projectLCurve(best, this).flip();
 	}
 
-	@Override
-	public <LPI> Tuple<List<LPI>, List<SimplePathIndex>> prependRightListRhs(
-			Tuple<List<LPI>, List<? extends PathIndex>> intersections) {
-		return (Tuple)intersections;
-	}
-
-	@Override
-	public <LPI> Tuple<List<LPI>, List<SimplePathIndex>> prependLeftListRhs(
-			Tuple<List<LPI>, List<? extends PathIndex>> intersections) {
-		return (Tuple)intersections;
-	}
-
-	@Override
-	public <LPI> BestProjectTup<LPI, SimplePathIndex> prependLeftBestTupRhs(
-			BestProjectTup<LPI,? extends PathIndex> projectSimplerTup) {
-		return (BestProjectTup)projectSimplerTup;
-	}
-
-	@Override
-	public <LPI> BestProjectTup<LPI, SimplePathIndex> prependRightBestTupRhs(
-			BestProjectTup<LPI,? extends PathIndex> projectSimplerTup) {
-		return (BestProjectTup)projectSimplerTup;
-	}
-	
-	@Override
-	public <LPI> BestProjectTup<SimplePathIndex, LPI> prependLeftBestTupLhs(
-			BestProjectTup<? extends PathIndex, LPI> projectSimplerTup) {
-		return (BestProjectTup)projectSimplerTup;
-	}
-
-	@Override
-	public <LPI> BestProjectTup<SimplePathIndex, LPI> prependRightBestTupLhs(
-			BestProjectTup<? extends PathIndex, LPI> projectSimplerTup) {
-		return (BestProjectTup)projectSimplerTup;
-	}
-	
 	
 	
 }

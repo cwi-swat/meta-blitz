@@ -2,20 +2,21 @@ package nogbeter.paths.simple.lines;
 
 import static bezier.util.Util.square;
 
-import java.util.List;
 
-import nogbeter.paths.BestProject;
-import nogbeter.paths.BestProjectTup;
 import nogbeter.paths.Path;
+import nogbeter.paths.PathIndex;
 import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeSet;
+import nogbeter.paths.results.intersections.IIntersections;
+import nogbeter.paths.results.intersections.Intersections;
+import nogbeter.paths.results.project.BestProject;
+import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.nonlinear.Curve;
 import nogbeter.util.BBox;
 import nogbeter.util.Interval;
 import bezier.points.Vec;
 import bezier.util.STuple;
-import bezier.util.Tuple;
 import bezier.util.Util;
 
 public abstract class VerticalLine extends Line {
@@ -33,43 +34,55 @@ public abstract class VerticalLine extends Line {
 	abstract double getTForY(double y);
 	
 	@Override
-	public <RPP,RLS extends Path,RRS extends Path> 
-		Tuple<List<SimplePathIndex>, List<RPP>> intersection(
+	public <RPP extends PathIndex,RLS extends Path,RRS extends Path> 
+		IIntersections<SimplePathIndex, RPP> intersection(
 			Path<RPP,RLS,RRS> other) {
 		return other.intersectionLVerLine(this);
 	}
 
 	@Override
-	public Tuple<List<SimplePathIndex>, List<SimplePathIndex>> intersectionLDiaLine(
+	public IIntersections<SimplePathIndex, SimplePathIndex> intersectionLDiaLine(
 			DiagonalLine lhs) {
 		return lhs.intersectionLVerLine(this).flip();
 	}
 
 	@Override
-	public Tuple<List<SimplePathIndex>, List<SimplePathIndex>> intersectionLHorLine(
+	public IIntersections<SimplePathIndex, SimplePathIndex> intersectionLHorLine(
 			HorizontalLine lhs) {
 		if(yInterval.isInside(lhs.y) && lhs.xInterval.isInside(x)){
 			return makeIntersectionResult(lhs,lhs.getTForX(x), getTForY(lhs.y));
 		} else {
-			return Util.emptyTupleList;
+			return Intersections.NoIntersections;
 		}
 	}
 
 	@Override
-	public Tuple<List<SimplePathIndex>, List<SimplePathIndex>> intersectionLVerLine(
+	public IIntersections<SimplePathIndex, SimplePathIndex> intersectionLVerLine(
 			VerticalLine lhs) {
-		return Util.emptyTupleList;
+		if(x == lhs.x){
+			Interval r = yInterval.intersection(lhs.yInterval);
+			if(r != null){
+				if(r.low == r.high){
+					return makeIntersectionResult(lhs, lhs.getTForY(r.low), getTForY(r.low));
+				} else {
+					return makeIntersectionResult(lhs, lhs.getTForY(r.low), getTForY(r.low))
+							.append(
+							makeIntersectionResult(lhs, lhs.getTForY(r.high), getTForY(r.high)));
+				}
+			}
+		}
+		return Intersections.NoIntersections;
 	}
 	
 	
 	@Override
-	public Tuple<List<SetIndex>, List<SimplePathIndex>> intersectionLSet(
+	public IIntersections<SetIndex, SimplePathIndex> intersectionLSet(
 			ShapeSet lhs) {
 		return lhs.intersectionLVerLine(this).flip();
 	}
 	
 	@Override
-	public Tuple<List<SimplePathIndex>, List<SimplePathIndex>> intersectionLCurve(
+	public IIntersections<SimplePathIndex, SimplePathIndex> intersectionLCurve(
 			Curve lhs) {
 		if(overlaps(lhs.getBBox())){
 			double lt = lhs.findTForX(x);
@@ -80,10 +93,10 @@ public abstract class VerticalLine extends Line {
 				}
 			}
 		} 
-		return Util.emptyTupleList;
+		return Intersections.NoIntersections;
 	}
 
-	boolean overlaps(BBox b) {
+	public boolean overlaps(BBox b) {
 		return b.xInterval.isInside(x) 
 			&& b.yInterval.overlapsWith(yInterval);
 	}
@@ -97,7 +110,7 @@ public abstract class VerticalLine extends Line {
 	}
 	
 	@Override
-	public <RPP,RLS extends Path,RRS extends Path> 
+	public <RPP extends PathIndex,RLS extends Path,RRS extends Path> 
 			BestProjectTup<SimplePathIndex, RPP>  project(
 			double best, Path<RPP,RLS,RRS> other) {
 		return other.projectLVerLine(best, this);
@@ -133,13 +146,14 @@ public abstract class VerticalLine extends Line {
 
 
 	@Override
+	public
 	double distanceSquared(Vec v) {
 		double xDist = square(v.x - x);
 		double yDist = square(yInterval.minDistance(v.y));
 		return xDist + yDist;
 	}
 	
-	double minDistSquaredTo(BBox b){
+	public double minDistSquaredTo(BBox b){
 		double xDist = b.xInterval.minDistance(x);
 		double yDist = yInterval.minDistance(b.yInterval);
 		return xDist*xDist + yDist*yDist;

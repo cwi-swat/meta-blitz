@@ -11,15 +11,6 @@ import bezier.paths.Constants;
 
 public class Util {
 
-	public static Tuple emptyTupleList = new Tuple(Collections.unmodifiableList(Collections.EMPTY_LIST),Collections.unmodifiableList(Collections.EMPTY_LIST));
-	
-	public static <A,B> Tuple<List<A>,List<B>> appendTupList(Tuple<List<A>,List<B>>  lhs, Tuple<List<A>,List<B>> rhs){
-		Tuple<List<A>,List<B>> res = new Tuple<List<A>,List<B>>(new ArrayList<A>(lhs.l),new ArrayList<B>(rhs.r));
-		res.l.addAll(rhs.l);
-		res.r.addAll(rhs.r);
-		return res;
-	}
-	
 	public static <T> int floorBinarySearch(List<T> elems, T toFind, Comparator<T> comp ){
 		int min = -1;
 		int max = elems.size();

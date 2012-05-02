@@ -86,6 +86,7 @@ public class Interval {
 										Math.max(high,other.high));
 	}
 	
+	
 	public double minDistance(double x){
 		return x - getClosestPoint(x);
 	}
