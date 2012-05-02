@@ -1,12 +1,12 @@
 package bezier.demos;
 
-import static bezier.points.Transformation.id;
+import static nogbeter.transform.AffineTransformation.id;
+import nogbeter.points.twod.Vec;
 import bezier.composite.Path;
 import bezier.composite.Paths;
 import bezier.image.generated.ColorsAlpha;
 import bezier.paths.factory.TextFactory;
 import bezier.paths.simple.QuadCurve;
-import bezier.points.Vec;
 import bezier.segment.LengthMap;
 
 public class TextOnPath extends DemoBase{

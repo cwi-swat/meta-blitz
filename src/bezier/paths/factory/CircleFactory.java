@@ -8,10 +8,11 @@ import static java.lang.Math.tan;
 import java.util.ArrayList;
 import java.util.List;
 
+import nogbeter.points.twod.Vec;
+import nogbeter.transform.AffineTransformation;
+
 import bezier.paths.ConnectedPath;
 import bezier.paths.Path;
-import bezier.points.Transformation;
-import bezier.points.Vec;
 
 public class CircleFactory {
 	
@@ -44,7 +45,7 @@ public class CircleFactory {
 	
 	public static Path makeEllipiticalArc(Vec center, double width , double height, double startAngle, double endAngle){
 		Path result = makeArc(startAngle,endAngle);
-		return result.transform(Transformation.id.scale(width/2, height/2).translate(center));
+		return result.transform(AffineTransformation.id.scale(width/2, height/2).translate(center));
 	}
 	
 	

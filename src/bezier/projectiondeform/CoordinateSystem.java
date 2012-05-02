@@ -1,6 +1,6 @@
 package bezier.projectiondeform;
 
-import bezier.points.Vec;
+import nogbeter.points.twod.Vec;
 
 public interface CoordinateSystem {
 

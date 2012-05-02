@@ -4,8 +4,8 @@ import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.paths.simple.SimplePathIndex;
-import nogbeter.util.Interval;
-import bezier.points.Vec;
+import nogbeter.points.oned.Interval;
+import nogbeter.points.twod.Vec;
 
 public class HorizontalLRLine extends HorizontalLine{
 
@@ -28,6 +28,13 @@ public class HorizontalLRLine extends HorizontalLine{
 	public Vec getTangentAtLocal(double t) {
 		return new Vec(0,-1);
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("HorLRLine %s -> %s", getStartPoint().toString(), getEndPoint().toString());
+	}
+
+
 
 
 }

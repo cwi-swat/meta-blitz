@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import bezier.points.Vec;
 import bezier.util.STuple;
 import bezier.util.Tuple;
 import nogbeter.paths.Path;
@@ -18,7 +17,8 @@ import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.paths.results.transformers.IPathIndexTransformer;
 import nogbeter.paths.results.transformers.PITransformers;
 import nogbeter.paths.simple.lines.VerticalLine;
-import nogbeter.util.Interval;
+import nogbeter.points.oned.Interval;
+import nogbeter.points.twod.Vec;
 
 public abstract class SimplePath extends SplittablePath<SimplePathIndex,SimplePath,SimplePath>{
 

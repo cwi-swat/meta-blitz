@@ -11,8 +11,9 @@ import nogbeter.paths.simple.lines.DiagonalLine;
 import nogbeter.paths.simple.lines.HorizontalLine;
 import nogbeter.paths.simple.lines.VerticalLine;
 import nogbeter.paths.simple.nonlinear.Curve;
-import nogbeter.util.BBox;
-import bezier.points.Vec;
+import nogbeter.points.twod.BBox;
+import nogbeter.points.twod.Vec;
+import nogbeter.transform.AffineTransformation;
 import bezier.util.Tuple;
 
 public abstract class Path<PathParam extends PathIndex,LSimp extends Path,RSimp extends Path> {
@@ -123,4 +124,6 @@ public abstract class Path<PathParam extends PathIndex,LSimp extends Path,RSimp 
 	public boolean isClosed(){
 		return getStartPoint().isEqError(getEndPoint());
 	}
+	
+	public abstract Path<PathParam,LSimp,RSimp> transform(AffineTransformation t);
 }

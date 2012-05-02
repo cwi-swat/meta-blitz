@@ -13,8 +13,8 @@ import nogbeter.paths.simple.lines.DiagonalLine;
 import nogbeter.paths.simple.lines.HorizontalLine;
 import nogbeter.paths.simple.lines.Line;
 import nogbeter.paths.simple.lines.VerticalLine;
-import nogbeter.util.BBox;
-import bezier.points.Vec;
+import nogbeter.points.twod.BBox;
+import nogbeter.points.twod.Vec;
 import bezier.util.Tuple;
 
 public abstract class SplittablePath<PathParam extends PathIndex,LSimp extends Path,RSimp extends Path>
@@ -63,6 +63,9 @@ public abstract class SplittablePath<PathParam extends PathIndex,LSimp extends P
 	public <LPP extends PathIndex, LLSimp extends Path, LRSimp extends Path> 
 		IIntersections<LPP, PathParam> intersectionLSplittable(
 			SplittablePath<LPP, LLSimp, LRSimp> lhs) {
+		if(!lhs.getBBox().overlaps(getBBox())){
+			return Intersections.NoIntersections;
+		}
 		if (getBBox().area() > lhs.getBBox().area()) {
 			Tuple<LSimp,RSimp> simp = splitSimpler();
 			IIntersections<LPP, PathParam> l =

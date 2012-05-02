@@ -2,12 +2,13 @@ package bezier.paths.simple;
 
 import java.util.List;
 
+import nogbeter.points.twod.Vec;
+
 import bezier.paths.ConnectedPath;
 import bezier.paths.Path;
 import bezier.paths.compound.ICompoundPath;
 import bezier.paths.util.PathParameter;
 import bezier.paths.util.TPair;
-import bezier.points.Vec;
 
 public abstract class SimplePath extends ConnectedPath{
 

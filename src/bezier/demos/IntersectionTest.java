@@ -1,15 +1,16 @@
 package bezier.demos;
 
-import static bezier.points.Transformation.id;
+import static nogbeter.transform.AffineTransformation.id;
 
 import java.util.List;
+
+import nogbeter.points.twod.Vec;
+import nogbeter.transform.AffineTransformation;
 
 import bezier.image.generated.ColorsAlpha;
 import bezier.paths.Path;
 import bezier.paths.factory.TextFactory;
 import bezier.paths.util.PathParameter;
-import bezier.points.Transformation;
-import bezier.points.Vec;
 import bezier.util.STuple;
 
 public class IntersectionTest extends DemoBase{

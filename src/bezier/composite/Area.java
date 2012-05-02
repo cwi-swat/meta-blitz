@@ -1,6 +1,6 @@
 package bezier.composite;
 
-import bezier.points.Vec;
+import nogbeter.points.twod.Vec;
 import bezier.util.HasBBox;
 
 public interface Area extends HasBBox{

@@ -8,12 +8,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import bezier.graphtheory.MutableGraph;
+import nogbeter.points.twod.Vec;
+import nogbeter.transform.Matrix;
+import nogbeter.transform.AffineTransformation;
+
+
+import bezier.MutableGraph;
 import bezier.paths.util.BestProjection;
 import bezier.paths.util.TPair;
-import bezier.points.Matrix;
-import bezier.points.Transformation;
-import bezier.points.Vec;
 import bezier.segment.LengthMap;
 import bezier.util.BBox;
 import bezier.util.STuple;
@@ -256,7 +258,7 @@ public class Paths implements Area{
 		return paths.get(i);
 	}
 
-	public Paths transform(Transformation translate) {
+	public Paths transform(AffineTransformation translate) {
 		return transform(translate.to);
 	}
 	

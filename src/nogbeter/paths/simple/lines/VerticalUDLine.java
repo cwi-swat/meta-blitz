@@ -1,7 +1,7 @@
 package nogbeter.paths.simple.lines;
 
-import nogbeter.util.Interval;
-import bezier.points.Vec;
+import nogbeter.points.oned.Interval;
+import nogbeter.points.twod.Vec;
 
 public class VerticalUDLine extends VerticalLine{
 
@@ -12,7 +12,7 @@ public class VerticalUDLine extends VerticalLine{
 
 	@Override
 	double getTForY(double y) {
-		return yInterval.getFactorForPoint(x);
+		return yInterval.getFactorForPoint(y);
 	}
 
 	@Override
@@ -25,4 +25,8 @@ public class VerticalUDLine extends VerticalLine{
 		return new Vec(-1,0);
 	}
 	
+	@Override
+	public String toString() {
+		return String.format("VerUDLine %s -> %s", getStartPoint().toString(), getEndPoint().toString());
+	}
 }

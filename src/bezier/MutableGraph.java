@@ -1,4 +1,4 @@
-package bezier.graphtheory;
+package bezier;
 
 import java.util.Collection;
 import java.util.HashMap;

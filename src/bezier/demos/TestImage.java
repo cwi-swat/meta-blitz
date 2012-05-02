@@ -1,10 +1,12 @@
 package bezier.demos;
 
 
-import static bezier.points.Transformation.id;
+import static nogbeter.transform.AffineTransformation.id;
 
 import java.awt.Color;
 import java.util.List;
+
+import nogbeter.points.twod.Vec;
 
 import com.sun.istack.internal.Pool.Impl;
 
@@ -35,7 +37,6 @@ import bezier.image.generated.SampleInstances.Sample3;
 import bezier.image.generated.SampleInstances.Sample4;
 import bezier.paths.factory.TextFactory;
 import bezier.paths.simple.QuadCurve;
-import bezier.points.Vec;
 import bezier.segment.LengthMap;
 import bezier.segment.curve.Curve;
 public class TestImage extends DemoBase {

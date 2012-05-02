@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import nogbeter.points.twod.Vec;
+
 import bezier.composite.Path;
 import bezier.composite.Paths;
 import bezier.paths.Constants;
 import bezier.paths.simple.Line;
-import bezier.points.Vec;
 import bezier.segment.curve.Curve;
 import bezier.util.STuple;
 import bezier.util.Tuple;

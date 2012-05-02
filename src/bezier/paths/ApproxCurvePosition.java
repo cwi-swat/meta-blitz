@@ -1,8 +1,8 @@
 package bezier.paths;
 
+import nogbeter.points.twod.Vec;
 import bezier.paths.simple.SimplePath;
 import bezier.paths.util.PathParameter;
-import bezier.points.Vec;
 
 public class ApproxCurvePosition {
 	public final SimplePath approx;

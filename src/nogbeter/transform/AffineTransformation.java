@@ -1,7 +1,9 @@
-package bezier.points;
+package nogbeter.transform;
+
+import nogbeter.points.twod.Vec;
 
 
-public final class AffineTransformation {
+public final class AffineTransformation implements ITransform{
 	
 	public static AffineTransformation id = new AffineTransformation();
 	
@@ -21,9 +23,11 @@ public final class AffineTransformation {
 		return to.mul(from);
 	}
 	
+	
 	public Vec from(Vec to){
 		return back.mul(to);
 	}
+	
 	
 	public AffineTransformation mul(AffineTransformation other){
 		return new AffineTransformation(other.to.mul(to),  back.mul(other.back));
@@ -59,5 +63,10 @@ public final class AffineTransformation {
 	
 	public AffineTransformation shearY(double x){
 		return new AffineTransformation(Matrix.shearY(x).mul(to), back.mul(Matrix.shearY(-x)));
+	}
+
+	@Override
+	public Vec transform(Vec d) {
+		return to.mul(d);
 	}
 }

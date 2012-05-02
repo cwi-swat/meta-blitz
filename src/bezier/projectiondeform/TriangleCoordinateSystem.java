@@ -1,7 +1,7 @@
 package bezier.projectiondeform;
 
+import nogbeter.points.twod.Vec;
 import bezier.paths.simple.Line;
-import bezier.points.Vec;
 
 public final class TriangleCoordinateSystem implements CoordinateSystem{
 	

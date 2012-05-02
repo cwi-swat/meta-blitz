@@ -5,9 +5,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import nogbeter.points.twod.Vec;
+
 import bezier.paths.util.BestProjection;
 import bezier.paths.util.TInterval;
-import bezier.points.Vec;
 import bezier.segment.curve.Curve;
 import bezier.segment.curve.CurveApproxTree;
 import bezier.util.Util;

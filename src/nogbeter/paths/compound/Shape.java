@@ -1,9 +1,12 @@
 package nogbeter.paths.compound;
 
-import bezier.points.Vec;
+import javax.swing.border.Border;
+
 import nogbeter.paths.Path;
 import nogbeter.paths.results.project.BestProjectTup;
-import nogbeter.util.BBox;
+import nogbeter.points.twod.BBox;
+import nogbeter.points.twod.Vec;
+import nogbeter.transform.AffineTransformation;
 
 
 public class Shape<LSimp extends Path, RSimp extends Path> extends CompoundSplittablePath<LSimp, RSimp> {
@@ -46,5 +49,13 @@ public class Shape<LSimp extends Path, RSimp extends Path> extends CompoundSplit
 		return false;
 	}
 
+	@Override
+	public Path<SplitIndex, LSimp, RSimp> transform(AffineTransformation t) {
+		return new Shape(left.transform(t),right.transform(t));
+	}
 
+
+	public String toString(){
+		return "Shape(" + left.toString() + "--" + right.toString() + ")";
+	}
 }

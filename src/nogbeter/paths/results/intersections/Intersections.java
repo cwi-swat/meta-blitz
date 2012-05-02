@@ -8,7 +8,7 @@ import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
 
 import bezier.util.Tuple;
 
-public class Intersections<LI extends PathIndex,RI extends PathIndex> implements IIntersections<LI, RI> {
+public class Intersections<LI extends PathIndex,RI extends PathIndex> implements IIntersections<LI, RI>, Iterable<Intersection<LI,RI>> {
 	
 	public static final Intersections NoIntersections = new Intersections((Intersection)null, null);
 	
@@ -32,6 +32,12 @@ public class Intersections<LI extends PathIndex,RI extends PathIndex> implements
 	
 	@Override
 	public IIntersections<LI, RI> appendNorm(Intersections<LI, RI> lhs) {
+		if(lhs.first == null){
+			return this;
+		}
+		if(first == null){
+			return lhs;
+		}
 		lhs.last.next = first;
 		return new Intersections<LI, RI>(lhs.first, last);
 	}
@@ -92,6 +98,7 @@ public class Intersections<LI extends PathIndex,RI extends PathIndex> implements
 				Intersection <LPI,RPI> curn = cur.transform(trans);
 				prev.next = curn;
 				prev = curn;
+				cur = cur.next;
 			}
 			return new Intersections<LPI, RPI>(firstNew,prev);
 		}

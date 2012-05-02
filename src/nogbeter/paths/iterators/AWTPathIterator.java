@@ -4,9 +4,10 @@ package nogbeter.paths.iterators;
 
 import nogbeter.paths.Path;
 import nogbeter.paths.simple.SimplePath;
+import nogbeter.points.twod.Vec;
+
 import java.awt.geom.PathIterator;
 
-import bezier.points.Vec;
 
 public class AWTPathIterator implements PathIterator{
 

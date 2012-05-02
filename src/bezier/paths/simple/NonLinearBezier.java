@@ -5,9 +5,10 @@ import static bezier.util.Util.clamp;
 import java.util.Collections;
 import java.util.List;
 
+import nogbeter.points.twod.Vec;
+
 import bezier.paths.ConnectedPath;
 import bezier.paths.Path;
-import bezier.points.Vec;
 import bezier.util.IntervalLocation;
 import bezier.util.STuple;
 public abstract class NonLinearBezier extends SimplePath{

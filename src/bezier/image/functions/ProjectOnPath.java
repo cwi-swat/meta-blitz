@@ -1,5 +1,6 @@
 package bezier.image.functions;
 
+import nogbeter.points.twod.Vec;
 import bezier.composite.Path;
 import bezier.composite.ProjectPath;
 import bezier.image.Image;
@@ -9,7 +10,6 @@ import bezier.image.generated.RasterInstances.Raster2;
 import bezier.image.generated.SampleInstances.Sample1;
 import bezier.image.generated.SampleInstances.Sample2;
 import bezier.paths.util.BestProjection;
-import bezier.points.Vec;
 import bezier.segment.LengthMap;
 import bezier.segment.curve.Curve;
 import bezier.segment.curve.CurveApproxTree;

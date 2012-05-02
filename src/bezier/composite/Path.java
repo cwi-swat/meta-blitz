@@ -6,15 +6,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import nogbeter.points.twod.Vec;
+import nogbeter.transform.Matrix;
+import nogbeter.transform.AffineTransformation;
+
 import bezier.demos.SetOperations;
 import bezier.paths.Constants;
 import bezier.paths.simple.Line;
 import bezier.paths.util.BestProjection;
 import bezier.paths.util.TInterval;
 import bezier.paths.util.TPair;
-import bezier.points.Matrix;
-import bezier.points.Transformation;
-import bezier.points.Vec;
 import bezier.segment.LengthMap;
 import bezier.segment.curve.Curve;
 import bezier.segment.curve.CurveApproxTree;
@@ -45,7 +46,7 @@ public class Path implements Area{
 		return new Path(newCurves);
 	}
 	
-	public Path transform(Transformation t){
+	public Path transform(AffineTransformation t){
 		return transform(t.to);
 	}
 
@@ -723,7 +724,7 @@ public class Path implements Area{
 		List<Curve> result = new ArrayList<Curve>();
 		result.addAll(this.curves);
 		for(int i = 1 ; i <n ; i++){
-			result.addAll(transform(Transformation.id.translate(getBBox().width * i, 0)).curves);
+			result.addAll(transform(AffineTransformation.id.translate(getBBox().width * i, 0)).curves);
 		}
 		return new Path(result);
 	}

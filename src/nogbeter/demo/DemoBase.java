@@ -20,10 +20,10 @@ import javax.swing.JFrame;
 
 import nogbeter.paths.Path;
 import nogbeter.paths.iterators.AWTPathIterator;
+import nogbeter.points.twod.Vec;
 
 import bezier.image.generated.ColorsAlpha;
 import bezier.image.generated.SampleInstances.Sample4;
-import bezier.points.Vec;
 
 
 

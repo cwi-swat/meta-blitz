@@ -5,8 +5,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import nogbeter.points.twod.Vec;
+
 import bezier.paths.util.PathParameter;
-import bezier.points.Vec;
 
 public class Intersections {
 	final List<Intersection> inters;

@@ -5,9 +5,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import nogbeter.points.twod.Vec;
+
 import bezier.paths.factory.PathFactory;
 import bezier.paths.util.PathParameter;
-import bezier.points.Vec;
 import bezier.util.STuple;
 import bezier.util.Tuple;
 

@@ -4,12 +4,15 @@ import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
 
-import nogbeter.paths.PathFactory;
+import nogbeter.paths.Path;
+import nogbeter.paths.factory.PathFactory;
 import nogbeter.paths.simple.SimplePath;
-import nogbeter.util.BBox;
-import nogbeter.util.Interval;
+import nogbeter.paths.simple.SimplePathIndex;
+import nogbeter.points.oned.Interval;
+import nogbeter.points.twod.BBox;
+import nogbeter.points.twod.Vec;
+import nogbeter.transform.AffineTransformation;
 import bezier.paths.Constants;
-import bezier.points.Vec;
 import bezier.util.STuple;
 import bezier.util.Tuple;
 import bezier.util.Util;
@@ -115,7 +118,7 @@ public class QuadCurve extends Curve{
 
 	@Override
 	public SimplePath getWithAdjustedStartPoint(Vec newStartPoint) {
-		return PathFactory.createQuad(newStartPoint,p1,p2);
+		return PathFactory.createQuad(newStartPoint,p1,p2,tInterval);
 	}
 
 	@Override
@@ -131,6 +134,13 @@ public class QuadCurve extends Curve{
 		coords[2] = (float)p2.x;
 		coords[3] = (float)p2.y;
 		return PathIterator.SEG_QUADTO;
+	}
+
+
+	@Override
+	public Path<SimplePathIndex, SimplePath, SimplePath> transform(
+			AffineTransformation t) {
+		return PathFactory.createQuad(t.to(p0),t.to(p1),t.to(p2),tInterval);
 	}
 
 

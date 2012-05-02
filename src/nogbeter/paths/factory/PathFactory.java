@@ -1,6 +1,8 @@
-package nogbeter.paths;
+package nogbeter.paths.factory;
 
-import bezier.points.Vec;
+import java.util.Set;
+
+import nogbeter.paths.Path;
 import nogbeter.paths.compound.Append;
 import nogbeter.paths.compound.Shape;
 import nogbeter.paths.compound.ShapeSet;
@@ -16,7 +18,8 @@ import nogbeter.paths.simple.lines.VerticalUDLine;
 import nogbeter.paths.simple.nonlinear.CubicCurve;
 import nogbeter.paths.simple.nonlinear.Curve;
 import nogbeter.paths.simple.nonlinear.QuadCurve;
-import nogbeter.util.Interval;
+import nogbeter.points.oned.Interval;
+import nogbeter.points.twod.Vec;
 
 public class PathFactory {
 
@@ -57,6 +60,10 @@ public class PathFactory {
 
 	public static Path createShape(Path border, Path ... inside){
 		return new Shape(border,createSet(inside));
+	}
+
+	public static Path createSet(Set<Path> paths) {
+		return createSet(paths.toArray(new Path[]{}));
 	}
 	
 }

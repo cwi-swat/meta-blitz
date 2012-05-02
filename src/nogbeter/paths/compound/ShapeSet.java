@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import bezier.points.Vec;
 import bezier.util.Tuple;
 import bezier.util.Util;
 import nogbeter.paths.Path;
@@ -21,7 +20,9 @@ import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.lines.DiagonalLine;
 import nogbeter.paths.simple.lines.HorizontalLine;
 import nogbeter.paths.simple.lines.VerticalLine;
-import nogbeter.util.BBox;
+import nogbeter.points.twod.BBox;
+import nogbeter.points.twod.Vec;
+import nogbeter.transform.AffineTransformation;
 
 import static nogbeter.paths.results.transformers.TupleTransformers.*;
 public class ShapeSet extends Path<SetIndex, Path, Path>{
@@ -99,7 +100,7 @@ public class ShapeSet extends Path<SetIndex, Path, Path>{
 
 	@Override
 	public IIntersections<SetIndex, SetIndex> intersectionLSet(ShapeSet lhs) {
-		return intersection(lhs);
+		return intersections(lhs);
 	}
 	
 
@@ -224,8 +225,23 @@ public class ShapeSet extends Path<SetIndex, Path, Path>{
 		return false;
 	}
 
-
-
-
+	@Override
+	public Path<SetIndex, Path, Path> transform(AffineTransformation t) {
+		List<Path> res = new ArrayList<Path>(shapes.size());
+		for(Path p : shapes){
+			res.add(p.transform(t));
+		}
+		return new ShapeSet(res);
+	}	
 	
+	public String toString(){
+		StringBuilder build = new StringBuilder();
+		build.append("ShapeSet(");
+		for(Path p : shapes){
+			build.append(p.toString());
+			build.append("\n, ");
+		}
+		build.append(")");
+		return build.toString();
+	}
 }

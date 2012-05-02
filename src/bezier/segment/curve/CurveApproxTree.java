@@ -5,10 +5,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
+import nogbeter.points.twod.Vec;
+
 import bezier.paths.util.BestProjection;
 import bezier.paths.util.TInterval;
 import bezier.paths.util.TPair;
-import bezier.points.Vec;
 import bezier.util.BBox;
 import bezier.util.MinMax;
 import bezier.util.STuple;

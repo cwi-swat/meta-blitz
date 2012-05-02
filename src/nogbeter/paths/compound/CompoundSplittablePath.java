@@ -3,7 +3,6 @@ package nogbeter.paths.compound;
 import java.util.LinkedList;
 import java.util.List;
 
-import bezier.points.Vec;
 import bezier.util.Tuple;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
@@ -18,7 +17,9 @@ import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.lines.DiagonalLine;
 import nogbeter.paths.simple.lines.HorizontalLine;
 import nogbeter.paths.simple.lines.VerticalLine;
-import nogbeter.util.BBox;
+import nogbeter.points.twod.BBox;
+import nogbeter.points.twod.Vec;
+import nogbeter.transform.AffineTransformation;
 
 public abstract class CompoundSplittablePath<LSimp extends Path, RSimp extends Path>
 		extends SplittablePath<SplitIndex, LSimp, RSimp> {
@@ -80,6 +81,8 @@ public abstract class CompoundSplittablePath<LSimp extends Path, RSimp extends P
 	public IPathIndexTransformer<SplitIndex> getRightTransformer() {
 		return PITransformers.splitRight;
 	}
+
+
 
 	
 }

@@ -1,13 +1,14 @@
 package bezier.demos;
 
-import static bezier.points.Transformation.id;
+import static nogbeter.transform.AffineTransformation.id;
 
 import java.util.List;
+
+import nogbeter.points.twod.Vec;
 
 import bezier.image.generated.ColorsAlpha;
 import bezier.paths.Path;
 import bezier.paths.factory.TextFactory;
-import bezier.points.Vec;
 
 public class SetOperations extends DemoBase{
 

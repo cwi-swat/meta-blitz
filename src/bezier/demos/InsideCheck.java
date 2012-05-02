@@ -1,10 +1,10 @@
 package bezier.demos;
 
+import nogbeter.transform.AffineTransformation;
 import bezier.image.generated.ColorsAlpha;
 import bezier.image.generated.SampleInstances.Sample4;
 import bezier.paths.Path;
 import bezier.paths.factory.TextFactory;
-import bezier.points.Transformation;
 
 public class InsideCheck extends DemoBase{
 
@@ -17,7 +17,7 @@ public class InsideCheck extends DemoBase{
 	@Override
 	public void draw() {
 		Path ts = TextFactory.text2Paths(lastLine);
-		ts = ts.transform(Transformation.id.rotate(wheel / 100.0 * Math.PI).scale(5).translate(100,300));//.;
+		ts = ts.transform(AffineTransformation.id.rotate(wheel / 100.0 * Math.PI).scale(5).translate(100,300));//.;
 		boolean inside = ts.isInside(mouse);
 		Sample4 c = inside ?  ColorsAlpha.green : ColorsAlpha.red;
 		draw(ts,ColorsAlpha.black,c);

@@ -1,5 +1,6 @@
 package bezier.image.functions;
 
+import nogbeter.points.twod.Vec;
 import bezier.composite.Paths;
 import bezier.composite.TPaths;
 import bezier.image.Image;
@@ -7,7 +8,6 @@ import bezier.image.PixelArea;
 import bezier.image.generated.RasterInstances.Raster1;
 import bezier.image.generated.SampleInstances.Sample1;
 import bezier.paths.util.BestProjection;
-import bezier.points.Vec;
 
 public class ProjectOnPaths {
 	public static Raster1 projectDist(Image<Sample1> mask, Paths p){

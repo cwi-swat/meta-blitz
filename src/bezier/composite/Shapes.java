@@ -3,8 +3,10 @@ package bezier.composite;
 import java.util.ArrayList;
 import java.util.List;
 
-import bezier.graphtheory.MutableGraph;
-import bezier.points.Vec;
+import nogbeter.points.twod.Vec;
+
+
+import bezier.MutableGraph;
 import bezier.util.BBox;
 
 public class Shapes implements Area{

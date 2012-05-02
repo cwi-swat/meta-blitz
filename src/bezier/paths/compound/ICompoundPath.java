@@ -1,6 +1,6 @@
 package bezier.paths.compound;
 
-import bezier.points.Vec;
+import nogbeter.points.twod.Vec;
 
 public interface ICompoundPath {
 

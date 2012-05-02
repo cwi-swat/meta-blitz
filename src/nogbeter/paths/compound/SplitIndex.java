@@ -16,5 +16,9 @@ public class SplitIndex extends PathIndex {
 		super(next);
 		this.choice = choice;
 	}
+	
+	public String toString(){
+		return "Split("+choice+")" + (next == null? "" : "," + next.toString());
+	}
 
 }

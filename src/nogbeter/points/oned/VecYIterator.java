@@ -1,8 +1,9 @@
-package nogbeter.util;
+package nogbeter.points.oned;
 
 import java.util.Iterator;
 
-import bezier.points.Vec;
+import nogbeter.points.twod.Vec;
+
 
 public class VecYIterator implements Iterator<Double>{
 

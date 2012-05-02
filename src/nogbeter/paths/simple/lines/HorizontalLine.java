@@ -6,6 +6,7 @@ import static bezier.util.Util.square;
 
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
+import nogbeter.paths.SplittablePath;
 import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.results.intersections.IIntersections;
@@ -14,9 +15,9 @@ import nogbeter.paths.results.project.BestProject;
 import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.nonlinear.Curve;
-import nogbeter.util.BBox;
-import nogbeter.util.Interval;
-import bezier.points.Vec;
+import nogbeter.points.oned.Interval;
+import nogbeter.points.twod.BBox;
+import nogbeter.points.twod.Vec;
 import bezier.util.STuple;
 import bezier.util.Util;
 
@@ -94,6 +95,13 @@ public abstract class HorizontalLine extends Line {
 		} 
 		return Intersections.NoIntersections;
 	}
+	
+	@Override
+	public <LPP extends PathIndex, LLSimp extends Path, LRSimp extends Path> 
+		IIntersections<LPP, SimplePathIndex> intersectionLSplittable(
+			SplittablePath<LPP, LLSimp, LRSimp> lhs) {
+		return lhs.intersectionLHorLine(this).flip();
+	}
 
 	public boolean overlaps(BBox b) {
 		return b.yInterval.isInside(y) 
@@ -162,6 +170,11 @@ public abstract class HorizontalLine extends Line {
 		double xDist = xInterval.minDistance(b.xInterval);
 		double yDist = b.yInterval.minDistance(y);
 		return xDist*xDist + yDist*yDist;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("HorLine %s -> %s", getStartPoint().toString(), getEndPoint().toString());
 	}
 
 

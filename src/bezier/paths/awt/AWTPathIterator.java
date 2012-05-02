@@ -3,10 +3,11 @@ package bezier.paths.awt;
 import java.awt.geom.PathIterator;
 import java.util.Iterator;
 
+import nogbeter.points.twod.Vec;
+
 import bezier.paths.ConnectedPath;
 import bezier.paths.Path;
 import bezier.paths.simple.SimplePath;
-import bezier.points.Vec;
 
 public class AWTPathIterator implements PathIterator{
 

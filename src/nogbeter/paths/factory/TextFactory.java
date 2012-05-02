@@ -1,4 +1,4 @@
-package bezier.paths.factory;
+package nogbeter.paths.factory;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
@@ -13,10 +13,10 @@ import java.util.Set;
 
 import javax.swing.UIManager;
 
+import nogbeter.paths.Path;
+import nogbeter.paths.simple.SimplePath;
 import nogbeter.points.twod.Vec;
 
-import bezier.paths.ConnectedPath;
-import bezier.paths.Path;
 
 public class TextFactory {
 
@@ -39,13 +39,13 @@ public class TextFactory {
 	    double[] curs = new double[6];
 	    Vec prev = new Vec(100,100);
 	    Set<Path> result = new HashSet<Path>();
-	    List<ConnectedPath> curves = new ArrayList<ConnectedPath>();
+	    List<SimplePath> curves = new ArrayList<SimplePath>();
         while(!p.isDone()){
         	 Vec cur;
         	switch(p.currentSegment(curs)){
         		case PathIterator.SEG_CLOSE:
-        			result.add(PathFactory.append(curves));
-        			curves = new ArrayList<ConnectedPath>();
+        			result.add(PathFactory.createAppends(curves.toArray(new SimplePath[]{})));
+        			curves = new ArrayList<SimplePath>();
         		break;
         		case PathIterator.SEG_MOVETO:
         			prev = new Vec(curs[0],curs[1]); 
@@ -76,7 +76,8 @@ public class TextFactory {
         	}
         	p.next();
         }
-        return PathFactory.join(result);
+        // TODO: nu kunnen letters geen gaten hebben!
+        return PathFactory.createSet(result);
 	}
 	
 

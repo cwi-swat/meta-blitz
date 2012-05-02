@@ -1,7 +1,7 @@
 package nogbeter.paths.simple.lines;
 
-import nogbeter.util.Interval;
-import bezier.points.Vec;
+import nogbeter.points.oned.Interval;
+import nogbeter.points.twod.Vec;
 
 public class VerticalDULine extends VerticalLine{
 
@@ -13,7 +13,7 @@ public class VerticalDULine extends VerticalLine{
 
 	@Override
 	double getTForY(double y) {
-		return 1.0 - yInterval.getFactorForPoint(x);
+		return 1.0 - yInterval.getFactorForPoint(y);
 	}
 
 	@Override
@@ -24,6 +24,11 @@ public class VerticalDULine extends VerticalLine{
 	@Override
 	public Vec getTangentAtLocal(double t) {
 		return new Vec(1,0);
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("VerDULine %s -> %s", getStartPoint().toString(), getEndPoint().toString());
 	}
 	
 }

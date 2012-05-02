@@ -5,6 +5,7 @@ import static bezier.util.Util.square;
 
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
+import nogbeter.paths.SplittablePath;
 import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.results.intersections.IIntersections;
@@ -13,9 +14,9 @@ import nogbeter.paths.results.project.BestProject;
 import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.nonlinear.Curve;
-import nogbeter.util.BBox;
-import nogbeter.util.Interval;
-import bezier.points.Vec;
+import nogbeter.points.oned.Interval;
+import nogbeter.points.twod.BBox;
+import nogbeter.points.twod.Vec;
 import bezier.util.STuple;
 import bezier.util.Util;
 
@@ -49,11 +50,7 @@ public abstract class VerticalLine extends Line {
 	@Override
 	public IIntersections<SimplePathIndex, SimplePathIndex> intersectionLHorLine(
 			HorizontalLine lhs) {
-		if(yInterval.isInside(lhs.y) && lhs.xInterval.isInside(x)){
-			return makeIntersectionResult(lhs,lhs.getTForX(x), getTForY(lhs.y));
-		} else {
-			return Intersections.NoIntersections;
-		}
+		return lhs.intersectionLVerLine(this).flip();
 	}
 
 	@Override
@@ -95,6 +92,14 @@ public abstract class VerticalLine extends Line {
 		} 
 		return Intersections.NoIntersections;
 	}
+	
+	@Override
+	public <LPP extends PathIndex, LLSimp extends Path, LRSimp extends Path> 
+		IIntersections<LPP, SimplePathIndex> intersectionLSplittable(
+			SplittablePath<LPP, LLSimp, LRSimp> lhs) {
+		return lhs.intersectionLVerLine(this).flip();
+	}
+
 
 	public boolean overlaps(BBox b) {
 		return b.xInterval.isInside(x) 
@@ -157,5 +162,10 @@ public abstract class VerticalLine extends Line {
 		double xDist = b.xInterval.minDistance(x);
 		double yDist = yInterval.minDistance(b.yInterval);
 		return xDist*xDist + yDist*yDist;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("VerLine %s -> %s", getStartPoint().toString(), getEndPoint().toString());
 	}
 }

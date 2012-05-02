@@ -1,10 +1,10 @@
 package nogbeter.paths.results.intersections;
 
-import bezier.points.Vec;
-import nogbeter.Intersections;
+
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.results.transformers.IPathIndexTransformer;
 import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
+import nogbeter.points.twod.Vec;
 
 public class Intersection<LI extends PathIndex,RI extends PathIndex> {
 
@@ -33,5 +33,9 @@ public class Intersection<LI extends PathIndex,RI extends PathIndex> {
 	
 	public Intersection<RI,LI> flip(){
 		return new Intersection<RI,LI>(right, left);
+	}
+	
+	public String toString(){
+		return "Intersection(" + left.toString() + "," + right.toString() + ")";
 	}
 }

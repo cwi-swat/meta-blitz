@@ -18,6 +18,8 @@ import java.awt.image.BufferedImage;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
+import nogbeter.points.twod.Vec;
+
 import bezier.image.Image;
 import bezier.image.functions.Mul;
 import bezier.image.generated.ColorsAlpha;
@@ -26,7 +28,6 @@ import bezier.image.generated.RasterInstances.Raster4;
 import  bezier.image.generated.SampleInstances.Sample4;
 import bezier.paths.Path;
 import bezier.paths.awt.DummyAWTSHape;
-import bezier.points.Vec;
 import bezier.segment.curve.Curve;
 
 

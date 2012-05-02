@@ -11,6 +11,8 @@ public class SetIndex extends PathIndex {
 		this.choice = choice;
 	}
 	
-	
+	public String toString(){
+		return "Set("+choice+")" + (next == null? "" : "," + next.toString());
+	}
 
 }

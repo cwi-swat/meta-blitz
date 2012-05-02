@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import nogbeter.points.twod.Vec;
+
 import bezier.paths.ConnectedPath;
 import bezier.paths.EmptyPath;
 import bezier.paths.Path;
@@ -16,7 +18,6 @@ import bezier.paths.simple.CubicCurve;
 import bezier.paths.simple.Line;
 import bezier.paths.simple.QuadCurve;
 import bezier.paths.simple.SimplePath;
-import bezier.points.Vec;
 
 public class PathFactory {
 	

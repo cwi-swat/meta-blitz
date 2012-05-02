@@ -1,6 +1,6 @@
 package bezier.image;
 
-import bezier.points.Vec;
+import nogbeter.points.twod.Vec;
 
 public class PixelArea {
 

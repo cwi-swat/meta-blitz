@@ -1,4 +1,4 @@
-package bezier.graphtheory;
+package nogbeter.graphtheory;
 
 public final class Tree {
 

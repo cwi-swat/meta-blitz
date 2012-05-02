@@ -1,4 +1,6 @@
-package bezier.points;
+package nogbeter.transform;
+
+import nogbeter.points.twod.Vec;
 
 public class Matrix {
 	public final double x1,x2,x3;

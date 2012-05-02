@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import nogbeter.points.twod.Vec;
+import nogbeter.transform.ITransform;
+
 import bezier.paths.awt.AWTPathIterator;
 import bezier.paths.awt.DummyAWTSHape;
 import bezier.paths.compound.ICompoundPath;
@@ -18,11 +21,9 @@ import bezier.paths.simple.Line;
 import bezier.paths.simple.SimplePath;
 import bezier.paths.util.BestProjection;
 import bezier.paths.util.IPathSelector;
-import bezier.paths.util.ITransform;
 import bezier.paths.util.PathIterator;
 import bezier.paths.util.PathParameter;
 import bezier.paths.util.TPair;
-import bezier.points.Vec;
 import bezier.util.BBox;
 import bezier.util.HasBBox;
 import bezier.util.MinMax;

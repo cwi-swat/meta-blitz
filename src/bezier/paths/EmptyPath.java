@@ -2,13 +2,14 @@ package bezier.paths;
 
 import java.util.Iterator;
 
+import nogbeter.points.twod.Vec;
+import nogbeter.transform.ITransform;
+
 import bezier.paths.compound.ICompoundPath;
 import bezier.paths.simple.Line;
 import bezier.paths.simple.SimplePath;
 import bezier.paths.util.IPathSelector;
-import bezier.paths.util.ITransform;
 import bezier.paths.util.PathParameter;
-import bezier.points.Vec;
 import bezier.util.BBox;
 import bezier.util.STuple;
 

@@ -2,10 +2,11 @@ package bezier.segment.curve;
 
 import java.util.List;
 
+import nogbeter.points.twod.Vec;
+import nogbeter.transform.Matrix;
+
 import bezier.composite.Path;
 import bezier.paths.simple.Line;
-import bezier.points.Matrix;
-import bezier.points.Vec;
 import bezier.projectiondeform.CoordinateSystem;
 import bezier.segment.LengthMap;
 import bezier.util.BBox;

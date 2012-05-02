@@ -1,4 +1,4 @@
-package bezier.graphtheory;
+package nogbeter.graphtheory;
 
 import java.util.ArrayList;
 import java.util.Collections;

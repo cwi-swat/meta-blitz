@@ -4,19 +4,20 @@ import java.awt.geom.PathIterator;
 import java.util.List;
 
 import nogbeter.paths.Path;
-import nogbeter.paths.PathFactory;
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.SplittablePath;
 import nogbeter.paths.compound.SplitIndex;
 import nogbeter.paths.compound.CompoundSplittablePath;
+import nogbeter.paths.factory.PathFactory;
 import nogbeter.paths.results.intersections.IIntersections;
 import nogbeter.paths.results.intersections.Intersections;
 import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
-import nogbeter.util.BBox;
-import nogbeter.util.Interval;
-import bezier.points.Vec;
+import nogbeter.points.oned.Interval;
+import nogbeter.points.twod.BBox;
+import nogbeter.points.twod.Vec;
+import nogbeter.transform.AffineTransformation;
 import bezier.util.Tuple;
 import bezier.util.Util;
 import static nogbeter.paths.results.transformers.TupleTransformers.*;
@@ -33,12 +34,10 @@ public abstract class Line extends SimplePath {
 	}
 	@Override
 	public SimplePath getWithAdjustedStartPoint(Vec newStartPoint) {
-		return PathFactory.createLine(newStartPoint, getEndPoint());
+		return PathFactory.createLine(newStartPoint, getEndPoint(),tInterval);
 	}
 	
 	public abstract double minDistSquaredTo(BBox b);
-	
-
 	
 
 
@@ -79,6 +78,13 @@ public abstract class Line extends SimplePath {
 		Vec end = getEndPoint();
 		coords[0] = (float)end.x; coords[1] = (float)end.y;
 		return PathIterator.SEG_LINETO;
+	}
+	
+
+	@Override
+	public Path<SimplePathIndex, SimplePath, SimplePath> transform(
+			AffineTransformation t) {
+		return PathFactory.createLine(t.to(getStartPoint()), t.to(getEndPoint()));
 	}
 	
 }

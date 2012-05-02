@@ -1,9 +1,13 @@
-package nogbeter.util;
+package nogbeter.points.twod;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
-import bezier.points.Vec;
+import nogbeter.points.oned.Interval;
+import nogbeter.points.oned.VecXIterator;
+import nogbeter.points.oned.VecYIterator;
+
 public final class BBox {
 	
 	public static BBox emptyBBox = 
@@ -93,12 +97,11 @@ public final class BBox {
 		return  xInterval.isInside(p.x) && yInterval.isInside(p.y);
 	}
 	
-	public static BBox fromPoints(Iterator<Vec> vecs){
-		return new BBox(	Interval.fromPoints(new VecXIterator(vecs)),
-							Interval.fromPoints(new VecYIterator(vecs)));
+	public static BBox fromPoints(Vec ... vecs){
+		List<Vec> vs = Arrays.asList(vecs);
+		return new BBox(	Interval.fromPoints(new VecXIterator(vs.iterator())),
+							Interval.fromPoints(new VecYIterator(vs.iterator())));
 	}
 	
-	public static BBox fromPoints(Vec ... vecs){
-		return fromPoints(Arrays.asList(vecs).iterator());
-	}
+
 }

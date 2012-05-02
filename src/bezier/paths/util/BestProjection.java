@@ -1,6 +1,6 @@
 package bezier.paths.util;
 
-import bezier.points.Vec;
+import nogbeter.points.twod.Vec;
 
 
 public final class BestProjection<A>{

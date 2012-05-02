@@ -3,6 +3,9 @@ package bezier.demos;
 import java.util.ArrayList;
 import java.util.List;
 
+import nogbeter.points.twod.Vec;
+import nogbeter.transform.AffineTransformation;
+
 import bezier.composite.Path;
 import bezier.composite.Paths;
 import bezier.image.generated.Colors;
@@ -11,8 +14,6 @@ import bezier.paths.factory.TextFactory;
 import bezier.paths.simple.CubicCurve;
 import bezier.paths.simple.Line;
 import bezier.paths.simple.QuadCurve;
-import bezier.points.Transformation;
-import bezier.points.Vec;
 import bezier.projectiondeform.LinesCoordinateSystem;
 import bezier.segment.LengthMap;
 import bezier.segment.curve.Curve;
@@ -29,7 +30,7 @@ public class ProjectOn extends DemoBase{
 	public void draw() {
 		Paths ts = TextFactory.text2Paths("Atze");
 //		ts = new Paths(ts.get(0));
-		ts = ts.transform(Transformation.id.scale(5).rotate(0 / 100.0 * Math.PI).translate(400,400)).makeMonotomous();
+		ts = ts.transform(AffineTransformation.id.scale(5).rotate(0 / 100.0 * Math.PI).translate(400,400)).makeMonotomous();
 		Path rect = makeRectangle();
 //		draw(ts,ColorsAlpha.red);
 		List<Path> ps = new ArrayList<Path>();
@@ -37,7 +38,7 @@ public class ProjectOn extends DemoBase{
 
 			LinesCoordinateSystem sys = LinesCoordinateSystem.create(t);
 			int rep = (int)(sys.totalLength() / 30);
-			Path r = rect.transform(Transformation.id.scale( sys.totalLength()/rep, wheel/40 )).makeMonotomous().repeatX(rep);
+			Path r = rect.transform(AffineTransformation.id.scale( sys.totalLength()/rep, wheel/40 )).makeMonotomous().repeatX(rep);
 			 r = sys.deform(r);
 //			 System.out.println(r.curves.size());
 			 ps.add(r);

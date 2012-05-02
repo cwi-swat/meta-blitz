@@ -2,13 +2,14 @@ package nogbeter.paths.simple.lines;
 
 import static bezier.util.Util.square;
 import static java.lang.Math.min;
-import static nogbeter.util.Interval.emptyInterval;
-import static nogbeter.util.Interval.interval01;
+import static nogbeter.points.oned.Interval.emptyInterval;
+import static nogbeter.points.oned.Interval.interval01;
 
 import java.awt.geom.PathIterator;
 
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
+import nogbeter.paths.SplittablePath;
 import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.compound.SplitIndex;
@@ -20,9 +21,10 @@ import nogbeter.paths.results.transformers.IPathIndexTransformer;
 import nogbeter.paths.results.transformers.PITransformers;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
-import nogbeter.util.BBox;
-import nogbeter.util.Interval;
-import bezier.points.Vec;
+import nogbeter.points.oned.Interval;
+import nogbeter.points.twod.BBox;
+import nogbeter.points.twod.Vec;
+import nogbeter.transform.AffineTransformation;
 import bezier.util.STuple;
 import bezier.util.Tuple;
 import bezier.util.Util;
@@ -117,13 +119,17 @@ public class DiagonalLine extends Line {
 		if (dx == 0) {
 			return null;
 		} else {
-			double res = (xf - sx) / dx;
+			double res = findAll(sx, dx, xf);
 			if (res >= 0 && res <= 1) {
 				return res;
 			} else {
 				return null;
 			}
 		}
+	}
+	
+	private double findAll(double sx, double dx, double xf){
+		return (xf - sx) / dx;
 	}
 
 	public double getTAtY(double y) {
@@ -140,6 +146,14 @@ public class DiagonalLine extends Line {
 
 	public Double findY(double y) {
 		return find(start.y, dir.y, y);
+	}
+	
+	public double findXAll(double x) {
+		return findAll(start.x, dir.x, x);
+	}
+
+	public double findYAll(double y) {
+		return findAll(start.y, dir.y, y);
 	}
 
 	@Override
@@ -201,26 +215,37 @@ public class DiagonalLine extends Line {
 			ShapeSet lhs) {
 		return lhs.intersectionLDiaLine(this).flip();
 	}
+	
+	@Override
+	public <LPP extends PathIndex, LLSimp extends Path, LRSimp extends Path> 
+		IIntersections<LPP, SimplePathIndex> intersectionLSplittable(
+			SplittablePath<LPP, LLSimp, LRSimp> lhs) {
+		return lhs.intersectionLDiaLine(this).flip();
+	}
 
 
 	STuple<Interval> getTIntervalsBBox(BBox b){
 		return new STuple<Interval>(
-				new Interval(	findX(b.xInterval.low), 
-								findX(b.xInterval.high)
+				new Interval(	
+						findXAll(b.xInterval.low), 
+						findXAll(b.xInterval.high)
 				).intersection(interval01),
-				new Interval(	findY(b.yInterval.low), 
-								findY(b.yInterval.high)
+				new Interval(	findYAll(b.yInterval.low), 
+								findYAll(b.yInterval.high)
 				).intersection(interval01)
 		);
 	}
 	
 	public boolean overlaps(BBox b) {
-		// this requires some drawing to see....
-		// project x end points onto line and y endpoints to
-		// if these t-intervals overlap, then the line
-		// overlaps the bbox
-		STuple<Interval> tIntervals = getTIntervalsBBox(b);
-		return Interval.overlap(tIntervals.l, tIntervals.r);
+		// 
+//		// this requires some drawing to see....
+//		// project x end points onto line and y endpoints to
+//		// if these t-intervals overlap, then the line
+//		// overlaps the bbox
+//		STuple<Interval> tIntervals = getTIntervalsBBox(b);
+//		return Interval.overlap(tIntervals.l, tIntervals.r);
+		// the code above is correct, but too slow....
+		return getBBox().overlaps(b);
 	}
 
 	@Override
@@ -346,4 +371,6 @@ public class DiagonalLine extends Line {
 			ShapeSet lhs) {
 		return lhs.projectLDiaLine(best, this).flip();
 	}
+	
+
 }

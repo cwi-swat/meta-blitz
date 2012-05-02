@@ -1,4 +1,4 @@
-package bezier.points;
+package nogbeter.points.twod;
 
 import bezier.paths.Constants;
 

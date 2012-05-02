@@ -6,13 +6,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import nogbeter.points.twod.Vec;
+import nogbeter.transform.ITransform;
+
 import bezier.paths.ConnectedPath;
 import bezier.paths.Path;
 import bezier.paths.simple.Line;
 import bezier.paths.simple.SimplePath;
-import bezier.paths.util.ITransform;
 import bezier.paths.util.PathParameter;
-import bezier.points.Vec;
 import bezier.util.BBox;
 import bezier.util.HasBBox;
 import bezier.util.KDTreeUtil;

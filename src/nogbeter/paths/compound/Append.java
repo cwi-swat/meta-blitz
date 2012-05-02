@@ -2,11 +2,12 @@ package nogbeter.paths.compound;
 
 import java.util.List;
 
-import bezier.points.Vec;
 import bezier.util.Tuple;
 import nogbeter.paths.Path;
 import nogbeter.paths.results.transformers.IPathIndexTransformer;
 import nogbeter.paths.simple.SimplePath;
+import nogbeter.points.twod.Vec;
+import nogbeter.transform.AffineTransformation;
 
 public class Append<LSimp extends Path,RSimp extends Path> 
 			extends CompoundSplittablePath<LSimp,RSimp> {
@@ -46,19 +47,16 @@ public class Append<LSimp extends Path,RSimp extends Path>
 		return right.getEndPoint();
 	}
 
-	@Override
-	public IPathIndexTransformer<SplitIndex> getLeftTransformer() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
-	public IPathIndexTransformer<SplitIndex> getRightTransformer() {
-		// TODO Auto-generated method stub
-		return null;
+	public Path<SplitIndex, LSimp, RSimp> transform(AffineTransformation t) {
+		return new Append(left.transform(t),right.transform(t));
 	}
-
 	
+	@Override
+	public String toString() {
+		return String.format("(%s + %s)", left,right);
+	}
 	
 
 }

@@ -6,6 +6,8 @@ import java.awt.RenderingHints;
 import java.awt.color.ICC_ColorSpace;
 import java.awt.image.BufferedImage;
 
+import nogbeter.transform.AffineTransformation;
+
 import bezier.composite.Paths;
 import bezier.image.functions.Div;
 import bezier.image.generated.RasterInstances;
@@ -13,7 +15,6 @@ import bezier.image.generated.RasterInstances.Raster1;
 import bezier.image.generated.SampleInstances;
 import bezier.image.generated.SampleInstances.Sample1;
 import bezier.paths.awt.DummyAWTSHape;
-import bezier.points.Transformation;
 
 public class FromShape {
 
@@ -32,7 +33,7 @@ public class FromShape {
 	                RenderingHints.VALUE_ANTIALIAS_ON);
 	   	g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g.setColor(new Color(ICC_ColorSpace.getInstance(ICC_ColorSpace.CS_GRAY), new float[]{1.0f}, 1.0f));
-		g.fill(new DummyAWTSHape(p.transform(Transformation.id.translate(-x,-y)).getPathIterator()));
+		g.fill(new DummyAWTSHape(p.transform(AffineTransformation.id.translate(-x,-y)).getPathIterator()));
 		g.dispose();
 		double[] data = new double[w * h];
 		bi.getRaster().getPixels(0, 0, w, h, data);

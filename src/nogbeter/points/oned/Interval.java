@@ -1,4 +1,4 @@
-package nogbeter.util;
+package nogbeter.points.oned;
 
 import java.util.Iterator;
 
@@ -74,9 +74,9 @@ public class Interval {
 	
 	public Interval intersection(Interval other){
 		double nLow = Math.max(low, other.low);
-		double nHigh = Math.max(high, other.high);
+		double nHigh = Math.min(high, other.high);
 		if(nHigh < nLow) {
-			return null;
+			return emptyInterval;
 		}
 		return new Interval(nLow,nHigh);
 	}

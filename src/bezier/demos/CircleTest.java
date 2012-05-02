@@ -1,9 +1,9 @@
 package bezier.demos;
 
+import nogbeter.points.twod.Vec;
+import nogbeter.transform.AffineTransformation;
 import bezier.paths.Path;
 import bezier.paths.factory.CircleFactory;
-import bezier.points.Transformation;
-import bezier.points.Vec;
 
 public class CircleTest extends DemoBase {
 
