@@ -25,6 +25,12 @@ public abstract class Curve extends SimplePath {
 
 	Tuple<SimplePath,SimplePath> simpler;
 
+	public Curve(Interval tInterval,SimplePath lsimp, SimplePath rsimp) {
+		super(tInterval);
+		if(lsimp != null){
+			this.simpler = new Tuple<SimplePath, SimplePath>(lsimp,rsimp);
+		}
+	}
 
 	public Curve(Interval tInterval) {
 		super(tInterval);
@@ -146,8 +152,21 @@ public abstract class Curve extends SimplePath {
 			ShapeSet lhs) {
 		return lhs.projectLCurve(best, this).flip();
 	}
+	
 
+	@Override
+	public Tuple<Path<SimplePathIndex>, Double> normaliseToLength(
+			double prevLength) {
+		Tuple<SimplePath,SimplePath> sp = splitSimplerCurve();
+		Tuple<Path<SimplePathIndex>, Double> l = sp.l.normaliseToLength(prevLength);
+		Tuple<Path<SimplePathIndex>, Double> r = sp.r.normaliseToLength(l.r);
+		return new Tuple<Path<SimplePathIndex>, Double>(
+			(Path<SimplePathIndex>)getWithNewSimpleAndInterval((SimplePath)l.l, (SimplePath)r.l, new Interval(prevLength,r.r)),
+			r.r);
+	}
 
+	abstract Curve getWithNewSimpleAndInterval(
+			SimplePath l, SimplePath l2, Interval interval) ;
 	
 	
 	

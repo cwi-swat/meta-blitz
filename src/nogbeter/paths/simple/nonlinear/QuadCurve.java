@@ -22,9 +22,12 @@ public class QuadCurve extends Curve{
 	
 	public final Vec p0,p1,p2;
 	
+	public QuadCurve(Vec p0,Vec p1, Vec p2, Interval tInterval){
+		this(p0,p1,p2,tInterval,null,null);
+	}
 	
-	public QuadCurve(Vec p0,Vec p1, Vec p2, Interval tInterval) {
-		super(tInterval);
+	public QuadCurve(Vec p0,Vec p1, Vec p2, Interval tInterval,SimplePath lsimp, SimplePath rsimp) {
+		super(tInterval,lsimp,rsimp);
 		this.p0 = p0;
 		this.p1 = p1;
 		this.p2 = p2;
@@ -117,7 +120,7 @@ public class QuadCurve extends Curve{
 	}
 
 	@Override
-	public SimplePath getWithAdjustedStartPoint(Vec newStartPoint) {
+	public QuadCurve getWithAdjustedStartPoint(Vec newStartPoint) {
 		return PathFactory.createQuad(newStartPoint,p1,p2,tInterval);
 	}
 
@@ -143,5 +146,11 @@ public class QuadCurve extends Curve{
 		return PathFactory.createQuad(t.to(p0),t.to(p1),t.to(p2),tInterval);
 	}
 
+
+	@Override
+	Curve getWithNewSimpleAndInterval(SimplePath lsimp,
+			SimplePath rsimp, Interval interval) {
+		return new QuadCurve(p0, p1, p2,  interval, lsimp, rsimp);
+	}
 
 }

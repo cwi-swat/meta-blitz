@@ -1,8 +1,10 @@
 package nogbeter.paths.simple;
 
 import static nogbeter.paths.results.transformers.TupleTransformers.unitTup;
+import bezier.util.Tuple;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
+import nogbeter.paths.SimplyIndexedPath;
 import nogbeter.paths.SplittablePath;
 import nogbeter.paths.results.intersections.IIntersections;
 import nogbeter.paths.results.intersections.Intersections;
@@ -13,14 +15,13 @@ import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
 import nogbeter.points.oned.Interval;
 import nogbeter.points.twod.Vec;
 
-public abstract class SimplePath extends SplittablePath<SimplePathIndex>{
+public abstract class SimplePath extends SimplyIndexedPath{
 
-	public final Interval tInterval;
-	
+
 	public SimplePath(Interval tInterval) {
-		this.tInterval=tInterval;
+		super(tInterval);
 	}
-	
+
 	public Vec getStartPoint(){
 		return getAtLocal(0.0);
 	}
@@ -33,13 +34,13 @@ public abstract class SimplePath extends SplittablePath<SimplePathIndex>{
 	public abstract Vec getTangentAtLocal(double t);
 	
 	@Override
-	public Vec getAt(SimplePathIndex t){
-		return getAtLocal(tInterval.getFactorForPoint(t.t));
+	public Vec getAtSimply(double t){
+		return getAtLocal(tInterval.getFactorForPoint(t));
 	}
 	
 	@Override
-	public Vec getTangentAt(SimplePathIndex t){
-		return getTangentAtLocal(tInterval.getFactorForPoint(t.t));
+	public Vec getTangentAtSimply(double t){
+		return getTangentAtLocal(tInterval.getFactorForPoint(t));
 	}
 	
 	
@@ -72,33 +73,6 @@ public abstract class SimplePath extends SplittablePath<SimplePathIndex>{
 
 	public abstract int awtCurSeg(float[] coords) ;
 	
-	@Override
-	public IPathIndexTransformer<SimplePathIndex> getLeftTransformer() {
-		return PITransformers.unit;
-	}
-
-	@Override
-	public IPathIndexTransformer<SimplePathIndex> getRightTransformer() {
-		return PITransformers.unit;
-	}
+	public abstract Tuple<Path<SimplePathIndex>,Double> normaliseToLength(double prevLength);
 	
-	@Override
-	public <B extends PathIndex> PathIndexTupleTransformer<SimplePathIndex, B> getLeftLeftTransformer() {
-		return unitTup;
-	}
-
-	@Override
-	public <B extends PathIndex> PathIndexTupleTransformer<SimplePathIndex, B> getLeftRightTransformer() {
-		return unitTup;
-	}
-
-	@Override
-	public <B extends PathIndex> PathIndexTupleTransformer<B,SimplePathIndex> getRightLeftTransformer() {
-		return unitTup;
-	}
-
-	@Override
-	public <B extends PathIndex> PathIndexTupleTransformer<B,SimplePathIndex> getRightRightTransformer() {
-		return unitTup;
-	}
 }

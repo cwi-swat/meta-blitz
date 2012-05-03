@@ -131,4 +131,10 @@ public abstract class Path
 	}
 	
 	public abstract Path<PathParam> transform(AffineTransformation t);
+	
+	public Path<PathParam> normaliseToLength(){
+		return normaliseToLength(0).l;
+	}
+	
+	public abstract Tuple<Path<PathParam>,Double> normaliseToLength(double prevLength);
 }

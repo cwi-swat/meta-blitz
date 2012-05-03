@@ -23,7 +23,7 @@ public abstract class Line extends SimplePath {
 		return BBox.fromPoints(getStartPoint(), getEndPoint());
 	}
 	@Override
-	public SimplePath getWithAdjustedStartPoint(Vec newStartPoint) {
+	public Line getWithAdjustedStartPoint(Vec newStartPoint) {
 		return PathFactory.createLine(newStartPoint, getEndPoint(),tInterval);
 	}
 	
@@ -61,6 +61,10 @@ public abstract class Line extends SimplePath {
 	}
 	
 
+	public double length(){
+		return getStartPoint().distance(getEndPoint());
+	}
+	
 	@Override
 	public int awtCurSeg(float[] coords) {
 		Vec end = getEndPoint();
@@ -70,9 +74,16 @@ public abstract class Line extends SimplePath {
 	
 
 	@Override
-	public Path<SimplePathIndex> transform(
+	public Line transform(
 			AffineTransformation t) {
 		return PathFactory.createLine(t.to(getStartPoint()), t.to(getEndPoint()));
 	}
 	
+	@Override
+	public Tuple<Path<SimplePathIndex>,Double> normaliseToLength(double prevLength) {
+		double nl = prevLength + length();
+		return new Tuple<Path<SimplePathIndex>, Double>(
+			PathFactory.createLine(getStartPoint(),getEndPoint(),new Interval(prevLength,nl)),
+			nl);
+	}
 }
