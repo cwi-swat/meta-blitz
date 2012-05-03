@@ -77,12 +77,12 @@ public class QuadCurve extends Curve{
 
 	@Override
 	public
-	Tuple<QuadCurve,QuadCurve> split(double t) {
+	Tuple<Curve,Curve> split(double t) {
 		Vec cl = p0.interpolate(t, p1);
 		Vec cr = p1.interpolate(t, p2);
 		Vec cm = cl.interpolate(t, cr);
 		STuple<Interval> st = tInterval.split();
-		return new Tuple<QuadCurve,QuadCurve>( new QuadCurve(p0,cl,cm,st.l),
+		return new Tuple<Curve,Curve>( new QuadCurve(p0,cl,cm,st.l),
 				 new QuadCurve(cm,cr,p2,st.r));
 	}
 
@@ -138,7 +138,7 @@ public class QuadCurve extends Curve{
 
 
 	@Override
-	public Path<SimplePathIndex, SimplePath, SimplePath> transform(
+	public QuadCurve transform(
 			AffineTransformation t) {
 		return PathFactory.createQuad(t.to(p0),t.to(p1),t.to(p2),tInterval);
 	}

@@ -16,7 +16,9 @@ import nogbeter.points.twod.Vec;
 import nogbeter.transform.AffineTransformation;
 import bezier.util.Tuple;
 
-public abstract class Path<PathParam extends PathIndex,LSimp extends Path,RSimp extends Path> {
+public abstract class Path
+	<PathParam extends PathIndex> 
+	{
 	
 	protected BBox bbox;
 
@@ -33,11 +35,9 @@ public abstract class Path<PathParam extends PathIndex,LSimp extends Path,RSimp 
 	public abstract Vec getTangentAt(PathParam t);
 	
 	
-	public abstract Tuple<LSimp,RSimp> splitSimpler() ;
 
-	public abstract <RPP extends PathIndex,RLSimp extends Path,RRSimp extends Path> 
-		IIntersections<PathParam, RPP> intersection(
-			Path<RPP,RLSimp,RRSimp> other);
+	public abstract <RPP extends PathIndex> IIntersections<PathParam, RPP> intersection(
+			Path<RPP> other);
 
 	public abstract IIntersections<SimplePathIndex, PathParam> intersectionLDiaLine(
 			DiagonalLine lhs);
@@ -58,23 +58,28 @@ public abstract class Path<PathParam extends PathIndex,LSimp extends Path,RSimp 
 
 
 	
-	public abstract <LPP extends PathIndex, LLSimp extends Path,LRSimp extends Path> IIntersections<LPP, PathParam> 
-			intersectionLSplittable(
-				SplittablePath<LPP,LLSimp,LRSimp> lhs);
+	public abstract <LPP extends PathIndex> 
+			IIntersections<LPP, PathParam> intersectionLSplittable(
+				SplittablePath<LPP> lhs);
 	
 	
 	public BestProject<PathParam> project(Vec p) {;
 		return project(Double.POSITIVE_INFINITY,p);
 	}
 	
-
+	
 	public abstract BestProject<PathParam> project(double best, Vec p);
 
+	public  <RPP extends PathIndex>  
+			BestProjectTup<PathParam, RPP>  project(
+					Path<RPP>  other){
+		return project(Double.POSITIVE_INFINITY, other);
+	}
 
-	public abstract <RPP extends PathIndex,RLS extends Path,RRS extends Path> 
+	public abstract <RPP extends PathIndex> 
 			BestProjectTup<PathParam, RPP> project(
 			double best,
-			Path<RPP,RLS,RRS>  other);
+			Path<RPP>  other);
 	
 	public abstract BestProjectTup<SimplePathIndex, PathParam> projectLDiaLine(
 			double best,
@@ -98,9 +103,9 @@ public abstract class Path<PathParam extends PathIndex,LSimp extends Path,RSimp 
 			double best,
 			ShapeSet lhs);
 	
-	public abstract <LPI extends PathIndex,LLS extends Path,LRS extends Path> BestProjectTup<LPI, PathParam> 
+	public abstract <LPI extends PathIndex> BestProjectTup<LPI, PathParam> 
 			projectLSplittable(
-			double best, Path<LPI,LLS,LRS> lhs) ;
+			double best, SplittablePath<LPI> lhs) ;
 	
 
 	protected double minDistTo(BBox br){
@@ -115,7 +120,7 @@ public abstract class Path<PathParam extends PathIndex,LSimp extends Path,RSimp 
 	public abstract Path getChild(int i);
 	
 
-	public abstract Path<PathParam,LSimp,RSimp> 
+	public abstract Path<PathParam> 
 		getWithAdjustedStartPoint(Vec newStartPoint);
 	
 	public abstract Vec getStartPoint();
@@ -125,5 +130,5 @@ public abstract class Path<PathParam extends PathIndex,LSimp extends Path,RSimp 
 		return getStartPoint().isEqError(getEndPoint());
 	}
 	
-	public abstract Path<PathParam,LSimp,RSimp> transform(AffineTransformation t);
+	public abstract Path<PathParam> transform(AffineTransformation t);
 }

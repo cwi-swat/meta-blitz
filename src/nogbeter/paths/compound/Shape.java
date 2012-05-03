@@ -9,10 +9,10 @@ import nogbeter.points.twod.Vec;
 import nogbeter.transform.AffineTransformation;
 
 
-public class Shape<LSimp extends Path, RSimp extends Path> extends CompoundSplittablePath<LSimp, RSimp> {
+public class Shape extends CompoundSplittablePath {
 
 	
-	public Shape(LSimp border, RSimp inside) {
+	public Shape(Path border, Path inside) {
 		super(border,inside); // border is left, inside is right!
 	}
 
@@ -30,7 +30,7 @@ public class Shape<LSimp extends Path, RSimp extends Path> extends CompoundSplit
 	}
 
 	@Override
-	public Path<SplitIndex, LSimp, RSimp> getWithAdjustedStartPoint(
+	public Path<SplitIndex> getWithAdjustedStartPoint(
 			Vec newStartPoint) {
 		throw new Error("Must implement , no mixins");
 	}
@@ -50,7 +50,7 @@ public class Shape<LSimp extends Path, RSimp extends Path> extends CompoundSplit
 	}
 
 	@Override
-	public Path<SplitIndex, LSimp, RSimp> transform(AffineTransformation t) {
+	public Shape transform(AffineTransformation t) {
 		return new Shape(left.transform(t),right.transform(t));
 	}
 

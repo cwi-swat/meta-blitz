@@ -12,6 +12,7 @@ import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.factory.PathFactory;
 import nogbeter.paths.results.project.BestProjectTup;
+import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.points.oned.Interval;
@@ -105,7 +106,7 @@ public class CubicCurve extends Curve{
 	}
 
 	@Override
-	Tuple<CubicCurve,CubicCurve> split(double t) {
+	Tuple<Curve,Curve> split(double t) {
 		Vec l0, l1, l2, l3;
 		Vec r0, r1, r2, r3;
 		l0 = p0;
@@ -117,7 +118,7 @@ public class CubicCurve extends Curve{
 		r1 = inter.interpolate(t, r2);
 		l3 = r0 = l2.interpolate(t, r1);
 		STuple<Interval> st = tInterval.split();
-		return new  Tuple<CubicCurve,CubicCurve>(
+		return new  Tuple<Curve,Curve>(
 				new CubicCurve(l0,l1,l2,l3,st.l),
 				new CubicCurve(r0,r1,r2,r3,st.r));
 	}
@@ -173,10 +174,11 @@ public class CubicCurve extends Curve{
 	}
 
 	@Override
-	public Path<SimplePathIndex, SimplePath, SimplePath> transform(
+	public CubicCurve transform(
 			AffineTransformation t) {
 		return PathFactory.createCubic(t.to(p0),t.to(p1),t.to(p2),t.to(p3),tInterval);
 	}
+
 
 
 }

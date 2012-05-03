@@ -2,9 +2,7 @@ package nogbeter.paths.results.intersections;
 
 
 import nogbeter.paths.PathIndex;
-import nogbeter.paths.results.transformers.IPathIndexTransformer;
 import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
-import nogbeter.points.twod.Vec;
 
 public class Intersection<LI extends PathIndex,RI extends PathIndex> {
 

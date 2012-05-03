@@ -13,7 +13,7 @@ public class Interval {
 			new Interval(	Double.POSITIVE_INFINITY,
 							Double.NEGATIVE_INFINITY);
 	
-	public final double low, high;
+	public final double low, high, length;
 
 	public Interval(double a, double b) {
 		if(a > b){
@@ -23,6 +23,7 @@ public class Interval {
 		}
 		this.low = a;
 		this.high = b;
+		this.length = b - a;
 	}
 	
 	public boolean isInside(double x){
@@ -93,7 +94,7 @@ public class Interval {
 	
 	public STuple<Double> closestPoints(Interval other){
 		switch(intervalIntervalLocation(other)){
-		case INSIDE: double x= intersection(other).low;
+		case INSIDE: double x= intersection(other).middle();
 					 return new STuple<Double>(x, x);
 		case LEFT_OF: return new STuple<Double>(low, other.high);
 		case RIGHT_OF: return new STuple<Double>(high, other.low);
@@ -115,11 +116,11 @@ public class Interval {
 	}
 	
 	public double length(){
-		return high - low;
+		return length;
 	}
 	
 	public double getAtFactor(double factor){
-		return (high - low) * factor + low;
+		return length * factor + low;
 	}
 	
 	public STuple<Interval> split(double factor){
@@ -145,7 +146,7 @@ public class Interval {
 	}
 	
 	public double getFactorForPoint(double p){
-		return (p - low)/(high - low);
+		return (p - low)/length;
 	}
 
 	public static boolean overlap(Interval a, Interval b) {

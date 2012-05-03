@@ -1,9 +1,10 @@
 package nogbeter.paths.results.transformers;
 
 import nogbeter.paths.PathIndex;
-
+import nogbeter.paths.results.transformers.PITransformers;
 public class PathIndexTupleTransformer<LI extends PathIndex,RI extends PathIndex>{
 
+	
 	 public final IPathIndexTransformer<LI> left;
 	 public final IPathIndexTransformer<RI> right;
 	 public final boolean doesNothing;

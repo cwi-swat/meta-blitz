@@ -4,15 +4,17 @@ import java.util.List;
 
 import bezier.util.Tuple;
 import nogbeter.paths.Path;
+import nogbeter.paths.PathIndex;
 import nogbeter.paths.results.transformers.IPathIndexTransformer;
+import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.points.twod.Vec;
 import nogbeter.transform.AffineTransformation;
 
-public class Append<LSimp extends Path,RSimp extends Path> 
-			extends CompoundSplittablePath<LSimp,RSimp> {
+public class Append 
+			extends CompoundSplittablePath {
 
-	public Append(LSimp left, RSimp right) {
+	public Append(Path left, Path right) {
 		super(left, right);
 	}
 
@@ -32,7 +34,7 @@ public class Append<LSimp extends Path,RSimp extends Path>
 	}
 
 	@Override
-	public Append<LSimp, RSimp> getWithAdjustedStartPoint(Vec newStartPoint) {
+	public Append getWithAdjustedStartPoint(Vec newStartPoint) {
 		Path newL = left.getWithAdjustedStartPoint(newStartPoint);
 		return new Append(newL,right);
 	}
@@ -49,7 +51,7 @@ public class Append<LSimp extends Path,RSimp extends Path>
 
 
 	@Override
-	public Path<SplitIndex, LSimp, RSimp> transform(AffineTransformation t) {
+	public Append transform(AffineTransformation t) {
 		return new Append(left.transform(t),right.transform(t));
 	}
 	
@@ -57,6 +59,8 @@ public class Append<LSimp extends Path,RSimp extends Path>
 	public String toString() {
 		return String.format("(%s + %s)", left,right);
 	}
+
+
 	
 
 }

@@ -12,6 +12,7 @@ import nogbeter.paths.results.intersections.IIntersections;
 import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.paths.results.transformers.IPathIndexTransformer;
 import nogbeter.paths.results.transformers.PITransformers;
+import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.lines.DiagonalLine;
@@ -21,13 +22,15 @@ import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
 import nogbeter.transform.AffineTransformation;
 
-public abstract class CompoundSplittablePath<LSimp extends Path, RSimp extends Path>
-		extends SplittablePath<SplitIndex, LSimp, RSimp> {
+import static nogbeter.paths.results.transformers.TupleTransformers.*;
 
-	public final LSimp left;
-	public final RSimp right;
+public abstract class CompoundSplittablePath
+		extends SplittablePath<SplitIndex> {
 
-	public CompoundSplittablePath(LSimp left, RSimp right) {
+	public final Path left;
+	public final Path right;
+
+	public CompoundSplittablePath(Path left, Path right) {
 		this.left = left;
 		this.right = right;
 	}
@@ -60,8 +63,8 @@ public abstract class CompoundSplittablePath<LSimp extends Path, RSimp extends P
 	}
 
 	@Override
-	public Tuple<LSimp, RSimp> splitSimpler() {
-		return new Tuple<LSimp, RSimp>(left, right);
+	public Tuple<Path, Path> splitSimpler() {
+		return new Tuple<Path, Path>(left, right);
 	}
 	
 	public int nrChildren(){
@@ -83,6 +86,26 @@ public abstract class CompoundSplittablePath<LSimp extends Path, RSimp extends P
 	}
 
 
+	@Override
+	public <B extends PathIndex> PathIndexTupleTransformer<SplitIndex, B> getLeftLeftTransformer() {
+		return (PathIndexTupleTransformer<SplitIndex, B>) leftLeft;
+	}
+
+	@Override
+	public <B extends PathIndex> PathIndexTupleTransformer<SplitIndex, B> getLeftRightTransformer() {
+		return (PathIndexTupleTransformer<SplitIndex, B>) leftRight;
+	}
+
+	@Override
+	public <B extends PathIndex> PathIndexTupleTransformer<B, SplitIndex> getRightLeftTransformer() {
+		return (PathIndexTupleTransformer<B, SplitIndex>) rightLeft;
+	}
+
+	@Override
+	public <B extends PathIndex> PathIndexTupleTransformer<B, SplitIndex> getRightRightTransformer() {
+		return (PathIndexTupleTransformer<B, SplitIndex>) rightRight;
+	}
+	
 
 	
 }

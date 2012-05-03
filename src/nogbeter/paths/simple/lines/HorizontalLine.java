@@ -35,9 +35,9 @@ public abstract class HorizontalLine extends Line {
 	abstract double getTForX(double x);
 	
 	@Override
-	public  <RPP extends PathIndex,RLS extends Path,RRS extends Path>
+	public  <RPP extends PathIndex>
 		IIntersections<SimplePathIndex, RPP> intersection(
-			Path<RPP,RLS,RRS> other) {
+			Path<RPP> other) {
 		return other.intersectionLHorLine(this);
 	}
 
@@ -97,9 +97,9 @@ public abstract class HorizontalLine extends Line {
 	}
 	
 	@Override
-	public <LPP extends PathIndex, LLSimp extends Path, LRSimp extends Path> 
+	public <LPP extends PathIndex> 
 		IIntersections<LPP, SimplePathIndex> intersectionLSplittable(
-			SplittablePath<LPP, LLSimp, LRSimp> lhs) {
+			SplittablePath<LPP> lhs) {
 		return lhs.intersectionLHorLine(this).flip();
 	}
 
@@ -118,8 +118,9 @@ public abstract class HorizontalLine extends Line {
 	}
 	
 	@Override
-	public <RPP extends PathIndex,RLS extends Path,RRS extends Path> BestProjectTup<SimplePathIndex, RPP> project(
-			double best, Path<RPP,RLS,RRS> other) {
+	public <RPP extends PathIndex> 
+		BestProjectTup<SimplePathIndex, RPP> project(
+			double best, Path<RPP> other) {
 		return other.projectLHorLine(best, this);
 	}
 
@@ -157,6 +158,11 @@ public abstract class HorizontalLine extends Line {
 		return lhs.projectLHorLine(best, this).flip();
 	}
 	
+	public <LPI extends PathIndex> 
+		BestProjectTup<LPI, SimplePathIndex> 
+		projectLSplittable(double best, SplittablePath<LPI> lhs) {
+		return lhs.projectLHorLine(best, this).flip();
+	}
 
 	@Override
 	public

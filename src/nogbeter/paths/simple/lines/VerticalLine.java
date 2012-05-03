@@ -35,9 +35,9 @@ public abstract class VerticalLine extends Line {
 	abstract double getTForY(double y);
 	
 	@Override
-	public <RPP extends PathIndex,RLS extends Path,RRS extends Path> 
+	public <RPP extends PathIndex> 
 		IIntersections<SimplePathIndex, RPP> intersection(
-			Path<RPP,RLS,RRS> other) {
+			Path<RPP> other) {
 		return other.intersectionLVerLine(this);
 	}
 
@@ -94,9 +94,9 @@ public abstract class VerticalLine extends Line {
 	}
 	
 	@Override
-	public <LPP extends PathIndex, LLSimp extends Path, LRSimp extends Path> 
+	public <LPP extends PathIndex> 
 		IIntersections<LPP, SimplePathIndex> intersectionLSplittable(
-			SplittablePath<LPP, LLSimp, LRSimp> lhs) {
+			SplittablePath<LPP> lhs) {
 		return lhs.intersectionLVerLine(this).flip();
 	}
 
@@ -115,9 +115,9 @@ public abstract class VerticalLine extends Line {
 	}
 	
 	@Override
-	public <RPP extends PathIndex,RLS extends Path,RRS extends Path> 
+	public <RPP extends PathIndex> 
 			BestProjectTup<SimplePathIndex, RPP>  project(
-			double best, Path<RPP,RLS,RRS> other) {
+			double best, Path<RPP> other) {
 		return other.projectLVerLine(best, this);
 	}
 
@@ -144,8 +144,15 @@ public abstract class VerticalLine extends Line {
 	}
 
 	@Override
-	public BestProjectTup<SetIndex, SimplePathIndex> projectLSet(double best,
-			ShapeSet lhs) {
+	public 
+	BestProjectTup<SetIndex, SimplePathIndex> 
+	projectLSet(double best,ShapeSet lhs) {
+		return lhs.projectLVerLine(best, this).flip();
+	}
+	
+	public <LPI extends PathIndex> 
+	BestProjectTup<LPI, SimplePathIndex> 
+	projectLSplittable(double best, SplittablePath<LPI> lhs) {
 		return lhs.projectLVerLine(best, this).flip();
 	}
 

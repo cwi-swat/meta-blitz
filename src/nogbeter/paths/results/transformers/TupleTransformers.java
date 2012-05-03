@@ -8,27 +8,16 @@ import nogbeter.paths.compound.SplitIndex;
 public class TupleTransformers {
 
 	
-	public static <A extends PathIndex, B extends PathIndex> 
-		PathIndexTupleTransformer<A,B> unitTup() {
-		return new PathIndexTupleTransformer(unit,unit);
-	}
-	public static <B extends PathIndex> 
-		PathIndexTupleTransformer<SplitIndex,B> leftLeft() { 
-		return new PathIndexTupleTransformer(splitLeft, unit);
-	}
-	public static <B extends PathIndex> 
-		PathIndexTupleTransformer<SplitIndex,B> leftRight(){
-		return new PathIndexTupleTransformer(splitRight, unit);
-	}
+	public static  PathIndexTupleTransformer unitTup =new PathIndexTupleTransformer(unit,unit);
+
+	public static PathIndexTupleTransformer<SplitIndex,?> leftLeft= left(splitLeft);
 	
-	public static <A extends PathIndex> 
-		PathIndexTupleTransformer<A,SplitIndex> rightLeft (){
-			return new PathIndexTupleTransformer(unit, splitLeft);
-	}
-	public static <A extends PathIndex> 
-		PathIndexTupleTransformer<A,SplitIndex> rightRight(){
-			return new PathIndexTupleTransformer(unit, splitRight);
-	}
+	public static PathIndexTupleTransformer<SplitIndex,?> leftRight = left(splitRight);
+	
+	public static PathIndexTupleTransformer<?,SplitIndex> rightLeft = right(splitLeft);
+	
+	public static PathIndexTupleTransformer<?,SplitIndex> rightRight = right(splitRight);
+
 	public static <PI extends PathIndex>  PathIndexTupleTransformer<SetIndex,PI> setLeft(int i){
 		return new PathIndexTupleTransformer<SetIndex, PI>(setTrans(i),unit);
 	}

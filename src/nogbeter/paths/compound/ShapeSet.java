@@ -25,7 +25,7 @@ import nogbeter.points.twod.Vec;
 import nogbeter.transform.AffineTransformation;
 
 import static nogbeter.paths.results.transformers.TupleTransformers.*;
-public class ShapeSet extends Path<SetIndex, Path, Path>{
+public class ShapeSet extends Path<SetIndex>{
 
 	public final List<Path> shapes;
 	
@@ -57,18 +57,14 @@ public class ShapeSet extends Path<SetIndex, Path, Path>{
 	}
 
 	@Override
-	public Tuple<Path, Path> splitSimpler() {
-		throw new Error("Not splitting set!");
-	}
-
-	@Override
-	public <RPP extends PathIndex, RLSimp extends Path, RRSimp extends Path> IIntersections<SetIndex, RPP> intersection(
-			Path<RPP, RLSimp, RRSimp> other) {
+	public <RPP extends PathIndex> 
+	IIntersections<SetIndex, RPP> 
+	intersection(Path<RPP> other) {
 		return other.intersectionLSet(this);
 	}
 
-	private <PPI extends PathIndex,LS extends Path,RS extends Path> 
-	IIntersections<PPI,SetIndex>  intersections(Path<PPI,LS,RS> lhs){
+	private <PPI extends PathIndex> 
+	IIntersections<PPI,SetIndex>  intersections(Path<PPI> lhs){
 		IIntersections<PPI,SetIndex> res = Intersections.NoIntersections;
 		if(lhs.getBBox().overlaps(getBBox())){
 			for(int i = 0 ; i < shapes.size() ; i++){
@@ -105,8 +101,9 @@ public class ShapeSet extends Path<SetIndex, Path, Path>{
 	
 
 	@Override
-	public <PPI extends PathIndex,LS extends Path,RS extends Path> 
-		IIntersections<PPI,SetIndex> intersectionLSplittable(SplittablePath<PPI, LS, RS> lhs) {
+	public <PPI extends PathIndex> 
+	IIntersections<PPI,SetIndex> 
+	intersectionLSplittable(SplittablePath<PPI> lhs) {
 		return intersections(lhs);
 	}
 
@@ -127,14 +124,15 @@ public class ShapeSet extends Path<SetIndex, Path, Path>{
 	}
 
 	@Override
-	public <RPP extends PathIndex, RLS extends Path, RRS extends Path> BestProjectTup<SetIndex, RPP> project(
-			double best, Path<RPP, RLS, RRS> other) {
+	public <RPP extends PathIndex>
+	BestProjectTup<SetIndex, RPP> 
+	project(double best, Path<RPP> other) {
 		return other.projectLSet(best, this);
 	}
 
 
-	private <RPP extends PathIndex, LS extends Path, RS extends Path>
-	BestProjectTup<RPP,SetIndex>  projects(double best, Path<RPP,LS,RS> lhs){
+	private <RPP extends PathIndex>
+	BestProjectTup<RPP,SetIndex>  projects(double best, Path<RPP> lhs){
 		
 		BestProjectTup<RPP,SetIndex> res = new BestProjectTup(best);
 		if(minDistTo(lhs.getBBox()) < best){
@@ -172,8 +170,9 @@ public class ShapeSet extends Path<SetIndex, Path, Path>{
 	
 
 	@Override
-	public <LPI extends PathIndex, LLS extends Path, LRS extends Path> BestProjectTup<LPI, SetIndex> projectLSplittable(
-			double best, Path<LPI, LLS, LRS> lhs) {
+	public <LPI extends PathIndex> 
+	BestProjectTup<LPI, SetIndex>
+	projectLSplittable(double best, SplittablePath<LPI> lhs) {
 		if(minDistTo(lhs.getBBox()) > best){
 			return BestProjectTup.noBestYet;
 		}
@@ -182,14 +181,14 @@ public class ShapeSet extends Path<SetIndex, Path, Path>{
 		if(getBBox().area()/shapes.size() > lhs.getBBox().area()/2.0 ){
 			return projects(best, lhs);
 		} else {
-			Tuple<LLS,LRS> sp = lhs.splitSimpler();
+			Tuple<Path,Path> sp = lhs.splitSimpler();
 			if(sp.l.getBBox().avgDistSquared(getBBox().getMiddle()) <
 					sp.l.getBBox().avgDistSquared(getBBox().getMiddle())){
-				BestProjectTup<LPI, SetIndex> res = sp.l.project(best, this).transform(leftLeft());
-				return res.choose(sp.r.project(res.distSquared, this).transform(leftRight()));
+				BestProjectTup<LPI, SetIndex> res = sp.l.project(best, this).transform(lhs.getLeftLeftTransformer());
+				return res.choose(sp.r.project(res.distSquared, this).transform(lhs.getLeftRightTransformer()));
 			} else {
-				BestProjectTup<LPI, SetIndex> res = sp.r.project(best, this).transform(leftRight());
-				return res.choose(sp.l.project(res.distSquared, this).transform(leftLeft()));
+				BestProjectTup<LPI, SetIndex> res = sp.r.project(best, this).transform(lhs.getLeftRightTransformer());
+				return res.choose(sp.l.project(res.distSquared, this).transform(lhs.getLeftLeftTransformer()));
 			}
 		}
 		
@@ -226,7 +225,7 @@ public class ShapeSet extends Path<SetIndex, Path, Path>{
 	}
 
 	@Override
-	public Path<SetIndex, Path, Path> transform(AffineTransformation t) {
+	public ShapeSet transform(AffineTransformation t) {
 		List<Path> res = new ArrayList<Path>(shapes.size());
 		for(Path p : shapes){
 			res.add(p.transform(t));

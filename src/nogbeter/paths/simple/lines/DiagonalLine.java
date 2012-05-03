@@ -166,9 +166,8 @@ public class DiagonalLine extends Line {
 	}
 
 	@Override
-	public  <RPP extends PathIndex ,RLS extends Path,RRS extends Path> 
-			IIntersections<SimplePathIndex, RPP> intersection(
-			Path<RPP,RLS,RRS> other) {
+	public  <RPP extends PathIndex> 
+			IIntersections<SimplePathIndex, RPP> intersection(Path<RPP> other) {
 		return other.intersectionLDiaLine(this);
 	}
 
@@ -217,9 +216,9 @@ public class DiagonalLine extends Line {
 	}
 	
 	@Override
-	public <LPP extends PathIndex, LLSimp extends Path, LRSimp extends Path> 
-		IIntersections<LPP, SimplePathIndex> intersectionLSplittable(
-			SplittablePath<LPP, LLSimp, LRSimp> lhs) {
+	public <LPP extends PathIndex> 
+		IIntersections<LPP, SimplePathIndex> 
+		intersectionLSplittable(SplittablePath<LPP> lhs) {
 		return lhs.intersectionLDiaLine(this).flip();
 	}
 
@@ -265,37 +264,39 @@ public class DiagonalLine extends Line {
 
 
 	public double minDistSquaredTo(BBox b){
-		STuple<Interval> tIntervals = getTIntervalsBBox(b);
-		if(Interval.overlap(tIntervals.l,tIntervals.r)){
-			return 0;
-		} else {
-			double res = Double.POSITIVE_INFINITY;
-			if(tIntervals.l != emptyInterval){
-				Interval xyInterval = 
-						new Interval(	getYAt(tIntervals.l.low), 
-										getYAt(tIntervals.l.high));
-				res = min(res, square(xyInterval.minDistance(b.yInterval)));
-			}
-			if(tIntervals.r != emptyInterval){
-				Interval yxInterval = 
-						new Interval(	getYAt(tIntervals.r.low), 
-										getYAt(tIntervals.r.high));
-				res = min(res, square(yxInterval.minDistance(b.xInterval)));
-			}
-			res = min(res, distanceSquared(b.getLeftUp()));
-			res = min(res, distanceSquared(b.getLeftDown()));
-			res = min(res, distanceSquared(b.getRightUp()));
-			res = min(res, distanceSquared(b.getRightDown()));
-			return res;
-		}
+		return minDistTo(b);
+//		STuple<Interval> tIntervals = getTIntervalsBBox(b);
+//		if(Interval.overlap(tIntervals.l,tIntervals.r)){
+//			return 0;
+//		} else {
+//			double res = Double.POSITIVE_INFINITY;
+//			if(tIntervals.l != emptyInterval){
+//				Interval xyInterval = 
+//						new Interval(	getYAt(tIntervals.l.low), 
+//										getYAt(tIntervals.l.high));
+//				res = min(res, square(xyInterval.minDistance(b.yInterval)));
+//			}
+//			if(tIntervals.r != emptyInterval){
+//				Interval yxInterval = 
+//						new Interval(	getYAt(tIntervals.r.low), 
+//										getYAt(tIntervals.r.high));
+//				res = min(res, square(yxInterval.minDistance(b.xInterval)));
+//			}
+//			res = min(res, distanceSquared(b.getLeftUp()));
+//			res = min(res, distanceSquared(b.getLeftDown()));
+//			res = min(res, distanceSquared(b.getRightUp()));
+//			res = min(res, distanceSquared(b.getRightDown()));
+//			return res;
+//		}
 	}
 	
 
 
 
 	@Override
-	public <RPP extends PathIndex,RLS extends Path,RRS extends Path>  BestProjectTup<SimplePathIndex, RPP> project(
-			double best, Path<RPP,RLS,RRS>other) {
+	public <RPP extends PathIndex>  
+			BestProjectTup<SimplePathIndex, RPP> 
+			project(double best, Path<RPP>other) {
 		return other.projectLDiaLine(best, this);
 	}
 
@@ -321,14 +322,14 @@ public class DiagonalLine extends Line {
 		BestProjectTup<SimplePathIndex, SimplePathIndex> res = BestProjectTup.noBestYet;
 		if(txInterval != null){
 			Vec lowv = getAtLocal(txInterval.low); Vec highv = getAtLocal(txInterval.high);
-			double lowDist = lowv.y - lhs.y; double highDist = highv.y - lhs.y;
+			double lowDist = square(lowv.y - lhs.y); double highDist = square(highv.y - lhs.y);
 			if(lowDist < highDist){
 				res = res.choose(
-						makeBestProject(square(lowDist), lhs, lhs.getTForX(lowv.x), txInterval.low)
+						makeBestProject(lowDist, lhs, lhs.getTForX(lowv.x), txInterval.low)
 						);
 			} else {
 				res = res.choose(
-						makeBestProject(square(lowDist), lhs, lhs.getTForX(highv.x), txInterval.high)
+						makeBestProject(highDist, lhs, lhs.getTForX(highv.x), txInterval.high)
 					);
 			}
 		} 
@@ -343,19 +344,19 @@ public class DiagonalLine extends Line {
 	public BestProjectTup<SimplePathIndex, SimplePathIndex> projectLVerLine(
 			double best, VerticalLine lhs) {
 		Interval tyInterval = new Interval(
-				getTAtX(lhs.yInterval.low),
-				getTAtX(lhs.yInterval.high)).intersection(interval01);
+				getTAtY(lhs.yInterval.low),
+				getTAtY(lhs.yInterval.high)).intersection(interval01);
 		BestProjectTup<SimplePathIndex, SimplePathIndex> res = BestProjectTup.noBestYet;
 		if(tyInterval != null){
 			Vec lowv = getAtLocal(tyInterval.low); Vec highv = getAtLocal(tyInterval.high);
-			double lowDist = lowv.x - lhs.x; double highDist = highv.x - lhs.x;
+			double lowDist = square(lowv.x - lhs.x); double highDist = square(highv.x - lhs.x);
 			if(lowDist < highDist){
 				res = res.choose(
-						makeBestProject(square(lowDist), lhs, lhs.getTForY(lowv.x), tyInterval.low)
+						makeBestProject(lowDist, lhs, lhs.getTForY(lowv.y), tyInterval.low)
 					);
 			} else {
 				res = res.choose(
-						makeBestProject(square(lowDist), lhs, lhs.getTForY(highv.x), tyInterval.high)
+						makeBestProject(highDist, lhs, lhs.getTForY(highv.y), tyInterval.high)
 					);
 			}
 		} 
@@ -372,5 +373,10 @@ public class DiagonalLine extends Line {
 		return lhs.projectLDiaLine(best, this).flip();
 	}
 	
+	public <LPI extends PathIndex>
+			BestProjectTup<LPI, SimplePathIndex> 
+			projectLSplittable(double best, SplittablePath<LPI> lhs) {
+		return lhs.projectLDiaLine(best, this).flip();
+	}
 
 }

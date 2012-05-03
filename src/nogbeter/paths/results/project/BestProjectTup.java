@@ -40,7 +40,12 @@ public class BestProjectTup<L extends PathIndex,R extends PathIndex>{
 	BestProjectTup<LPI,RPI> transform(PathIndexTupleTransformer<LPI, RPI> trans){
 		return new BestProjectTup<LPI, RPI>(distSquared,trans.left.transform(l),
 									  trans.right.transform(r));	
-}
+	}
+	
+	public String toString(){
+		return "BestProjectTup("+distSquared + "," + l + "," + r + ")";
+	}
+	
 
 	
 }

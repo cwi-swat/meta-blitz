@@ -10,6 +10,7 @@ import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.results.intersections.IIntersections;
 import nogbeter.paths.results.project.BestProjectTup;
+import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.lines.DiagonalLine;
@@ -17,6 +18,8 @@ import nogbeter.paths.simple.lines.HorizontalLine;
 import nogbeter.paths.simple.lines.VerticalLine;
 import nogbeter.points.oned.Interval;
 import bezier.util.Tuple;
+
+import static nogbeter.paths.results.transformers.TupleTransformers.*;
 
 public abstract class Curve extends SimplePath {
 
@@ -38,7 +41,6 @@ public abstract class Curve extends SimplePath {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public Tuple<Curve,Curve> makeMonotomous() {
 		Tuple<Curve,Curve> result = split(xyRoots.get(0));
 		result.l.xyRoots = Collections.EMPTY_LIST;
@@ -70,9 +72,13 @@ public abstract class Curve extends SimplePath {
 		setXYRoots();
 		return xyRoots.size() == 0;
 	}
+	
+	
+	public Tuple<Path,Path> splitSimpler(){
+		return (Tuple)splitSimplerCurve();
+	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Tuple<SimplePath,SimplePath> splitSimpler() {
+	public Tuple<SimplePath,SimplePath> splitSimplerCurve() {
 		if (simpler == null) {
 			setXYRoots();
 			if (!isMonotomous()) {
@@ -89,15 +95,16 @@ public abstract class Curve extends SimplePath {
 
 	abstract SimplePath getSimplerApprox();
 
-	abstract <Sub extends Curve> Tuple<Sub,Sub> split(double t);
+	abstract Tuple<Curve,Curve> split(double t);
 
-	<Sub extends Curve> Tuple<Sub,Sub> split() {
+	Tuple<Curve,Curve> split() {
 		return split(0.5);
 	}
 
 	@Override
-	public <RPP extends PathIndex,RLS extends Path,RRS extends Path> IIntersections<SimplePathIndex, RPP> intersection(
-			Path<RPP,RLS,RRS> other) {
+	public <RPP extends PathIndex> 
+		IIntersections<SimplePathIndex, RPP> intersection(
+			Path<RPP> other) {
 		return other.intersectionLCurve(this);
 	}
 
@@ -128,35 +135,20 @@ public abstract class Curve extends SimplePath {
 
 	
 	@Override
-	public <RPP extends PathIndex,RLS extends Path,RRS extends Path>  BestProjectTup<SimplePathIndex, RPP> project(
-			double best, Path<RPP,RLS,RRS> other) {
+	public <RPP extends PathIndex>  
+		BestProjectTup<SimplePathIndex, RPP> project(
+			double best, Path<RPP> other) {
 		return other.projectLCurve(best, this);
 	}
 
-	@Override
-	public BestProjectTup<SimplePathIndex, SimplePathIndex> projectLDiaLine(double best,
-			DiagonalLine lhs) {
-		return  lhs.projectLCurve(best, this).flip();
-	}
-
-	@Override
-	public BestProjectTup<SimplePathIndex, SimplePathIndex> projectLHorLine(double best,
-			HorizontalLine lhs) {
-		return  lhs.projectLCurve(best, this).flip();
-	}
-
-	@Override
-	public BestProjectTup<SimplePathIndex, SimplePathIndex> projectLVerLine(double best,
-			VerticalLine lhs) {
-		return  lhs.projectLCurve(best, this).flip();
-	}
-	
 	@Override
 	public BestProjectTup<SetIndex, SimplePathIndex> projectLSet(double best,
 			ShapeSet lhs) {
 		return lhs.projectLCurve(best, this).flip();
 	}
 
+
+	
 	
 	
 }

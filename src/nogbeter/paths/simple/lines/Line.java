@@ -1,17 +1,9 @@
 package nogbeter.paths.simple.lines;
 
 import java.awt.geom.PathIterator;
-import java.util.List;
 
 import nogbeter.paths.Path;
-import nogbeter.paths.PathIndex;
-import nogbeter.paths.SplittablePath;
-import nogbeter.paths.compound.SplitIndex;
-import nogbeter.paths.compound.CompoundSplittablePath;
 import nogbeter.paths.factory.PathFactory;
-import nogbeter.paths.results.intersections.IIntersections;
-import nogbeter.paths.results.intersections.Intersections;
-import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.points.oned.Interval;
@@ -19,8 +11,6 @@ import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
 import nogbeter.transform.AffineTransformation;
 import bezier.util.Tuple;
-import bezier.util.Util;
-import static nogbeter.paths.results.transformers.TupleTransformers.*;
 
 public abstract class Line extends SimplePath {
 
@@ -39,14 +29,12 @@ public abstract class Line extends SimplePath {
 	
 	public abstract double minDistSquaredTo(BBox b);
 	
-
-
 	public abstract double distanceSquared(Vec v) ;
 	
 	public abstract boolean overlaps(BBox b) ;
 	
 	@Override
-	public Tuple<SimplePath,SimplePath> splitSimpler() {
+	public Tuple<Path,Path> splitSimpler() {
 		throw new Error("Cannot make" + this + "simpler!");
 	}
 	
@@ -82,7 +70,7 @@ public abstract class Line extends SimplePath {
 	
 
 	@Override
-	public Path<SimplePathIndex, SimplePath, SimplePath> transform(
+	public Path<SimplePathIndex> transform(
 			AffineTransformation t) {
 		return PathFactory.createLine(t.to(getStartPoint()), t.to(getEndPoint()));
 	}

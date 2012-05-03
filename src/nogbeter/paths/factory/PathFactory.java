@@ -51,14 +51,23 @@ public class PathFactory {
 	}
 	
 	public static Path createAppends(SimplePath ... paths){
+		if(paths.length == 1){
+			return paths[0];
+		}
 		return Append.createAppends(paths);
 	}
 	
 	public static Path createSet(Path ... paths){
+		if(paths.length == 1){
+			return paths[0];
+		}
 		return new ShapeSet(paths);
 	}
 
 	public static Path createShape(Path border, Path ... inside){
+		if(inside.length == 0){
+			return border;
+		}
 		return new Shape(border,createSet(inside));
 	}
 
