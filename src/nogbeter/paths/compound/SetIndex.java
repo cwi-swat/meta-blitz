@@ -15,4 +15,5 @@ public class SetIndex extends PathIndex {
 		return "Set("+choice+")" + (next == null? "" : "," + next.toString());
 	}
 
+	
 }

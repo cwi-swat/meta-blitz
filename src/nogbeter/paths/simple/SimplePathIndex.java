@@ -14,5 +14,4 @@ public class SimplePathIndex extends PathIndex {
 	public String toString(){
 		return "SimpInd("+t+")";
 	}
-	
 }

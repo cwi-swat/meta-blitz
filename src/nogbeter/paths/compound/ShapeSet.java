@@ -248,4 +248,9 @@ public class ShapeSet extends Path<SetIndex>{
 	public Tuple<Path<SetIndex>, Double> normaliseToLength(double prevLength) {
 		throw new Error("Cannot length normalise set!");
 	}
+
+	@Override
+	public Path getSegment(SetIndex p) {
+		return shapes.get(p.choice).getSegment(p.next);
+	}
 }

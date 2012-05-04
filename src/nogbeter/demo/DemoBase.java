@@ -1,5 +1,8 @@
 package nogbeter.demo;
 
+import static nogbeter.paths.factory.PathFactory.createAppends;
+import static nogbeter.paths.factory.PathFactory.createLine;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -19,6 +22,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import nogbeter.paths.Path;
+import nogbeter.paths.PathIndex;
 import nogbeter.paths.iterators.AWTPathIterator;
 import nogbeter.points.twod.Vec;
 
@@ -115,8 +119,12 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 		}
 	}
 	
-
 	public void drawLine(Vec at, Vec mouse) {
+		drawLine(at, mouse,ColorsAlpha.black);
+	}
+
+	public void drawLine(Vec at, Vec mouse, Sample4 color) {
+		g.setColor(fromSample(color));
 		g.drawLine(round(at.x), round(at.y),round(mouse.x), round(mouse.y));
 	}
 	
@@ -340,5 +348,15 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 		wheel += e.getUnitsToScroll();
 		repaint();
 	}
+	
+	public Path<PathIndex> rectangle(){
+		Vec a = new Vec(-1,-1);
+		Vec b = new Vec(1,-1);
+		Vec c = new Vec(1,1);
+		Vec d = new Vec(-1,1);
+//		Vec e = new Vec(150,50);
+		return createAppends(createLine(a,b), createLine(b,c), createLine(c,d),createLine(d,a));
+	}
+	
 
 }

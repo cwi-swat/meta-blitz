@@ -3,7 +3,7 @@ package nogbeter.paths.compound;
 import nogbeter.paths.PathIndex;
 
 
-public class SplitIndex extends PathIndex {
+public abstract class SplitIndex extends PathIndex {
 	
 	
 	public static enum SplitChoice{
@@ -20,5 +20,7 @@ public class SplitIndex extends PathIndex {
 	public String toString(){
 		return "Split("+choice+")" + (next == null? "" : "," + next.toString());
 	}
+
+	
 
 }

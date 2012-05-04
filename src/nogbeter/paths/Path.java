@@ -137,4 +137,6 @@ public abstract class Path
 	}
 	
 	public abstract Tuple<Path<PathParam>,Double> normaliseToLength(double prevLength);
+	
+	public abstract Path getSegment(PathParam p);
 }

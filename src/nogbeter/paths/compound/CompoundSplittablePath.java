@@ -24,8 +24,8 @@ import nogbeter.transform.AffineTransformation;
 
 import static nogbeter.paths.results.transformers.TupleTransformers.*;
 
-public abstract class CompoundSplittablePath
-		extends SplittablePath<SplitIndex> {
+public abstract class CompoundSplittablePath<P extends SplitIndex>
+		extends SplittablePath<P> {
 
 	public final Path left;
 	public final Path right;
@@ -75,37 +75,15 @@ public abstract class CompoundSplittablePath
 		return i == 0 ? left : right;
 	}
 	
-	@Override
-	public IPathIndexTransformer<SplitIndex> getLeftTransformer() {
-		return PITransformers.splitLeft;
-	}
 
 	@Override
-	public IPathIndexTransformer<SplitIndex> getRightTransformer() {
-		return PITransformers.splitRight;
+	public Path getSegment(P p) {
+		switch (p.choice) {
+		case Left:
+			return left.getSegment(p.next);
+		case Right:
+			return right.getSegment(p.next);
+		}
+		throw new Error("Unkown split choice:" + this + "\n");
 	}
-
-
-	@Override
-	public <B extends PathIndex> PathIndexTupleTransformer<SplitIndex, B> getLeftLeftTransformer() {
-		return (PathIndexTupleTransformer<SplitIndex, B>) leftLeft;
-	}
-
-	@Override
-	public <B extends PathIndex> PathIndexTupleTransformer<SplitIndex, B> getLeftRightTransformer() {
-		return (PathIndexTupleTransformer<SplitIndex, B>) leftRight;
-	}
-
-	@Override
-	public <B extends PathIndex> PathIndexTupleTransformer<B, SplitIndex> getRightLeftTransformer() {
-		return (PathIndexTupleTransformer<B, SplitIndex>) rightLeft;
-	}
-
-	@Override
-	public <B extends PathIndex> PathIndexTupleTransformer<B, SplitIndex> getRightRightTransformer() {
-		return (PathIndexTupleTransformer<B, SplitIndex>) rightRight;
-	}
-	
-
-	
 }

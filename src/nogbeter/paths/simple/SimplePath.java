@@ -50,7 +50,7 @@ public abstract class SimplePath extends SimplyIndexedPath{
 		SimplePathIndex l = lhs.makeGlobalPathIndexFromLocal(tl);
 		SimplePathIndex r = makeGlobalPathIndexFromLocal(tr);
 		return new Intersections<SimplePathIndex, SimplePathIndex>(l, r,
-				getAtLocal(tl), lhs.getTangentAtLocal(tl),getTangentAtLocal(tr));
+				lhs.getAtLocal(tl), lhs.getTangentAtLocal(tl),getTangentAtLocal(tr));
 	}
 	
 	public SimplePathIndex makeGlobalPathIndexFromLocal(double t){
@@ -76,4 +76,8 @@ public abstract class SimplePath extends SimplyIndexedPath{
 	
 	public abstract Tuple<Path<SimplePathIndex>,Double> normaliseToLength(double prevLength);
 	
+	@Override
+	public Path getSegment(SimplePathIndex p) {
+		return this;
+	}
 }

@@ -1,18 +1,18 @@
 package nogbeter.paths.compound;
 
-import java.util.List;
-
-import bezier.util.Tuple;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.results.transformers.IPathIndexTransformer;
+import nogbeter.paths.results.transformers.PITransformers;
 import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
+import nogbeter.paths.results.transformers.TupleTransformers;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.points.twod.Vec;
 import nogbeter.transform.AffineTransformation;
+import bezier.util.Tuple;
 
 public class Append 
-			extends CompoundSplittablePath {
+			extends CompoundSplittablePath<AppendIndex> {
 
 	public Append(Path left, Path right) {
 		super(left, right);
@@ -61,11 +61,48 @@ public class Append
 	}
 
 	@Override
-	public Tuple<Path<SplitIndex>, Double> normaliseToLength(double prevLength) {
+	public Tuple<Path<AppendIndex>, Double> normaliseToLength(double prevLength) {
 		Tuple<Path, Double> ln = left.normaliseToLength(prevLength);
 		Tuple<Path, Double> rn = right.normaliseToLength(ln.r);
-		return new Tuple<Path<SplitIndex>, Double>(new Append(ln.l, rn.l),rn.r);
+		return new Tuple<Path<AppendIndex>, Double>(new Append(ln.l, rn.l),rn.r);
 	}
+
+	@Override
+	public IPathIndexTransformer<AppendIndex> getLeftTransformer() {
+		return PITransformers.appendLeft;
+	}
+
+	@Override
+	public IPathIndexTransformer<AppendIndex> getRightTransformer() {
+		return PITransformers.appendRight;
+	}
+
+	@Override
+	public <B extends PathIndex> PathIndexTupleTransformer<AppendIndex, B> getLeftLeftTransformer() {
+		return (PathIndexTupleTransformer<AppendIndex, B>) TupleTransformers.aleftLeft;
+	}
+
+	@Override
+	public <B extends PathIndex> PathIndexTupleTransformer<AppendIndex, B> getLeftRightTransformer() {
+		return (PathIndexTupleTransformer<AppendIndex, B>) TupleTransformers.aleftRight;
+	}
+
+	@Override
+	public <B extends PathIndex> PathIndexTupleTransformer<B, AppendIndex> getRightLeftTransformer() {
+		return  (PathIndexTupleTransformer<B, AppendIndex>) TupleTransformers.arightLeft;
+	}
+
+	@Override
+	public <B extends PathIndex> PathIndexTupleTransformer<B, AppendIndex> getRightRightTransformer() {
+		return  (PathIndexTupleTransformer<B, AppendIndex>) TupleTransformers.arightRight;
+	}
+
+	@Override
+	public Path getSegment(AppendIndex p) {
+		return this;
+	}
+
+
 
 
 }

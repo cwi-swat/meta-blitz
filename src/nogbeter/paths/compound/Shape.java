@@ -5,13 +5,18 @@ import javax.swing.border.Border;
 import bezier.util.Tuple;
 
 import nogbeter.paths.Path;
+import nogbeter.paths.PathIndex;
 import nogbeter.paths.results.project.BestProjectTup;
+import nogbeter.paths.results.transformers.IPathIndexTransformer;
+import nogbeter.paths.results.transformers.PITransformers;
+import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
+import nogbeter.paths.results.transformers.TupleTransformers;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
 import nogbeter.transform.AffineTransformation;
 
 
-public class Shape extends CompoundSplittablePath {
+public class Shape extends CompoundSplittablePath<ShapeIndex> {
 
 	
 	public Shape(Path border, Path inside) {
@@ -32,7 +37,7 @@ public class Shape extends CompoundSplittablePath {
 	}
 
 	@Override
-	public Path<SplitIndex> getWithAdjustedStartPoint(
+	public Path<ShapeIndex> getWithAdjustedStartPoint(
 			Vec newStartPoint) {
 		throw new Error("Must implement , no mixins");
 	}
@@ -62,7 +67,40 @@ public class Shape extends CompoundSplittablePath {
 	}
 
 	@Override
-	public Tuple<Path<SplitIndex>, Double> normaliseToLength(double prevLength) {
+	public Tuple<Path<ShapeIndex>, Double> normaliseToLength(double prevLength) {
 		throw new Error("Cannot length normalise shape!");
 	}
+
+	@Override
+	public IPathIndexTransformer<ShapeIndex> getLeftTransformer() {
+		return PITransformers.shapeBorder;
+	}
+
+	@Override
+	public IPathIndexTransformer<ShapeIndex> getRightTransformer() {
+		return PITransformers.shapeInside;
+	}
+
+	@Override
+	public <B extends PathIndex> PathIndexTupleTransformer<ShapeIndex, B> getLeftLeftTransformer() {
+		return (PathIndexTupleTransformer<ShapeIndex, B>) TupleTransformers.leftBorder;
+	}
+
+	@Override
+	public <B extends PathIndex> PathIndexTupleTransformer<ShapeIndex, B> getLeftRightTransformer() {
+		return (PathIndexTupleTransformer<ShapeIndex, B>) TupleTransformers.leftInside;
+	}
+
+	@Override
+	public <B extends PathIndex> PathIndexTupleTransformer<B, ShapeIndex> getRightLeftTransformer() {
+		return (PathIndexTupleTransformer<B, ShapeIndex>) TupleTransformers.rightBorder;
+	}
+
+	@Override
+	public <B extends PathIndex> PathIndexTupleTransformer<B, ShapeIndex> getRightRightTransformer() {
+		return (PathIndexTupleTransformer<B, ShapeIndex>) TupleTransformers.rightInside;
+	}
+
+
+	
 }

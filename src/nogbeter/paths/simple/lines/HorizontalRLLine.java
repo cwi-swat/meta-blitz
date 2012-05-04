@@ -23,7 +23,7 @@ public class HorizontalRLLine extends HorizontalLine{
 
 	@Override
 	public Vec getTangentAtLocal(double t) {
-		return new Vec(0,1);
+		return new Vec(-1,0);
 	}
 	
 	@Override

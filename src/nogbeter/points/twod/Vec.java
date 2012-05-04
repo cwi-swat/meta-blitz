@@ -106,13 +106,6 @@ public final class Vec {
 		return Math.sqrt(distanceSquared(other));
 	}
 
-	public int compareXY(Vec vec) {
-		if(x == vec.x){
-			return Double.compare(y, vec.y);
-		} else {
-			return Double.compare(x, vec.x);
-		}
-	}
 
 	public boolean isEq(Vec vec) {
 		return x == vec.x && y == vec.y;

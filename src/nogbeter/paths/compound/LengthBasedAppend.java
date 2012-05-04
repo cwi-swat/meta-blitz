@@ -97,5 +97,6 @@ public class LengthBasedAppend extends SimplyIndexedPath{
 		return new Tuple<Path<SimplePathIndex>, Double>(this, right.tInterval.high);
 	}
 
+
 	
 }

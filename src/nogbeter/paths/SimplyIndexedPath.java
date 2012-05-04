@@ -1,6 +1,7 @@
 package nogbeter.paths;
 
 import static nogbeter.paths.results.transformers.TupleTransformers.unitTup;
+import nogbeter.paths.compound.AppendIndex;
 import nogbeter.paths.results.transformers.IPathIndexTransformer;
 import nogbeter.paths.results.transformers.PITransformers;
 import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
@@ -64,4 +65,9 @@ public abstract class SimplyIndexedPath extends SplittablePath<SimplePathIndex>{
 	public abstract SimplyIndexedPath transform(AffineTransformation t);
 	
 	public abstract SimplyIndexedPath getWithAdjustedStartPoint(Vec newStartPoint);
+	
+	@Override
+	public Path getSegment(SimplePathIndex p) {
+		return this;
+	}
 }
