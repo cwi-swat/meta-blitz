@@ -23,8 +23,8 @@ public class ProjectVecTest extends DemoBase{
 		private Path r;
 		
 		public ProjectVecTest() {
-			r = TextFactory.text2Paths("ws").transform(id.scale(5).translate(400, 400));
-			System.out.println(r);
+			r = TextFactory.text2Paths("s").transform(id.scale(5).translate(400, 400)).normaliseToLength();
+//			System.out.println(r);
 		}
 		
 		@Override
@@ -34,7 +34,7 @@ public class ProjectVecTest extends DemoBase{
 //			Path q = rectangle().transform(id.translate(-150,-150).translate(mouse));
 			draw(r);
 			BestProject<PathIndex> best = r.project(mouse);
-//			System.out.println(best);
+			System.out.println(best);
 //			System.out.println(r.getAt(best.t));
 			drawLine(r.getAt(best.t), mouse);
 

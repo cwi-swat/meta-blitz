@@ -2,6 +2,8 @@ package nogbeter.paths.compound;
 
 import javax.swing.border.Border;
 
+import bezier.util.Tuple;
+
 import nogbeter.paths.Path;
 import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.points.twod.BBox;
@@ -57,5 +59,10 @@ public class Shape extends CompoundSplittablePath {
 
 	public String toString(){
 		return "Shape(" + left.toString() + "--" + right.toString() + ")";
+	}
+
+	@Override
+	public Tuple<Path<SplitIndex>, Double> normaliseToLength(double prevLength) {
+		throw new Error("Cannot length normalise shape!");
 	}
 }

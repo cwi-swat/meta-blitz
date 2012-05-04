@@ -90,5 +90,12 @@ public class LengthBasedAppend extends SimplyIndexedPath{
 		return new LengthBasedAppend(left.transform(t), right.transform(t), tInterval);
 	}
 
+
+	@Override
+	public Tuple<Path<SimplePathIndex>, Double> normaliseToLength(
+			double prevLength) {
+		return new Tuple<Path<SimplePathIndex>, Double>(this, right.tInterval.high);
+	}
+
 	
 }

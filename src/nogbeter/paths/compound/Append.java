@@ -60,5 +60,12 @@ public class Append
 		return String.format("(%s + %s)", left,right);
 	}
 
+	@Override
+	public Tuple<Path<SplitIndex>, Double> normaliseToLength(double prevLength) {
+		Tuple<Path, Double> ln = left.normaliseToLength(prevLength);
+		Tuple<Path, Double> rn = right.normaliseToLength(ln.r);
+		return new Tuple<Path<SplitIndex>, Double>(new Append(ln.l, rn.l),rn.r);
+	}
+
 
 }

@@ -243,4 +243,9 @@ public class ShapeSet extends Path<SetIndex>{
 		build.append(")");
 		return build.toString();
 	}
+	
+	@Override
+	public Tuple<Path<SetIndex>, Double> normaliseToLength(double prevLength) {
+		throw new Error("Cannot length normalise set!");
+	}
 }
