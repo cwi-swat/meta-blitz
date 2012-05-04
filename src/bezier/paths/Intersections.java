@@ -45,22 +45,22 @@ public class Intersections {
 		}
 	}
 
-	public IntersectionType intersectionTypePar(double sig1, double sig2) {
-		if(sig1 == 0 && sig2 == 0){
-			return IntersectionType.Parallel;
-		} else if(sig1 == 0){
-			return IntersectionType.Exit;
-		} else { // sig2 == 0
-			return IntersectionType.Enter;
-		}
-	}
-	
-	private IntersectionType intersectionType(Vec dirA, Vec toInterB, Vec fromInterB){
-		Vec normA = dirA.perpendicularCCW();
-		double sig1 = Math.signum(normA.dot(toInterB));
-		double sig2 =  Math.signum(normA.dot(fromInterB));
-		return getIntersectionType(sig1, sig2);
-	}
+//	public IntersectionType intersectionTypePar(double sig1, double sig2) {
+//		if(sig1 == 0 && sig2 == 0){
+//			return IntersectionType.Parallel;
+//		} else if(sig1 == 0){
+//			return IntersectionType.Exit;
+//		} else { // sig2 == 0
+//			return IntersectionType.Enter;
+//		}
+//	}
+//	
+//	private IntersectionType intersectionType(Vec dirA, Vec toInterB, Vec fromInterB){
+//		Vec normA = dirA.perpendicularCCW();
+//		double sig1 = Math.signum(normA.dot(toInterB));
+//		double sig2 =  Math.signum(normA.dot(fromInterB));
+//		return getIntersectionType(sig1, sig2);
+//	}
 
 	
 	private IntersectionType intersectionType(Vec toInterA, Vec fromInterA, Vec toInterB, Vec fromInterB){

@@ -5,6 +5,7 @@ import java.util.Iterator;
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.results.transformers.IPathIndexTransformer;
 import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
+import nogbeter.points.twod.Vec;
 
 import bezier.util.Tuple;
 
@@ -15,8 +16,8 @@ public class Intersections<LI extends PathIndex,RI extends PathIndex> implements
 	private final Intersection<LI,RI> first;
 	private final Intersection<LI,RI> last;
 	
-	public Intersections(LI l, RI r){
-		this.first = new Intersection<LI, RI>(l,r);
+	public Intersections(LI l, RI r,Vec loc, Vec tanl, Vec tanr){
+		this.first = new Intersection<LI, RI>(l,r,loc,tanl, tanr);
 		this.last = first;
 	}
 	

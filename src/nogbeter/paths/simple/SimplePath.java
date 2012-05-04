@@ -49,7 +49,8 @@ public abstract class SimplePath extends SimplyIndexedPath{
 			SimplePath lhs, double tl, double tr) {
 		SimplePathIndex l = lhs.makeGlobalPathIndexFromLocal(tl);
 		SimplePathIndex r = makeGlobalPathIndexFromLocal(tr);
-		return new Intersections<SimplePathIndex, SimplePathIndex>(l, r);
+		return new Intersections<SimplePathIndex, SimplePathIndex>(l, r,
+				getAtLocal(tl), lhs.getTangentAtLocal(tl),getTangentAtLocal(tr));
 	}
 	
 	public SimplePathIndex makeGlobalPathIndexFromLocal(double t){

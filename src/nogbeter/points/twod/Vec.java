@@ -56,6 +56,11 @@ public final class Vec {
 		return new Vec(-y,x);
 	}
 	
+	// this is a lefthanded coordinate system
+	public Vec tanToNormal(){
+		return perpendicularCW();
+	}
+	
 	public Vec perpendicularCW(){
 		return new Vec(y,-x);
 	}
@@ -77,6 +82,16 @@ public final class Vec {
 	
 	public Vec negate(){
 		return new Vec(-x,-y);
+	}
+	
+	// given two vectors on the same line,
+	// do the vectors go in the same direction
+	public boolean sameDir(Vec other){
+		if(Math.signum(x) == 0){
+			return Math.signum(y) == Math.signum(other.y);
+		} else {
+			return Math.signum(x) == Math.signum(other.x);
+		}
 	}
 	
 	public boolean isEqError(Vec other){
