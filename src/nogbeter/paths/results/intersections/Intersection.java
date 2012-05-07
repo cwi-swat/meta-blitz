@@ -5,7 +5,7 @@ import nogbeter.paths.PathIndex;
 import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
 import nogbeter.points.twod.Vec;
 
-public class Intersection<LI extends PathIndex,RI extends PathIndex> {
+public class Intersection<LI extends PathIndex,RI extends PathIndex>{
 
 	public final LI left;
 	public final RI right;
@@ -38,6 +38,10 @@ public class Intersection<LI extends PathIndex,RI extends PathIndex> {
 	}
 	
 	public String toString(){
-		return "Intersection(" + left.toString() + "," + right.toString() + ")";
+		return "Intersection(" + left.toString() + "\n\t" + right.toString() + ")";
 	}
+
+
+
+	
 }

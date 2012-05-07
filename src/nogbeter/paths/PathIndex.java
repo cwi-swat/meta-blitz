@@ -1,12 +1,16 @@
 package nogbeter.paths;
 
-public abstract class PathIndex {
+import nogbeter.paths.simple.SimplePathIndex;
+
+public abstract class PathIndex implements Comparable<PathIndex>{
 	
 	public final PathIndex next;
 	
 	public PathIndex(PathIndex next) {
 		this.next = next;
 	}
+	
+	public abstract boolean isAdjacentOrderRight(PathIndex other);
 
 
 }

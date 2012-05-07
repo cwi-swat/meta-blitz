@@ -3,7 +3,7 @@ package nogbeter.demo;
 import bezier.image.generated.ColorsAlpha;
 import bezier.image.generated.SampleInstances.Sample4;
 import nogbeter.crossing.Crossing;
-import nogbeter.crossing.CrossingType;
+import nogbeter.crossing.CrossType;
 import nogbeter.crossing.Crossings;
 import nogbeter.crossing.GroupedIntersections;
 import nogbeter.paths.Path;

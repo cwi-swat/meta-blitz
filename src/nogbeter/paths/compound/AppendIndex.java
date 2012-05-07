@@ -2,6 +2,7 @@ package nogbeter.paths.compound;
 
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.compound.SplitIndex.SplitChoice;
+import nogbeter.paths.simple.SimplePathIndex;
 
 public class AppendIndex extends SplitIndex {
 	
@@ -15,4 +16,9 @@ public class AppendIndex extends SplitIndex {
 		return "Append("+choice+")" + (next == null? "" : "," + next.toString());
 	}
 
+
+
+	
+
+	
 }

@@ -8,18 +8,15 @@ public class Crossing<L extends PathIndex, R extends PathIndex>{
 	public final L l;
 	public final R r;
 	public final Vec loc;
-	public final CrossingType type;
+	public final CrossType type;
 	
-	public Crossing(L l, R r, Vec loc, CrossingType type) {
+	public Crossing(L l, R r, Vec loc, CrossType type) {
 		this.l = l;
 		this.r = r;
 		this.loc = loc;
 		this.type = type;
 	}
-	
-	public String toString(){
-		return type.toString() +  loc ;
-	}
+
 	
 	
 }

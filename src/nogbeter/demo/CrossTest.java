@@ -1,8 +1,14 @@
 package nogbeter.demo;
 
 import static nogbeter.transform.AffineTransformation.id;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import nogbeter.crossing.Crossing;
-import nogbeter.crossing.CrossingType;
+import nogbeter.crossing.CrossType;
 import nogbeter.crossing.Crossings;
 import nogbeter.crossing.GroupedIntersections;
 import nogbeter.paths.Path;
@@ -41,22 +47,23 @@ public class CrossTest extends DemoBase{
 	public void draw() {
 
 		Path<PathIndex> q = rectangle().transform(id.scale(200).translate(mouse.add(location)));
-		TextFactory.text2Paths("nm").transform(id.scale(5).translate(mouse));
+//		TextFactory.text2Paths("nm").transform(id.scale(5).translate(mouse));
 		draw(r);
 		draw(q);
 		IIntersections<PathIndex,PathIndex> ints = r.intersection(q);
-		Crossings<PathIndex, PathIndex> cross = new GroupedIntersections(ints, r,q).toCrossings();
+		Crossings<PathIndex, PathIndex> cross = new GroupedIntersections(ints, r,q).getCrossings();
 		for(Crossing<PathIndex, PathIndex> c : cross){
-			Sample4 color;
-			if(c.type == CrossingType.Enter){
-				color = ColorsAlpha.green;
-			} else if(c.type == CrossingType.Exit){
+			Sample4 color = ColorsAlpha.black;
+			if(c.type == CrossType.Enter){
+				color = ColorsAlpha.green; 
+			} else if(c.type == CrossType.Exit){
 				color = ColorsAlpha.red;
-			} else {
-				color = ColorsAlpha.beige;
-			}
+			} else if(c.type == CrossType.Parallel){
+				color = ColorsAlpha.pink;
+			} 
 			fillOval(c.loc, 10, color);
 		}
+		System.out.println();
 
 	}
 }

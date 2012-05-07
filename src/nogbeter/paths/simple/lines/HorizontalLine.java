@@ -85,12 +85,16 @@ public abstract class HorizontalLine extends Line {
 	public IIntersections<SimplePathIndex, SimplePathIndex> intersectionLCurve(
 			Curve lhs) {
 		if(overlaps(lhs.getBBox())){
-			double lt = lhs.findTForY(y);
-			if(Interval.interval01.isInside(lt)){
-				double rt = getTForX(lhs.getAtLocal(lt).x);
-				if(Interval.interval01.isInside(rt)){
-					return makeIntersectionResult(lhs,lt,rt);
+			if(lhs.isMonotomous()){
+				double lt = lhs.findTForY(y);
+				if(Interval.interval01.isInside(lt)){
+					double rt = getTForX(lhs.getAtLocal(lt).x);
+					if(Interval.interval01.isInside(rt)){
+						return makeIntersectionResult(lhs,lt,rt);
+					}
 				}
+			} else {
+				return intersectionLSplittable(lhs);
 			}
 		} 
 		return Intersections.NoIntersections;
