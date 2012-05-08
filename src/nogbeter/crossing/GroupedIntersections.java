@@ -3,11 +3,7 @@ package nogbeter.crossing;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Queue;
 import java.util.Stack;
 
 import nogbeter.paths.Path;
@@ -15,7 +11,6 @@ import nogbeter.paths.PathIndex;
 import nogbeter.paths.results.intersections.IIntersections;
 import nogbeter.paths.results.intersections.Intersection;
 import nogbeter.points.twod.Vec;
-import bezier.paths.Constants;
 import bezier.util.Tuple;
 
 public class GroupedIntersections<L extends PathIndex,R extends PathIndex> {
@@ -82,11 +77,7 @@ public class GroupedIntersections<L extends PathIndex,R extends PathIndex> {
 		return res;
 	}
 	
-	
-	
-	// ints = intersections per point
 	public Crossings<L,R> getCrossings(){
-		
 		List<Crossing<L, R>> res = new ArrayList<Crossing<L,R>>();
 		for(List<Intersection<L,R>> grouped : groupIntersectionsOnLeftSegments()){
 			for(List<Intersection<L, R>> intersPerPoint : groupIntersectionsOnPointPerLeftSegment(grouped)){
@@ -96,11 +87,44 @@ public class GroupedIntersections<L extends PathIndex,R extends PathIndex> {
 			}
 		}	
 		return new Crossings<L, R>(res);
-		
 	}
 
 	private Crossing<L, R> makeCrossing(Intersection<L,R> inter, CrossType crossingType) {
 		return new Crossing<L, R>(inter.left, inter.right, inter.loc, crossingType);
+	}
+	
+	private Tuple<Vec,Vec> getOrderedTangents(PathIndex l, Vec tanl, PathIndex r, Vec tanr){
+		if(l.isAdjacentOrderRight(r)){
+			return new Tuple<Vec, Vec>(tanl, tanr);
+		} else {
+			return new  Tuple<Vec, Vec>(tanr, tanl);
+		}
+	}
+	
+	private Tuple<Vec,Vec> getOrderedTangentsLeft(Intersection<L,R> l, Intersection<L, R> r){
+		return getOrderedTangents(l.left, l.tanl, r.left, r.tanl);
+	}
+	
+	private Tuple<Vec,Vec> getOrderedTangentsRight(Intersection<L,R> l, Intersection<L, R> r){
+		return getOrderedTangents(l.right, l.tanr, r.right, r.tanr);
+	}
+	
+	private CrossType getCrossingTypeDouble(Intersection<L,R> l, Intersection<L,R> r){
+		if(l.tanl.isEq(r.tanl)){
+			Tuple<Vec,Vec> orderTanR = getOrderedTangentsRight(l, r);
+			return GetCrossingType.doubleIntersectionTypeL(l.tanl, orderTanR.l, orderTanR.r);
+		} else {
+			Tuple<Vec,Vec> orderTanL = getOrderedTangentsLeft(l, r);
+			return GetCrossingType.doubleIntersectionTypeR(orderTanL.l, orderTanL.r, l.tanr);
+		}
+	}
+	
+	private CrossType getCrossingTypeQuad(Intersection<L,R> a, Intersection<L,R> b,  
+			Intersection<L,R> c,  Intersection<L,R> d){
+		Tuple<Vec,Vec> orderTanL = getOrderedTangentsLeft(a, c);
+		Tuple<Vec,Vec> orderTanR = getOrderedTangentsRight(a, b);
+		return GetCrossingType.quadIntersectionType(orderTanL.l, orderTanL.r,
+				orderTanR.l, orderTanR.r);
 	}
 
 	private CrossType getCrossingType(List<Intersection<L, R>> intersPerPoint) {
@@ -109,47 +133,10 @@ public class GroupedIntersections<L extends PathIndex,R extends PathIndex> {
 			Intersection<L,R> i = intersPerPoint.get(0);
 			return GetCrossingType.singleIntersectionType(i.tanl, i.tanr);
 		} else if(intersPerPoint.size() == 2){
-			Intersection<L,R> l = intersPerPoint.get(0);
-			Intersection<L,R> r = intersPerPoint.get(1);
-			System.out.println(l);
-			System.out.println(r);
-			if(l.tanl.isEq(r.tanl)){
-				if(l.right.isAdjacentOrderRight(r.right)){
-					return GetCrossingType.doubleIntersectionTypeL(
-							l.tanl,l.tanr,r.tanr);
-				} else {
-					return GetCrossingType.doubleIntersectionTypeL(
-							l.tanl,r.tanr,l.tanr);
-				}
-			} else {
-				if(l.left.isAdjacentOrderRight(r.left)){
-					return GetCrossingType.doubleIntersectionTypeR(
-							l.tanl,r.tanl,l.tanr);
-				} else {
-					return GetCrossingType.doubleIntersectionTypeR(
-							r.tanl,l.tanl,l.tanr);
-				}
-
-			}
+			return getCrossingTypeDouble(intersPerPoint.get(0), intersPerPoint.get(1));
 		} else if(intersPerPoint.size() == 4){
-			
-			Intersection<L,R> a = intersPerPoint.get(0);
-			Intersection<L,R> b = intersPerPoint.get(1);
-			Intersection<L,R> c = intersPerPoint.get(2);
-			Intersection<L,R> d = intersPerPoint.get(3);
-			Vec la, lb;
-			if(a.left.isAdjacentOrderRight(c.left)){
-				la = a.tanl; lb = c.tanl;
-			} else {
-				lb = a.tanl; la = c.tanl;
-			}
-			Vec ra, rb;
-			if(a.right.isAdjacentOrderRight(b.right)){
-				ra = a.tanr; rb = b.tanr;
-			} else {
-				ra = b.tanr; rb = a.tanr;
-			}
-			return GetCrossingType.quadIntersectionType(la,lb,ra,rb);
+			return getCrossingTypeQuad(intersPerPoint.get(0),intersPerPoint.get(1),
+					intersPerPoint.get(2),intersPerPoint.get(3));
 		} else {
 			throw new Error("Weird number of intersections per point " + intersPerPoint.size());
 		}

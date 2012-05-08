@@ -56,21 +56,4 @@ public class GetCrossingType {
 			return null;
 		}
 	}
-
-	public static CrossType quadIntersectionType(Vec tanl, Vec tanl2,
-			Vec tanl3, Vec tanl4, Vec tanr, Vec tanr2, Vec tanr3, Vec tanr4) {
-		Tuple<Vec,Vec> tanltup = getDifferent(tanl,tanl2,tanl3,tanl4);
-		Tuple<Vec,Vec> tanrtup = getDifferent(tanr,tanl2,tanr3,tanr4);
-		return quadIntersectionType(tanltup.l, tanltup.r, tanrtup.l, tanrtup.r);
-	}
-
-	private static Tuple<Vec, Vec> getDifferent(Vec tanl, Vec tanl2, Vec tanl3,
-			Vec tanl4) {
-		if(tanl.sameDir(tanl2)){
-			return new Tuple<Vec, Vec>(tanl, tanl3);
-		} else {
-			return new Tuple<Vec, Vec>(tanl, tanl2);
-		}
-	}
-	
 }
