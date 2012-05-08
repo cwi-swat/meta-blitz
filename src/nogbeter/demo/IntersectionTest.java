@@ -2,8 +2,6 @@ package nogbeter.demo;
 
 import bezier.image.generated.ColorsAlpha;
 import bezier.image.generated.SampleInstances.Sample4;
-import nogbeter.crossing.Crossing;
-import nogbeter.crossing.CrossType;
 import nogbeter.crossing.Crossings;
 import nogbeter.crossing.GroupedIntersections;
 import nogbeter.paths.Path;
@@ -26,21 +24,22 @@ public class IntersectionTest extends DemoBase {
 	private Path<PathIndex> r;
 	
 	public IntersectionTest() {
-		r = TextFactory.text2Paths("ws").transform(id.scale(5).translate(200, 200));
-		System.out.println(r);
+		r = rectangle().transform(id.scale(200).translate(400,400));
+//		r = TextFactory.text2Paths("ws").transform(id.scale(5).translate(200, 200));
 	}
 	
 	@Override
 	public void draw() {
 
-		Path<PathIndex> q = TextFactory.text2Paths("nm").transform(id.scale(5).translate(mouse));
+//		Path<PathIndex> q = TextFactory.text2Paths("nm").transform(id.scale(5).translate(mouse));
+		Path<PathIndex> q = rectangle().transform(id.scale(200).translate(mouse.add(mouse)));
 		draw(r);
 		draw(q);
 		IIntersections<PathIndex,PathIndex> ints = r.intersection(q);
 		for(Intersection<PathIndex, PathIndex> i : ints){
 //			fillOval(i.loc, 5,ColorsAlpha.green);
-			drawLine(i.loc, i.loc.add(i.tanl.normalize().mul(75)),ColorsAlpha.red);
-			drawLine(i.loc, i.loc.add(i.tanr.normalize().mul(75)),ColorsAlpha.green);
+			drawLine(i.loc, i.loc.add(i.tanl.normalize().tanToNormal().mul(75)),ColorsAlpha.red);
+//			drawLine(i.loc, i.loc.add(i.tanr.normalize().mul(75)),ColorsAlpha.green);
 		}
 //		
 //		for(Crossing<PathIndex, PathIndex> c : cr){

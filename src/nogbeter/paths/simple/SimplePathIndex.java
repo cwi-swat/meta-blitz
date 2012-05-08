@@ -24,13 +24,10 @@ public class SimplePathIndex extends PathIndex {
 			throw new Error("Comparing incomparable pathindexes!");
 		}
 	}
-	
+
 	@Override
-	public boolean isAdjacentOrderRight(PathIndex other){
-		if(other instanceof SimplePathIndex){
-			return ((SimplePathIndex)other).t < t;
-		} else {
-			throw new Error("No adjacent order defined!");
-		}
+	public double getSimple() {
+		return t;
 	}
+	
 }

@@ -53,7 +53,7 @@ public final class Vec {
 	}
 	
 	public Vec perpendicularCCW(){
-		return new Vec(-y,x);
+		return new Vec(y,-x);
 	}
 	
 	// this is a lefthanded coordinate system
@@ -61,8 +61,13 @@ public final class Vec {
 		return perpendicularCW();
 	}
 	
+	// this is a lefthanded coordinate system
+	public Vec tanToAntiNormal(){
+		return perpendicularCCW();
+	}
+	
 	public Vec perpendicularCW(){
-		return new Vec(y,-x);
+		return new Vec(-y,x);
 	}
 	
 	public Vec addMul(double s, Vec add){

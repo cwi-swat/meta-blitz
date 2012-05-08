@@ -38,12 +38,8 @@ public abstract class SplitIndex extends PathIndex {
 	}
 
 	@Override
-	public boolean isAdjacentOrderRight(PathIndex other) {
-		if(other instanceof SplitIndex){
-			return next.isAdjacentOrderRight(other.next);
-		} else {
-			throw new Error("No adjacent order defined!");
-		}
+	public double getSimple() {
+		return next.getSimple();
 	}
 	
 

@@ -8,15 +8,12 @@ public class Crossing<L extends PathIndex, R extends PathIndex>{
 	public final L l;
 	public final R r;
 	public final Vec loc;
-	public final CrossType type;
-	
-	public Crossing(L l, R r, Vec loc, CrossType type) {
+	public boolean leftAfterInside;
+	public Crossing(L l, R r, Vec loc, boolean leftAfterInside) {
 		this.l = l;
 		this.r = r;
 		this.loc = loc;
-		this.type = type;
+		this.leftAfterInside = leftAfterInside;
 	}
-
-	
 	
 }

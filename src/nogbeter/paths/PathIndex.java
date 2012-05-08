@@ -10,7 +10,11 @@ public abstract class PathIndex implements Comparable<PathIndex>{
 		this.next = next;
 	}
 	
-	public abstract boolean isAdjacentOrderRight(PathIndex other);
+	public abstract double getSimple();
+	
+	public boolean isAdjacentOrderRight(PathIndex other){
+		return getSimple() > other.getSimple();
+	}
 
 
 }

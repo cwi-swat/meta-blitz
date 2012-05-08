@@ -8,7 +8,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import nogbeter.crossing.Crossing;
-import nogbeter.crossing.CrossType;
 import nogbeter.crossing.Crossings;
 import nogbeter.crossing.GroupedIntersections;
 import nogbeter.paths.Path;
@@ -16,12 +15,16 @@ import nogbeter.paths.PathIndex;
 import nogbeter.paths.factory.TextFactory;
 import nogbeter.paths.results.intersections.IIntersections;
 import nogbeter.paths.results.intersections.Intersection;
+import nogbeter.points.angles.AngularInterval;
+import nogbeter.points.angles.AngularIntervalFactory;
 import nogbeter.points.twod.Vec;
 import bezier.image.generated.ColorsAlpha;
 import bezier.image.generated.SampleInstances.Sample4;
 
 public class CrossTest extends DemoBase{
 	public static void main(String[] argv){
+		AngularInterval in = AngularIntervalFactory.create180DegreesInterval(new Vec(0,1));
+		System.out.println(in.isInside(new Vec(1,0)));
 		new CrossTest();
 	}
 
@@ -29,8 +32,9 @@ public class CrossTest extends DemoBase{
 	private Path<PathIndex> r;
 	
 	public CrossTest() {
-		r = rectangle().transform(id.scale(200).translate(400,400));
-//		r = TextFactory.text2Paths("ws").transform(id.scale(5).translate(200, 200));
+//		r = rectangle().transform(id.scale(200).translate(400,400));
+		System.out.println(r);
+		r = TextFactory.text2Paths("ws").transform(id.scale(5).translate(200, 200));
 	}
 	
 	public void handleKeyStroke(char key){
@@ -46,22 +50,15 @@ public class CrossTest extends DemoBase{
 	@Override
 	public void draw() {
 
-		Path<PathIndex> q = rectangle().transform(id.scale(200).translate(mouse.add(location)));
-//		TextFactory.text2Paths("nm").transform(id.scale(5).translate(mouse));
+		Path<PathIndex> q = // rectangle().transform(id.scale(200).translate(mouse.add(location)));
+		TextFactory.text2Paths("nm").transform(id.scale(5).translate(mouse.add(location)));
 		draw(r);
 		draw(q);
 		IIntersections<PathIndex,PathIndex> ints = r.intersection(q);
 		Crossings<PathIndex, PathIndex> cross = new GroupedIntersections(ints, r,q).getCrossings();
 		for(Crossing<PathIndex, PathIndex> c : cross){
-			Sample4 color = ColorsAlpha.black;
-			if(c.type == CrossType.Enter){
-				color = ColorsAlpha.green; 
-			} else if(c.type == CrossType.Exit){
-				color = ColorsAlpha.red;
-			} else if(c.type == CrossType.Parallel){
-				color = ColorsAlpha.pink;
-			} 
-			fillOval(c.loc, 10, color);
+		
+			fillOval(c.loc, 10, c.leftAfterInside ? ColorsAlpha.green : ColorsAlpha.red);
 		}
 		System.out.println();
 

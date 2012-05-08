@@ -81,17 +81,16 @@ public class GroupedIntersections<L extends PathIndex,R extends PathIndex> {
 		List<Crossing<L, R>> res = new ArrayList<Crossing<L,R>>();
 		for(List<Intersection<L,R>> grouped : groupIntersectionsOnLeftSegments()){
 			for(List<Intersection<L, R>> intersPerPoint : groupIntersectionsOnPointPerLeftSegment(grouped)){
-				CrossType type = getCrossingType(intersPerPoint);
-				Crossing<L, R> n = makeCrossing(intersPerPoint.get(0), type);
-				res.add(n);
+				LineStateBeforeAndAfter type = getCrossingType(intersPerPoint);
+				Crossing<L, R> n = type.toCrossing(intersPerPoint.get(0));
+				if(n!= null){
+					res.add(n);
+				}
 			}
 		}	
 		return new Crossings<L, R>(res);
 	}
 
-	private Crossing<L, R> makeCrossing(Intersection<L,R> inter, CrossType crossingType) {
-		return new Crossing<L, R>(inter.left, inter.right, inter.loc, crossingType);
-	}
 	
 	private Tuple<Vec,Vec> getOrderedTangents(PathIndex l, Vec tanl, PathIndex r, Vec tanr){
 		if(l.isAdjacentOrderRight(r)){
@@ -109,7 +108,7 @@ public class GroupedIntersections<L extends PathIndex,R extends PathIndex> {
 		return getOrderedTangents(l.right, l.tanr, r.right, r.tanr);
 	}
 	
-	private CrossType getCrossingTypeDouble(Intersection<L,R> l, Intersection<L,R> r){
+	private LineStateBeforeAndAfter getCrossingTypeDouble(Intersection<L,R> l, Intersection<L,R> r){
 		if(l.tanl.isEq(r.tanl)){
 			Tuple<Vec,Vec> orderTanR = getOrderedTangentsRight(l, r);
 			return GetCrossingType.doubleIntersectionTypeL(l.tanl, orderTanR.l, orderTanR.r);
@@ -119,7 +118,7 @@ public class GroupedIntersections<L extends PathIndex,R extends PathIndex> {
 		}
 	}
 	
-	private CrossType getCrossingTypeQuad(Intersection<L,R> a, Intersection<L,R> b,  
+	private LineStateBeforeAndAfter getCrossingTypeQuad(Intersection<L,R> a, Intersection<L,R> b,  
 			Intersection<L,R> c,  Intersection<L,R> d){
 		Tuple<Vec,Vec> orderTanL = getOrderedTangentsLeft(a, c);
 		Tuple<Vec,Vec> orderTanR = getOrderedTangentsRight(a, b);
@@ -127,11 +126,10 @@ public class GroupedIntersections<L extends PathIndex,R extends PathIndex> {
 				orderTanR.l, orderTanR.r);
 	}
 
-	private CrossType getCrossingType(List<Intersection<L, R>> intersPerPoint) {
-		System.out.printf("%s %s\n",intersPerPoint.get(0).loc,intersPerPoint.size());
+	private LineStateBeforeAndAfter getCrossingType(List<Intersection<L, R>> intersPerPoint) {
 		if(intersPerPoint.size() == 1){
 			Intersection<L,R> i = intersPerPoint.get(0);
-			return GetCrossingType.singleIntersectionType(i.tanl, i.tanr);
+			return GetCrossingType.singleCrossingType(i.tanl, i.tanr);
 		} else if(intersPerPoint.size() == 2){
 			return getCrossingTypeDouble(intersPerPoint.get(0), intersPerPoint.get(1));
 		} else if(intersPerPoint.size() == 4){
