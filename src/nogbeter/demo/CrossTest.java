@@ -8,7 +8,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import nogbeter.crossing.Crossing;
-import nogbeter.crossing.Crossings;
 import nogbeter.crossing.GroupedIntersections;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
@@ -29,12 +28,13 @@ public class CrossTest extends DemoBase{
 	}
 
 	Vec location = new Vec(0,0);
-	private Path<PathIndex> r;
+	private Path<PathIndex> r,q;
 	
 	public CrossTest() {
 //		r = rectangle().transform(id.scale(200).translate(400,400));
 		System.out.println(r);
 		r = TextFactory.text2Paths("ws").transform(id.scale(5).translate(200, 200));
+		q = TextFactory.text2Paths("nm").transform(id.scale(5));
 	}
 	
 	public void handleKeyStroke(char key){
@@ -51,11 +51,11 @@ public class CrossTest extends DemoBase{
 	public void draw() {
 
 		Path<PathIndex> q = // rectangle().transform(id.scale(200).translate(mouse.add(location)));
-		TextFactory.text2Paths("nm").transform(id.scale(5).translate(mouse.add(location)));
+		this.q.transform(id.translate(mouse.add(location)));
 		draw(r);
 		draw(q);
 		IIntersections<PathIndex,PathIndex> ints = r.intersection(q);
-		Crossings<PathIndex, PathIndex> cross = new GroupedIntersections(ints, r,q).getCrossings();
+		List<Crossing<PathIndex, PathIndex>> cross = new GroupedIntersections(ints, r,q).getCrossings();
 		for(Crossing<PathIndex, PathIndex> c : cross){
 		
 			fillOval(c.loc, 10, c.leftAfterInside ? ColorsAlpha.green : ColorsAlpha.red);

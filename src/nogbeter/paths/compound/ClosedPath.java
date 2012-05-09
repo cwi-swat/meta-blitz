@@ -1,0 +1,202 @@
+package nogbeter.paths.compound;
+
+import java.util.List;
+
+import bezier.util.Tuple;
+import nogbeter.paths.Path;
+import nogbeter.paths.PathIndex;
+import nogbeter.paths.SplittablePath;
+import nogbeter.paths.results.intersections.IIntersections;
+import nogbeter.paths.results.project.BestProject;
+import nogbeter.paths.results.project.BestProjectTup;
+import nogbeter.paths.results.transformers.PITransformers;
+import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
+import nogbeter.paths.results.transformers.TupleTransformers;
+import nogbeter.paths.simple.SimplePathIndex;
+import nogbeter.paths.simple.lines.DiagonalLine;
+import nogbeter.paths.simple.lines.HorizontalLine;
+import nogbeter.paths.simple.lines.VerticalLine;
+import nogbeter.points.twod.BBox;
+import nogbeter.points.twod.Vec;
+import nogbeter.transform.AffineTransformation;
+
+public class ClosedPath extends Path<ClosedPathIndex>{
+	
+	final Path<PathIndex> actual;
+	
+	public ClosedPath(Path<PathIndex> actual) {
+		this.actual = actual;
+	}
+
+	@Override
+	public BBox makeBBox() {
+		return actual.makeBBox();
+	}
+
+	@Override
+	public Vec getAt(ClosedPathIndex t) {
+		return actual.getAt(t.next);
+	}
+
+	@Override
+	public Vec getTangentAt(ClosedPathIndex t) {
+		return actual.getTangentAt(t.next);
+	}
+
+	@Override
+	public <RPP extends PathIndex> IIntersections<ClosedPathIndex, RPP> intersection(
+			Path<RPP> other) {
+		return (IIntersections<ClosedPathIndex, RPP>) actual.intersection(other).transform(TupleTransformers.closeLeft);
+	}
+
+	@Override
+	public IIntersections<SimplePathIndex, ClosedPathIndex> intersectionLDiaLine(
+			DiagonalLine lhs) {
+		return (IIntersections<SimplePathIndex, ClosedPathIndex>) 
+				actual.intersectionLDiaLine(lhs).transform(TupleTransformers.closeRight);
+	}
+
+	@Override
+	public IIntersections<SimplePathIndex, ClosedPathIndex> intersectionLHorLine(
+			HorizontalLine lhs) {
+		return (IIntersections<SimplePathIndex, ClosedPathIndex>) 
+				actual.intersectionLHorLine(lhs).transform(TupleTransformers.closeRight);
+	}
+
+	@Override
+	public IIntersections<SimplePathIndex, ClosedPathIndex> intersectionLVerLine(
+			VerticalLine lhs) {
+		return (IIntersections<SimplePathIndex, ClosedPathIndex>) 
+				actual.intersectionLVerLine(lhs).transform(TupleTransformers.closeRight);
+	}
+
+	@Override
+	public IIntersections<SetIndex, ClosedPathIndex> intersectionLSet(
+			ShapeSet lhs) {
+		return (IIntersections<SetIndex, ClosedPathIndex>) 
+				actual.intersectionLSet(lhs).transform(TupleTransformers.closeRight);
+	}
+
+	@Override
+	public <LPP extends PathIndex> IIntersections<LPP, ClosedPathIndex> intersectionLSplittable(
+			SplittablePath<LPP> lhs) {
+		return (IIntersections<LPP, ClosedPathIndex>) 
+				actual.intersectionLSplittable(lhs).transform(TupleTransformers.closeRight);
+	}
+
+	@Override
+	public BestProject<ClosedPathIndex> project(double best, Vec p) {
+		return actual.project(best,p).transform(PITransformers.closedT);
+	}
+
+	@Override
+	public <RPP extends PathIndex> BestProjectTup<ClosedPathIndex, RPP> project(
+			double best, Path<RPP> other) {
+		return (BestProjectTup<ClosedPathIndex, RPP>)
+				actual.project(other).transform(TupleTransformers.closeLeft);
+	}
+
+	@Override
+	public BestProjectTup<SimplePathIndex, ClosedPathIndex> projectLDiaLine(
+			double best, DiagonalLine lhs) {
+		return 
+				(BestProjectTup<SimplePathIndex, ClosedPathIndex>)
+				actual.projectLDiaLine(best,lhs).transform(TupleTransformers.closeRight);
+	}
+
+	@Override
+	public BestProjectTup<SimplePathIndex, ClosedPathIndex> projectLHorLine(
+			double best, HorizontalLine lhs) {
+		return 
+				(BestProjectTup<SimplePathIndex, ClosedPathIndex>)
+				actual.projectLHorLine(best,lhs).transform(TupleTransformers.closeRight);
+	}
+
+	@Override
+	public BestProjectTup<SimplePathIndex, ClosedPathIndex> projectLVerLine(
+			double best, VerticalLine lhs) {
+		return 
+				(BestProjectTup<SimplePathIndex, ClosedPathIndex>)
+				actual.projectLVerLine(best,lhs).transform(TupleTransformers.closeRight);
+	}
+
+	@Override
+	public BestProjectTup<SetIndex, ClosedPathIndex> projectLSet(double best,
+			ShapeSet lhs) {
+		return 
+				(BestProjectTup<SetIndex, ClosedPathIndex>)
+				actual.projectLSet(best,lhs).transform(TupleTransformers.closeRight);
+	}
+
+	@Override
+	public <LPI extends PathIndex> BestProjectTup<LPI, ClosedPathIndex> projectLSplittable(
+			double best, SplittablePath<LPI> lhs) {
+		return 
+				(BestProjectTup<LPI, ClosedPathIndex>)
+				actual.projectLSplittable(best,lhs).transform(TupleTransformers.closeRight);
+	}
+
+	@Override
+	public int nrChildren() {
+		return 1;
+	}
+
+	@Override
+	public Path getChild(int i) {
+		return actual;
+	}
+
+	@Override
+	public Path<ClosedPathIndex> getWithAdjustedStartPoint(Vec newStartPoint) {
+		return new ClosedPath(actual.getWithAdjustedStartPoint(newStartPoint));
+	}
+
+	@Override
+	public Vec getStartPoint() {
+		return actual.getStartPoint();
+	}
+
+	@Override
+	public Vec getEndPoint() {
+		return actual.getStartPoint();
+	}
+
+	@Override
+	public Path<ClosedPathIndex> transform(AffineTransformation t) {
+		return new ClosedPath(actual.transform(t));
+	}
+
+	@Override
+	public Tuple<Path<ClosedPathIndex>, Double> normaliseToLength(
+			double prevLength) {
+		Tuple<Path<PathIndex>, Double> resDeep = actual.normaliseToLength(prevLength);
+		return new Tuple<Path<ClosedPathIndex>, Double>(new ClosedPath(resDeep.l), resDeep.r);
+	}
+
+	@Override
+	public Path getSegment(ClosedPathIndex p) {
+		return actual.getSegment(p.next);
+	}
+
+	@Override
+	public void getSubPath(ClosedPathIndex from, ClosedPathIndex to,
+			List<Path> result) {
+		if(from.compareTo(to) < 0){
+			actual.getSubPath(from, to, result);
+		} else {
+			actual.getSubPathFrom(from, result);
+			actual.getSubPathTo(to, result);
+		}
+	}
+
+	@Override
+	public void getSubPathFrom(ClosedPathIndex from, List<Path> result) {
+		throw new Error("SubPathFrom of closedPath is whole path!");
+	}
+
+	@Override
+	public void getSubPathTo(ClosedPathIndex to, List<Path> result) {
+		throw new Error("SubPathTill of closedPath is whole path!");
+	}
+
+}

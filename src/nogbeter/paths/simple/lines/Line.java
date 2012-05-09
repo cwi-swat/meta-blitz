@@ -1,6 +1,7 @@
 package nogbeter.paths.simple.lines;
 
 import java.awt.geom.PathIterator;
+import java.util.List;
 
 import nogbeter.paths.Path;
 import nogbeter.paths.factory.PathFactory;
@@ -85,5 +86,24 @@ public abstract class Line extends SimplePath {
 		return new Tuple<Path<SimplePathIndex>, Double>(
 			PathFactory.createLine(getStartPoint(),getEndPoint(),new Interval(prevLength,nl)),
 			nl);
+	}
+	
+
+	@Override
+	public void getSubPath(SimplePathIndex from, SimplePathIndex to,List<Path> result) {
+		result.add(PathFactory.createLine(getAt(from), getAt(to)));
+	}
+	
+
+	@Override
+	public void getSubPathFrom(SimplePathIndex from, List<Path> result) {
+		result.add(PathFactory.createLine(getAt(from), getEndPoint()));
+		
+	}
+
+	@Override
+	public void getSubPathTo(SimplePathIndex to, List<Path> result) {
+		result.add(PathFactory.createLine(getStartPoint(), getAt(to)));
+		
 	}
 }

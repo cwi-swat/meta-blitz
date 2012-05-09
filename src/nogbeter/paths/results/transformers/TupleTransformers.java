@@ -4,6 +4,7 @@ import static nogbeter.paths.results.transformers.PITransformers.*;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.compound.AppendIndex;
+import nogbeter.paths.compound.ClosedPathIndex;
 import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeIndex;
 import nogbeter.paths.compound.SplitIndex;
@@ -27,7 +28,10 @@ public class TupleTransformers {
 	public static PathIndexTupleTransformer<?,AppendIndex> arightLeft = right(appendLeft);
 	
 	public static PathIndexTupleTransformer<?,AppendIndex> arightRight = right(appendRight);
+	
+	public static PathIndexTupleTransformer<ClosedPathIndex,?> closeLeft = left(closedT);
 
+	public static PathIndexTupleTransformer<?, ClosedPathIndex> closeRight = right(closedT);
 
 	public static <PI extends PathIndex>  PathIndexTupleTransformer<SetIndex,PI> setLeft(int i){
 		return new PathIndexTupleTransformer<SetIndex, PI>(setTrans(i),unit);

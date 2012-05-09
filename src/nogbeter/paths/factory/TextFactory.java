@@ -44,7 +44,7 @@ public class TextFactory {
         	 Vec cur;
         	switch(p.currentSegment(curs)){
         		case PathIterator.SEG_CLOSE:
-        			result.add(PathFactory.createAppends(curves.toArray(new SimplePath[]{})));
+        			result.add(PathFactory.createClosedPath(curves.toArray(new SimplePath[]{})));
         			curves = new ArrayList<SimplePath>();
         		break;
         		case PathIterator.SEG_MOVETO:

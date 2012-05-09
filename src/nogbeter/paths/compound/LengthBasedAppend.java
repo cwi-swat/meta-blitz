@@ -1,5 +1,7 @@
 package nogbeter.paths.compound;
 
+import java.util.List;
+
 import bezier.util.Tuple;
 import nogbeter.paths.Path;
 import nogbeter.paths.SimplyIndexedPath;
@@ -28,10 +30,18 @@ public class LengthBasedAppend extends SimplyIndexedPath{
 		return left.getBBox().union(right.getBBox());
 	}
 
+	private boolean isLeft(double t){
+		return t < left.tInterval.high;
+	}
+	
+	private boolean isLeft(SimplePathIndex t){
+		return isLeft(t.t);
+	}
+	
 
 	@Override
 	public Vec getAtSimply(double t) {
-		if(t < left.tInterval.high ){
+		if(isLeft(t) ){
 			return left.getAtSimply(t);
 		} else {
 			return right.getAtSimply(t);
@@ -41,7 +51,7 @@ public class LengthBasedAppend extends SimplyIndexedPath{
 
 	@Override
 	public Vec getTangentAtSimply(double t) {
-		if(t < left.tInterval.high ){
+		if(isLeft(t) ){
 			return left.getTangentAtSimply(t);
 		} else {
 			return right.getTangentAtSimply(t);
@@ -95,6 +105,44 @@ public class LengthBasedAppend extends SimplyIndexedPath{
 	public Tuple<Path<SimplePathIndex>, Double> normaliseToLength(
 			double prevLength) {
 		return new Tuple<Path<SimplePathIndex>, Double>(this, right.tInterval.high);
+	}
+
+
+	@Override
+	public void getSubPath(SimplePathIndex from, SimplePathIndex to,
+			List<Path> result) {
+		if(isLeft(from) == isLeft(to)){
+			if(isLeft(from)){
+				left.getSubPath(from, to, result);
+			} else {
+				right.getSubPath(from, to, result);
+			}
+		} else {
+			left.getSubPathFrom(from, result);
+			right.getSubPathTo(to, result);
+		}
+	}
+
+
+	@Override
+	public void getSubPathFrom(SimplePathIndex from, List<Path> result) {
+		if(isLeft(from)){
+			left.getSubPathFrom(from, result);
+			result.add(right);
+		} else {
+			right.getSubPathFrom(from, result);
+		}
+	}
+
+
+	@Override
+	public void getSubPathTo(SimplePathIndex to, List<Path> result) {
+		if(isLeft(to)){
+			left.getSubPathTo(to, result);
+		} else {
+			result.add(left);
+			right.getSubPathTo(to, result);
+		}
 	}
 
 

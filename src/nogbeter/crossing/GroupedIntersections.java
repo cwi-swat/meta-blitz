@@ -77,7 +77,7 @@ public class GroupedIntersections<L extends PathIndex,R extends PathIndex> {
 		return res;
 	}
 	
-	public Crossings<L,R> getCrossings(){
+	public List<Crossing<L,R>> getCrossings(){
 		List<Crossing<L, R>> res = new ArrayList<Crossing<L,R>>();
 		for(List<Intersection<L,R>> grouped : groupIntersectionsOnLeftSegments()){
 			for(List<Intersection<L, R>> intersPerPoint : groupIntersectionsOnPointPerLeftSegment(grouped)){
@@ -88,7 +88,7 @@ public class GroupedIntersections<L extends PathIndex,R extends PathIndex> {
 				}
 			}
 		}	
-		return new Crossings<L, R>(res);
+		return res;
 	}
 
 	

@@ -4,6 +4,7 @@ import java.util.Set;
 
 import nogbeter.paths.Path;
 import nogbeter.paths.compound.Append;
+import nogbeter.paths.compound.ClosedPath;
 import nogbeter.paths.compound.Shape;
 import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.simple.SimplePath;
@@ -55,6 +56,19 @@ public class PathFactory {
 			return paths[0];
 		}
 		return Append.createAppends(paths);
+	}
+	
+	public static Path createClosedPath(SimplePath ... paths){
+		Vec begin = paths[0].getStartPoint();
+		Vec end = paths[paths.length-1].getEndPoint();
+		if(begin.isEqError(end)){
+			if(!begin.isEq(end)){
+				paths[0] = (SimplePath) paths[0].getWithAdjustedStartPoint(end);
+			}
+			return new ClosedPath(createAppends(paths));
+		} else {
+			throw new Error("Not closed!");
+		}
 	}
 	
 	public static Path createSet(Path ... paths){

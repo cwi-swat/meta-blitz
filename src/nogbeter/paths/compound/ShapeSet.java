@@ -10,6 +10,7 @@ import bezier.util.Util;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.SplittablePath;
+import nogbeter.paths.compound.SplitIndex.SplitChoice;
 import nogbeter.paths.results.intersections.IIntersections;
 import nogbeter.paths.results.intersections.Intersections;
 import nogbeter.paths.results.project.BestProject;
@@ -252,5 +253,21 @@ public class ShapeSet extends Path<SetIndex>{
 	@Override
 	public Path getSegment(SetIndex p) {
 		return shapes.get(p.choice).getSegment(p.next);
+	}
+	
+	@Override
+	public void getSubPath(SetIndex from, SetIndex to, List<Path> result) {
+		shapes.get(from.choice).getSubPath(from.next, to.next, result);
+		
+	}
+
+	@Override
+	public void getSubPathFrom(SetIndex from, List<Path> result) {
+		throw new Error("Set is not a segment!");
+	}
+
+	@Override
+	public void getSubPathTo(SetIndex to, List<Path> result) {
+		throw new Error("Set is not a segment!");
 	}
 }

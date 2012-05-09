@@ -6,6 +6,7 @@ import static nogbeter.points.oned.Interval.emptyInterval;
 import static nogbeter.points.oned.Interval.interval01;
 
 import java.awt.geom.PathIterator;
+import java.util.List;
 
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
@@ -13,6 +14,7 @@ import nogbeter.paths.SplittablePath;
 import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.compound.SplitIndex;
+import nogbeter.paths.factory.PathFactory;
 import nogbeter.paths.results.intersections.IIntersections;
 import nogbeter.paths.results.intersections.Intersections;
 import nogbeter.paths.results.project.BestProject;
@@ -378,9 +380,4 @@ public class DiagonalLine extends Line {
 			projectLSplittable(double best, SplittablePath<LPI> lhs) {
 		return lhs.projectLDiaLine(best, this).flip();
 	}
-
-	
-
-	
-
 }

@@ -41,6 +41,11 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 	Graphics2D g;
 	
 	DemoBase()  {
+        mouse = new Vec(0,0);
+        size = new Vec(1000,800);
+
+        textInput = "";
+        lastLine ="";
         // Create a frame
         JFrame frame = new JFrame();
 
@@ -50,10 +55,7 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
         // Display the frame
         int frameWidth = 1000;
         int frameHeight = 800;
-        size = new Vec(1000,800);
-        mouse = new Vec(0,0);
-        textInput = "";
-        lastLine ="";
+
         frame.setSize(frameWidth, frameHeight);
         frame.setVisible(true);
         frame.addWindowListener(this);

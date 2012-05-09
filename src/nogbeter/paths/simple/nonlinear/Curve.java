@@ -1,7 +1,6 @@
 package nogbeter.paths.simple.nonlinear;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import nogbeter.paths.Path;
@@ -10,7 +9,6 @@ import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.results.intersections.IIntersections;
 import nogbeter.paths.results.project.BestProjectTup;
-import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.lines.DiagonalLine;
@@ -18,8 +16,6 @@ import nogbeter.paths.simple.lines.HorizontalLine;
 import nogbeter.paths.simple.lines.VerticalLine;
 import nogbeter.points.oned.Interval;
 import bezier.util.Tuple;
-
-import static nogbeter.paths.results.transformers.TupleTransformers.*;
 
 public abstract class Curve extends SimplePath {
 
@@ -138,8 +134,6 @@ public abstract class Curve extends SimplePath {
 		return lhs.intersectionLCurve(this).flip();
 	}
 
-
-	
 	@Override
 	public <RPP extends PathIndex>  
 		BestProjectTup<SimplePathIndex, RPP> project(
@@ -153,7 +147,6 @@ public abstract class Curve extends SimplePath {
 		return lhs.projectLCurve(best, this).flip();
 	}
 	
-
 	@Override
 	public Tuple<Path<SimplePathIndex>, Double> normaliseToLength(
 			double prevLength) {
@@ -161,13 +154,33 @@ public abstract class Curve extends SimplePath {
 		Tuple<Path<SimplePathIndex>, Double> l = sp.l.normaliseToLength(prevLength);
 		Tuple<Path<SimplePathIndex>, Double> r = sp.r.normaliseToLength(l.r);
 		return new Tuple<Path<SimplePathIndex>, Double>(
-			(Path<SimplePathIndex>)getWithNewSimpleAndInterval((SimplePath)l.l, (SimplePath)r.l, new Interval(prevLength,r.r)),
+			(Path<SimplePathIndex>)getWithNewSimpleAndInterval(
+					(SimplePath)l.l, (SimplePath)r.l, new Interval(prevLength,r.r)),
 			r.r);
 	}
 
 	abstract Curve getWithNewSimpleAndInterval(
 			SimplePath l, SimplePath l2, Interval interval) ;
 	
+
+	@Override
+	public void getSubPath(SimplePathIndex from, SimplePathIndex to, List<Path> result) {
+		Tuple<Curve,Curve> sl = split(from.t);
+		double splitRight = (to.t - from.t) / (1.0 - from.t);
+		Tuple<Curve,Curve> sr = sl.r.split(splitRight);
+		result.add(sr.l);
+	}
 	
-	
+	@Override
+	public void getSubPathFrom(SimplePathIndex from, List<Path> result) {
+		Tuple<Curve,Curve> sl = split(from.t);
+		result.add(sl.r);
+	}
+
+	@Override
+	public void getSubPathTo(SimplePathIndex to, List<Path> result) {
+		Tuple<Curve,Curve> sl = split(to.t);
+		result.add(sl.l);
+		
+	}
 }

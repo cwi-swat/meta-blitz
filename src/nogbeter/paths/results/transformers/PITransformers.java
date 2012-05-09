@@ -2,6 +2,7 @@ package nogbeter.paths.results.transformers;
 
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.compound.AppendIndex;
+import nogbeter.paths.compound.ClosedPathIndex;
 import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeIndex;
 import nogbeter.paths.compound.SplitIndex;
@@ -13,6 +14,7 @@ public class PITransformers{
 	public static IPathIndexTransformer<ShapeIndex> shapeInside = new ShapePITransformer(SplitIndex.SplitChoice.Right);
 	public static IPathIndexTransformer<AppendIndex> appendLeft = new AppendPITransformer(SplitIndex.SplitChoice.Left);
 	public static IPathIndexTransformer<AppendIndex> appendRight = new AppendPITransformer(SplitIndex.SplitChoice.Right);
+	public static IPathIndexTransformer<ClosedPathIndex> closedT = new ClosedPITransformer();
 	public static IPathIndexTransformer<SetIndex> setTrans(int i){
 		return new SetPITransformer(i);
 	}
@@ -65,6 +67,18 @@ public class PITransformers{
 		}
 		public SetIndex transform(PathIndex p){
 			return new SetIndex(choice, p);
+		}
+		public boolean doesNothing(){
+			return false;
+		}
+	}
+	
+	public static class ClosedPITransformer implements IPathIndexTransformer<ClosedPathIndex> {
+		
+		public ClosedPITransformer() {
+		}
+		public ClosedPathIndex transform(PathIndex p){
+			return new ClosedPathIndex(p);
 		}
 		public boolean doesNothing(){
 			return false;

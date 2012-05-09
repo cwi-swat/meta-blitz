@@ -1,11 +1,15 @@
 package nogbeter.paths;
 
 import static bezier.util.Util.square;
+
+import java.util.List;
+
 import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.results.intersections.IIntersections;
 import nogbeter.paths.results.project.BestProject;
 import nogbeter.paths.results.project.BestProjectTup;
+import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.lines.DiagonalLine;
 import nogbeter.paths.simple.lines.HorizontalLine;
@@ -139,4 +143,8 @@ public abstract class Path
 	public abstract Tuple<Path<PathParam>,Double> normaliseToLength(double prevLength);
 	
 	public abstract Path getSegment(PathParam p);
+	
+	public abstract void getSubPath(PathParam from, PathParam to, List<Path> result);
+	public abstract void getSubPathFrom(PathParam from, List<Path> result);
+	public abstract void getSubPathTo(PathParam to, List<Path> result);
 }

@@ -1,11 +1,14 @@
 package nogbeter.paths.compound;
 
+import java.util.List;
+
 import javax.swing.border.Border;
 
 import bezier.util.Tuple;
 
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
+import nogbeter.paths.compound.SplitIndex.SplitChoice;
 import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.paths.results.transformers.IPathIndexTransformer;
 import nogbeter.paths.results.transformers.PITransformers;
@@ -102,5 +105,23 @@ public class Shape extends CompoundSplittablePath<ShapeIndex> {
 	}
 
 
-	
+	@Override
+	public void getSubPath(ShapeIndex from, ShapeIndex to, List<Path> result) {
+		if(from.choice == SplitChoice.Left){
+			left.getSubPath(from.next, to.next, result);
+		} else {
+			right.getSubPath(from.next, to.next, result);
+		}
+		
+	}
+
+	@Override
+	public void getSubPathFrom(ShapeIndex from, List<Path> result) {
+		throw new Error("Shape is not a segment!");
+	}
+
+	@Override
+	public void getSubPathTo(ShapeIndex to, List<Path> result) {
+		throw new Error("Shape is not a segment!");
+	}
 }
