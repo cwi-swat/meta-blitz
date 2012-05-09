@@ -2,6 +2,7 @@ package nogbeter.paths.compound;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import bezier.util.Tuple;
 import nogbeter.paths.Path;
@@ -85,5 +86,11 @@ public abstract class CompoundSplittablePath<P extends SplitIndex>
 			return right.getSegment(p.next);
 		}
 		throw new Error("Unkown split choice:" + this + "\n");
+	}
+	
+	@Override
+	public void getClosedSegmentsNotInSet(Set<Path> segments, List<Path> res){
+		left.getClosedSegmentsNotInSet(segments, res);
+		right.getClosedSegmentsNotInSet(segments, res);
 	}
 }

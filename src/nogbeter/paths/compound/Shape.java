@@ -1,6 +1,7 @@
 package nogbeter.paths.compound;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.border.Border;
 
@@ -14,6 +15,7 @@ import nogbeter.paths.results.transformers.IPathIndexTransformer;
 import nogbeter.paths.results.transformers.PITransformers;
 import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
 import nogbeter.paths.results.transformers.TupleTransformers;
+import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
 import nogbeter.transform.AffineTransformation;
@@ -124,4 +126,32 @@ public class Shape extends CompoundSplittablePath<ShapeIndex> {
 	public void getSubPathTo(ShapeIndex to, List<Path> result) {
 		throw new Error("Shape is not a segment!");
 	}
+
+
+
+	@Override
+	public AngularInterval getAngularInsideInterval(ShapeIndex t) {
+		if(t.choice == SplitChoice.Left){
+			return left.getAngularInsideInterval(t.next);
+		} else {
+			return right.getAngularInsideInterval(t.next);
+		}
+	}
+
+	@Override
+	public Vec getStartTan() {
+		throw new Error("Shape has no start or end");
+	}
+
+	@Override
+	public Vec getEndTan() {
+		throw new Error("Shape has no start or end");
+	}
+
+	@Override
+	public boolean isCyclicBorder(ShapeIndex p) {
+		throw new Error("Shape has no start or end");
+	}
+	
+
 }

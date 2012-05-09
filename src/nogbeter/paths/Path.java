@@ -3,18 +3,19 @@ package nogbeter.paths;
 import static bezier.util.Util.square;
 
 import java.util.List;
+import java.util.Set;
 
 import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.results.intersections.IIntersections;
 import nogbeter.paths.results.project.BestProject;
 import nogbeter.paths.results.project.BestProjectTup;
-import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.lines.DiagonalLine;
 import nogbeter.paths.simple.lines.HorizontalLine;
 import nogbeter.paths.simple.lines.VerticalLine;
 import nogbeter.paths.simple.nonlinear.Curve;
+import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
 import nogbeter.transform.AffineTransformation;
@@ -37,7 +38,7 @@ public abstract class Path
 	
 	public abstract Vec getAt(PathParam t);
 	public abstract Vec getTangentAt(PathParam t);
-	
+	public abstract AngularInterval getAngularInsideInterval(PathParam t);
 	
 
 	public abstract <RPP extends PathIndex> IIntersections<PathParam, RPP> intersection(
@@ -129,6 +130,8 @@ public abstract class Path
 	
 	public abstract Vec getStartPoint();
 	public abstract Vec getEndPoint();
+	public abstract Vec getStartTan();
+	public abstract Vec getEndTan();
 	
 	public boolean isClosed(){
 		return getStartPoint().isEqError(getEndPoint());
@@ -142,9 +145,31 @@ public abstract class Path
 	
 	public abstract Tuple<Path<PathParam>,Double> normaliseToLength(double prevLength);
 	
-	public abstract Path getSegment(PathParam p);
-	
 	public abstract void getSubPath(PathParam from, PathParam to, List<Path> result);
 	public abstract void getSubPathFrom(PathParam from, List<Path> result);
 	public abstract void getSubPathTo(PathParam to, List<Path> result);
+	
+	public boolean isInside(Vec v){
+		BestProject<PathParam> project = project(v); // getNearest
+
+		Vec loc = getAt(project.t);
+		Vec to = v.sub(loc);
+		if(to.isEqError(Vec.ZeroVec)){
+			return true;
+		} else {
+			AngularInterval interval = getAngularInsideInterval(project.t);
+			return interval.isInside(to);
+		}
+	}
+	
+	public abstract boolean isCyclicBorder(PathParam p);
+	
+	public Path getSegment(PathParam p) {
+		throw new Error("Cannot contain segment");
+	}
+	
+	
+	public void getClosedSegmentsNotInSet(Set<Path> segments, List<Path> res){
+		throw new Error("Cannot contain closed segment");
+	}
 }

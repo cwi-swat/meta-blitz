@@ -33,7 +33,7 @@ public abstract class SplitIndex extends PathIndex {
 				return cmp;
 			}
 		} else {
-			throw new Error("Comparing incomparable pathindexes!");
+			throw new Error("Comparing incomparable pathindexes!" + this + " " + o);
 		}
 	}
 

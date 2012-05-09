@@ -15,6 +15,9 @@ public class SingleVecAngularInterval implements AngularInterval{
 	public boolean isInside(Vec a) {
 		return wichNorm.dot(a) == 0 && wich.sameDir(a);
 	}
-
+	
+	public String toString(){
+		return "SingleVec(which: " + wich + ")";
+	}
 
 }

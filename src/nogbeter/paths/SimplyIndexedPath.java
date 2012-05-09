@@ -6,6 +6,7 @@ import nogbeter.paths.results.transformers.IPathIndexTransformer;
 import nogbeter.paths.results.transformers.PITransformers;
 import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
 import nogbeter.paths.simple.SimplePathIndex;
+import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.oned.Interval;
 import nogbeter.points.twod.Vec;
 import nogbeter.transform.AffineTransformation;
@@ -70,4 +71,6 @@ public abstract class SimplyIndexedPath extends SplittablePath<SimplePathIndex>{
 	public Path getSegment(SimplePathIndex p) {
 		return this;
 	}
+	
+	
 }

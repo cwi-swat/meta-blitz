@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import bezier.util.Tuple;
 import bezier.util.Util;
@@ -21,6 +22,7 @@ import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.lines.DiagonalLine;
 import nogbeter.paths.simple.lines.HorizontalLine;
 import nogbeter.paths.simple.lines.VerticalLine;
+import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
 import nogbeter.transform.AffineTransformation;
@@ -249,14 +251,12 @@ public class ShapeSet extends Path<SetIndex>{
 	public Tuple<Path<SetIndex>, Double> normaliseToLength(double prevLength) {
 		throw new Error("Cannot length normalise set!");
 	}
-
-	@Override
-	public Path getSegment(SetIndex p) {
-		return shapes.get(p.choice).getSegment(p.next);
-	}
 	
 	@Override
 	public void getSubPath(SetIndex from, SetIndex to, List<Path> result) {
+		if(from.choice != to.choice){
+			throw new Error("Cannot get subpath of two different set elems!");
+		}
 		shapes.get(from.choice).getSubPath(from.next, to.next, result);
 		
 	}
@@ -269,5 +269,37 @@ public class ShapeSet extends Path<SetIndex>{
 	@Override
 	public void getSubPathTo(SetIndex to, List<Path> result) {
 		throw new Error("Set is not a segment!");
+	}
+
+	@Override
+	public AngularInterval getAngularInsideInterval(SetIndex t) {
+		return shapes.get(t.choice).getAngularInsideInterval(t.next);
+	}
+
+	@Override
+	public Vec getStartTan() {
+		throw new Error("Set is not a segment!");
+	}
+
+	@Override
+	public Vec getEndTan() {
+		throw new Error("Set is not a segment!");
+	}
+
+	@Override
+	public boolean isCyclicBorder(SetIndex p) {
+		throw new Error("Shape has no start or end");
+	}
+	
+	@Override
+	public Path getSegment(SetIndex p) {
+		return shapes.get(p.choice).getSegment(p.next);
+	}
+	
+	@Override
+	public void getClosedSegmentsNotInSet(Set<Path> segments, List<Path> res){
+		for(Path p : shapes){
+			p.getClosedSegmentsNotInSet(segments, res);
+		}
 	}
 }

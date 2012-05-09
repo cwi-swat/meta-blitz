@@ -7,6 +7,7 @@ import static nogbeter.points.oned.Interval.interval01;
 
 import java.awt.geom.PathIterator;
 import java.util.List;
+import java.util.Set;
 
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
@@ -23,6 +24,7 @@ import nogbeter.paths.results.transformers.IPathIndexTransformer;
 import nogbeter.paths.results.transformers.PITransformers;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
+import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.oned.Interval;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;

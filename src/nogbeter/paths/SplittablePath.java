@@ -83,9 +83,9 @@ public abstract class SplittablePath<PathParam extends PathIndex>
 		} else {
 			Tuple<Path,Path> simp = lhs.splitSimpler();
 			IIntersections<LPP, PathParam> l =
-					simp.l.intersection(this).transform(getLeftLeftTransformer());
+					simp.l.intersection(this).transform(lhs.getLeftLeftTransformer());
 			IIntersections<LPP, PathParam> r=
-					simp.r.intersection(this).transform(getLeftRightTransformer());
+					simp.r.intersection(this).transform(lhs.getLeftRightTransformer());
 			return l.append(r);
 
 		}
@@ -111,12 +111,12 @@ public abstract class SplittablePath<PathParam extends PathIndex>
 			if(lhs.distanceSquared(sp.l.getBBox().getMiddle()) <
 					lhs.distanceSquared(sp.r.getBBox().getMiddle())){
 				BestProjectTup<SimplePathIndex, PathParam> fsbest = 
-						lhs.project(best,sp.l).transform(right(getLeftTransformer()));
+						lhs.project(best,sp.l).transform(getRightLeftTransformer());
 				return fsbest.choose(lhs.project(fsbest.distSquared,sp.r)
 						.transform(right(getRightTransformer())));
 			} else {
 				BestProjectTup<SimplePathIndex, PathParam> fsbest = 
-						lhs.project(best,sp.r).transform(right(getRightTransformer()));
+						lhs.project(best,sp.r).transform(getRightRightTransformer());
 				return fsbest.choose(lhs.project(fsbest.distSquared,sp.l)
 						.transform(right(getLeftTransformer())));
 			}
@@ -164,14 +164,14 @@ public abstract class SplittablePath<PathParam extends PathIndex>
 			if(sp.l.getBBox().avgDistSquared(lhs.getBBox().getMiddle()) <
 					sp.l.getBBox().avgDistSquared(lhs.getBBox().getMiddle())){
 				BestProjectTup<LPI, PathParam> res = lhs.project(best, sp.l)
-						.transform(right(getLeftTransformer()));
+						.transform(getRightLeftTransformer());
 				return res.choose(lhs.project(res.distSquared, sp.r)
-						.transform(right(getRightTransformer())));
+						.transform(getRightRightTransformer()));
 			} else {
 				BestProjectTup<LPI, PathParam> res = lhs.project(best, sp.r)
-						.transform(right(getRightTransformer()));
+						.transform(getRightRightTransformer());
 				return res.choose(lhs.project(res.distSquared, sp.l)
-						.transform(right(getLeftTransformer())));
+						.transform(getRightLeftTransformer()));
 			}
 		} else {
 			Tuple<Path,Path> sp = lhs.splitSimpler();

@@ -16,5 +16,4 @@ public abstract class PathIndex implements Comparable<PathIndex>{
 		return getSimple() > other.getSimple();
 	}
 
-
 }

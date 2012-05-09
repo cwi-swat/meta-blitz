@@ -21,7 +21,7 @@ public class SimplePathIndex extends PathIndex {
 			SimplePathIndex pi = (SimplePathIndex)o;
 			return Double.compare(t, pi.t);
 		} else {
-			throw new Error("Comparing incomparable pathindexes!");
+			throw new Error("Comparing incomparable pathindexes!" + this + " " + o);
 		}
 	}
 

@@ -1,6 +1,10 @@
 package nogbeter.paths.simple;
 
 import static nogbeter.paths.results.transformers.TupleTransformers.unitTup;
+
+import java.util.List;
+import java.util.Set;
+
 import bezier.util.Tuple;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
@@ -12,6 +16,8 @@ import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.paths.results.transformers.IPathIndexTransformer;
 import nogbeter.paths.results.transformers.PITransformers;
 import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
+import nogbeter.points.angles.AngularInterval;
+import nogbeter.points.angles.AngularIntervalFactory;
 import nogbeter.points.oned.Interval;
 import nogbeter.points.twod.Vec;
 
@@ -75,9 +81,25 @@ public abstract class SimplePath extends SimplyIndexedPath{
 	public abstract int awtCurSeg(float[] coords) ;
 	
 	public abstract Tuple<Path<SimplePathIndex>,Double> normaliseToLength(double prevLength);
+
 	
 	@Override
-	public Path getSegment(SimplePathIndex p) {
-		return this;
+	public AngularInterval getAngularInsideInterval(SimplePathIndex t) {
+		return AngularIntervalFactory.create180DegreesInterval(getTangentAt(t));
+	}
+	
+	@Override
+	public Vec getStartTan() {
+		return getTangentAtLocal(0.0);
+	}
+
+	@Override
+	public Vec getEndTan() {
+		return getTangentAtLocal(1.0);
+	}
+	
+	@Override
+	public boolean isCyclicBorder(SimplePathIndex p) {
+		return p.t == tInterval.high || p.t == tInterval.low;
 	}
 }

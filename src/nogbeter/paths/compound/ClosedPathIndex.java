@@ -24,7 +24,7 @@ public class ClosedPathIndex extends PathIndex{
 	}
 	
 	public String toString(){
-		return "Closed";
+		return "Closed(" + next.toString() + ")";
 	}
 
 }

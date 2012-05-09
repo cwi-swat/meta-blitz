@@ -3,6 +3,9 @@ package nogbeter.points.twod;
 import bezier.paths.Constants;
 
 public final class Vec {
+	
+	public static final Vec ZeroVec = new Vec(0,0);
+	
 	public final double x, y;
 	public final boolean point;
 	
@@ -115,4 +118,5 @@ public final class Vec {
 	public boolean isEq(Vec vec) {
 		return x == vec.x && y == vec.y;
 	}
+
 }

@@ -5,8 +5,11 @@ import java.util.List;
 import bezier.util.Tuple;
 import nogbeter.paths.Path;
 import nogbeter.paths.SimplyIndexedPath;
+import nogbeter.paths.compound.SplitIndex.SplitChoice;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
+import nogbeter.points.angles.AngularInterval;
+import nogbeter.points.angles.AngularIntervalFactory;
 import nogbeter.points.oned.Interval;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
@@ -143,6 +146,37 @@ public class LengthBasedAppend extends SimplyIndexedPath{
 			result.add(left);
 			right.getSubPathTo(to, result);
 		}
+	}
+
+
+	@Override
+	public AngularInterval getAngularInsideInterval(SimplePathIndex t) {
+		if(t.t == left.tInterval.high){
+				return AngularIntervalFactory.
+					createAngularIntervalSingleIfEq(right.getStartTan(),left.getEndTan().negate());
+		} else if(t.t < left.tInterval.high){
+			return left.getAngularInsideInterval(t);
+		} else {
+			return right.getAngularInsideInterval(t);
+		}
+	}
+
+
+	@Override
+	public Vec getStartTan() {
+		return left.getStartTan();
+	}
+
+
+	@Override
+	public Vec getEndTan() {
+		return right.getEndTan();
+	}
+
+
+	@Override
+	public boolean isCyclicBorder(SimplePathIndex p) {
+		return p.t == 0 || p.t == right.tInterval.high;
 	}
 
 

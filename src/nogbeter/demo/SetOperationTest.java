@@ -14,27 +14,28 @@ import nogbeter.paths.PathIndex;
 import nogbeter.paths.factory.TextFactory;
 import nogbeter.paths.results.intersections.IIntersections;
 import nogbeter.paths.results.intersections.Intersection;
+import nogbeter.paths.setoperations.SetOperations;
 import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.angles.AngularIntervalFactory;
 import nogbeter.points.twod.Vec;
 import bezier.image.generated.ColorsAlpha;
 import bezier.image.generated.SampleInstances.Sample4;
 
-public class CrossTest extends DemoBase{
+public class SetOperationTest extends DemoBase{
 	public static void main(String[] argv){
 		AngularInterval in = AngularIntervalFactory.create180DegreesInterval(new Vec(0,1));
 		System.out.println(in.isInside(new Vec(1,0)));
-		new CrossTest();
+		new SetOperationTest();
 	}
 
 	Vec location = new Vec(0,0);
-	private Path<PathIndex> r,q;
+	private Path<PathIndex> r,z;
 	
-	public CrossTest() {
+	public SetOperationTest() {
 //		r = rectangle().transform(id.scale(200).translate(400,400));
-		System.out.println(r);
-		r = TextFactory.text2Paths("ws").transform(id.scale(5).translate(200, 200));
-		q = TextFactory.text2Paths("nm").transform(id.scale(5));
+		r = TextFactory.text2Paths("w").transform(id.scale(5).translate(200, 200));
+		z = TextFactory.text2Paths("v").transform(id.scale(5));
+//		z = rectangle().transform(id.scale(200));
 	}
 	
 	public void handleKeyStroke(char key){
@@ -50,16 +51,30 @@ public class CrossTest extends DemoBase{
 	@Override
 	public void draw() {
 
-		Path<PathIndex> q = // rectangle().transform(id.scale(200).translate(mouse.add(location)));
-		this.q.transform(id.translate(mouse.add(location)));
+		Path<PathIndex> q =
+		z.transform(
+				id.translate(mouse.add(location)));
 		draw(r);
 		draw(q);
 		IIntersections<PathIndex,PathIndex> ints = r.intersection(q);
-		List<Crossing<PathIndex, PathIndex>> cross = new GroupedIntersections(ints, r,q).getCrossings();
-		for(Crossing<PathIndex, PathIndex> c : cross){
-		
-			fillOval(c.loc, 10, c.leftAfterInside ? ColorsAlpha.green : ColorsAlpha.red);
+		List<List<Crossing<PathIndex, PathIndex>>> cross = new GroupedIntersections(ints, r,q).getCrossings();
+		int i = 0;
+		for(List<Crossing<PathIndex, PathIndex>> cc : cross){
+			for(Crossing<PathIndex,PathIndex> c : cc){
+				System.out.println(c.r);
+				fillOval(c.loc, 10, c.leftAfterInside ? ColorsAlpha.green : ColorsAlpha.red);
+				i++;
+			}
 		}
+		System.out.println(i);
+//		Path p = new SetOperations<PathIndex, PathIndex>(r, q, cross).union();
+//		draw(p);
+		
+//		for(Crossing<PathIndex, PathIndex> c : cross){
+//		
+//			fillOval(c.loc, 10, c.leftAfterInside ? ColorsAlpha.green : ColorsAlpha.red);
+//		}
+//		System.out.println();
 
 	}
 }

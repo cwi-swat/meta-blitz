@@ -10,6 +10,7 @@ public class AngularIntervalFactory {
 	
 	// if the dir of start is the same is the dir of end, returns the interval consisting of only this vec
 	public static AngularInterval createAngularIntervalSingleIfEq(Vec start, Vec end){
+
 		Vec startNorm = start.tanToNormal();
 		if(startNorm.dot(end) == 0){
 			if(start.sameDir(end)){

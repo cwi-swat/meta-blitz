@@ -1,6 +1,7 @@
 package nogbeter.paths.compound;
 
 import java.util.List;
+import java.util.Set;
 
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
@@ -10,6 +11,8 @@ import nogbeter.paths.results.transformers.PITransformers;
 import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
 import nogbeter.paths.results.transformers.TupleTransformers;
 import nogbeter.paths.simple.SimplePath;
+import nogbeter.points.angles.AngularInterval;
+import nogbeter.points.angles.AngularIntervalFactory;
 import nogbeter.points.twod.Vec;
 import nogbeter.transform.AffineTransformation;
 import bezier.util.Tuple;
@@ -21,9 +24,9 @@ public class Append
 		super(left, right);
 	}
 
-	private static Path createAppend(SimplePath[] paths, int start, int end){
+	private static Path createAppend(List<Path> paths, int start, int end){
 		if(start == end -1){
-			return paths[start];
+			return paths.get(start);
 		} else {
 			int mid = (start + end)/2;
 			return new Append(
@@ -32,8 +35,8 @@ public class Append
 		}
 	}
 	
-	public static Path createAppends(SimplePath[] paths) {
-		return createAppend(paths, 0, paths.length);
+	public static Path createAppends(List<Path> paths) {
+		return createAppend(paths, 0, paths.size());
 	}
 
 	@Override
@@ -101,11 +104,6 @@ public class Append
 	}
 
 	@Override
-	public Path getSegment(AppendIndex p) {
-		return this;
-	}
-
-	@Override
 	public void getSubPath(AppendIndex from, AppendIndex to, List<Path> res) {
 		if(from.choice == to.choice){
 			if(from.choice == SplitChoice.Left){
@@ -141,6 +139,40 @@ public class Append
 	}
 
 
+	@Override
+	public AngularInterval getAngularInsideInterval(AppendIndex t) {
+		if(t.isBorder()){
+			return AngularIntervalFactory.
+					createAngularIntervalSingleIfEq(right.getStartTan(), 
+							left.getEndTan().negate()); 
+		} else if(t.choice == SplitChoice.Left){
+			return left.getAngularInsideInterval(t.next);
+		} else {
+			return right.getAngularInsideInterval(t.next);
+		}
+	}
+
+
+	@Override
+	public Vec getStartTan() {
+		return left.getStartTan();
+	}
+
+	@Override
+	public Vec getEndTan() {
+		return right.getEndTan();
+	}
+
+
+	@Override
+	public boolean isCyclicBorder(AppendIndex p) {
+		return p.isCyclicBorder();
+	}
+
+	@Override
+	public void getClosedSegmentsNotInSet(Set<Path> segments, List<Path> res){
+		throw new Error("Cannot contain segment");
+	}
 
 
 }

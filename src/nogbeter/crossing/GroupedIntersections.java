@@ -77,15 +77,19 @@ public class GroupedIntersections<L extends PathIndex,R extends PathIndex> {
 		return res;
 	}
 	
-	public List<Crossing<L,R>> getCrossings(){
-		List<Crossing<L, R>> res = new ArrayList<Crossing<L,R>>();
+	public List<List<Crossing<L, R>>> getCrossings(){
+		List<List<Crossing<L, R>>> res = new ArrayList<List<Crossing<L, R>>>();
 		for(List<Intersection<L,R>> grouped : groupIntersectionsOnLeftSegments()){
+			List<Crossing<L, R>> segCross = new ArrayList<Crossing<L,R>>();
 			for(List<Intersection<L, R>> intersPerPoint : groupIntersectionsOnPointPerLeftSegment(grouped)){
 				LineStateBeforeAndAfter type = getCrossingType(intersPerPoint);
 				Crossing<L, R> n = type.toCrossing(intersPerPoint.get(0));
 				if(n!= null){
-					res.add(n);
+					segCross.add(n);
 				}
+			}
+			if(!segCross.isEmpty()){
+				res.add(segCross);
 			}
 		}	
 		return res;

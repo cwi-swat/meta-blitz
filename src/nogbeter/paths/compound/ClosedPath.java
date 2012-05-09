@@ -1,6 +1,7 @@
 package nogbeter.paths.compound;
 
 import java.util.List;
+import java.util.Set;
 
 import bezier.util.Tuple;
 import nogbeter.paths.Path;
@@ -16,6 +17,8 @@ import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.lines.DiagonalLine;
 import nogbeter.paths.simple.lines.HorizontalLine;
 import nogbeter.paths.simple.lines.VerticalLine;
+import nogbeter.points.angles.AngularInterval;
+import nogbeter.points.angles.AngularIntervalFactory;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
 import nogbeter.transform.AffineTransformation;
@@ -174,18 +177,13 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 	}
 
 	@Override
-	public Path getSegment(ClosedPathIndex p) {
-		return actual.getSegment(p.next);
-	}
-
-	@Override
 	public void getSubPath(ClosedPathIndex from, ClosedPathIndex to,
 			List<Path> result) {
 		if(from.compareTo(to) < 0){
-			actual.getSubPath(from, to, result);
+			actual.getSubPath(from.next, to.next, result);
 		} else {
-			actual.getSubPathFrom(from, result);
-			actual.getSubPathTo(to, result);
+			actual.getSubPathFrom(from.next, result);
+			actual.getSubPathTo(to.next, result);
 		}
 	}
 
@@ -199,4 +197,43 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 		throw new Error("SubPathTill of closedPath is whole path!");
 	}
 
+	@Override
+	public AngularInterval getAngularInsideInterval(ClosedPathIndex t) {
+		if(actual.isCyclicBorder(t.next)){
+			return 
+			AngularIntervalFactory.createAngularIntervalSingleIfEq(actual.getStartTan(),
+					actual.getEndTan().negate());
+		}
+		return actual.getAngularInsideInterval(t.next);
+	}
+
+	@Override
+	public Vec getStartTan() {
+		throw new Error("Closedpath has no start or end!");
+	}
+
+	@Override
+	public Vec getEndTan() {
+		throw new Error("Closedpath has no start or end!");
+	}
+
+	@Override
+	public boolean isCyclicBorder(ClosedPathIndex p) {
+		throw new Error("Closedpath has no start or end!");
+	}
+	
+	@Override
+	public Path getSegment(ClosedPathIndex p) {
+		return this;
+	}
+	
+	@Override
+	public void getClosedSegmentsNotInSet(Set<Path> segments, List<Path> res){
+		if(!segments.contains(this)){
+			res.add(this);
+		}
+	}
+
+	
+	
 }

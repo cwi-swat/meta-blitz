@@ -17,6 +17,10 @@ public class TwoAngularVecMoreThan180 implements AngularInterval {
 		return startNorm.dot(a) >= 0 || end.tanToAntiNormal().dot(a) >= 0;
 
 	}
+	
+	public String toString(){
+		return "TwoVec>180(begin: " + startNorm + "end: " + end + ")";
+	}
 
 }
 

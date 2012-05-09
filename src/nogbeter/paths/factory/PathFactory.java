@@ -1,5 +1,7 @@
 package nogbeter.paths.factory;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import nogbeter.paths.Path;
@@ -51,24 +53,32 @@ public class PathFactory {
 		return new CubicCurve(p0, p1, p2, p3, interval);
 	}
 	
-	public static Path createAppends(SimplePath ... paths){
-		if(paths.length == 1){
-			return paths[0];
+	public static Path createAppends(List<Path> paths){
+		if(paths.size() == 1){
+			return paths.get(0);
 		}
 		return Append.createAppends(paths);
 	}
 	
-	public static Path createClosedPath(SimplePath ... paths){
-		Vec begin = paths[0].getStartPoint();
-		Vec end = paths[paths.length-1].getEndPoint();
+	public static Path createAppends(Path ... paths){
+		return createAppends(Arrays.asList(paths));
+	}
+	
+	public static Path createClosedPath(List<Path>  paths){
+		Vec begin = paths.get(0).getStartPoint();
+		Vec end = paths.get(paths.size()-1).getEndPoint();
 		if(begin.isEqError(end)){
 			if(!begin.isEq(end)){
-				paths[0] = (SimplePath) paths[0].getWithAdjustedStartPoint(end);
+				paths.set(0, (SimplePath)  paths.get(0).getWithAdjustedStartPoint(end));
 			}
 			return new ClosedPath(createAppends(paths));
 		} else {
-			throw new Error("Not closed!");
+			throw new Error("Not closed!" + createAppends(paths));
 		}
+	}
+	
+	public static Path createClosedPath(Path ... paths){
+		return createClosedPath(Arrays.asList(paths));
 	}
 	
 	public static Path createSet(Path ... paths){
@@ -88,6 +98,6 @@ public class PathFactory {
 	public static Path createSet(Set<Path> paths) {
 		return createSet(paths.toArray(new Path[]{}));
 	}
-	
+
 }
 

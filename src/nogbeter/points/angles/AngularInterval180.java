@@ -17,5 +17,9 @@ class AngularInterval180 implements AngularInterval {
 	public boolean isInside(Vec a) {
 		return dirNorm.dot(a) >= 0;
 	}
+	
+	public String toString(){
+		return "Angular180(norm: " + dirNorm + ")";
+	}
 
 }

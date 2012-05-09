@@ -23,6 +23,7 @@ import javax.swing.JFrame;
 
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
+import nogbeter.paths.factory.PathFactory;
 import nogbeter.paths.iterators.AWTPathIterator;
 import nogbeter.points.twod.Vec;
 
@@ -357,7 +358,7 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 		Vec c = new Vec(1,1);
 		Vec d = new Vec(-1,1);
 //		Vec e = new Vec(150,50);
-		return createAppends(createLine(a,b), createLine(b,c), createLine(c,d),createLine(d,a));
+		return PathFactory.createClosedPath(createLine(a,b), createLine(b,c), createLine(c,d),createLine(d,a));
 	}
 	
 
