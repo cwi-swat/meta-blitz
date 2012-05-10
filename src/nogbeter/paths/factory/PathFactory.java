@@ -11,13 +11,7 @@ import nogbeter.paths.compound.Shape;
 import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.lines.DiagonalLine;
-import nogbeter.paths.simple.lines.HorizontalLRLine;
-import nogbeter.paths.simple.lines.HorizontalLine;
 import nogbeter.paths.simple.lines.Line;
-import nogbeter.paths.simple.lines.HorizontalRLLine;
-import nogbeter.paths.simple.lines.VerticalDULine;
-import nogbeter.paths.simple.lines.VerticalLine;
-import nogbeter.paths.simple.lines.VerticalUDLine;
 import nogbeter.paths.simple.nonlinear.CubicCurve;
 import nogbeter.paths.simple.nonlinear.Curve;
 import nogbeter.paths.simple.nonlinear.QuadCurve;
@@ -32,7 +26,7 @@ public class PathFactory {
 
 	public static Line createLine(Vec start, Vec end,
 			Interval interval) {
-		return Line.createLine(start, end, interval);
+		return new DiagonalLine(start, end, interval);
 	}
 
 	public static QuadCurve createQuad(Vec p0, Vec p1, Vec p2) {

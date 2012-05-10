@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nogbeter.paths.Path;
+import nogbeter.paths.PathIndex;
 import nogbeter.paths.factory.PathFactory;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
@@ -151,6 +152,11 @@ public class QuadCurve extends Curve{
 	Curve getWithNewSimpleAndInterval(SimplePath lsimp,
 			SimplePath rsimp, Interval interval) {
 		return new QuadCurve(p0, p1, p2,  interval, lsimp, rsimp);
+	}
+
+	@Override
+	public Path<PathIndex> reverse() {
+		return (Path)PathFactory.createQuad(p2, p1, p0);
 	}
 
 }

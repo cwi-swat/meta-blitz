@@ -65,13 +65,13 @@ public class GroupedIntersections<L extends PathIndex,R extends PathIndex> {
 				new Stack<List<Intersection<L,R>>>();
 		
 		for(Intersection<L, R> in : ints){
-			if(res.isEmpty() || !res.peek().get(0).loc.isEqError(in.loc)){
+			if(res.isEmpty() || !res.peek().get(0).locl.isEq(in.locl)){
 				res.push(new ArrayList<Intersection<L,R>>(MAX_NR_INTERSECTIONS_PER_CROSSING));
 			}
 			res.peek().add(in);
 		}
 		// wrap around case
-		if(res.get(0).get(0).loc.isEqError(res.peek().get(0).loc)){
+		if(res.get(0).get(0).locl.isEq(res.peek().get(0).locl)){
 			res.get(0).addAll(res.pop());
 		}
 		return res;
@@ -114,6 +114,7 @@ public class GroupedIntersections<L extends PathIndex,R extends PathIndex> {
 	
 	private LineStateBeforeAndAfter getCrossingTypeDouble(Intersection<L,R> l, Intersection<L,R> r){
 		if(l.tanl.isEq(r.tanl)){
+
 			Tuple<Vec,Vec> orderTanR = getOrderedTangentsRight(l, r);
 			return GetCrossingType.doubleIntersectionTypeL(l.tanl, orderTanR.l, orderTanR.r);
 		} else {

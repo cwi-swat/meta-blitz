@@ -20,8 +20,6 @@ import nogbeter.paths.results.transformers.IPathIndexTransformer;
 import nogbeter.paths.results.transformers.PITransformers;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.lines.DiagonalLine;
-import nogbeter.paths.simple.lines.HorizontalLine;
-import nogbeter.paths.simple.lines.VerticalLine;
 import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
@@ -84,17 +82,6 @@ public class ShapeSet extends Path<SetIndex>{
 		return intersections(lhs);
 	}
 
-	@Override
-	public IIntersections<SimplePathIndex, SetIndex> intersectionLHorLine(
-			HorizontalLine lhs) {
-		return intersections(lhs);
-	}
-
-	@Override
-	public IIntersections<SimplePathIndex, SetIndex> intersectionLVerLine(
-			VerticalLine lhs) {
-		return intersections(lhs);
-	}
 	
 
 	@Override
@@ -153,18 +140,6 @@ public class ShapeSet extends Path<SetIndex>{
 		return projects(best,lhs);
 	}
 
-	@Override
-	public BestProjectTup<SimplePathIndex, SetIndex> projectLHorLine(
-			double best, HorizontalLine lhs) {
-		return projects(best,lhs);
-	}
-
-	@Override
-	public BestProjectTup<SimplePathIndex, SetIndex> projectLVerLine(
-			double best, VerticalLine lhs) {
-		return projects(best,lhs);
-	}
-	
 	@Override
 	public BestProjectTup<SetIndex, SetIndex> projectLSet(double best,
 			ShapeSet lhs) {
@@ -302,4 +277,16 @@ public class ShapeSet extends Path<SetIndex>{
 			p.getClosedSegmentsNotInSet(segments, res);
 		}
 	}
+
+	@Override
+	public Path<PathIndex> reverse() {
+		List<Path> res = new ArrayList<Path>();
+		for(Path p : shapes){
+			res.add(p.reverse());
+		}
+		return (Path)new ShapeSet(res);
+	}
+	
+	public Vec getArbPoint(){ return shapes.get(0).getArbPoint();}
+	public Vec getArbPointTan(){ return shapes.get(0).getArbPointTan();}
 }

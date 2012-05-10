@@ -152,6 +152,14 @@ public class Shape extends CompoundSplittablePath<ShapeIndex> {
 	public boolean isCyclicBorder(ShapeIndex p) {
 		throw new Error("Shape has no start or end");
 	}
+
+
+	@Override
+	public Path<PathIndex> reverse() {
+		throw new Error("Shape has no start or end");
+	}
 	
+	public Vec getArbPoint(){ return left.getArbPoint();}
+	public Vec getArbPointTan(){ return left.getArbPointTan();}
 
 }

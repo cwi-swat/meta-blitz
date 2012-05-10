@@ -17,8 +17,6 @@ import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.lines.DiagonalLine;
-import nogbeter.paths.simple.lines.HorizontalLine;
-import nogbeter.paths.simple.lines.VerticalLine;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
 import nogbeter.transform.AffineTransformation;

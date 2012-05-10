@@ -4,6 +4,7 @@ import java.util.List;
 
 import bezier.util.Tuple;
 import nogbeter.paths.Path;
+import nogbeter.paths.PathIndex;
 import nogbeter.paths.SimplyIndexedPath;
 import nogbeter.paths.compound.SplitIndex.SplitChoice;
 import nogbeter.paths.simple.SimplePath;
@@ -180,5 +181,12 @@ public class LengthBasedAppend extends SimplyIndexedPath{
 	}
 
 
+	@Override
+	public Path<PathIndex> reverse() {
+		return (Path)new Append(right.reverse(), left.reverse());
+	}
+
+	public Vec getArbPoint(){ return getStartPoint();}
+	public Vec getArbPointTan(){ return getStartTan();}
 	
 }

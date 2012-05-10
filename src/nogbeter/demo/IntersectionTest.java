@@ -37,7 +37,7 @@ public class IntersectionTest extends DemoBase {
 		IIntersections<PathIndex,PathIndex> ints = r.intersection(q);
 		for(Intersection<PathIndex, PathIndex> i : ints){
 //			fillOval(i.loc, 5,ColorsAlpha.green);
-			drawLine(i.loc, i.loc.add(i.tanl.normalize().mul(75)),ColorsAlpha.red);
+			drawLine(i.locl, i.locl.add(i.tanl.normalize().mul(75)),ColorsAlpha.red);
 //			drawLine(i.loc, i.loc.add(i.tanr.normalize().mul(75)),ColorsAlpha.green);
 		}
 //		

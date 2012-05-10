@@ -26,6 +26,78 @@ public class Interval {
 		this.length = b - a;
 	}
 	
+	public Interval(double a, double b, double c) {
+		// manual sorting for speed
+		if(a < b){
+			// if b < c already right
+			if(b > c){
+				if(c < a){
+					a = c;
+				} else {
+					c = b;
+				}
+			}
+		} else {
+			if( b < c){
+				if(c < a){
+					c = a;
+					a = b;
+				} else {
+					a = b;
+				}
+			} else {
+				b = c;
+				c = a;
+				a = b;
+			}
+		}
+		this.low = a;
+		this.high = c;
+		this.length = c - a;
+	}
+	
+	
+	public Interval(double a, double b, double c, double d) {
+		// manual sorting for speed
+		if(a < b){
+			if(c < d){
+				// if b < c already right
+				if(b >= c){
+					a = c;
+					d = a;
+				}
+			} else {
+				if(b < d){
+					d =c;
+				} else {
+					a = d;
+					d = b;
+				}
+			}
+		} else {
+			if(c < d){
+				if(a < c){
+					a = b;
+				} else {
+					d = a;
+					a = c;
+				}
+			} else {
+				if(a < d){
+					a = b;
+					d = c;
+				} else {
+					c = d;
+					d = a;
+					a = c;
+				}
+			}
+		}
+		this.low = a;
+		this.high = d;
+		this.length = d - a;
+	}
+
 	public boolean isInside(double x){
 		return x >= low && x <= high;
 	}
@@ -56,6 +128,10 @@ public class Interval {
 		} else {
 			return high;
 		}
+	}
+	
+	public boolean isEmpty(){
+		return low > high;
 	}
 	
 	public boolean overlapsWith(Interval other){
@@ -152,6 +228,10 @@ public class Interval {
 	public static boolean overlap(Interval a, Interval b) {
 		return a != emptyInterval && b != emptyInterval && 
 				a.overlapsWith(b);
+	}
+
+	public boolean isSinglePoint() {
+		return low == high;
 	}
 
 }

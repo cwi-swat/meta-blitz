@@ -159,6 +159,14 @@ public class DiagonalLine extends Line {
 	public double findYAll(double y) {
 		return findAll(start.y, dir.y, y);
 	}
+	
+	public double findAll(Vec v){
+		if(dir.x == 0){
+			return findYAll(v.y);
+		} else {
+			return findXAll(v.x);
+		}
+	}
 
 	@Override
 	public String toString() {
@@ -178,40 +186,35 @@ public class DiagonalLine extends Line {
 	@Override
 	public IIntersections<SimplePathIndex, SimplePathIndex> intersectionLDiaLine(
 			DiagonalLine lhs) {
-		Tuple<Double, Double> res = lhs.intersection(this);
-		if (res != null) {
-			return makeIntersectionResult(lhs,res.l,res.r);
-		} else {
+		if(dir.tanToNormal().dot(lhs.dir) == 0){
+			if(isOnSameLine(lhs)){
+				Interval intv = new Interval(findAll(lhs.start),findAll(lhs.end))
+							.intersection(interval01);
+				if(!intv.isEmpty()){
+					IIntersections<SimplePathIndex, SimplePathIndex> res =
+							makeIntersectionResult(lhs,lhs.findAll(getAtLocal(intv.low)),intv.low);
+					if(!intv.isSinglePoint()){
+						res = res.append(
+								makeIntersectionResult(lhs,lhs.findAll(getAtLocal(intv.high)),intv.high));
+					}
+					return res;
+				}
+			}
 			return Intersections.NoIntersections;
-		}
-	}
-
-	@Override
-	public IIntersections<SimplePathIndex, SimplePathIndex> intersectionLHorLine(
-			HorizontalLine lhs) {
-		double t = getTAtY(lhs.y);
-		if(interval01.isInside(t)){
-			Vec res = getAtLocal(t);
-			if (lhs.xInterval.isInside(res.x)) {
-				return makeIntersectionResult(lhs,lhs.getTForX(res.x), t);
-			} 
-		}
-		return Intersections.NoIntersections;
-	}
-
-	@Override
-	public IIntersections<SimplePathIndex, SimplePathIndex> intersectionLVerLine(
-			VerticalLine lhs) {
-		double t = getTAtX(lhs.x);
-		if(interval01.isInside(t)){
-			Vec res = getAtLocal(t);
-			if (lhs.yInterval.isInside(res.y)) {
-				return makeIntersectionResult(lhs,lhs.getTForY(res.y), t);
+		} else {
+			Tuple<Double, Double> res = lhs.intersection(this);
+			if (res != null) {
+				return makeIntersectionResult(lhs,res.l,res.r);
+			} else {
+				return Intersections.NoIntersections;
 			}
 		}
-		return Intersections.NoIntersections;
 	}
-	
+
+	private boolean isOnSameLine(DiagonalLine lhs) {
+		return getAtLocal(findAll(lhs.start)).isEq(lhs.start);
+	}
+
 
 	@Override
 	public IIntersections<SetIndex, SimplePathIndex> intersectionLSet(
@@ -316,61 +319,6 @@ public class DiagonalLine extends Line {
 		}
 	}
 
-
-	@Override
-	public BestProjectTup<SimplePathIndex, SimplePathIndex> projectLHorLine(
-			double best, HorizontalLine lhs) {
-		Interval txInterval = new Interval(
-				getTAtX(lhs.xInterval.low),
-				getTAtX(lhs.xInterval.high)).intersection(interval01);
-		BestProjectTup<SimplePathIndex, SimplePathIndex> res = BestProjectTup.noBestYet;
-		if(txInterval != null){
-			Vec lowv = getAtLocal(txInterval.low); Vec highv = getAtLocal(txInterval.high);
-			double lowDist = square(lowv.y - lhs.y); double highDist = square(highv.y - lhs.y);
-			if(lowDist < highDist){
-				res = res.choose(
-						makeBestProject(lowDist, lhs, lhs.getTForX(lowv.x), txInterval.low)
-						);
-			} else {
-				res = res.choose(
-						makeBestProject(highDist, lhs, lhs.getTForX(highv.x), txInterval.high)
-					);
-			}
-		} 
-		return res.choose(
-				projectLPoint(lhs, lhs.getTForX(lhs.xInterval.low), lhs.xInterval.low, lhs.y))
-				.choose(
-				projectLPoint(lhs, lhs.getTForX(lhs.xInterval.high),lhs.xInterval.high, lhs.y)
-			);
-	}
-
-	@Override
-	public BestProjectTup<SimplePathIndex, SimplePathIndex> projectLVerLine(
-			double best, VerticalLine lhs) {
-		Interval tyInterval = new Interval(
-				getTAtY(lhs.yInterval.low),
-				getTAtY(lhs.yInterval.high)).intersection(interval01);
-		BestProjectTup<SimplePathIndex, SimplePathIndex> res = BestProjectTup.noBestYet;
-		if(tyInterval != null){
-			Vec lowv = getAtLocal(tyInterval.low); Vec highv = getAtLocal(tyInterval.high);
-			double lowDist = square(lowv.x - lhs.x); double highDist = square(highv.x - lhs.x);
-			if(lowDist < highDist){
-				res = res.choose(
-						makeBestProject(lowDist, lhs, lhs.getTForY(lowv.y), tyInterval.low)
-					);
-			} else {
-				res = res.choose(
-						makeBestProject(highDist, lhs, lhs.getTForY(highv.y), tyInterval.high)
-					);
-			}
-		} 
-		return res.choose(
-				projectLPoint(lhs, lhs.getTForY(lhs.yInterval.low), lhs.x, lhs.yInterval.low))
-				.choose(
-				projectLPoint(lhs, lhs.getTForY(lhs.yInterval.high), lhs.x, lhs.yInterval.high)
-			);
-	}
-
 	@Override
 	public BestProjectTup<SetIndex, SimplePathIndex> projectLSet(double best,
 			ShapeSet lhs) {
@@ -381,5 +329,10 @@ public class DiagonalLine extends Line {
 			BestProjectTup<LPI, SimplePathIndex> 
 			projectLSplittable(double best, SplittablePath<LPI> lhs) {
 		return lhs.projectLDiaLine(best, this).flip();
+	}
+
+	@Override
+	public Path<PathIndex> reverse() {
+		return (Path)PathFactory.createLine(end, start);
 	}
 }

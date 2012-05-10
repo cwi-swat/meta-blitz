@@ -12,8 +12,6 @@ import nogbeter.paths.results.project.BestProject;
 import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.lines.DiagonalLine;
-import nogbeter.paths.simple.lines.HorizontalLine;
-import nogbeter.paths.simple.lines.VerticalLine;
 import nogbeter.paths.simple.nonlinear.Curve;
 import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.twod.BBox;
@@ -46,12 +44,6 @@ public abstract class Path
 
 	public abstract IIntersections<SimplePathIndex, PathParam> intersectionLDiaLine(
 			DiagonalLine lhs);
-
-	public abstract IIntersections<SimplePathIndex, PathParam>  intersectionLHorLine(
-			HorizontalLine lhs);
-
-	public abstract IIntersections<SimplePathIndex, PathParam> intersectionLVerLine(
-			VerticalLine lhs);
 
 	public IIntersections<SimplePathIndex, PathParam> intersectionLCurve(
 			Curve lhs){
@@ -89,14 +81,6 @@ public abstract class Path
 	public abstract BestProjectTup<SimplePathIndex, PathParam> projectLDiaLine(
 			double best,
 			DiagonalLine lhs);
-	
-	public abstract BestProjectTup<SimplePathIndex, PathParam> projectLHorLine(
-			double best,
-			HorizontalLine lhs);
-	
-	public abstract BestProjectTup<SimplePathIndex, PathParam> projectLVerLine(
-			double best,
-			VerticalLine lhs);
 	
 	public BestProjectTup<SimplePathIndex, PathParam> projectLCurve(
 			double best,
@@ -172,4 +156,10 @@ public abstract class Path
 	public void getClosedSegmentsNotInSet(Set<Path> segments, List<Path> res){
 		throw new Error("Cannot contain closed segment");
 	}
+	
+	public abstract Path<PathIndex> reverse();
+	
+	public abstract Vec getArbPoint();
+	public abstract Vec getArbPointTan();
+	
 }

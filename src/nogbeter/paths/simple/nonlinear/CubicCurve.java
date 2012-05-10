@@ -161,7 +161,7 @@ public class CubicCurve extends Curve{
 	@Override
 	public
 	BBox makeBBox() {
-		return BBox.fromPoints(p0,p1,p2,p3);
+		return BBox.from4Points(p0,p1,p2,p3);
 	}
 
 
@@ -186,6 +186,11 @@ public class CubicCurve extends Curve{
 	Curve getWithNewSimpleAndInterval(SimplePath lsimp,
 			SimplePath rsimp, Interval interval) {
 		return new CubicCurve(p0, p1, p2, p3, interval, lsimp, rsimp);
+	}
+
+	@Override
+	public Path<PathIndex> reverse() {
+		return (Path)PathFactory.createCubic(p3, p2, p1, p0);
 	}
 
 	

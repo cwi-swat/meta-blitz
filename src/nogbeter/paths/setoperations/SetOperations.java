@@ -39,6 +39,14 @@ public class SetOperations<L extends PathIndex,R extends PathIndex> {
 			this.end = end;
 		}
 		
+		int getPrevIndex(int i){
+			if(i == start){
+				return end;
+			} else {
+				return i-1;
+			}
+		}
+		
 		int getNextIndex(int i){
 			if(i == end){
 				return start;
@@ -57,7 +65,6 @@ public class SetOperations<L extends PathIndex,R extends PathIndex> {
 		Tuple<List<Crossing<L,R>>,List<SegmentStartEndIndex>> norm =
 				getLeftSegs(crossingPerSegmentSortedOnLeft);
 		this.crossingSortedOnLeft = norm.l;
-		System.err.printf("Nr crossings %d\n",this.crossingSortedOnLeft.size());
 		this.leftStartEndSegment = norm.r;
 		used = new boolean[this.crossingSortedOnLeft.size()];
 		this.crossingIndexesSortedOnRight =
@@ -144,13 +151,17 @@ public class SetOperations<L extends PathIndex,R extends PathIndex> {
 		return NoLooseEnd;
 	}
 
-	Path doOperation(boolean shouldBeInside){
+	Path doOperation(boolean shouldBeInsideL,boolean reverseRight){
 		List<Path> res = new ArrayList<Path>();
-		leftPath.getClosedSegmentsNotInSet(usedPathsLeft, res);
-		rightPath.getClosedSegmentsNotInSet(usedPathsRight, res);
+		if(shouldBeInsideL ^ reverseRight){
+			leftPath.getClosedSegmentsNotInSet(usedPathsLeft, res);
+		}
+		if(!reverseRight && shouldBeInsideL){
+			rightPath.getClosedSegmentsNotInSet(usedPathsRight, res);
+		}
 		int beginIndex;
-		while((beginIndex = findLooseEnd(shouldBeInside)) != NoLooseEnd){
-			Path closedPathFrom = getClosedPathFrom(beginIndex);
+		while((beginIndex = findLooseEnd(shouldBeInsideL)) != NoLooseEnd){
+			Path closedPathFrom = getClosedPathFrom(beginIndex, reverseRight);
 			res.add(closedPathFrom);
 		}
 		return PathFactory.createSet(new HashSet(res));
@@ -164,20 +175,34 @@ public class SetOperations<L extends PathIndex,R extends PathIndex> {
 		return leftStartEndSegment.get(i).getNextIndex(i);
 	}
 	
-	private int getNextRightIndex(int i){
-		return rightStartEndSegment.get(i).getNextIndex(i);
+	private int getNextRightIndex(int i,boolean reverse){
+		if(reverse){
+			return rightStartEndSegment.get(i).getPrevIndex(i);
+		} else {
+			return rightStartEndSegment.get(i).getNextIndex(i);
+		}
 	}
 
-	private Path getClosedPathFrom(int beginIndex) {
+	private Path getClosedPathFrom(int beginIndex, boolean reverseRight) {
 		List<Path> res = new ArrayList<Path>();
 		while(!used[beginIndex]){
 			int nextIndex = getNextLeftIndex(beginIndex);
 			leftPath.getSubPath(crossingSortedOnLeft.get(beginIndex).l,
 					crossingSortedOnLeft.get(nextIndex).l, res);
 			int startRight = fromLeftToRight[nextIndex];
-			int nextRight = getNextRightIndex(startRight);
-			rightPath.getSubPath(getRightCrossing(startRight).r,
-					getRightCrossing(nextRight).r, res);
+			int nextRight = getNextRightIndex(startRight,reverseRight);
+	
+			if(reverseRight){
+				List<Path> resLocalRight = new ArrayList<Path>();
+				rightPath.getSubPath(getRightCrossing(nextRight).r,
+						getRightCrossing(startRight).r, resLocalRight);
+				res.addAll(reverseAll(resLocalRight));
+			} else {
+				rightPath.getSubPath(getRightCrossing(startRight).r, 
+						getRightCrossing(nextRight).r, res);
+			}
+
+
 			used[beginIndex] = used[nextIndex] =
 			used[crossingIndexesSortedOnRight.get(startRight)] = true;
 			beginIndex = crossingIndexesSortedOnRight.get(nextRight);
@@ -185,12 +210,24 @@ public class SetOperations<L extends PathIndex,R extends PathIndex> {
 		return PathFactory.createClosedPath(res);
 	}
 	
+	private List<Path> reverseAll(List<Path> resLocalRight) {
+		List<Path> res = new ArrayList<Path>();
+		for(int i = resLocalRight.size()-1 ; i >= 0; i--){
+			res.add(resLocalRight.get(i).reverse());
+		}
+		return res;
+	}
+
 	public Path union(){
-		return doOperation(false);
+		return doOperation(false,false);
 	}
 	
 	public Path intersection(){
-		return doOperation(true);
+		return doOperation(true,false);
+	}
+	
+	public Path substract(){
+		return doOperation(false,true);
 	}
 	
 }

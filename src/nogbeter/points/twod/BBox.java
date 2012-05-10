@@ -103,5 +103,17 @@ public final class BBox {
 							Interval.fromPoints(new VecYIterator(vs.iterator())));
 	}
 	
+	public static BBox from2Points(Vec a, Vec b){
+		return new BBox(new Interval(a.x, b.x), new Interval(a.y, b.y));
+	}
+	
+	public static BBox from3Points(Vec a, Vec b, Vec c){
+		return new BBox(new Interval(a.x, b.x,c.x), new Interval(a.y, b.y,c.y));
+	}
+	
+	public static BBox from4Points(Vec a, Vec b, Vec c, Vec d){
+		return new BBox(new Interval(a.x, b.x,c.x, d.x), new Interval(a.y, b.y,c.y, d.y));
+	}
+
 
 }

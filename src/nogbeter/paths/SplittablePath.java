@@ -11,9 +11,7 @@ import nogbeter.paths.results.transformers.IPathIndexTransformer;
 import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.lines.DiagonalLine;
-import nogbeter.paths.simple.lines.HorizontalLine;
 import nogbeter.paths.simple.lines.Line;
-import nogbeter.paths.simple.lines.VerticalLine;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
 import bezier.util.Tuple;
@@ -50,16 +48,6 @@ public abstract class SplittablePath<PathParam extends PathIndex>
 	@Override
 	public IIntersections<SimplePathIndex, PathParam> intersectionLDiaLine(
 			DiagonalLine lhs) {
-		return intersectionLine(lhs);
-	}
-	@Override
-	public IIntersections<SimplePathIndex, PathParam> intersectionLHorLine(
-			HorizontalLine lhs) {
-		return intersectionLine(lhs);
-	}
-	@Override
-	public IIntersections<SimplePathIndex, PathParam> intersectionLVerLine(
-			VerticalLine lhs) {
 		return intersectionLine(lhs);
 	}
 	@Override
@@ -134,16 +122,6 @@ public abstract class SplittablePath<PathParam extends PathIndex>
 	@Override
 	public BestProjectTup<SimplePathIndex, PathParam> projectLDiaLine(
 			double best, DiagonalLine lhs) {
-		return projectLine(best, lhs);
-	}
-	@Override
-	public BestProjectTup<SimplePathIndex, PathParam> projectLHorLine(
-			double best, HorizontalLine lhs) {
-		return projectLine(best, lhs);
-	}
-	@Override
-	public BestProjectTup<SimplePathIndex, PathParam> projectLVerLine(
-			double best, VerticalLine lhs) {
 		return projectLine(best, lhs);
 	}
 	@Override

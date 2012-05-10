@@ -17,7 +17,7 @@ public class LineStateBeforeAndAfter {
 	public <L extends PathIndex,R extends PathIndex> 
 	Crossing<L, R> toCrossing(Intersection<L,R> i){
 		if(leftBeforeInside != leftAfterInside){
-			return new Crossing<L, R>(i.left,i.right, i.loc, leftAfterInside);
+			return new Crossing<L, R>(i.left,i.right, i.locl, leftAfterInside);
 		} else {
 			return null;
 		}

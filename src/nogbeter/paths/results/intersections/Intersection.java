@@ -9,20 +9,22 @@ public class Intersection<LI extends PathIndex,RI extends PathIndex>{
 
 	public final LI left;
 	public final RI right;
-	public final Vec loc;
+	public final Vec locl;
+	public final Vec locr;
 	public final Vec tanl;
 	public final Vec tanr;
 	Intersection<LI,RI> next;
 	
-	public Intersection(LI left, RI right, Vec loc, Vec tanl, Vec tanr){
-		this(left,right,loc,tanl,tanr,null);
+	public Intersection(LI left, RI right, Vec locl, Vec locr, Vec tanl, Vec tanr){
+		this(left,right,locl,locr,tanl,tanr,null);
 	}
 	
-	public Intersection(LI left, RI right, Vec loc, Vec tanl, Vec tanr, Intersection<LI,RI> next) {
+	public Intersection(LI left, RI right, Vec locl, Vec locr, Vec tanl, Vec tanr, Intersection<LI,RI> next) {
 		this.next = next;
 		this.left = left;
 		this.right = right;
-		this.loc = loc;
+		this.locl = locl;
+		this.locr = locr;
 		this.tanl = tanl;
 		this.tanr = tanr;
 	}
@@ -30,11 +32,11 @@ public class Intersection<LI extends PathIndex,RI extends PathIndex>{
 	public<LPI extends PathIndex, RPI extends PathIndex>
 		Intersection<LPI,RPI> transform(PathIndexTupleTransformer<LPI, RPI> trans){
 		return new Intersection<LPI, RPI>(trans.left.transform(left),
-										  trans.right.transform(right),loc,tanl,tanr);	
+										  trans.right.transform(right),locl,locr,tanl,tanr);	
 	}
 	
 	public Intersection<RI,LI> flip(){
-		return new Intersection<RI,LI>(right, left,loc,tanr,tanl);
+		return new Intersection<RI,LI>(right, left,locr,locl,tanr,tanl);
 	}
 	
 	public String toString(){

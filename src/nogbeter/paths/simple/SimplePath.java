@@ -56,7 +56,7 @@ public abstract class SimplePath extends SimplyIndexedPath{
 		SimplePathIndex l = lhs.makeGlobalPathIndexFromLocal(tl);
 		SimplePathIndex r = makeGlobalPathIndexFromLocal(tr);
 		return new Intersections<SimplePathIndex, SimplePathIndex>(l, r,
-				lhs.getAtLocal(tl), lhs.getTangentAtLocal(tl),getTangentAtLocal(tr));
+				lhs.getAtLocal(tl), getAtLocal(tr), lhs.getTangentAtLocal(tl),getTangentAtLocal(tr));
 	}
 	
 	public SimplePathIndex makeGlobalPathIndexFromLocal(double t){
@@ -102,4 +102,7 @@ public abstract class SimplePath extends SimplyIndexedPath{
 	public boolean isCyclicBorder(SimplePathIndex p) {
 		return p.t == tInterval.high || p.t == tInterval.low;
 	}
+	
+	public Vec getArbPoint(){ return getStartPoint();}
+	public Vec getArbPointTan(){ return getStartTan(); }
 }

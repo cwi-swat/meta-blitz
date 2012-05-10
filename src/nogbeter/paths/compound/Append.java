@@ -174,5 +174,12 @@ public class Append
 		throw new Error("Cannot contain segment");
 	}
 
+	@Override
+	public Path<PathIndex> reverse() {
+		return (Path)new Append(right.reverse(), left.reverse());
+	}
+	
+	public Vec getArbPoint(){ return getStartPoint();}
 
+	public Vec getArbPointTan(){ return getStartTan();}
 }

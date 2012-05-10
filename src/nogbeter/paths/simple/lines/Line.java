@@ -21,7 +21,7 @@ public abstract class Line extends SimplePath {
 	
 	@Override
 	public BBox makeBBox(){
-		return BBox.fromPoints(getStartPoint(), getEndPoint());
+		return BBox.from2Points(getStartPoint(), getEndPoint());
 	}
 	@Override
 	public Line getWithAdjustedStartPoint(Vec newStartPoint) {
@@ -40,25 +40,7 @@ public abstract class Line extends SimplePath {
 	}
 	
 	public static Line createLine(Vec start, Vec end, Interval interval){
-		if (start.x == end.x) {
-			if (start.y < end.y) {
-				return new VerticalUDLine(start.x, new Interval(
-						start.y, end.y), interval);
-			} else {
-				return new VerticalDULine(start.x, new Interval(end.y,
-						start.y), interval);
-			}
-		} else if (start.y == end.y) {
-			if (start.x < end.x) {
-				return new HorizontalLRLine(new Interval(start.x,
-						end.x), start.y, interval);
-			} else {
-				return new HorizontalRLLine(new Interval(start.x,
-						end.x), start.y, interval);
-			}
-		} else {
 			return new DiagonalLine(start, end, interval);
-		}
 	}
 	
 

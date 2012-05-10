@@ -15,8 +15,6 @@ import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
 import nogbeter.paths.results.transformers.TupleTransformers;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.paths.simple.lines.DiagonalLine;
-import nogbeter.paths.simple.lines.HorizontalLine;
-import nogbeter.paths.simple.lines.VerticalLine;
 import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.angles.AngularIntervalFactory;
 import nogbeter.points.twod.BBox;
@@ -60,20 +58,6 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 	}
 
 	@Override
-	public IIntersections<SimplePathIndex, ClosedPathIndex> intersectionLHorLine(
-			HorizontalLine lhs) {
-		return (IIntersections<SimplePathIndex, ClosedPathIndex>) 
-				actual.intersectionLHorLine(lhs).transform(TupleTransformers.closeRight);
-	}
-
-	@Override
-	public IIntersections<SimplePathIndex, ClosedPathIndex> intersectionLVerLine(
-			VerticalLine lhs) {
-		return (IIntersections<SimplePathIndex, ClosedPathIndex>) 
-				actual.intersectionLVerLine(lhs).transform(TupleTransformers.closeRight);
-	}
-
-	@Override
 	public IIntersections<SetIndex, ClosedPathIndex> intersectionLSet(
 			ShapeSet lhs) {
 		return (IIntersections<SetIndex, ClosedPathIndex>) 
@@ -106,23 +90,6 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 				(BestProjectTup<SimplePathIndex, ClosedPathIndex>)
 				actual.projectLDiaLine(best,lhs).transform(TupleTransformers.closeRight);
 	}
-
-	@Override
-	public BestProjectTup<SimplePathIndex, ClosedPathIndex> projectLHorLine(
-			double best, HorizontalLine lhs) {
-		return 
-				(BestProjectTup<SimplePathIndex, ClosedPathIndex>)
-				actual.projectLHorLine(best,lhs).transform(TupleTransformers.closeRight);
-	}
-
-	@Override
-	public BestProjectTup<SimplePathIndex, ClosedPathIndex> projectLVerLine(
-			double best, VerticalLine lhs) {
-		return 
-				(BestProjectTup<SimplePathIndex, ClosedPathIndex>)
-				actual.projectLVerLine(best,lhs).transform(TupleTransformers.closeRight);
-	}
-
 	@Override
 	public BestProjectTup<SetIndex, ClosedPathIndex> projectLSet(double best,
 			ShapeSet lhs) {
@@ -234,6 +201,12 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 		}
 	}
 
+	@Override
+	public Path<PathIndex> reverse() {
+		return (Path)new ClosedPath(actual.reverse());
+	}
+
+	public Vec getArbPoint(){ return actual.getArbPoint();}
 	
-	
+	public Vec getArbPointTan(){ return actual.getArbPointTan();}
 }
