@@ -19,7 +19,7 @@ import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.paths.results.transformers.IPathIndexTransformer;
 import nogbeter.paths.results.transformers.PITransformers;
 import nogbeter.paths.simple.SimplePathIndex;
-import nogbeter.paths.simple.lines.DiagonalLine;
+import nogbeter.paths.simple.lines.Line;
 import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
@@ -77,8 +77,8 @@ public class ShapeSet extends Path<SetIndex>{
 	}
 
 	@Override
-	public IIntersections<SimplePathIndex, SetIndex> intersectionLDiaLine(
-			DiagonalLine lhs) {
+	public IIntersections<SimplePathIndex, SetIndex> intersectionLLine(
+			Line lhs) {
 		return intersections(lhs);
 	}
 
@@ -135,8 +135,8 @@ public class ShapeSet extends Path<SetIndex>{
 	}
 	
 	@Override
-	public BestProjectTup<SimplePathIndex, SetIndex> projectLDiaLine(
-			double best, DiagonalLine lhs) {
+	public BestProjectTup<SimplePathIndex, SetIndex> projectLLine(
+			double best, Line lhs) {
 		return projects(best,lhs);
 	}
 

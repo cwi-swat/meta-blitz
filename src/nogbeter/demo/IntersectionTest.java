@@ -3,6 +3,7 @@ package nogbeter.demo;
 import bezier.image.generated.ColorsAlpha;
 import bezier.image.generated.SampleInstances.Sample4;
 import nogbeter.crossing.GroupedIntersections;
+import nogbeter.demo.swt.DemoBase;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.factory.PathFactory;
@@ -16,24 +17,27 @@ import static nogbeter.transform.AffineTransformation.*;
 public class IntersectionTest extends DemoBase {
 
 	public static void main(String[] argv){
-		new IntersectionTest();
+		new IntersectionTest().run();
 	}
+
 
 
 	private Path<PathIndex> r;
 	
 	public IntersectionTest() {
 		r = // rectangle().transform(id.scale(200).translate(400,400));
-		r = TextFactory.text2Paths("ws").transform(id.scale(5).translate(200, 200));
+		r = TextFactory.text2Paths("ws").transform(id.scale(10).translate(200, 400));
 	}
 	
 	@Override
 	public void draw() {
-
-		Path<PathIndex> q = TextFactory.text2Paths("nm").transform(id.scale(5).translate(mouse));
+		mouse = new Vec(0,500);
+		Path<PathIndex> q = TextFactory.text2Paths("nm").transform(id.scale(10).translate(mouse));
 //		Path<PathIndex> q = rectangle().transform(id.scale(200).translate(mouse.add(mouse)));
-		draw(r);
-		draw(q);
+		long first = System.currentTimeMillis();
+		fill(r);
+		fill(q);
+		System.out.println(System.currentTimeMillis() - first);
 		IIntersections<PathIndex,PathIndex> ints = r.intersection(q);
 		for(Intersection<PathIndex, PathIndex> i : ints){
 //			fillOval(i.loc, 5,ColorsAlpha.green);

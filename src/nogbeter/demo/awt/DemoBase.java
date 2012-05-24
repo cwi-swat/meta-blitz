@@ -1,4 +1,4 @@
-package nogbeter.demo;
+package nogbeter.demo.awt;
 
 import static nogbeter.paths.factory.PathFactory.createAppends;
 import static nogbeter.paths.factory.PathFactory.createLine;
@@ -21,6 +21,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
+import nogbeter.demo.DummyAWTSHape;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.factory.PathFactory;
@@ -34,14 +35,14 @@ import bezier.image.generated.SampleInstances.Sample4;
 
 public abstract class DemoBase  extends JComponent implements KeyListener,MouseWheelListener,MouseListener, MouseMotionListener, WindowListener{
 	private static final long serialVersionUID = 1478770999111265074L;
-	Vec size;
-	Vec mouse;
-	String textInput;
-	String lastLine;
-	double wheel;
+	public Vec size;
+	public Vec mouse;
+	public String textInput;
+	public String lastLine;
+	public double wheel;
 	Graphics2D g;
 	
-	DemoBase()  {
+	public DemoBase()  {
         mouse = new Vec(0,0);
         size = new Vec(1000,800);
 
@@ -350,6 +351,10 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		wheel += e.getUnitsToScroll();
 		repaint();
+	}
+	
+	public void run() {
+		
 	}
 	
 	public Path<PathIndex> rectangle(){

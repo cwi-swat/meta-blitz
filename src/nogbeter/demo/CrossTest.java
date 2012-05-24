@@ -9,6 +9,7 @@ import java.util.List;
 
 import nogbeter.crossing.Crossing;
 import nogbeter.crossing.GroupedIntersections;
+import nogbeter.demo.awt.DemoBase;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.factory.TextFactory;

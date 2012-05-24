@@ -11,7 +11,7 @@ import nogbeter.paths.results.intersections.IIntersections;
 import nogbeter.paths.results.project.BestProject;
 import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.paths.simple.SimplePathIndex;
-import nogbeter.paths.simple.lines.DiagonalLine;
+import nogbeter.paths.simple.lines.Line;
 import nogbeter.paths.simple.nonlinear.Curve;
 import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.twod.BBox;
@@ -42,8 +42,8 @@ public abstract class Path
 	public abstract <RPP extends PathIndex> IIntersections<PathParam, RPP> intersection(
 			Path<RPP> other);
 
-	public abstract IIntersections<SimplePathIndex, PathParam> intersectionLDiaLine(
-			DiagonalLine lhs);
+	public abstract IIntersections<SimplePathIndex, PathParam> intersectionLLine(
+			Line lhs);
 
 	public IIntersections<SimplePathIndex, PathParam> intersectionLCurve(
 			Curve lhs){
@@ -78,9 +78,9 @@ public abstract class Path
 			double best,
 			Path<RPP>  other);
 	
-	public abstract BestProjectTup<SimplePathIndex, PathParam> projectLDiaLine(
+	public abstract BestProjectTup<SimplePathIndex, PathParam> projectLLine(
 			double best,
-			DiagonalLine lhs);
+			Line lhs);
 	
 	public BestProjectTup<SimplePathIndex, PathParam> projectLCurve(
 			double best,
@@ -161,5 +161,14 @@ public abstract class Path
 	
 	public abstract Vec getArbPoint();
 	public abstract Vec getArbPointTan();
+	
+	public boolean contains(Path other){
+		Vec v = other.getArbPoint();
+		BestProject<PathParam> project = project(other.getArbPoint()); // getNearest
+		Vec loc = getAt(project.t);
+		Vec to = v.sub(loc);
+		AngularInterval interval = getAngularInsideInterval(project.t);
+		return interval.isInside(to);
+	}
 	
 }

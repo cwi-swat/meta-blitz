@@ -153,10 +153,10 @@ public class SetOperations<L extends PathIndex,R extends PathIndex> {
 
 	Path doOperation(boolean shouldBeInsideL,boolean reverseRight){
 		List<Path> res = new ArrayList<Path>();
-		if(shouldBeInsideL ^ reverseRight){
+		if(!shouldBeInsideL){
 			leftPath.getClosedSegmentsNotInSet(usedPathsLeft, res);
 		}
-		if(!reverseRight && shouldBeInsideL){
+		if(!reverseRight && !shouldBeInsideL){
 			rightPath.getClosedSegmentsNotInSet(usedPathsRight, res);
 		}
 		int beginIndex;

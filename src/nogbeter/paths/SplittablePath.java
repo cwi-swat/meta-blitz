@@ -10,7 +10,7 @@ import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.paths.results.transformers.IPathIndexTransformer;
 import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
 import nogbeter.paths.simple.SimplePathIndex;
-import nogbeter.paths.simple.lines.DiagonalLine;
+import nogbeter.paths.simple.lines.Line;
 import nogbeter.paths.simple.lines.Line;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
@@ -46,8 +46,8 @@ public abstract class SplittablePath<PathParam extends PathIndex>
 	}
 	
 	@Override
-	public IIntersections<SimplePathIndex, PathParam> intersectionLDiaLine(
-			DiagonalLine lhs) {
+	public IIntersections<SimplePathIndex, PathParam> intersectionLLine(
+			Line lhs) {
 		return intersectionLine(lhs);
 	}
 	@Override
@@ -120,8 +120,8 @@ public abstract class SplittablePath<PathParam extends PathIndex>
 		return other.projectLSplittable(best, this);
 	}
 	@Override
-	public BestProjectTup<SimplePathIndex, PathParam> projectLDiaLine(
-			double best, DiagonalLine lhs) {
+	public BestProjectTup<SimplePathIndex, PathParam> projectLLine(
+			double best, Line lhs) {
 		return projectLine(best, lhs);
 	}
 	@Override

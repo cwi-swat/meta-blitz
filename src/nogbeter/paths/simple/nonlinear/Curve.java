@@ -11,7 +11,7 @@ import nogbeter.paths.results.intersections.IIntersections;
 import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
-import nogbeter.paths.simple.lines.DiagonalLine;
+import nogbeter.paths.simple.lines.Line;
 import nogbeter.points.oned.Interval;
 import bezier.util.Tuple;
 
@@ -109,9 +109,9 @@ public abstract class Curve extends SimplePath {
 	}
 
 	@Override
-	public IIntersections<SimplePathIndex, SimplePathIndex> intersectionLDiaLine(
-			DiagonalLine lhs) {
-		return super.intersectionLDiaLine(lhs);
+	public IIntersections<SimplePathIndex, SimplePathIndex> intersectionLLine(
+			Line lhs) {
+		return super.intersectionLLine(lhs);
 	}
 	
 	@Override

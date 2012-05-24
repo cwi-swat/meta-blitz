@@ -1,6 +1,7 @@
 package nogbeter.demo;
 
 import sun.java2d.loops.DrawLine;
+import nogbeter.demo.awt.DemoBase;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.factory.PathFactory;

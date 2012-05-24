@@ -14,7 +14,7 @@ import nogbeter.paths.results.transformers.PITransformers;
 import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
 import nogbeter.paths.results.transformers.TupleTransformers;
 import nogbeter.paths.simple.SimplePathIndex;
-import nogbeter.paths.simple.lines.DiagonalLine;
+import nogbeter.paths.simple.lines.Line;
 import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.angles.AngularIntervalFactory;
 import nogbeter.points.twod.BBox;
@@ -51,10 +51,10 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 	}
 
 	@Override
-	public IIntersections<SimplePathIndex, ClosedPathIndex> intersectionLDiaLine(
-			DiagonalLine lhs) {
+	public IIntersections<SimplePathIndex, ClosedPathIndex> intersectionLLine(
+			Line lhs) {
 		return (IIntersections<SimplePathIndex, ClosedPathIndex>) 
-				actual.intersectionLDiaLine(lhs).transform(TupleTransformers.closeRight);
+				actual.intersectionLLine(lhs).transform(TupleTransformers.closeRight);
 	}
 
 	@Override
@@ -84,11 +84,11 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 	}
 
 	@Override
-	public BestProjectTup<SimplePathIndex, ClosedPathIndex> projectLDiaLine(
-			double best, DiagonalLine lhs) {
+	public BestProjectTup<SimplePathIndex, ClosedPathIndex> projectLLine(
+			double best, Line lhs) {
 		return 
 				(BestProjectTup<SimplePathIndex, ClosedPathIndex>)
-				actual.projectLDiaLine(best,lhs).transform(TupleTransformers.closeRight);
+				actual.projectLLine(best,lhs).transform(TupleTransformers.closeRight);
 	}
 	@Override
 	public BestProjectTup<SetIndex, ClosedPathIndex> projectLSet(double best,
