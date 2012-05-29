@@ -24,6 +24,7 @@ import javax.swing.JFrame;
 import nogbeter.demo.DummyAWTSHape;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
+import nogbeter.paths.compound.ClosedPath;
 import nogbeter.paths.factory.PathFactory;
 import nogbeter.paths.iterators.AWTPathIterator;
 import nogbeter.points.twod.Vec;
@@ -357,7 +358,7 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 		
 	}
 	
-	public Path<PathIndex> rectangle(){
+	public ClosedPath rectangle(){
 		Vec a = new Vec(-1,-1);
 		Vec b = new Vec(1,-1);
 		Vec c = new Vec(1,1);

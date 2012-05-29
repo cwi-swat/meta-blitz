@@ -5,6 +5,7 @@ import sun.java2d.loops.DrawLine;
 import nogbeter.demo.awt.DemoBase;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
+import nogbeter.paths.compound.ClosedPath;
 import nogbeter.paths.factory.PathFactory;
 import nogbeter.paths.factory.TextFactory;
 import nogbeter.paths.results.intersections.IIntersections;
@@ -41,13 +42,13 @@ public class InsideTest extends DemoBase{
 
 		
 
-		public Path rectangle(){
+		public ClosedPath rectangle(){
 			Vec a = new Vec(100,100);
 			Vec b = new Vec(200,100);
 			Vec c = new Vec(200,200);
 			Vec d = new Vec(100,200);
 			Vec e = new Vec(150,50);
-			return createAppends(createLine(a,b), createLine(b,c), createLine(c,d),createLine(d,a));
+			return createClosedPath(createLine(a,b), createLine(b,c), createLine(c,d),createLine(d,a));
 		}
 		
 	}

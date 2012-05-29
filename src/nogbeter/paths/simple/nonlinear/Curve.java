@@ -9,9 +9,9 @@ import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.results.intersections.IIntersections;
 import nogbeter.paths.results.project.BestProjectTup;
+import nogbeter.paths.simple.Line;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
-import nogbeter.paths.simple.lines.Line;
 import nogbeter.points.oned.Interval;
 import bezier.util.Tuple;
 

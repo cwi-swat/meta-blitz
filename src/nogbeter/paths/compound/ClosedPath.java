@@ -13,8 +13,8 @@ import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.paths.results.transformers.PITransformers;
 import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
 import nogbeter.paths.results.transformers.TupleTransformers;
+import nogbeter.paths.simple.Line;
 import nogbeter.paths.simple.SimplePathIndex;
-import nogbeter.paths.simple.lines.Line;
 import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.angles.AngularIntervalFactory;
 import nogbeter.points.twod.BBox;
@@ -209,4 +209,12 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 	public Vec getArbPoint(){ return actual.getArbPoint();}
 	
 	public Vec getArbPointTan(){ return actual.getArbPointTan();}
+	
+	public boolean isDefindedClockwise() {
+		Vec outside = getBBox().getLeftUp().add(new Vec(-1,-1));
+		BestProject<ClosedPathIndex> pro = project(outside);
+		AngularInterval aint = getAngularInsideInterval(pro.t);
+		Vec toOutside = outside.sub(getAt(pro.t));
+		return !aint.isInside(toOutside);
+	}
 }

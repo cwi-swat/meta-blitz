@@ -3,7 +3,7 @@ package nogbeter.demo;
 import bezier.image.generated.ColorsAlpha;
 import bezier.image.generated.SampleInstances.Sample4;
 import nogbeter.crossing.GroupedIntersections;
-import nogbeter.demo.swt.DemoBase;
+import nogbeter.demo.awt.DemoBase;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.factory.PathFactory;

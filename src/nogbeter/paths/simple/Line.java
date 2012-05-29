@@ -1,4 +1,4 @@
-package nogbeter.paths.simple.lines;
+package nogbeter.paths.simple;
 
 import static bezier.util.Util.square;
 import static java.lang.Math.min;
@@ -22,8 +22,6 @@ import nogbeter.paths.results.project.BestProject;
 import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.paths.results.transformers.IPathIndexTransformer;
 import nogbeter.paths.results.transformers.PITransformers;
-import nogbeter.paths.simple.SimplePath;
-import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.oned.Interval;
 import nogbeter.points.twod.BBox;

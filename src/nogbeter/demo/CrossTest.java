@@ -32,9 +32,9 @@ public class CrossTest extends DemoBase{
 	private Path<PathIndex> r,q;
 	
 	public CrossTest() {
-//		r = rectangle().transform(id.scale(200).translate(400,400));
+		r = (Path)rectangle().transform(id.scale(200).translate(400,400));
 		System.out.println(r);
-		r = TextFactory.text2Paths("ws").transform(id.scale(5).translate(200, 200));
+//		r = TextFactory.text2Paths("ws").transform(id.scale(5).translate(200, 200));
 		q = TextFactory.text2Paths("nm").transform(id.scale(5));
 	}
 	

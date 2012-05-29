@@ -9,9 +9,8 @@ import nogbeter.paths.compound.Append;
 import nogbeter.paths.compound.ClosedPath;
 import nogbeter.paths.compound.Shape;
 import nogbeter.paths.compound.ShapeSet;
+import nogbeter.paths.simple.Line;
 import nogbeter.paths.simple.SimplePath;
-import nogbeter.paths.simple.lines.Line;
-import nogbeter.paths.simple.lines.Line;
 import nogbeter.paths.simple.nonlinear.CubicCurve;
 import nogbeter.paths.simple.nonlinear.Curve;
 import nogbeter.paths.simple.nonlinear.QuadCurve;
@@ -58,20 +57,25 @@ public class PathFactory {
 		return createAppends(Arrays.asList(paths));
 	}
 	
-	public static Path createClosedPath(List<Path>  paths){
+	public static ClosedPath createClosedPath(List<Path>  paths){
 		Vec begin = paths.get(0).getStartPoint();
 		Vec end = paths.get(paths.size()-1).getEndPoint();
 		if(begin.isEqError(end)){
 			if(!begin.isEq(end)){
 				paths.set(0, (SimplePath)  paths.get(0).getWithAdjustedStartPoint(end));
 			}
-			return new ClosedPath(createAppends(paths));
+			ClosedPath p = new ClosedPath(createAppends(paths));
+			if(!p.isDefindedClockwise()){
+				throw new Error("Closed path not defined clockwise:" + createAppends(paths) );
+			} else {
+				return p;
+			}
 		} else {
 			throw new Error("Not closed!" + createAppends(paths));
 		}
 	}
 	
-	public static Path createClosedPath(Path ... paths){
+	public static ClosedPath createClosedPath(Path ... paths){
 		return createClosedPath(Arrays.asList(paths));
 	}
 	
