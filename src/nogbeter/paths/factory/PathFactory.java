@@ -57,21 +57,25 @@ public class PathFactory {
 		return createAppends(Arrays.asList(paths));
 	}
 	
-	public static ClosedPath createClosedPath(List<Path>  paths){
+	public static ClosedPath createClosedPathUnsafe(List<Path>  paths){
 		Vec begin = paths.get(0).getStartPoint();
 		Vec end = paths.get(paths.size()-1).getEndPoint();
 		if(begin.isEqError(end)){
 			if(!begin.isEq(end)){
 				paths.set(0, (SimplePath)  paths.get(0).getWithAdjustedStartPoint(end));
 			}
-			ClosedPath p = new ClosedPath(createAppends(paths));
-			if(!p.isDefindedClockwise()){
-				throw new Error("Closed path not defined clockwise:" + createAppends(paths) );
-			} else {
-				return p;
-			}
+			return new ClosedPath(createAppends(paths));
 		} else {
 			throw new Error("Not closed!" + createAppends(paths));
+		}
+	}
+	
+	public static ClosedPath createClosedPath(List<Path>  paths){
+		ClosedPath p = createClosedPathUnsafe(paths);
+		if(!p.isDefindedClockwise()){
+			throw new Error("Closed path not defined clockwise:" + createAppends(paths) );
+		} else {
+			return p;
 		}
 	}
 	
@@ -79,22 +83,28 @@ public class PathFactory {
 		return createClosedPath(Arrays.asList(paths));
 	}
 	
-	public static Path createSet(Path ... paths){
-		if(paths.length == 1){
-			return paths[0];
+	
+	public static Path createSet(List<Path> paths){
+		if(paths.size() == 1){
+			return paths.get(0);
 		}
 		return new ShapeSet(paths);
 	}
 
+	
+	public static Path createSet(Path ... paths){
+		return createSet(Arrays.asList(paths));
+	}
+
 	public static Path createShape(Path border, Path ... inside){
-		if(inside.length == 0){
+		return createShape(border, Arrays.asList(inside));
+	}
+
+	public static Path createShape(Path border, List<Path> inside) {
+		if(inside.size() == 0){
 			return border;
 		}
 		return new Shape(border,createSet(inside));
-	}
-
-	public static Path createSet(Set<Path> paths) {
-		return createSet(paths.toArray(new Path[]{}));
 	}
 
 }

@@ -162,4 +162,5 @@ public class Shape extends CompoundSplittablePath<ShapeIndex> {
 	public Vec getArbPoint(){ return left.getArbPoint();}
 	public Vec getArbPointTan(){ return left.getArbPointTan();}
 
+	
 }

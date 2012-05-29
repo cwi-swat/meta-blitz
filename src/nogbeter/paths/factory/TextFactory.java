@@ -8,12 +8,19 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import javax.swing.UIManager;
 
+import bezier.composite.Shape;
+import bezier.util.Tuple;
+
 import nogbeter.paths.Path;
+import nogbeter.paths.PathIndex;
+import nogbeter.paths.compound.ClosedPath;
+import nogbeter.paths.compound.ShapeIndex;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.points.twod.Vec;
 
@@ -38,13 +45,23 @@ public class TextFactory {
 	    PathIterator p  = v.getOutline().getPathIterator(new AffineTransform());
 	    double[] curs = new double[6];
 	    Vec prev = new Vec(100,100);
-	    Set<Path> result = new HashSet<Path>();
+	    List<Path> result = new ArrayList<Path>();
+	    Set<Path> unkownHoles = new HashSet<Path>();
+	    List<List<Path>> knownHoles = new ArrayList<List<Path>>();
 	    List<SimplePath> curves = new ArrayList<SimplePath>();
         while(!p.isDone()){
         	 Vec cur;
         	switch(p.currentSegment(curs)){
         		case PathIterator.SEG_CLOSE:
-        			result.add(PathFactory.createClosedPath((List)curves));
+        			ClosedPath newPath = PathFactory.createClosedPathUnsafe((List)curves);
+        			System.out.printf("Creating: %s\n", newPath);
+        			if(newPath.isDefindedClockwise()){
+        				knownHoles.add(new ArrayList<Path>(4));
+        				result.add(newPath);
+        				determineHoles(result,unkownHoles, knownHoles);
+        			} else {
+        				unkownHoles.add(newPath);
+        			}
         			curves = new ArrayList<SimplePath>();
         		break;
         		case PathIterator.SEG_MOVETO:
@@ -76,11 +93,40 @@ public class TextFactory {
         	}
         	p.next();
         }
-        // TODO: nu kunnen letters geen gaten hebben!
-        return PathFactory.createSet(result);
+        if(unkownHoles.size() > 0){
+        	throw new Error("Floating hole!" + unkownHoles.iterator().next());
+        }
+       
+        return PathFactory.createSet(createShapes(result,knownHoles));
 	}
 	
 
+
+	private static List<Path> createShapes(List<Path> borders,
+			List<List<Path>> knownHoles) {
+		List<Path> res = new ArrayList<Path>(borders.size());
+		for(int i = 0 ; i < borders.size() ; i++){
+			res.add(PathFactory.createShape(borders.get(i), knownHoles.get(i)));
+		}
+		return res;
+	}
+
+	private static void determineHoles(List<Path> result,
+			Set<Path> unkownHoles, List<List<Path>> knownHoles) {
+		Iterator<Path> hit = unkownHoles.iterator();
+		while(hit.hasNext()){
+			Path hole = hit.next();
+			for(int i = result.size()-1; i >= 0 ; i--){
+				Path p = result.get(i);
+				if(p.contains(hole)){
+					knownHoles.get(i).add(hole);
+					hit.remove();
+					break;
+				}
+			}
+		}
+		
+	}
 	public static Path text2Paths(String text){
 		return text2Paths(defaultFontName(),text);
 	}

@@ -13,7 +13,7 @@ public class SingleVecAngularInterval implements AngularInterval{
 
 	@Override
 	public boolean isInside(Vec a) {
-		return wichNorm.dot(a) == 0 && wich.sameDir(a);
+		return wichNorm.dot(a) == 0 && (wich.sameDir(a) || a.isEq(Vec.ZeroVec));
 	}
 	
 	public String toString(){

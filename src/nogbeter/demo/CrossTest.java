@@ -35,7 +35,8 @@ public class CrossTest extends DemoBase{
 		r = (Path)rectangle().transform(id.scale(200).translate(400,400));
 		System.out.println(r);
 //		r = TextFactory.text2Paths("ws").transform(id.scale(5).translate(200, 200));
-		q = TextFactory.text2Paths("nm").transform(id.scale(5));
+		q = TextFactory.text2Paths("B").transform(id.scale(5));
+		System.out.println(q);
 	}
 	
 	public void handleKeyStroke(char key){
@@ -50,16 +51,18 @@ public class CrossTest extends DemoBase{
 	
 	@Override
 	public void draw() {
-
+//
 		Path<PathIndex> q = // rectangle().transform(id.scale(200).translate(mouse.add(location)));
 		this.q.transform(id.translate(mouse.add(location)));
 		draw(r);
 		draw(q);
 		IIntersections<PathIndex,PathIndex> ints = r.intersection(q);
-		List<Crossing<PathIndex, PathIndex>> cross = new GroupedIntersections(ints, r,q).getCrossings();
-		for(Crossing<PathIndex, PathIndex> c : cross){
-		
-			fillOval(c.loc, 10, c.leftAfterInside ? ColorsAlpha.green : ColorsAlpha.red);
+		List<List<Crossing<PathIndex, PathIndex>>> cross = new GroupedIntersections(ints, r,q).getCrossings();
+		for(List<Crossing<PathIndex, PathIndex>> cc : cross){
+			for(Crossing<PathIndex, PathIndex> c : cc){
+			
+				fillOval(c.loc, 10, c.leftAfterInside ? ColorsAlpha.green : ColorsAlpha.red);
+			}
 		}
 
 	}

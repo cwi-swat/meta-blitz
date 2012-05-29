@@ -164,7 +164,7 @@ public class SetOperations<L extends PathIndex,R extends PathIndex> {
 			Path closedPathFrom = getClosedPathFrom(beginIndex, reverseRight);
 			res.add(closedPathFrom);
 		}
-		return PathFactory.createSet(new HashSet(res));
+		return PathFactory.createSet(res);
 	}
 	
 	private Crossing<L, R> getRightCrossing(int i){

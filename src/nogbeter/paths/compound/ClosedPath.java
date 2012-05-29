@@ -212,9 +212,11 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 	
 	public boolean isDefindedClockwise() {
 		Vec outside = getBBox().getLeftUp().add(new Vec(-1,-1));
-		BestProject<ClosedPathIndex> pro = project(outside);
-		AngularInterval aint = getAngularInsideInterval(pro.t);
-		Vec toOutside = outside.sub(getAt(pro.t));
-		return !aint.isInside(toOutside);
+		return !isInside(outside);
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("Closed(%s)",actual.toString());
 	}
 }
