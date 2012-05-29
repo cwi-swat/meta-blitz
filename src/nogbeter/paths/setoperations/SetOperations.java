@@ -18,13 +18,14 @@ import nogbeter.paths.simple.SimplePath;
 public class SetOperations<L extends PathIndex,R extends PathIndex> {
 	
 	private static final int NoLooseEnd = -1;
+	
 	List<Crossing<L,R>> crossingSortedOnLeft;
 	List<SegmentStartEndIndex> leftStartEndSegment;
 	List<Integer> crossingIndexesSortedOnRight;
 	List<SegmentStartEndIndex> rightStartEndSegment;
 	int[] fromLeftToRight;
 	Set<Path> usedPathsLeft;
-	HashSet<Path> usedPathsRight;
+	Set<Path> usedPathsRight;
 	boolean[] used;
 	
 	Path<L> leftPath;

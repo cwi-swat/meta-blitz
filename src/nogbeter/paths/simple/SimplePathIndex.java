@@ -29,5 +29,11 @@ public class SimplePathIndex extends PathIndex {
 	public double getSimple() {
 		return t;
 	}
+
+	@Override
+	public boolean isEq(PathIndex other) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 }

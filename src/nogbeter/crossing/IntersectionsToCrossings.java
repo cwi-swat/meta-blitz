@@ -13,16 +13,22 @@ import nogbeter.paths.results.intersections.Intersection;
 import nogbeter.points.twod.Vec;
 import bezier.util.Tuple;
 
-public class GroupedIntersections<L extends PathIndex,R extends PathIndex> {
+public class IntersectionsToCrossings<L extends PathIndex,R extends PathIndex> {
 
 	List<Intersection<L, R>> inters;
 	Path<L> l; Path<R> r;
-	public GroupedIntersections(
+	public IntersectionsToCrossings(
 			IIntersections<L, R> inters, Path<L> l, Path<R> r) {
-		this.inters = new ArrayList<Intersection<L,R>>();
-		for(Intersection<L, R> in : inters){
-			this.inters.add(in);
-		}
+		this.inters = getIntersectionList(inters);
+		sortIntersections();
+		this.l = l;
+		this.r = r;
+	}
+
+	private void sortIntersections() {
+		// sorts on left path index first, then on right path index
+		// The closed path index transformers makes sure that maximum 
+		// pathindexes inside closed are mapped to minimum.
 		Collections.sort(this.inters, new Comparator<Intersection<L,R>>() {
 			@Override
 			public int compare(Intersection<L, R> o1, Intersection<L, R> o2) {
@@ -34,62 +40,42 @@ public class GroupedIntersections<L extends PathIndex,R extends PathIndex> {
 				}
 			}
 		});
-		this.l = l;
-		this.r = r;
+	}
+
+	private List<Intersection<L,R>> getIntersectionList(IIntersections<L, R> inters) {
+		List<Intersection<L,R>> res = new ArrayList<Intersection<L,R>>();
+		for(Intersection<L, R> in : inters){
+			res.add(in);
+		}
+		return res;
 	}
 	
 
 	private static final int MAX_NR_INTERSECTIONS_PER_CROSSING = 4;
 
-	List<List<Intersection<L, R>>> 
-		groupIntersectionsOnLeftSegments(){
-		
-		List<List<Intersection<L, R>>> res =
-				new ArrayList<List<Intersection<L,R>>>();
-		Path<PathIndex> prev = null;
-		for(Intersection<L,R> in : inters){
-			Path<PathIndex> cur = l.getSegment(in.left);
-			if(prev == null || cur !=prev ){
-				res.add(new ArrayList<Intersection<L, R>>());
-			}
-			res.get(res.size()-1).add(in);
-			prev = cur;
-		}
-		return res;
-	}
 	
-	List<List<Intersection<L, R>>> 
-	groupIntersectionsOnPointPerLeftSegment(List<Intersection<L, R>> ints){
+	List<List<Intersection<L, R>>> groupIntersectionsOnPoint(List<Intersection<L, R>> ints){
 
 		Stack<List<Intersection<L, R>>> res =
 				new Stack<List<Intersection<L,R>>>();
 		
 		for(Intersection<L, R> in : ints){
-			if(res.isEmpty() || !res.peek().get(0).locl.isEq(in.locl)){
+			if(res.isEmpty() || !res.peek().get(0).left.isEq(in.left)){
 				res.push(new ArrayList<Intersection<L,R>>(MAX_NR_INTERSECTIONS_PER_CROSSING));
 			}
 			res.peek().add(in);
 		}
-		// wrap around case
-		if(res.get(0).get(0).locl.isEq(res.peek().get(0).locl)){
-			res.get(0).addAll(res.pop());
-		}
+		
 		return res;
 	}
 	
-	public List<List<Crossing<L, R>>> getCrossings(){
-		List<List<Crossing<L, R>>> res = new ArrayList<List<Crossing<L, R>>>();
-		for(List<Intersection<L,R>> grouped : groupIntersectionsOnLeftSegments()){
-			List<Crossing<L, R>> segCross = new ArrayList<Crossing<L,R>>();
-			for(List<Intersection<L, R>> intersPerPoint : groupIntersectionsOnPointPerLeftSegment(grouped)){
-				LineStateBeforeAndAfter type = getCrossingType(intersPerPoint);
-				Crossing<L, R> n = type.toCrossing(intersPerPoint.get(0));
-				if(n!= null){
-					segCross.add(n);
-				}
-			}
-			if(!segCross.isEmpty()){
-				res.add(segCross);
+	public List<Crossing<L, R>> getCrossings(){
+		List<Crossing<L, R>> res = new ArrayList<Crossing<L, R>>();
+		for(List<Intersection<L,R>> intersPerPoint : groupIntersectionsOnPoint(inters)){
+			LineStateBeforeAndAfter type = getCrossingType(intersPerPoint);
+			Crossing<L, R> n = type.toCrossing(intersPerPoint.get(0));
+			if(n!= null){
+				res.add(n);
 			}
 		}	
 		return res;

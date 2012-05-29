@@ -272,7 +272,7 @@ public class ShapeSet extends Path<SetIndex>{
 	}
 	
 	@Override
-	public void getClosedSegmentsNotInSet(Set<Path> segments, List<Path> res){
+	public void getClosedSegmentsNotInSet(Set<Path> segments, List<ClosedPath> res){
 		for(Path p : shapes){
 			p.getClosedSegmentsNotInSet(segments, res);
 		}
@@ -289,4 +289,14 @@ public class ShapeSet extends Path<SetIndex>{
 	
 	public Vec getArbPoint(){ return shapes.get(0).getArbPoint();}
 	public Vec getArbPointTan(){ return shapes.get(0).getArbPointTan();}
+
+	@Override
+	public PathIndex minPathIndex() {
+		throw new Error("Shape does not have begin nor end!");
+	}
+
+	@Override
+	public PathIndex maxPathIndex() {
+		throw new Error("Shape does not have begin nor end!");
+	}
 }

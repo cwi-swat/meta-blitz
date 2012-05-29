@@ -29,9 +29,6 @@ public class TupleTransformers {
 	
 	public static PathIndexTupleTransformer<?,AppendIndex> arightRight = right(appendRight);
 	
-	public static PathIndexTupleTransformer<ClosedPathIndex,?> closeLeft = left(closedT);
-
-	public static PathIndexTupleTransformer<?, ClosedPathIndex> closeRight = right(closedT);
 
 	public static <PI extends PathIndex>  PathIndexTupleTransformer<SetIndex,PI> setLeft(int i){
 		return new PathIndexTupleTransformer<SetIndex, PI>(setTrans(i),unit);

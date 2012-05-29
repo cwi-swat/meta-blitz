@@ -40,7 +40,7 @@ public class BestProject<A extends PathIndex>{
 	
 	public<LPI extends PathIndex>
 	BestProject<LPI> transform(IPathIndexTransformer<LPI> trans){
-		if(trans.doesNothing()){
+		if(trans.doesNothing() || t == null){
 			return (BestProject<LPI>)this;
 		} else {
 			return new BestProject<LPI>(distSquared, trans.transform(t));

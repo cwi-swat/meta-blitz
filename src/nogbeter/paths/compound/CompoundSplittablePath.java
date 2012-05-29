@@ -87,8 +87,11 @@ public abstract class CompoundSplittablePath<P extends SplitIndex>
 	}
 	
 	@Override
-	public void getClosedSegmentsNotInSet(Set<Path> segments, List<Path> res){
+	public void getClosedSegmentsNotInSet(Set<Path> segments, List<ClosedPath> res){
 		left.getClosedSegmentsNotInSet(segments, res);
 		right.getClosedSegmentsNotInSet(segments, res);
 	}
+	
+	public P minPathIndex(){ return getLeftTransformer().transform(left.minPathIndex()); }
+	public P maxPathIndex(){ return getRightTransformer().transform(right.maxPathIndex()); }
 }

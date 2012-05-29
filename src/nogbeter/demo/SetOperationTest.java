@@ -6,16 +6,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
 import nogbeter.crossing.Crossing;
-import nogbeter.crossing.GroupedIntersections;
+import nogbeter.crossing.IntersectionsToCrossings;
 import nogbeter.demo.awt.DemoBase;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.factory.TextFactory;
 import nogbeter.paths.results.intersections.IIntersections;
 import nogbeter.paths.results.intersections.Intersection;
-import nogbeter.paths.setoperations.SetOperations;
 import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.angles.AngularIntervalFactory;
 import nogbeter.points.twod.Vec;
@@ -58,8 +56,8 @@ public class SetOperationTest extends DemoBase{
 	
 	public SetOperationTest() {
 //		r = rectangle().transform(id.scale(200).translate(400,400));
-		r = TextFactory.text2Paths("swe").transform(id.scale(5).translate(200, 200));
-		z = TextFactory.text2Paths("snmk").transform(id.scale(5));
+		r = TextFactory.text2Paths("sw").transform(id.scale(5).translate(200, 200));
+		z = TextFactory.text2Paths("sk").transform(id.scale(5));
 //		z = rectangle().transform(id.scale(200));
 	}
 	
@@ -79,9 +77,8 @@ public class SetOperationTest extends DemoBase{
 		Path<PathIndex> q =
 		z.transform(
 				id.translate(mouse));
-
-		IIntersections<PathIndex,PathIndex> ints = r.intersection(q);
-		List<List<Crossing<PathIndex, PathIndex>>> cross = new GroupedIntersections(ints, r,q).getCrossings();
+		draw(r.union(q));
+		
 //		int i = 0;
 //		for(List<Crossing<PathIndex, PathIndex>> cc : cross){
 //			for(Crossing<PathIndex,PathIndex> c : cc){
@@ -98,8 +95,7 @@ public class SetOperationTest extends DemoBase{
 //		}
 //		draw(r,c);
 //		draw(q,c);
-		Path p = new SetOperations<PathIndex, PathIndex>(r, q, cross).substract();
-		draw(p);
+
 		
 //		for(Crossing<PathIndex, PathIndex> c : cross){
 //		

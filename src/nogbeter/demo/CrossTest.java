@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import nogbeter.crossing.Crossing;
-import nogbeter.crossing.GroupedIntersections;
+import nogbeter.crossing.IntersectionsToCrossings;
 import nogbeter.demo.awt.DemoBase;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
@@ -57,7 +57,7 @@ public class CrossTest extends DemoBase{
 		draw(r);
 		draw(q);
 		IIntersections<PathIndex,PathIndex> ints = r.intersection(q);
-		List<List<Crossing<PathIndex, PathIndex>>> cross = new GroupedIntersections(ints, r,q).getCrossings();
+		List<List<Crossing<PathIndex, PathIndex>>> cross = new IntersectionsToCrossings(ints, r,q).getCrossingsPerLeftSegment();
 		for(List<Crossing<PathIndex, PathIndex>> cc : cross){
 			for(Crossing<PathIndex, PathIndex> c : cc){
 			

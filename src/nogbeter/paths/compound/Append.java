@@ -11,6 +11,7 @@ import nogbeter.paths.results.transformers.PITransformers;
 import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
 import nogbeter.paths.results.transformers.TupleTransformers;
 import nogbeter.paths.simple.SimplePath;
+import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.angles.AngularIntervalFactory;
 import nogbeter.points.twod.Vec;
@@ -170,7 +171,7 @@ public class Append
 	}
 
 	@Override
-	public void getClosedSegmentsNotInSet(Set<Path> segments, List<Path> res){
+	public void getClosedSegmentsNotInSet(Set<Path> segments, List<ClosedPath> res){
 		throw new Error("Cannot contain segment");
 	}
 
@@ -182,4 +183,5 @@ public class Append
 	public Vec getArbPoint(){ return getStartPoint();}
 
 	public Vec getArbPointTan(){ return getStartTan();}
+
 }

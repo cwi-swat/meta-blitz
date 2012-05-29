@@ -5,6 +5,10 @@ import static bezier.util.Util.square;
 import java.util.List;
 import java.util.Set;
 
+import nogbeter.crossing.Crossing;
+import nogbeter.crossing.IntersectionsToCrossings;
+import nogbeter.crossing.MakePathsFromCrossings;
+import nogbeter.paths.compound.ClosedPath;
 import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.results.intersections.IIntersections;
@@ -153,7 +157,7 @@ public abstract class Path
 	}
 	
 	
-	public void getClosedSegmentsNotInSet(Set<Path> segments, List<Path> res){
+	public void getClosedSegmentsNotInSet(Set<Path> segments, List<ClosedPath> res){
 		throw new Error("Cannot contain closed segment");
 	}
 	
@@ -171,5 +175,29 @@ public abstract class Path
 		return interval.isInside(to);
 	}
 	
+	public abstract PathIndex minPathIndex();
+	public abstract PathIndex maxPathIndex();
 	
+	public <RPP extends PathIndex> List<Crossing<PathParam,RPP>> getCrossings(Path<RPP> other){
+		IIntersections<PathParam,RPP> inters = intersection(other);
+		return new IntersectionsToCrossings(inters, this, other).getCrossings();
+	}
+	
+	public <RPP extends PathIndex> Path union(Path<RPP> other){
+		return new 
+				MakePathsFromCrossings<PathParam, RPP>
+		(this, other, false, false, false, getCrossings(other)).makeAllPaths();
+	}
+	
+	public <RPP extends PathIndex> Path intersectionOp(Path<RPP> other){
+		return new 
+				MakePathsFromCrossings<PathParam, RPP>
+		(this, other, true, true, false, getCrossings(other)).makeAllPaths();
+	}
+	
+	public <RPP extends PathIndex> Path subtract(Path<RPP> other){
+		return new 
+				MakePathsFromCrossings<PathParam, RPP>
+		(this, other, false, true, true, getCrossings(other)).makeAllPaths();
+	}
 }

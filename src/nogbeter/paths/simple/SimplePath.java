@@ -105,4 +105,5 @@ public abstract class SimplePath extends SimplyIndexedPath{
 	
 	public Vec getArbPoint(){ return getStartPoint();}
 	public Vec getArbPointTan(){ return getStartTan(); }
+
 }

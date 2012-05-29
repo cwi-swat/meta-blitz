@@ -72,5 +72,8 @@ public abstract class SimplyIndexedPath extends SplittablePath<SimplePathIndex>{
 		return this;
 	}
 	
+	public SimplePathIndex minPathIndex(){ return new SimplePathIndex(tInterval.low); }
+	public SimplePathIndex maxPathIndex(){ return new SimplePathIndex(tInterval.high); }
+	
 	
 }

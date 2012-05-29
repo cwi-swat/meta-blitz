@@ -10,6 +10,7 @@ import nogbeter.paths.SplittablePath;
 import nogbeter.paths.results.intersections.IIntersections;
 import nogbeter.paths.results.project.BestProject;
 import nogbeter.paths.results.project.BestProjectTup;
+import nogbeter.paths.results.transformers.IPathIndexTransformer;
 import nogbeter.paths.results.transformers.PITransformers;
 import nogbeter.paths.results.transformers.PathIndexTupleTransformer;
 import nogbeter.paths.results.transformers.TupleTransformers;
@@ -24,9 +25,15 @@ import nogbeter.transform.AffineTransformation;
 public class ClosedPath extends Path<ClosedPathIndex>{
 	
 	final Path<PathIndex> actual;
+	final PathIndexTupleTransformer<?,?> closeLeft, closeRight;
+	final IPathIndexTransformer<ClosedPathIndex> closeTransformer;
 	
 	public ClosedPath(Path<PathIndex> actual) {
 		this.actual = actual;
+		this.closeTransformer=  
+				PITransformers.closedT(actual.minPathIndex(), actual.maxPathIndex());
+		this.closeLeft = TupleTransformers.left(closeTransformer);
+		this.closeRight = TupleTransformers.right(closeTransformer);
 	}
 
 	@Override
@@ -47,40 +54,41 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 	@Override
 	public <RPP extends PathIndex> IIntersections<ClosedPathIndex, RPP> intersection(
 			Path<RPP> other) {
-		return (IIntersections<ClosedPathIndex, RPP>) actual.intersection(other).transform(TupleTransformers.closeLeft);
+		return (IIntersections<ClosedPathIndex, RPP>) 
+				actual.intersection(other).transform(closeLeft);
 	}
 
 	@Override
 	public IIntersections<SimplePathIndex, ClosedPathIndex> intersectionLLine(
 			Line lhs) {
 		return (IIntersections<SimplePathIndex, ClosedPathIndex>) 
-				actual.intersectionLLine(lhs).transform(TupleTransformers.closeRight);
+				actual.intersectionLLine(lhs).transform(closeRight);
 	}
 
 	@Override
 	public IIntersections<SetIndex, ClosedPathIndex> intersectionLSet(
 			ShapeSet lhs) {
 		return (IIntersections<SetIndex, ClosedPathIndex>) 
-				actual.intersectionLSet(lhs).transform(TupleTransformers.closeRight);
+				actual.intersectionLSet(lhs).transform(closeRight);
 	}
 
 	@Override
 	public <LPP extends PathIndex> IIntersections<LPP, ClosedPathIndex> intersectionLSplittable(
 			SplittablePath<LPP> lhs) {
 		return (IIntersections<LPP, ClosedPathIndex>) 
-				actual.intersectionLSplittable(lhs).transform(TupleTransformers.closeRight);
+				actual.intersectionLSplittable(lhs).transform(closeRight);
 	}
 
 	@Override
 	public BestProject<ClosedPathIndex> project(double best, Vec p) {
-		return actual.project(best,p).transform(PITransformers.closedT);
+		return actual.project(best,p).transform(closeTransformer);
 	}
 
 	@Override
 	public <RPP extends PathIndex> BestProjectTup<ClosedPathIndex, RPP> project(
 			double best, Path<RPP> other) {
 		return (BestProjectTup<ClosedPathIndex, RPP>)
-				actual.project(other).transform(TupleTransformers.closeLeft);
+				actual.project(other).transform(closeLeft);
 	}
 
 	@Override
@@ -88,14 +96,14 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 			double best, Line lhs) {
 		return 
 				(BestProjectTup<SimplePathIndex, ClosedPathIndex>)
-				actual.projectLLine(best,lhs).transform(TupleTransformers.closeRight);
+				actual.projectLLine(best,lhs).transform(closeRight);
 	}
 	@Override
 	public BestProjectTup<SetIndex, ClosedPathIndex> projectLSet(double best,
 			ShapeSet lhs) {
 		return 
 				(BestProjectTup<SetIndex, ClosedPathIndex>)
-				actual.projectLSet(best,lhs).transform(TupleTransformers.closeRight);
+				actual.projectLSet(best,lhs).transform(closeRight);
 	}
 
 	@Override
@@ -103,7 +111,7 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 			double best, SplittablePath<LPI> lhs) {
 		return 
 				(BestProjectTup<LPI, ClosedPathIndex>)
-				actual.projectLSplittable(best,lhs).transform(TupleTransformers.closeRight);
+				actual.projectLSplittable(best,lhs).transform(closeRight);
 	}
 
 	@Override
@@ -195,7 +203,7 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 	}
 	
 	@Override
-	public void getClosedSegmentsNotInSet(Set<Path> segments, List<Path> res){
+	public void getClosedSegmentsNotInSet(Set<Path> segments, List<ClosedPath> res){
 		if(!segments.contains(this)){
 			res.add(this);
 		}
@@ -218,5 +226,15 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 	@Override
 	public String toString() {
 		return String.format("Closed(%s)",actual.toString());
+	}
+	
+	@Override
+	public PathIndex minPathIndex() {
+		throw new Error("ClosedPath does not have begin nor end!");
+	}
+
+	@Override
+	public PathIndex maxPathIndex() {
+		throw new Error("ClosedPath does not have begin nor end!");
 	}
 }
