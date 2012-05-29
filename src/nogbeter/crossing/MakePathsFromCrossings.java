@@ -145,7 +145,7 @@ public class MakePathsFromCrossings <L extends PathIndex,R extends PathIndex>{
 				prev = cur;
 			}
 		}
-		res.add(list.size()-1);
+		res.add(list.size());
 		return res;
 	}
 
