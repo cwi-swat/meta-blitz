@@ -60,7 +60,8 @@ public class IntersectionsToCrossings<L extends PathIndex,R extends PathIndex> {
 				new Stack<List<Intersection<L,R>>>();
 		
 		for(Intersection<L, R> in : ints){
-			if(res.isEmpty() || !res.peek().get(0).left.isEq(in.left)){
+			// dit is raadsel achtig, waarom niet op pad...?
+			if(res.isEmpty() || !res.peek().get(0).locl.isEq(in.locl)){
 				res.push(new ArrayList<Intersection<L,R>>(MAX_NR_INTERSECTIONS_PER_CROSSING));
 			}
 			res.peek().add(in);

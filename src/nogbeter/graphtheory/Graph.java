@@ -3,6 +3,7 @@ package nogbeter.graphtheory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -83,21 +84,27 @@ public final class Graph {
 		return new Graph(result);
 	}
 	
-	public Tree getTree(int root){
+	public Tree getTree(int root, List<Integer> prev) throws CycleFoundException{
 		List<Tree> subtrees = new ArrayList<Tree>();
+		if(prev.contains(root)){
+			List<Integer> cycle = prev.subList(prev.indexOf(root), prev.size());
+			throw new CycleFoundException(cycle);
+		}
 		for(int i = 0; i < edge.length ; i++){
 			if(edge[root][i]){
-				subtrees.add(getTree(i));
+				List<Integer> newPrev = new LinkedList<Integer>(prev);
+				newPrev.add(root);
+				subtrees.add(getTree(i,newPrev));
 			}
 		}
 		return new Tree(root,subtrees.toArray(new Tree[]{}));
 	}
 	
-	public List<Tree> getForrest(){
+	public List<Tree> getForrest() throws CycleFoundException{
 		List<Tree> forrest = new ArrayList<Tree>();
 		for(int i = 0; i < edge.length ; i++){
 			if(isRoot(i)){
-				forrest.add(getTree(i));
+				forrest.add(getTree(i,Collections.EMPTY_LIST));
 			}
 		}
 		return forrest;

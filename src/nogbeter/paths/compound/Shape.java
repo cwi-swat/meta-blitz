@@ -137,6 +137,15 @@ public class Shape extends CompoundSplittablePath<ShapeIndex> {
 			return right.getAngularInsideInterval(t.next);
 		}
 	}
+	
+	@Override
+	public List<Vec> getTangents(ShapeIndex t) {
+		if(t.choice == SplitChoice.Left){
+			return left.getTangents(t.next);
+		} else {
+			return right.getTangents(t.next);
+		}
+	}
 
 	@Override
 	public Vec getStartTan() {
@@ -149,18 +158,15 @@ public class Shape extends CompoundSplittablePath<ShapeIndex> {
 	}
 
 	@Override
-	public boolean isCyclicBorder(ShapeIndex p) {
-		throw new Error("Shape has no start or end");
-	}
-
-
-	@Override
 	public Path<PathIndex> reverse() {
 		throw new Error("Shape has no start or end");
 	}
 	
 	public Vec getArbPoint(){ return left.getArbPoint();}
 	public Vec getArbPointTan(){ return left.getArbPointTan();}
+
+
+	
 
 	
 }

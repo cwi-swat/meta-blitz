@@ -174,13 +174,6 @@ public class LengthBasedAppend extends SimplyIndexedPath{
 		return right.getEndTan();
 	}
 
-
-	@Override
-	public boolean isCyclicBorder(SimplePathIndex p) {
-		return p.t == 0 || p.t == right.tInterval.high;
-	}
-
-
 	@Override
 	public Path<PathIndex> reverse() {
 		return (Path)new Append(right.reverse(), left.reverse());

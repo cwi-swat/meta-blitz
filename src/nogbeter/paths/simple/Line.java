@@ -6,6 +6,7 @@ import static nogbeter.points.oned.Interval.emptyInterval;
 import static nogbeter.points.oned.Interval.interval01;
 
 import java.awt.geom.PathIterator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -30,8 +31,7 @@ import nogbeter.transform.AffineTransformation;
 import bezier.util.STuple;
 import bezier.util.Tuple;
 import bezier.util.Util;
-
-
+import static nogbeter.util.DebugPrint.*;
 public class Line extends SimplePath {
 
 	public final Vec start, dir, end;
@@ -189,6 +189,7 @@ public class Line extends SimplePath {
 				Interval intv = new Interval(findAll(lhs.start),findAll(lhs.end))
 							.intersection(interval01);
 				if(!intv.isEmpty()){
+					Vec v  = getAtLocal(intv.low);
 					IIntersections<SimplePathIndex, SimplePathIndex> res =
 							makeIntersectionResult(lhs,lhs.findAll(getAtLocal(intv.low)),intv.low);
 					if(!intv.isSinglePoint()){
@@ -395,4 +396,6 @@ public class Line extends SimplePath {
 		result.add(PathFactory.createLine(getStartPoint(), getAt(to)));
 		
 	}
+
+
 }

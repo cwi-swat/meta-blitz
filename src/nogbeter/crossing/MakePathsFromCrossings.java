@@ -94,10 +94,11 @@ public class MakePathsFromCrossings <L extends PathIndex,R extends PathIndex>{
 			leftUsed[beginIndex] = true;
 			leftSegs.getSegment(res, beginIndex);
 			beginIndex = bidir.fromLeftToRight(leftSegs.getEndIndex(beginIndex));
+			
 			rightSegs.getSegment(res, beginIndex);
 			beginIndex = bidir.fromRightToLeft(rightSegs.getEndIndex(beginIndex));
 		} while(!leftUsed[beginIndex]);
-		return PathFactory.createClosedPath(res);
+		return PathFactory.createClosedPathUnsafe(res);
 	}
 
 	int findLooseEnd(){

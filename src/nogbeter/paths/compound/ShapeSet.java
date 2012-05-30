@@ -250,6 +250,12 @@ public class ShapeSet extends Path<SetIndex>{
 	public AngularInterval getAngularInsideInterval(SetIndex t) {
 		return shapes.get(t.choice).getAngularInsideInterval(t.next);
 	}
+	
+
+	@Override
+	public List<Vec> getTangents(SetIndex t) {
+		return shapes.get(t.choice).getTangents(t.next);
+	}
 
 	@Override
 	public Vec getStartTan() {
@@ -261,10 +267,6 @@ public class ShapeSet extends Path<SetIndex>{
 		throw new Error("Set is not a segment!");
 	}
 
-	@Override
-	public boolean isCyclicBorder(SetIndex p) {
-		throw new Error("Shape has no start or end");
-	}
 	
 	@Override
 	public Path getSegment(SetIndex p) {
@@ -299,4 +301,5 @@ public class ShapeSet extends Path<SetIndex>{
 	public PathIndex maxPathIndex() {
 		throw new Error("Shape does not have begin nor end!");
 	}
+
 }

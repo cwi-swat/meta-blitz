@@ -61,6 +61,7 @@ public class TextFactory {
         				determineHoles(result,unkownHoles, knownHoles);
         			} else {
         				unkownHoles.add(newPath);
+        				determineHoles(result,unkownHoles, knownHoles);
         			}
         			curves = new ArrayList<SimplePath>();
         		break;

@@ -10,10 +10,16 @@ public class Interval {
 	
 	public static final Interval interval01 = new Interval(0, 1);
 	public static final Interval emptyInterval = 
-			new Interval(	Double.POSITIVE_INFINITY,
+			new Interval(true,	Double.POSITIVE_INFINITY,
 							Double.NEGATIVE_INFINITY);
 	
 	public final double low, high, length;
+	
+	public Interval(boolean literal, double low, double high){
+		this.low = low;
+		this.high = high;
+		this.length = high - low;
+	}
 
 	public Interval(double a, double b) {
 		if(a > b){
@@ -234,4 +240,8 @@ public class Interval {
 		return low == high;
 	}
 
+	public String toString(){
+		return String.format("[%f,%f]", low,high);
+	}
+	
 }

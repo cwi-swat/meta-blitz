@@ -358,7 +358,7 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 		
 	}
 	
-	public ClosedPath rectangle(){
+	public Path rectangle(){
 		Vec a = new Vec(-1,-1);
 		Vec b = new Vec(1,-1);
 		Vec c = new Vec(1,1);

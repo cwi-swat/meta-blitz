@@ -27,7 +27,7 @@ public class InsideTest extends DemoBase{
 		private Path r;
 		
 		public InsideTest() {
-			r = TextFactory.text2Paths("ws").transform(id.scale(5).translate(400, 400));
+			r = TextFactory.text2Paths("wso").transform(id.scale(5).translate(400, 400));
 		}
 		
 		@Override

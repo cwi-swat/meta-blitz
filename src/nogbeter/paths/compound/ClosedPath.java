@@ -1,5 +1,6 @@
 package nogbeter.paths.compound;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -27,11 +28,14 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 	final Path<PathIndex> actual;
 	final PathIndexTupleTransformer<?,?> closeLeft, closeRight;
 	final IPathIndexTransformer<ClosedPathIndex> closeTransformer;
+	final PathIndex minPathIndex, maxPathIndex;
 	
 	public ClosedPath(Path<PathIndex> actual) {
 		this.actual = actual;
+		this.minPathIndex = actual.minPathIndex();
+		this.maxPathIndex = actual.maxPathIndex();
 		this.closeTransformer=  
-				PITransformers.closedT(actual.minPathIndex(), actual.maxPathIndex());
+				PITransformers.closedT(minPathIndex, maxPathIndex);
 		this.closeLeft = TupleTransformers.left(closeTransformer);
 		this.closeRight = TupleTransformers.right(closeTransformer);
 	}
@@ -174,7 +178,8 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 
 	@Override
 	public AngularInterval getAngularInsideInterval(ClosedPathIndex t) {
-		if(actual.isCyclicBorder(t.next)){
+		if(t.next.isEq(minPathIndex) || t.next.isEq(maxPathIndex)){
+			System.out.println("Border!");
 			return 
 			AngularIntervalFactory.createAngularIntervalSingleIfEq(actual.getStartTan(),
 					actual.getEndTan().negate());
@@ -189,11 +194,6 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 
 	@Override
 	public Vec getEndTan() {
-		throw new Error("Closedpath has no start or end!");
-	}
-
-	@Override
-	public boolean isCyclicBorder(ClosedPathIndex p) {
 		throw new Error("Closedpath has no start or end!");
 	}
 	
@@ -219,7 +219,7 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 	public Vec getArbPointTan(){ return actual.getArbPointTan();}
 	
 	public boolean isDefindedClockwise() {
-		Vec outside = getBBox().getLeftUp().add(new Vec(-1,-1));
+		Vec outside = getBBox().getLeftUp().add(new Vec(-10,-10));
 		return !isInside(outside);
 	}
 	
@@ -236,5 +236,17 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 	@Override
 	public PathIndex maxPathIndex() {
 		throw new Error("ClosedPath does not have begin nor end!");
+	}
+
+	@Override
+	public List<Vec> getTangents(ClosedPathIndex t) {
+		if(t.next.isEq(minPathIndex) || t.next.isEq(maxPathIndex)){
+			List<Vec> v = new ArrayList<Vec>();
+			v.addAll(actual.getTangents(minPathIndex));
+			v.addAll(actual.getTangents(maxPathIndex));
+			return v;
+		} else {
+			return actual.getTangents(t.next);
+		}
 	}
 }

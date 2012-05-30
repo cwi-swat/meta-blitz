@@ -39,7 +39,13 @@ public class ForwardSegmentMaker<L extends PathIndex> implements ISegmentMaker<L
 
 	@Override
 	public void getSegment(List<Path> result,int i) {
-		p.getSubPath(crossList.get(i), crossList.get(next.get(i)), result);
+		List<Path> localRes = new ArrayList<Path>();
+		p.getSubPath(crossList.get(i), crossList.get(next.get(i)), localRes);
+//		System.out.printf("Start %s \n End %s\n",crossList.get(i), crossList.get(next.get(i)) );
+//		for(Path p : localRes){
+//			System.out.println(p);
+//		}
+		result.addAll(localRes);
 	}
 
 }

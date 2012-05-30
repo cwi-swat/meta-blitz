@@ -32,10 +32,13 @@ public class CrossTest extends DemoBase{
 	private Path<PathIndex> r,q;
 	
 	public CrossTest() {
-		r = (Path)rectangle().transform(id.scale(200).translate(400,400));
-		System.out.println(r);
-//		r = TextFactory.text2Paths("ws").transform(id.scale(5).translate(200, 200));
-		q = TextFactory.text2Paths("B").transform(id.scale(5));
+//		r = (Path)rectangle().transform(id.scale(200).translate(400,400));
+//		System.out.println(r);
+////		r = TextFactory.text2Paths("ws").transform(id.scale(5).translate(200, 200));
+//		q = TextFactory.text2Paths("B").transform(id.scale(5));
+		r = rectangle().transform(id.scale(30).translate(200, 200));
+//		z = TextFactory.text2Paths("w").transform(id.scale(5));
+		q = rectangle().transform(id.scale(200));
 		System.out.println(q);
 	}
 	
@@ -56,14 +59,12 @@ public class CrossTest extends DemoBase{
 		this.q.transform(id.translate(mouse.add(location)));
 		draw(r);
 		draw(q);
-		IIntersections<PathIndex,PathIndex> ints = r.intersection(q);
-		List<List<Crossing<PathIndex, PathIndex>>> cross = new IntersectionsToCrossings(ints, r,q).getCrossingsPerLeftSegment();
-		for(List<Crossing<PathIndex, PathIndex>> cc : cross){
-			for(Crossing<PathIndex, PathIndex> c : cc){
-			
+//		IIntersections<PathIndex,PathIndex> ints = r.intersection(q);
+		List<Crossing<PathIndex, PathIndex>> cross = r.crossings(q);
+		System.out.printf("%d\n",cross.size());
+			for(Crossing<PathIndex, PathIndex> c : cross){
 				fillOval(c.loc, 10, c.leftAfterInside ? ColorsAlpha.green : ColorsAlpha.red);
 			}
-		}
 
 	}
 }

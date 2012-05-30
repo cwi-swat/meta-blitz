@@ -41,6 +41,7 @@ public abstract class Path
 	public abstract Vec getAt(PathParam t);
 	public abstract Vec getTangentAt(PathParam t);
 	public abstract AngularInterval getAngularInsideInterval(PathParam t);
+	public abstract List<Vec> getTangents(PathParam t);
 	
 
 	public abstract <RPP extends PathIndex> IIntersections<PathParam, RPP> intersection(
@@ -150,7 +151,6 @@ public abstract class Path
 		}
 	}
 	
-	public abstract boolean isCyclicBorder(PathParam p);
 	
 	public Path getSegment(PathParam p) {
 		throw new Error("Cannot contain segment");
@@ -168,7 +168,7 @@ public abstract class Path
 	
 	public boolean contains(Path other){
 		Vec v = other.getArbPoint();
-		BestProject<PathParam> project = project(other.getArbPoint()); // getNearest
+		BestProject<PathParam> project = project(v); // getNearest
 		Vec loc = getAt(project.t);
 		Vec to = v.sub(loc);
 		AngularInterval interval = getAngularInsideInterval(project.t);
@@ -178,7 +178,7 @@ public abstract class Path
 	public abstract PathIndex minPathIndex();
 	public abstract PathIndex maxPathIndex();
 	
-	public <RPP extends PathIndex> List<Crossing<PathParam,RPP>> getCrossings(Path<RPP> other){
+	public <RPP extends PathIndex> List<Crossing<PathParam,RPP>> crossings(Path<RPP> other){
 		IIntersections<PathParam,RPP> inters = intersection(other);
 		return new IntersectionsToCrossings(inters, this, other).getCrossings();
 	}
@@ -186,18 +186,18 @@ public abstract class Path
 	public <RPP extends PathIndex> Path union(Path<RPP> other){
 		return new 
 				MakePathsFromCrossings<PathParam, RPP>
-		(this, other, false, false, false, getCrossings(other)).makeAllPaths();
+		(this, other, false, false, false, crossings(other)).makeAllPaths();
 	}
 	
 	public <RPP extends PathIndex> Path intersectionOp(Path<RPP> other){
 		return new 
 				MakePathsFromCrossings<PathParam, RPP>
-		(this, other, true, true, false, getCrossings(other)).makeAllPaths();
+		(this, other, true, true, false, crossings(other)).makeAllPaths();
 	}
 	
 	public <RPP extends PathIndex> Path subtract(Path<RPP> other){
 		return new 
 				MakePathsFromCrossings<PathParam, RPP>
-		(this, other, false, true, true, getCrossings(other)).makeAllPaths();
+		(this, other, false, true, true, crossings(other)).makeAllPaths();
 	}
 }

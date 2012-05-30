@@ -5,15 +5,21 @@ import static nogbeter.transform.AffineTransformation.id;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import nogbeter.crossing.Crossing;
 import nogbeter.crossing.IntersectionsToCrossings;
 import nogbeter.demo.awt.DemoBase;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
+import nogbeter.paths.compound.ClosedPath;
+import nogbeter.paths.compound.ClosedPathIndex;
 import nogbeter.paths.factory.TextFactory;
+import nogbeter.paths.iterators.ClosedPathIterator;
+import nogbeter.paths.iterators.ShapeIterator;
 import nogbeter.paths.results.intersections.IIntersections;
 import nogbeter.paths.results.intersections.Intersection;
+import nogbeter.paths.results.project.BestProject;
 import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.angles.AngularIntervalFactory;
 import nogbeter.points.twod.Vec;
@@ -52,12 +58,16 @@ public class SetOperationTest extends DemoBase{
 	}
 
 	Vec location = new Vec(0,0);
-	private Path<PathIndex> r,z;
 	
+	Path<ClosedPathIndex> r;
+	private Path<ClosedPathIndex> z;
+	boolean bla = false;
 	public SetOperationTest() {
-//		r = rectangle().transform(id.scale(200).translate(400,400));
-		r = TextFactory.text2Paths("sw").transform(id.scale(5).translate(200, 200));
-		z = TextFactory.text2Paths("sk").transform(id.scale(5));
+		r = rectangle().transform(id.scale(200).translate(400,400));
+		r = TextFactory.text2Paths("atze").transform(id.scale(5).translate(200, 200));
+		System.out.println("r");
+//		r = rectangle().transform(id.scale(30).translate(200, 200));
+		z = TextFactory.text2Paths("atze").transform(id.scale(5));
 //		z = rectangle().transform(id.scale(200));
 	}
 	
@@ -73,12 +83,54 @@ public class SetOperationTest extends DemoBase{
 	
 	@Override
 	public void draw() {
-
-		Path<PathIndex> q =
+		if(!bla){
+			location = mouse;
+		}
+		Path<ClosedPathIndex> q =
 		z.transform(
-				id.translate(mouse));
-		draw(r.union(q));
-		
+				id.translate(location));
+		Path p = r.union(q);
+		draw(p);
+//		Iterator<Path> it = new ClosedPathIterator(p);
+//		while(it.hasNext()){
+//			Path z = it.next();
+//			draw(z);
+//			Vec d = 	z.getBBox().getLeftUp().add(new Vec(-10,-10));
+//			BestProject<PathIndex> best = z.project(d);
+//			Vec v = z.getAt(best.t);
+//			List<Vec> vs = z.getTangents(best.t);
+//			System.out.println(best.t);
+//			drawOval(d,3,ColorsAlpha.blue);
+//			drawOval(v,3,ColorsAlpha.blue);
+//			if(vs.isEmpty()){
+//				System.out.println("Weirrd!!!!!!!!!!!");
+//			}
+//			for(Vec vv : vs){
+//				vv = vv.normalize();
+//				vv = vv.mul(40);
+//				System.out.print(vv + " ");
+//				drawLine(v, v.add(vv), ColorsAlpha.green);
+//				drawOval(v.add(vv),3,ColorsAlpha.blue);
+//			}
+//			drawLine(z.getBBox().getLeftUp(), z.getBBox().getRightUp(), ColorsAlpha.red);
+//			drawLine(z.getBBox().getRightUp(), z.getBBox().getRightDown(), ColorsAlpha.red);
+//			drawLine(z.getBBox().getRightDown(), z.getBBox().getLeftDown(), ColorsAlpha.red);
+//			drawLine(z.getBBox().getLeftDown(), z.getBBox().getLeftUp(), ColorsAlpha.red);
+//		}
+//		draw(p,bla ? (p.isInside(mouse) ? ColorsAlpha.red : ColorsAlpha.green) : ColorsAlpha.black );
+//		while(it.hasNext()){
+//			
+//			draw(it.next(),c);
+//		}
+//		System.out.println(p);
+//		System.out.println("end");
+//		List<Crossing<ClosedPathIndex, ClosedPathIndex>> cross = r.crossings(q);
+//		
+//			for(Crossing<ClosedPathIndex, ClosedPathIndex> c : cross){
+//				
+//				fillOval(c.loc, 10, 
+//						(c.leftAfterInside ? ColorsAlpha.green : ColorsAlpha.red).lerp(0.5,ColorsAlpha.transparent));
+//			}
 //		int i = 0;
 //		for(List<Crossing<PathIndex, PathIndex>> cc : cross){
 //			for(Crossing<PathIndex,PathIndex> c : cc){

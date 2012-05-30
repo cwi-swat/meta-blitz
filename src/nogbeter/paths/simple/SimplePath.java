@@ -2,6 +2,7 @@ package nogbeter.paths.simple;
 
 import static nogbeter.paths.results.transformers.TupleTransformers.unitTup;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -98,12 +99,14 @@ public abstract class SimplePath extends SimplyIndexedPath{
 		return getTangentAtLocal(1.0);
 	}
 	
-	@Override
-	public boolean isCyclicBorder(SimplePathIndex p) {
-		return p.t == tInterval.high || p.t == tInterval.low;
-	}
-	
 	public Vec getArbPoint(){ return getStartPoint();}
 	public Vec getArbPointTan(){ return getStartTan(); }
 
+	@Override
+	public List<Vec> getTangents(SimplePathIndex t) {
+		List<Vec> v = new ArrayList<Vec>();
+		v.add(getTangentAt(t));
+		return v;
+	}
+	
 }

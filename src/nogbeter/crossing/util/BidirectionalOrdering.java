@@ -50,7 +50,7 @@ public class BidirectionalOrdering<A> {
 
 			@Override
 			public A get(int i) {
-				return leftOrdering.get(i);
+				return leftOrdering.get(fromRightToLeft(i));
 			}
 		};
 	}

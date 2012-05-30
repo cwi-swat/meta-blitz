@@ -1,5 +1,6 @@
 package nogbeter.paths.compound;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -21,8 +22,12 @@ import bezier.util.Tuple;
 public class Append 
 			extends CompoundSplittablePath<AppendIndex> {
 
+	final PathIndex borderLeft, borderRight;
+	
 	public Append(Path left, Path right) {
 		super(left, right);
+		borderLeft = new AppendIndex(SplitChoice.Left, left.maxPathIndex());
+		borderRight = new AppendIndex(SplitChoice.Right, right.minPathIndex());
 	}
 
 	private static Path createAppend(List<Path> paths, int start, int end){
@@ -142,7 +147,7 @@ public class Append
 
 	@Override
 	public AngularInterval getAngularInsideInterval(AppendIndex t) {
-		if(t.isBorder()){
+		if(t.isEq(borderLeft) || t.isEq(borderRight)){
 			return AngularIntervalFactory.
 					createAngularIntervalSingleIfEq(right.getStartTan(), 
 							left.getEndTan().negate()); 
@@ -150,6 +155,21 @@ public class Append
 			return left.getAngularInsideInterval(t.next);
 		} else {
 			return right.getAngularInsideInterval(t.next);
+		}
+	}
+	
+
+	@Override
+	public List<Vec> getTangents(AppendIndex t) {
+		if(t.isEq(borderLeft) || t.isEq(borderRight)){
+			List<Vec> res = new ArrayList<Vec>();
+			res.addAll(left.getTangents(borderLeft.next));
+			res.addAll(right.getTangents(borderRight.next));
+			return res;
+		} else if(t.choice == SplitChoice.Left){
+			return left.getTangents(t.next);
+		} else {
+			return right.getTangents(t.next);
 		}
 	}
 
@@ -162,12 +182,6 @@ public class Append
 	@Override
 	public Vec getEndTan() {
 		return right.getEndTan();
-	}
-
-
-	@Override
-	public boolean isCyclicBorder(AppendIndex p) {
-		return p.isCyclicBorder();
 	}
 
 	@Override
@@ -183,5 +197,6 @@ public class Append
 	public Vec getArbPoint(){ return getStartPoint();}
 
 	public Vec getArbPointTan(){ return getStartTan();}
+
 
 }
