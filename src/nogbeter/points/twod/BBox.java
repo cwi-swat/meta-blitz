@@ -115,5 +115,8 @@ public final class BBox {
 		return new BBox(new Interval(a.x, b.x,c.x, d.x), new Interval(a.y, b.y,c.y, d.y));
 	}
 
-
+	public String toString(){
+		return String.format("[x:%s y:%s]", xInterval,yInterval);
+	}
+	
 }

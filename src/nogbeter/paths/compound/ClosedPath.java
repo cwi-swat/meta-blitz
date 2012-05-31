@@ -179,7 +179,6 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 	@Override
 	public AngularInterval getAngularInsideInterval(ClosedPathIndex t) {
 		if(t.next.isEq(minPathIndex) || t.next.isEq(maxPathIndex)){
-			System.out.println("Border!");
 			return 
 			AngularIntervalFactory.createAngularIntervalSingleIfEq(actual.getStartTan(),
 					actual.getEndTan().negate());
@@ -198,7 +197,7 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 	}
 	
 	@Override
-	public Path getSegment(ClosedPathIndex p) {
+	public Path getClosedPath(ClosedPathIndex p) {
 		return this;
 	}
 	

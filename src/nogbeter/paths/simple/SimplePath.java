@@ -12,6 +12,7 @@ import nogbeter.paths.PathIndex;
 import nogbeter.paths.SimplyIndexedPath;
 import nogbeter.paths.SplittablePath;
 import nogbeter.paths.results.intersections.IIntersections;
+import nogbeter.paths.results.intersections.IntersectionType;
 import nogbeter.paths.results.intersections.Intersections;
 import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.paths.results.transformers.IPathIndexTransformer;
@@ -57,9 +58,20 @@ public abstract class SimplePath extends SimplyIndexedPath{
 		SimplePathIndex l = lhs.makeGlobalPathIndexFromLocal(tl);
 		SimplePathIndex r = makeGlobalPathIndexFromLocal(tr);
 		return new Intersections<SimplePathIndex, SimplePathIndex>(l, r,
-				lhs.getAtLocal(tl), getAtLocal(tr), lhs.getTangentAtLocal(tl),getTangentAtLocal(tr));
+				lhs.getAtLocal(tl), getAtLocal(tr), lhs.getTangentAtLocal(tl),getTangentAtLocal(tr),
+				lhs.getIntersectionType(l), this.getIntersectionType(r));
 	}
 	
+	private IntersectionType getIntersectionType(SimplePathIndex l) {
+		if(l.t == tInterval.high){
+			return IntersectionType.BorderLeft;
+		} else if(l.t == tInterval.low){
+			return IntersectionType.BorderRight;
+		} else {
+			return IntersectionType.Normal;
+		}
+	}
+
 	public SimplePathIndex makeGlobalPathIndexFromLocal(double t){
 		return new SimplePathIndex(tInterval.getAtFactor(t));
 	}

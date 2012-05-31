@@ -76,12 +76,12 @@ public abstract class CompoundSplittablePath<P extends SplitIndex>
 	
 
 	@Override
-	public Path getSegment(P p) {
+	public Path getClosedPath(P p) {
 		switch (p.choice) {
 		case Left:
-			return left.getSegment(p.next);
+			return left.getClosedPath(p.next);
 		case Right:
-			return right.getSegment(p.next);
+			return right.getClosedPath(p.next);
 		}
 		throw new Error("Unkown split choice:" + this + "\n");
 	}

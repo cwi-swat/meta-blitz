@@ -32,6 +32,7 @@ public class BestProject<A extends PathIndex>{
 
 	public BestProject<A> choose(BestProject<A> rhs){
 		if(distSquared < rhs.distSquared){
+		
 			return this;
 		} else {
 			return rhs;

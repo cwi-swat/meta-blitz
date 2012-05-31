@@ -92,6 +92,10 @@ public final class Vec {
 		return new Vec(-x,-y);
 	}
 	
+	public boolean onSameLine(Vec other){
+		return perpendicularCW().dot(other) == 0;
+	}
+	
 	// given two vectors on the same line,
 	// do the vectors go in the same direction
 	public boolean sameDir(Vec other){

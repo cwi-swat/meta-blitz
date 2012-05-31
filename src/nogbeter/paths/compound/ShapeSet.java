@@ -269,8 +269,8 @@ public class ShapeSet extends Path<SetIndex>{
 
 	
 	@Override
-	public Path getSegment(SetIndex p) {
-		return shapes.get(p.choice).getSegment(p.next);
+	public Path getClosedPath(SetIndex p) {
+		return shapes.get(p.choice).getClosedPath(p.next);
 	}
 	
 	@Override

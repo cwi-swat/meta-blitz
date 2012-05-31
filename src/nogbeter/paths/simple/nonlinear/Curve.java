@@ -154,19 +154,25 @@ public abstract class Curve extends SimplePath {
 		Tuple<Curve,Curve> sl = split(from.t);
 		double splitRight = (to.t - from.t) / (1.0 - from.t);
 		Tuple<Curve,Curve> sr = sl.r.split(splitRight);
-		result.add(sr.l);
+		if(!sl.l.getStartPoint().isEq(sl.l.getEndPoint())){
+			result.add(sl.l);
+		}
 	}
 	
 	@Override
 	public void getSubPathFrom(SimplePathIndex from, List<Path> result) {
 		Tuple<Curve,Curve> sl = split(from.t);
-		result.add(sl.r);
+		if(!sl.r.getStartPoint().isEq(sl.r.getEndPoint())){
+			result.add(sl.r);
+		}
 	}
 
 	@Override
 	public void getSubPathTo(SimplePathIndex to, List<Path> result) {
 		Tuple<Curve,Curve> sl = split(to.t);
-		result.add(sl.l);
+		if(!sl.l.getStartPoint().isEq(sl.l.getEndPoint())){
+			result.add(sl.l);
+		}
 		
 	}
 }

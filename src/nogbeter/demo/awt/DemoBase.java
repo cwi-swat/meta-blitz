@@ -171,7 +171,7 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 			g.setColor(fromSample(inside));
 			g.fillRect(round(location.x)-round(w/2.0),round(location.y)-round(h/2.0), round(w), round(h));
 		}
-		if(inside.last() > 0.0){
+		if(border.last() > 0.0){
 			g.setColor(fromSample(border));
 			g.drawRect(round(location.x)-round(w/2.0),round(location.y)-round(h/2.0), round(w), round(h));
 		}

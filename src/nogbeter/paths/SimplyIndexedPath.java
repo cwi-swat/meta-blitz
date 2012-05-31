@@ -68,7 +68,7 @@ public abstract class SimplyIndexedPath extends SplittablePath<SimplePathIndex>{
 	public abstract SimplyIndexedPath getWithAdjustedStartPoint(Vec newStartPoint);
 	
 	@Override
-	public Path getSegment(SimplePathIndex p) {
+	public Path getClosedPath(SimplePathIndex p) {
 		return this;
 	}
 	

@@ -8,22 +8,18 @@ import bezier.util.Tuple;
 
 import nogbeter.paths.Path;
 import nogbeter.paths.compound.ClosedPath;
+import nogbeter.paths.compound.ClosedPathIndex;
 import nogbeter.paths.factory.PathFactory;
+import nogbeter.paths.results.project.BestProject;
+import nogbeter.points.twod.Vec;
 
 public class ClosedPathsToShapes {
 	
 	public static Path closedPathsToShapes(List<ClosedPath> closed){
-//		return PathFactory.createSet((List)closed);
 		Tuple<List<Integer>,List<Integer>> bh = splitIntoBordersAndHoles(closed);
 		List<Integer> borders = bh.l;
 		List<Integer> holes = bh.r;
-//		List<Path> res = new ArrayList<Path>();
-//		for(int i : borders){
-//			res.add(closed.get(i));
-////			System.out.printf("\t%s\n",closed.get(i));
-//		}
-//		
-//		return PathFactory.createSet(res);
+		
 		boolean[][] contains = new boolean[closed.size()][closed.size()];
 		for(int j : holes){
 			boolean found = false;
@@ -33,23 +29,29 @@ public class ClosedPathsToShapes {
 					contains[i][j] = true;
 					found = true;
 					break;
+				} else if(!closed.get(j).contains(closed.get(i))){
+					contains[j][i] = true;
 				}
-//				} else if(!closed.get(j).contains(closed.get(i))){
-//					contains[j][i] = true;
-//				}
 			}
 			if(!found)
 			System.out.printf("Not contained in anything: %s\n", closed.get(j).getArbPoint());
 		}
 		try{
 			List<Tree> forrest = new Graph(contains).getForrest();
-			System.out.printf("Number of shapes: %d\n", forrest.size());
+			List<Path> res = new ArrayList<Path>();
+//			System.out.printf("Number of shapes: %d\n", forrest.size());
 			for(Tree f : forrest){
 				if(!closed.get(f.root).isDefindedClockwise()){
-					System.err.printf("Not defined clockwise!\n");
+					ClosedPath p = closed.get(f.root);
+					System.err.printf("Not defined clockwise! %s\n", closed.get(f.root));
+					BestProject<ClosedPathIndex> b = p.project(p.getBBox().getLeftUp().sub(new Vec(10,10)));
+					System.err.printf("loc : %s %s %s\n", p.getBBox().getLeftUp().sub(new Vec(10,10)), p.getAt(b.t), b.t);
+					res.add(makeShape(closed,f));
+				} else {
+					res.add(makeShape(closed,f));
 				}
 			}
-			return PathFactory.createSet(makeShapeSet(closed,forrest));
+			return PathFactory.createSet(res);
 		} catch(CycleFoundException e){
 			System.out.printf("Cycle found!:\n");
 			List<Path> res = new ArrayList<Path>();
@@ -61,6 +63,7 @@ public class ClosedPathsToShapes {
 			return PathFactory.createSet(res);
 		}
 	}
+
 
 	private static List<Path> makeShapeSet(List<ClosedPath> closed, List<Tree> forrest) {
 		List<Path> shapes = new ArrayList<Path>();

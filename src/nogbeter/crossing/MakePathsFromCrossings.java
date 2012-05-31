@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import bezier.util.Tuple;
+
 import nogbeter.crossing.util.BidirectionalOrdering;
 import nogbeter.crossing.util.ForwardSegmentMaker;
 import nogbeter.crossing.util.IMap;
@@ -33,12 +35,15 @@ public class MakePathsFromCrossings <L extends PathIndex,R extends PathIndex>{
 	private final Path<R> r;
 	private final boolean rightInside;
 	private final boolean reverseRight;
+	private final Set<Path> remove, keep;
 	
-	public MakePathsFromCrossings(Path<L> l, Path<R> r, boolean leftInside, boolean rightInside,
-			boolean reverseRight, List<Crossing<L, R>> crossingsSortedOnLeft) {
-		this.l = l;
-		this.r = r;
-		bidir = makeBidir(crossingsSortedOnLeft);
+	public MakePathsFromCrossings(CrossingsInfo<L, R> crossingsInfo, boolean leftInside, boolean rightInside,
+			boolean reverseRight) {
+		this.l = crossingsInfo.l;
+		this.r = crossingsInfo.r;
+		Tuple<Set<Path>, Set<Path>> rk = crossingsInfo.getRemovesAndKeeps();
+		remove = rk.l; keep = rk.r;
+		bidir = makeBidir(crossingsInfo.crossings);
 		left = bidir.getLeft();
 		leftUsed = new boolean[bidir.size()];
 		leftSegs = makeSegmentMaker(false,l, getLeftList(left));
@@ -81,7 +86,7 @@ public class MakePathsFromCrossings <L extends PathIndex,R extends PathIndex>{
 			List<ClosedPath> leftNon, Path other) {
 		List<ClosedPath> result = new ArrayList<ClosedPath>();
 		for(ClosedPath p : leftNon){
-			if(other.contains(p) == shouldBeInside){
+			if(keep.contains(p) || (other.contains(p) == shouldBeInside && !remove.contains(p))){
 				result.add(p);
 			}
 		}
@@ -126,7 +131,7 @@ public class MakePathsFromCrossings <L extends PathIndex,R extends PathIndex>{
 			Path<P> p, ISimpleList<P> list) {
 		Set<Path> withIntersections = new HashSet<Path>();
 		for(int i = 0 ; i < list.size() ; i++){
-			withIntersections.add(p.getSegment(list.get(i)));
+			withIntersections.add(p.getClosedPath(list.get(i)));
 		}
 		List<ClosedPath> res = new ArrayList<ClosedPath>();
 		p.getClosedSegmentsNotInSet(withIntersections, res);
@@ -138,9 +143,9 @@ public class MakePathsFromCrossings <L extends PathIndex,R extends PathIndex>{
 		if(list.size() == 0){
 			return res;
 		}
-		Path prev = p.getSegment(list.get(0));
+		Path prev = p.getClosedPath(list.get(0));
 		for(int i = 1 ; i < list.size() ; i++){
-			Path cur = p.getSegment(list.get(i));
+			Path cur = p.getClosedPath(list.get(i));
 			if(prev != cur){
 				res.add(i);
 				prev = cur;

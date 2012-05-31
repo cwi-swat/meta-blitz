@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import nogbeter.crossing.Crossing;
+import nogbeter.crossing.CrossingsInfo;
 import nogbeter.crossing.IntersectionsToCrossings;
 import nogbeter.crossing.MakePathsFromCrossings;
 import nogbeter.paths.compound.ClosedPath;
@@ -152,7 +153,7 @@ public abstract class Path
 	}
 	
 	
-	public Path getSegment(PathParam p) {
+	public Path getClosedPath(PathParam p) {
 		throw new Error("Cannot contain segment");
 	}
 	
@@ -175,29 +176,38 @@ public abstract class Path
 		return interval.isInside(to);
 	}
 	
+	public boolean isOnBorder(Vec v){
+		return project(v).distSquared == 0;
+	}
+	
 	public abstract PathIndex minPathIndex();
 	public abstract PathIndex maxPathIndex();
 	
 	public <RPP extends PathIndex> List<Crossing<PathParam,RPP>> crossings(Path<RPP> other){
 		IIntersections<PathParam,RPP> inters = intersection(other);
-		return new IntersectionsToCrossings(inters, this, other).getCrossings();
+		return crossingsInfo(other).crossings;
+	}
+	
+	public <RPP extends PathIndex> CrossingsInfo<PathParam, RPP> crossingsInfo(Path<RPP> other){
+		IIntersections<PathParam,RPP> inters = intersection(other);
+		return new IntersectionsToCrossings(inters, this, other).getCrossingsInfo();
 	}
 	
 	public <RPP extends PathIndex> Path union(Path<RPP> other){
 		return new 
 				MakePathsFromCrossings<PathParam, RPP>
-		(this, other, false, false, false, crossings(other)).makeAllPaths();
+		(crossingsInfo(other), false, false, false).makeAllPaths();
 	}
 	
 	public <RPP extends PathIndex> Path intersectionOp(Path<RPP> other){
 		return new 
 				MakePathsFromCrossings<PathParam, RPP>
-		(this, other, true, true, false, crossings(other)).makeAllPaths();
+		(crossingsInfo(other), true, true, false).makeAllPaths();
 	}
 	
 	public <RPP extends PathIndex> Path subtract(Path<RPP> other){
 		return new 
 				MakePathsFromCrossings<PathParam, RPP>
-		(this, other, false, true, true, crossings(other)).makeAllPaths();
+		(crossingsInfo(other), false, true, true).makeAllPaths();
 	}
 }

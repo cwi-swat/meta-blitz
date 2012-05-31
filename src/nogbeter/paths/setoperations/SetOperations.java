@@ -79,12 +79,12 @@ public class SetOperations<L extends PathIndex,R extends PathIndex> {
 		if(used.length == 0){
 			return Collections.EMPTY_LIST;
 		}
-		Path prevSeg = rightPath.getSegment(getRightCrossing(0).r);
+		Path prevSeg = rightPath.getClosedPath(getRightCrossing(0).r);
 		usedPathsRight.add(prevSeg);
 		List<SegmentStartEndIndex> res = new ArrayList<SegmentStartEndIndex>();
 		int curStart = 0;
 		for(int i = 1 ; i < crossingIndexesSortedOnRight.size() ; i++){
-			Path curSeg = rightPath.getSegment(getRightCrossing(i).r);
+			Path curSeg = rightPath.getClosedPath(getRightCrossing(i).r);
 			if(prevSeg != curSeg){
 				usedPathsRight.add(curSeg);
 				SegmentStartEndIndex newSeg = new SegmentStartEndIndex(curStart, i-1);
@@ -109,7 +109,7 @@ public class SetOperations<L extends PathIndex,R extends PathIndex> {
 		List<Crossing<L, R>> cross = new ArrayList<Crossing<L,R>>();
 		List<SegmentStartEndIndex> startEnds = new ArrayList<SegmentStartEndIndex>();
 		for(List<Crossing<L, R>> crossingPerSeg : crossingSortedOnLeft){
-			usedPathsLeft.add(leftPath.getSegment(crossingPerSeg.get(0).l));
+			usedPathsLeft.add(leftPath.getClosedPath(crossingPerSeg.get(0).l));
 			cross.addAll(crossingPerSeg);
 			int end = start + (crossingPerSeg.size()-1);
 			SegmentStartEndIndex newSeg = new SegmentStartEndIndex(start,end) ;

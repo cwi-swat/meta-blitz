@@ -16,8 +16,8 @@ public class Intersections<LI extends PathIndex,RI extends PathIndex> implements
 	private final Intersection<LI,RI> first;
 	private final Intersection<LI,RI> last;
 	
-	public Intersections(LI l, RI r,Vec locl, Vec locr, Vec tanl, Vec tanr){
-		this.first = new Intersection<LI, RI>(l,r,locl, locr, tanl, tanr);
+	public Intersections(LI l, RI r,Vec locl, Vec locr, Vec tanl, Vec tanr, IntersectionType typel, IntersectionType typer){
+		this.first = new Intersection<LI, RI>(l,r,locl, locr, tanl, tanr, typel, typer);
 		this.last = first;
 	}
 	
@@ -109,19 +109,4 @@ public class Intersections<LI extends PathIndex,RI extends PathIndex> implements
 	public IIntersections<LI, RI> append(IIntersections<LI, RI> r) {
 		return r.appendNorm(this);
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-
 }

@@ -256,6 +256,9 @@ public class Line extends SimplePath {
 	@Override
 	public BestProject<SimplePathIndex> project(double best, Vec p) {
 		double t = closestT(p);
+		if(Double.isNaN(t)){
+			System.out.println(this);
+		}
 		double dist = getAtLocal(t).distanceSquared(p);
 		return new BestProject<SimplePathIndex>(dist, makeGlobalPathIndexFromLocal(t));
 	}
@@ -381,20 +384,34 @@ public class Line extends SimplePath {
 
 	@Override
 	public void getSubPath(SimplePathIndex from, SimplePathIndex to,List<Path> result) {
-		result.add(PathFactory.createLine(getAt(from), getAt(to)));
+		Vec s = getAt(from);
+		Vec e = getAt(to);
+		if(s.isEq(e)){
+			return;
+		}
+		result.add(PathFactory.createLine(s,e));
 	}
 	
 
 	@Override
 	public void getSubPathFrom(SimplePathIndex from, List<Path> result) {
-		result.add(PathFactory.createLine(getAt(from), getEndPoint()));
+		Vec s = getAt(from);
+		Vec e = getEndPoint();
+		if(s.isEq(e)){
+			return;
+		}
+		result.add(PathFactory.createLine(s,e));
 		
 	}
 
 	@Override
 	public void getSubPathTo(SimplePathIndex to, List<Path> result) {
-		result.add(PathFactory.createLine(getStartPoint(), getAt(to)));
-		
+		Vec s = getStartPoint();
+		Vec e = getAt(to);
+		if(s.isEq(e)){
+			return;
+		}
+		result.add(PathFactory.createLine(s,e));
 	}
 
 
