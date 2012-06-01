@@ -18,6 +18,8 @@ import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.compound.SplitIndex;
 import nogbeter.paths.factory.PathFactory;
 import nogbeter.paths.results.intersections.IIntersections;
+import nogbeter.paths.results.intersections.Intersection;
+import nogbeter.paths.results.intersections.IntersectionType;
 import nogbeter.paths.results.intersections.Intersections;
 import nogbeter.paths.results.project.BestProject;
 import nogbeter.paths.results.project.BestProjectTup;
@@ -184,6 +186,9 @@ public class Line extends SimplePath {
 	@Override
 	public IIntersections<SimplePathIndex, SimplePathIndex> intersectionLLine(
 			Line lhs) {
+		if(lhs == this){
+			return selfIntersection();
+		}
 		if(dir.tanToNormal().dot(lhs.dir) == 0){
 			if(isOnSameLine(lhs)){
 				Interval intv = new Interval(findAll(lhs.start),findAll(lhs.end))
@@ -209,6 +214,8 @@ public class Line extends SimplePath {
 			}
 		}
 	}
+
+
 
 	private boolean isOnSameLine(Line lhs) {
 		return getAtLocal(findAll(lhs.start)).isEq(lhs.start);
@@ -386,7 +393,7 @@ public class Line extends SimplePath {
 	public void getSubPath(SimplePathIndex from, SimplePathIndex to,List<Path> result) {
 		Vec s = getAt(from);
 		Vec e = getAt(to);
-		if(s.isEq(e)){
+		if(s.isEqError(e)){
 			return;
 		}
 		result.add(PathFactory.createLine(s,e));
@@ -397,7 +404,7 @@ public class Line extends SimplePath {
 	public void getSubPathFrom(SimplePathIndex from, List<Path> result) {
 		Vec s = getAt(from);
 		Vec e = getEndPoint();
-		if(s.isEq(e)){
+		if(s.isEqError(e)){
 			return;
 		}
 		result.add(PathFactory.createLine(s,e));
@@ -408,7 +415,7 @@ public class Line extends SimplePath {
 	public void getSubPathTo(SimplePathIndex to, List<Path> result) {
 		Vec s = getStartPoint();
 		Vec e = getAt(to);
-		if(s.isEq(e)){
+		if(s.isEqError(e)){
 			return;
 		}
 		result.add(PathFactory.createLine(s,e));

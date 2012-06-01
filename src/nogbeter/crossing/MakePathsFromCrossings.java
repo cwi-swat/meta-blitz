@@ -19,7 +19,9 @@ import nogbeter.graphtheory.ClosedPathsToShapes;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.compound.ClosedPath;
+import nogbeter.paths.compound.NotClosedException;
 import nogbeter.paths.factory.PathFactory;
+import nogbeter.points.twod.Vec;
 
 public class MakePathsFromCrossings <L extends PathIndex,R extends PathIndex>{
 
@@ -54,17 +56,20 @@ public class MakePathsFromCrossings <L extends PathIndex,R extends PathIndex>{
 		this.reverseRight = reverseRight;
 	}
 	
-	public Path makeAllPaths(){
+	public Path makeAllPaths() throws NotClosedException{
 		List<ClosedPath> res = makePathsFromCrossings();
 		res.addAll(makePathsFromNonIntersections());
 		return ClosedPathsToShapes.closedPathsToShapes(res);
 	}
 	
-	List<ClosedPath> makePathsFromCrossings(){
+	List<ClosedPath> makePathsFromCrossings() throws NotClosedException{
 		List<ClosedPath> res = new ArrayList<ClosedPath>();
 		int beginIndex;
 		while((beginIndex = findLooseEnd()) != NoLooseEnd){
-			res.add(makeClosedPath(beginIndex));
+			ClosedPath p = makeClosedPath(beginIndex);
+			if(p != null){
+				res.add(p);
+			}
 		}
 		return res;
 	}
@@ -93,7 +98,7 @@ public class MakePathsFromCrossings <L extends PathIndex,R extends PathIndex>{
 		return result;
 	}
 
-	private ClosedPath makeClosedPath(int beginIndex) {
+	private ClosedPath makeClosedPath(int beginIndex) throws NotClosedException {
 		List<Path> res = new ArrayList<Path>();
 		do{
 			leftUsed[beginIndex] = true;
@@ -102,8 +107,28 @@ public class MakePathsFromCrossings <L extends PathIndex,R extends PathIndex>{
 			
 			rightSegs.getSegment(res, beginIndex);
 			beginIndex = bidir.fromRightToLeft(rightSegs.getEndIndex(beginIndex));
-		} while(!leftUsed[beginIndex]);
+		} while((res.isEmpty() ||
+				!res.get(0).getStartPoint().isEqError(res.get(res.size()-1).getEndPoint())
+				&& !leftUsed[beginIndex]));
+		if(res.isEmpty()){
+			return null;
+		}
+		res = makeContinous(res);
 		return PathFactory.createClosedPathUnsafe(res);
+	}
+
+	private List<Path> makeContinous(List<Path> segs) {
+		List<Path> res = new ArrayList<Path>();
+		Vec start = segs.get(segs.size()-1).getEndPoint();
+		for(Path p : segs){
+			if(p.getStartPoint().isEq(start)){
+				res.add(p);
+			} else {
+				res.add(p.getWithAdjustedStartPoint(start));
+			}
+			start = p.getEndPoint();
+		}
+		return res;
 	}
 
 	int findLooseEnd(){

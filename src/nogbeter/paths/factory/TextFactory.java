@@ -39,66 +39,69 @@ public class TextFactory {
 	}
 	
 	public static Path text2Paths(String font, String text){
-		Font f = new Font(font, Font.PLAIN, 50);
-		FontRenderContext ctx = new FontRenderContext(new AffineTransform(), true, true);
-		GlyphVector v = f.createGlyphVector(ctx, text);
-	    PathIterator p  = v.getOutline().getPathIterator(new AffineTransform());
-	    double[] curs = new double[6];
-	    Vec prev = new Vec(100,100);
-	    List<Path> result = new ArrayList<Path>();
-	    Set<Path> unkownHoles = new HashSet<Path>();
-	    List<List<Path>> knownHoles = new ArrayList<List<Path>>();
-	    List<SimplePath> curves = new ArrayList<SimplePath>();
-        while(!p.isDone()){
-        	 Vec cur;
-        	switch(p.currentSegment(curs)){
-        		case PathIterator.SEG_CLOSE:
-        			ClosedPath newPath = PathFactory.createClosedPathUnsafe((List)curves);
-        			System.out.printf("Creating: %s\n", newPath);
-        			if(newPath.isDefindedClockwise()){
-        				knownHoles.add(new ArrayList<Path>(4));
-        				result.add(newPath);
-        				determineHoles(result,unkownHoles, knownHoles);
-        			} else {
-        				unkownHoles.add(newPath);
-        				determineHoles(result,unkownHoles, knownHoles);
-        			}
-        			curves = new ArrayList<SimplePath>();
-        		break;
-        		case PathIterator.SEG_MOVETO:
-        			prev = new Vec(curs[0],curs[1]); 
-        		break; 
-        		case PathIterator.SEG_LINETO: {  
-        			cur = new Vec(curs[0],curs[1]);
-        			if(!cur.isEqError(prev)){
-        				curves.add(PathFactory.createLine(prev, cur));
-        				prev = cur;
-        			}
-        		break;
-        		}
-        		case PathIterator.SEG_QUADTO: {
-        			cur = new Vec(curs[2],curs[3]);
-        			Vec control = new Vec(curs[0],curs[1]);
-        			curves.add(PathFactory.createQuad(prev, control , cur));
-        			prev = cur;
-        		break;
-        		}
-        		case PathIterator.SEG_CUBICTO: {
-        			cur = new Vec(curs[4],curs[5]);
-        			Vec control1 = new Vec(curs[0],curs[1]);
-        			Vec control2 = new Vec(curs[2],curs[3]);
-        			curves.add(PathFactory.createCubic(prev, control1 , control2, cur));
-        			prev = cur;
-        			break;
-        		}
-        	}
-        	p.next();
-        }
-        if(unkownHoles.size() > 0){
-        	throw new Error("Floating hole!" + unkownHoles.iterator().next());
-        }
-       
-        return PathFactory.createSet(createShapes(result,knownHoles));
+		try{
+			Font f = new Font(font, Font.PLAIN, 50);
+			FontRenderContext ctx = new FontRenderContext(new AffineTransform(), true, true);
+			GlyphVector v = f.createGlyphVector(ctx, text);
+		    PathIterator p  = v.getOutline().getPathIterator(new AffineTransform());
+		    double[] curs = new double[6];
+		    Vec prev = new Vec(100,100);
+		    List<Path> result = new ArrayList<Path>();
+		    Set<Path> unkownHoles = new HashSet<Path>();
+		    List<List<Path>> knownHoles = new ArrayList<List<Path>>();
+		    List<SimplePath> curves = new ArrayList<SimplePath>();
+	        while(!p.isDone()){
+	        	 Vec cur;
+	        	switch(p.currentSegment(curs)){
+	        		case PathIterator.SEG_CLOSE:
+	        			ClosedPath newPath = PathFactory.createClosedPathUnsafe((List)curves);
+	        			if(newPath.isDefindedClockwise()){
+	        				knownHoles.add(new ArrayList<Path>(4));
+	        				result.add(newPath);
+	        				determineHoles(result,unkownHoles, knownHoles);
+	        			} else {
+	        				unkownHoles.add(newPath);
+	        				determineHoles(result,unkownHoles, knownHoles);
+	        			}
+	        			curves = new ArrayList<SimplePath>();
+	        		break;
+	        		case PathIterator.SEG_MOVETO:
+	        			prev = new Vec(curs[0],curs[1]); 
+	        		break; 
+	        		case PathIterator.SEG_LINETO: {  
+	        			cur = new Vec(curs[0],curs[1]);
+	        			if(!cur.isEqError(prev)){
+	        				curves.add(PathFactory.createLine(prev, cur));
+	        				prev = cur;
+	        			}
+	        		break;
+	        		}
+	        		case PathIterator.SEG_QUADTO: {
+	        			cur = new Vec(curs[2],curs[3]);
+	        			Vec control = new Vec(curs[0],curs[1]);
+	        			curves.add(PathFactory.createQuad(prev, control , cur));
+	        			prev = cur;
+	        		break;
+	        		}
+	        		case PathIterator.SEG_CUBICTO: {
+	        			cur = new Vec(curs[4],curs[5]);
+	        			Vec control1 = new Vec(curs[0],curs[1]);
+	        			Vec control2 = new Vec(curs[2],curs[3]);
+	        			curves.add(PathFactory.createCubic(prev, control1 , control2, cur));
+	        			prev = cur;
+	        			break;
+	        		}
+	        	}
+	        	p.next();
+	        }
+	        if(unkownHoles.size() > 0){
+	        	throw new Error("Floating hole!" + unkownHoles.iterator().next());
+	        }
+	       
+	        return PathFactory.createSet(createShapes(result,knownHoles));
+		} catch(Exception e){
+			throw new Error("Something went wrong during text consturction :" + e.getMessage());
+		}
 	}
 	
 

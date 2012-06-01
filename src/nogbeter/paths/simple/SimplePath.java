@@ -52,6 +52,19 @@ public abstract class SimplePath extends SimplyIndexedPath{
 	}
 	
 	
+	public IIntersections<SimplePathIndex, SimplePathIndex> selfIntersection() {
+		IIntersections<SimplePathIndex,SimplePathIndex> a =
+				new Intersections<SimplePathIndex, SimplePathIndex>(minPathIndex(), minPathIndex(),
+						getStartPoint(), getStartPoint(), getStartTan(), getStartTan(), 
+						IntersectionType.BorderRight, 
+						IntersectionType.BorderRight);
+		IIntersections<SimplePathIndex,SimplePathIndex> b =
+				new Intersections<SimplePathIndex, SimplePathIndex>(maxPathIndex(), maxPathIndex(),
+						getEndPoint(), getEndPoint(), getEndTan(), getEndTan(), 
+						IntersectionType.BorderLeft, 
+						IntersectionType.BorderLeft);
+		return a.append(b);
+	}
 	
 	protected IIntersections<SimplePathIndex,SimplePathIndex> makeIntersectionResult(
 			SimplePath lhs, double tl, double tr) {

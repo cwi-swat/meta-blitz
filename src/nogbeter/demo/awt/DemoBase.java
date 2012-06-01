@@ -25,6 +25,7 @@ import nogbeter.demo.DummyAWTSHape;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.compound.ClosedPath;
+import nogbeter.paths.compound.NotClosedException;
 import nogbeter.paths.factory.PathFactory;
 import nogbeter.paths.iterators.AWTPathIterator;
 import nogbeter.points.twod.Vec;
@@ -364,7 +365,11 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 		Vec c = new Vec(1,1);
 		Vec d = new Vec(-1,1);
 //		Vec e = new Vec(150,50);
-		return PathFactory.createClosedPath(createLine(a,b), createLine(b,c), createLine(c,d),createLine(d,a));
+		try {
+			return PathFactory.createClosedPath(createLine(a,b), createLine(b,c), createLine(c,d),createLine(d,a));
+		} catch (NotClosedException e) {
+			throw new Error(e.getMessage());
+		}
 	}
 	
 

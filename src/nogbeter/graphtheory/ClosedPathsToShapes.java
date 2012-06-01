@@ -46,7 +46,6 @@ public class ClosedPathsToShapes {
 					System.err.printf("Not defined clockwise! %s\n", closed.get(f.root));
 					BestProject<ClosedPathIndex> b = p.project(p.getBBox().getLeftUp().sub(new Vec(10,10)));
 					System.err.printf("loc : %s %s %s\n", p.getBBox().getLeftUp().sub(new Vec(10,10)), p.getAt(b.t), b.t);
-					res.add(makeShape(closed,f));
 				} else {
 					res.add(makeShape(closed,f));
 				}

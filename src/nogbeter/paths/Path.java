@@ -10,6 +10,7 @@ import nogbeter.crossing.CrossingsInfo;
 import nogbeter.crossing.IntersectionsToCrossings;
 import nogbeter.crossing.MakePathsFromCrossings;
 import nogbeter.paths.compound.ClosedPath;
+import nogbeter.paths.compound.NotClosedException;
 import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.results.intersections.IIntersections;
@@ -17,7 +18,7 @@ import nogbeter.paths.results.project.BestProject;
 import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.paths.simple.Line;
 import nogbeter.paths.simple.SimplePathIndex;
-import nogbeter.paths.simple.nonlinear.Curve;
+import nogbeter.paths.simple.curve.Curve;
 import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
@@ -193,19 +194,19 @@ public abstract class Path
 		return new IntersectionsToCrossings(inters, this, other).getCrossingsInfo();
 	}
 	
-	public <RPP extends PathIndex> Path union(Path<RPP> other){
+	public <RPP extends PathIndex> Path union(Path<RPP> other) throws NotClosedException{
 		return new 
 				MakePathsFromCrossings<PathParam, RPP>
 		(crossingsInfo(other), false, false, false).makeAllPaths();
 	}
 	
-	public <RPP extends PathIndex> Path intersectionOp(Path<RPP> other){
+	public <RPP extends PathIndex> Path intersectionOp(Path<RPP> other) throws NotClosedException{
 		return new 
 				MakePathsFromCrossings<PathParam, RPP>
 		(crossingsInfo(other), true, true, false).makeAllPaths();
 	}
 	
-	public <RPP extends PathIndex> Path subtract(Path<RPP> other){
+	public <RPP extends PathIndex> Path subtract(Path<RPP> other) throws NotClosedException{
 		return new 
 				MakePathsFromCrossings<PathParam, RPP>
 		(crossingsInfo(other), false, true, true).makeAllPaths();

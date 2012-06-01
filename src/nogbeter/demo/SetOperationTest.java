@@ -15,6 +15,7 @@ import nogbeter.paths.PathIndex;
 import nogbeter.paths.compound.Append;
 import nogbeter.paths.compound.ClosedPath;
 import nogbeter.paths.compound.ClosedPathIndex;
+import nogbeter.paths.compound.NotClosedException;
 import nogbeter.paths.factory.TextFactory;
 import nogbeter.paths.iterators.AppendIterator;
 import nogbeter.paths.iterators.ClosedPathIterator;
@@ -68,10 +69,10 @@ public class SetOperationTest extends DemoBase{
 	boolean bla = false;
 	public SetOperationTest() {
 		r = rectangle().transform(id.scale(200).translate(400,400));
-		r = TextFactory.text2Paths("z").transform(id.scale(5).translate(200, 200));
+		r = TextFactory.text2Paths("a").transform(id.scale(5).translate(200, 200));
 		System.out.println("r");
 //		r = rectangle().transform(id.scale(30).translate(200, 200));
-		z = TextFactory.text2Paths("z").transform(id.scale(5));
+		z = TextFactory.text2Paths("b").transform(id.scale(5));
 //		z = rectangle().transform(id.scale(200));
 	}
 	
@@ -104,20 +105,36 @@ public class SetOperationTest extends DemoBase{
 		}
 		Path<ClosedPathIndex> q =
 		z.transform(
-				id.translate(location));
-		Path p = r.union(q);
-		draw(p);
-		for(Crossing<ClosedPathIndex, ClosedPathIndex> c : r.crossings(q)){
-			fillOval(c.loc, 10, c.leftAfterInside ? ColorsAlpha.green.lerp(0.5, ColorsAlpha.transparent) : ColorsAlpha.red.lerp(0.5, ColorsAlpha.transparent) );
+				id.scale(1 + wheel / 100).translate(location));
+//		draw(q);
+//		draw(r);
+//		List<Crossing<ClosedPathIndex, ClosedPathIndex>> cross = r.crossings(q);
+//		System.out.println(cross.size());
+//		for(Crossing<ClosedPathIndex, ClosedPathIndex> c : cross){
+//			fillOval(c.loc, 10, c.leftAfterInside ? ColorsAlpha.green.lerp(0.5, ColorsAlpha.transparent) : ColorsAlpha.red.lerp(0.5, ColorsAlpha.transparent) );
+//			
+//		}
+		Path p = null;
+		try{
+			p = r.intersectionOp(q);
+
+		} catch(NotClosedException e){
+
+			draw(e.notClosed, ColorsAlpha.red);
+			System.out.println("Not closed! " + e.notClosed);
 		}
+		if(p != null){
+			draw(p);
+		}
+//		System.out.println(wheel);
 		if(bla){
-			System.out.println(Math.sqrt(p.project(mouse).distSquared)) ;
+//			System.out.println(p.project(mouse).t + " " +  p.project(mouse).distSquared) ;
 			drawLine(p.getAt(p.project(mouse).t),mouse);
-			PathIterator<Append> it = new AppendIterator(p);
-			while(it.hasNext()){
-				Append z = it.next();
-				drawAppendBBoxes(z);
-			}
+//			PathIterator<Append> it = new AppendIterator(p);
+//			while(it.hasNext()){
+//				Append z = it.next();
+//				drawAppendBBoxes(z);
+//			}
 		}
 //		Iterator<Path> it = new ClosedPathIterator(p);
 //		while(it.hasNext()){

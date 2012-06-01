@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import bezier.util.Tuple;
+import nogbeter.crossing.CrossingsInfo;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.SplittablePath;
@@ -247,5 +248,10 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 		} else {
 			return actual.getTangents(t.next);
 		}
+	}
+
+	public boolean isSelfCrossing() {
+		CrossingsInfo<ClosedPathIndex, ClosedPathIndex> ci = crossingsInfo(this);
+		return !ci.isEmpty();
 	}
 }

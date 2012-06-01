@@ -24,4 +24,8 @@ public class Tuple<L, R> {
 	public int hashCode(){
 		return l.hashCode() ^ r.hashCode();
 	}
+	
+	public String toString(){
+		return String.format("<%s,%s>",l.toString(),r.toString());
+	}
 }

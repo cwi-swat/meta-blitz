@@ -69,7 +69,7 @@ public class Append
 	
 	@Override
 	public String toString() {
-		return String.format("([%s]%s + %s)", getBBox(),left,right);
+		return String.format("(%s + %s)", left,right);
 	}
 
 	@Override

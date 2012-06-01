@@ -54,5 +54,28 @@ public class CrossingsInfo<L extends PathIndex, R extends PathIndex> {
 		}
 	}
 
+
+
+	public boolean isEmpty() {
+		return crossings.isEmpty() &&  antiParallels.isEmpty();
+	}
+
+	
+	public String toString(){
+		StringBuffer b = new StringBuffer();
+		b.append("Crossings: ");
+		for(Crossing<L, R> c : crossings){
+			b.append(c);
+		}
+		b.append("\nPars: ");
+		for(Tuple<Path, Path> c : parrallels){
+			b.append(c);
+		}
+		b.append("\nAntiPars: ");
+		for(Tuple<Path, Path> c : antiParallels){
+			b.append(c);
+		}
+		return b.toString();
+	}
 	
 }

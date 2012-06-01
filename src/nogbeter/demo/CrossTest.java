@@ -35,10 +35,10 @@ public class CrossTest extends DemoBase{
 //		r = (Path)rectangle().transform(id.scale(200).translate(400,400));
 //		System.out.println(r);
 ////		r = TextFactory.text2Paths("ws").transform(id.scale(5).translate(200, 200));
-//		q = TextFactory.text2Paths("B").transform(id.scale(5));
-		r = rectangle().transform(id.scale(30).translate(200, 200));
+		q = TextFactory.text2Paths("t").transform(id.scale(5));
+		r = TextFactory.text2Paths("a").transform(id.scale(5).translate(200, 200));
 //		z = TextFactory.text2Paths("w").transform(id.scale(5));
-		q = rectangle().transform(id.scale(200));
+//		q = rectangle().transform(id.scale(200));
 		System.out.println(q);
 	}
 	
@@ -59,11 +59,13 @@ public class CrossTest extends DemoBase{
 		this.q.transform(id.translate(mouse.add(location)));
 		draw(r);
 		draw(q);
-//		IIntersections<PathIndex,PathIndex> ints = r.intersection(q);
-		List<Crossing<PathIndex, PathIndex>> cross = r.crossings(q);
-		System.out.printf("%d\n",cross.size());
-			for(Crossing<PathIndex, PathIndex> c : cross){
-				fillOval(c.loc, 10, c.leftAfterInside ? ColorsAlpha.green : ColorsAlpha.red);
+		IIntersections<PathIndex,PathIndex> ints = r.intersection(q);
+
+//		System.out.printf("%d\n",cross.size());
+			for(Intersection<PathIndex, PathIndex> c : ints){
+				fillOval(c.locl.interpolate(0.5, c.locr), 3 + 1000 * c.locl.distance(c.locr));
+//				drawLine()
+//				fillOval(c.loc, 10, c.leftAfterInside ? ColorsAlpha.green : ColorsAlpha.red);
 			}
 
 	}
