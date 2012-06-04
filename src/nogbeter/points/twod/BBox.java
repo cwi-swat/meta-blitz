@@ -119,4 +119,27 @@ public final class BBox {
 		return String.format("[x:%s y:%s]", xInterval,yInterval);
 	}
 	
+	public BBox quadTreeLeftUp(){
+		return new BBox(xInterval.intSplitLeft(),yInterval.intSplitLeft());
+	}
+	
+	public BBox quadTreeRightUp(){
+		return new BBox(xInterval.intSplitRight(),yInterval.intSplitLeft());
+	}
+	
+	public BBox quadTreeRightDown(){
+		return new BBox(xInterval.intSplitRight(),yInterval.intSplitRight());
+	}
+	
+	public BBox quadTreeLeftDown(){
+		return new BBox(xInterval.intSplitLeft(),yInterval.intSplitRight());
+	}
+
+	public boolean encloses(BBox bBox) {
+		return xInterval.encloses(bBox.xInterval) && yInterval.encloses(yInterval);
+	}
+	
+	public BBox getIntBBox(){
+		return new BBox(xInterval.intIterval(), yInterval.intIterval());
+	}
 }

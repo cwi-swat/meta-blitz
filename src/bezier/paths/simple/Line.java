@@ -4,7 +4,7 @@ import java.awt.geom.PathIterator;
 import java.util.List;
 
 import nogbeter.points.twod.Vec;
-import nogbeter.transform.ITransform;
+import nogbeter.transform.IToTransform;
 
 import bezier.paths.ApproxCurvePosition;
 import bezier.paths.ConnectedPath;

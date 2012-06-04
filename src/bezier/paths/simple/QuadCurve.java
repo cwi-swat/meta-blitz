@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nogbeter.points.twod.Vec;
-import nogbeter.transform.ITransform;
+import nogbeter.transform.IToTransform;
 
 import bezier.paths.ConnectedPath;
 import bezier.paths.Constants;
@@ -47,7 +47,7 @@ public final class QuadCurve extends NonLinearBezier{
 	}
 
 	@Override
-	public Path transform(ITransform m) {
+	public Path transform(IToTransform m) {
 		return new QuadCurve(m.transform(p0), m.transform(p1), m.transform(p2), tStart,tEnd);
 	}
 	

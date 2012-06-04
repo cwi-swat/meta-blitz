@@ -2,6 +2,9 @@ package nogbeter.paths;
 
 import static bezier.util.Util.square;
 
+import images.AlphaMask;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -13,6 +16,9 @@ import nogbeter.paths.compound.ClosedPath;
 import nogbeter.paths.compound.NotClosedException;
 import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeSet;
+import nogbeter.paths.factory.PathFactory;
+import nogbeter.paths.iterators.ClosedPathIterator;
+import nogbeter.paths.iterators.ConnectedIterator;
 import nogbeter.paths.results.intersections.IIntersections;
 import nogbeter.paths.results.project.BestProject;
 import nogbeter.paths.results.project.BestProjectTup;
@@ -22,7 +28,8 @@ import nogbeter.paths.simple.curve.Curve;
 import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
-import nogbeter.transform.AffineTransformation;
+import nogbeter.transform.IToTransform;
+import nogbeter.transform.nonlinear.pathdeform.PathDeform;
 import bezier.util.Tuple;
 
 public abstract class Path
@@ -30,6 +37,8 @@ public abstract class Path
 	{
 	
 	protected BBox bbox;
+	private Path lengthNormalized;
+	private double length;
 
 	public abstract BBox makeBBox();
 
@@ -128,10 +137,20 @@ public abstract class Path
 		return getStartPoint().isEqError(getEndPoint());
 	}
 	
-	public abstract Path<PathParam> transform(AffineTransformation t);
+	public abstract Path<PathParam> transform(IToTransform t);
+	
+	public double length(){
+		normaliseToLength();
+		return length;
+	}
 	
 	public Path<PathParam> normaliseToLength(){
-		return normaliseToLength(0).l;
+		if(lengthNormalized == null){
+			 Tuple<Path<PathParam>,Double> tp = normaliseToLength(0);
+			lengthNormalized = tp.l;
+			length = tp.r;
+		}
+		return lengthNormalized;
 	}
 	
 	public abstract Tuple<Path<PathParam>,Double> normaliseToLength(double prevLength);
@@ -211,4 +230,21 @@ public abstract class Path
 				MakePathsFromCrossings<PathParam, RPP>
 		(crossingsInfo(other), false, true, true).makeAllPaths();
 	}
+	
+	public Path<PathParam> pathDeform(Path p){
+		ConnectedIterator it = new ConnectedIterator(p);
+		List<Path> res = new ArrayList<Path>();
+		while(it.hasNext()){
+			res.add(pathDeform(new PathDeform(it.next())));
+		}
+		return PathFactory.createSet(res);
+//		try{
+//			
+//			return res.union(res);
+//		} catch(NotClosedException e){
+//			throw new Error(e.getMessage());
+//		}
+	}
+	
+	public abstract Path<PathParam> pathDeform(PathDeform p);
 }

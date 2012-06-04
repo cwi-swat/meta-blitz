@@ -42,14 +42,14 @@ public class InsideTest extends DemoBase{
 		}
 
 		
-
-		public ClosedPath rectangle() throws NotClosedException{
-			Vec a = new Vec(100,100);
-			Vec b = new Vec(200,100);
-			Vec c = new Vec(200,200);
-			Vec d = new Vec(100,200);
-			Vec e = new Vec(150,50);
-			return createClosedPath(createLine(a,b), createLine(b,c), createLine(c,d),createLine(d,a));
-		}
+//
+//		public ClosedPath rectangle() throws NotClosedException{
+//			Vec a = new Vec(100,100);
+//			Vec b = new Vec(200,100);
+//			Vec c = new Vec(200,200);
+//			Vec d = new Vec(100,200);
+//			Vec e = new Vec(150,50);
+//			return createClosedPath(createLine(a,b), createLine(b,c), createLine(c,d),createLine(d,a));
+//		}
 		
 	}

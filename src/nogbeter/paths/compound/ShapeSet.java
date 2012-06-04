@@ -1,5 +1,7 @@
 package nogbeter.paths.compound;
 
+import images.AlphaMask;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,7 +25,8 @@ import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
-import nogbeter.transform.AffineTransformation;
+import nogbeter.transform.IToTransform;
+import nogbeter.transform.nonlinear.pathdeform.PathDeform;
 
 import static nogbeter.paths.results.transformers.TupleTransformers.*;
 public class ShapeSet extends Path<SetIndex>{
@@ -203,7 +206,7 @@ public class ShapeSet extends Path<SetIndex>{
 	}
 
 	@Override
-	public ShapeSet transform(AffineTransformation t) {
+	public ShapeSet transform(IToTransform t) {
 		List<Path> res = new ArrayList<Path>(shapes.size());
 		for(Path p : shapes){
 			res.add(p.transform(t));
@@ -300,6 +303,15 @@ public class ShapeSet extends Path<SetIndex>{
 	@Override
 	public PathIndex maxPathIndex() {
 		throw new Error("Shape does not have begin nor end!");
+	}
+
+	@Override
+	public Path<SetIndex> pathDeform(PathDeform p) {
+		List<Path> res = new ArrayList<Path>(shapes.size());
+		for(Path s : shapes){
+			res.add(s.pathDeform(p.getSubList(s.getBBox().xInterval)));
+		}
+		return new ShapeSet(res);
 	}
 
 }

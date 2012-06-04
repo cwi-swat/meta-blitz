@@ -12,7 +12,7 @@ import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.points.oned.Interval;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
-import nogbeter.transform.AffineTransformation;
+import nogbeter.transform.IToTransform;
 import bezier.paths.Constants;
 import bezier.util.STuple;
 import bezier.util.Tuple;
@@ -124,10 +124,18 @@ public class QuadCurve extends Curve{
 	public QuadCurve getWithAdjustedStartPoint(Vec newStartPoint) {
 		return PathFactory.createQuad(newStartPoint,p1,p2,tInterval);
 	}
+	
+	@Override
+	public QuadCurve getWithAdjustedEndPoint(Vec newEnd) {
+		return PathFactory.createQuad(p0,p1,newEnd,tInterval);
+	}
 
 	@Override
 	public
 	BBox makeBBox() {
+		if(isMonotomous()){
+			return BBox.fromPoints(p0,p2);
+		}
 		return BBox.fromPoints(p0,p1,p2);
 	}
 
@@ -143,7 +151,7 @@ public class QuadCurve extends Curve{
 
 	@Override
 	public QuadCurve transform(
-			AffineTransformation t) {
+			IToTransform t) {
 		return PathFactory.createQuad(t.to(p0),t.to(p1),t.to(p2),tInterval);
 	}
 
@@ -157,6 +165,24 @@ public class QuadCurve extends Curve{
 	@Override
 	public Path<PathIndex> reverse() {
 		return (Path)PathFactory.createQuad(p2, p1, p0);
+	}
+	
+	double findFast(double x0,double x1, double x2, double x){
+		double a= x2 -2*x1 + x0;
+		double b = 2 * (x1 - x0);
+		double c = x0 - x;
+		List<Double> roots = Util.findQuadraticPolynomialRoots(a, b, c);
+		for(double d : roots){
+			if(d >= 0 && d <= 1){
+				return d;
+			}
+		}
+		return Math.abs(x-x2) < Math.abs(x-x0) ? 1.0 : 0.0;
+	}
+
+	@Override
+	public double findXFast(double x) {
+		return findFast(p0.x, p1.x, p2.x, x);
 	}
 
 }

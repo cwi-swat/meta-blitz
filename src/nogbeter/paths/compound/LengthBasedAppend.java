@@ -15,7 +15,8 @@ import nogbeter.points.angles.AngularIntervalFactory;
 import nogbeter.points.oned.Interval;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
-import nogbeter.transform.AffineTransformation;
+import nogbeter.transform.IToTransform;
+import nogbeter.transform.nonlinear.pathdeform.PathDeform;
 
 public class LengthBasedAppend extends SimplyIndexedPath{
 
@@ -101,7 +102,7 @@ public class LengthBasedAppend extends SimplyIndexedPath{
 
 
 	@Override
-	public LengthBasedAppend transform(AffineTransformation t) {
+	public LengthBasedAppend transform(IToTransform t) {
 		return new LengthBasedAppend(left.transform(t), right.transform(t), tInterval);
 	}
 
@@ -196,6 +197,13 @@ public class LengthBasedAppend extends SimplyIndexedPath{
 		} else {
 			return right.getTangents(t);
 		}
+	}
+
+
+	@Override
+	public Path pathDeform(PathDeform p) {
+		return new Append(left.pathDeform(p.getSubList(left.getBBox().xInterval)), 
+				right.pathDeform(p.getSubList(right.getBBox().xInterval)));
 	}
 	
 }

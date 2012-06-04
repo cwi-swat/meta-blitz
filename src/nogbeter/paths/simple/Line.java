@@ -13,6 +13,7 @@ import java.util.Set;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.SplittablePath;
+import nogbeter.paths.compound.Append;
 import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.compound.SplitIndex;
@@ -25,11 +26,13 @@ import nogbeter.paths.results.project.BestProject;
 import nogbeter.paths.results.project.BestProjectTup;
 import nogbeter.paths.results.transformers.IPathIndexTransformer;
 import nogbeter.paths.results.transformers.PITransformers;
+import nogbeter.paths.simple.curve.Curve;
 import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.oned.Interval;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
-import nogbeter.transform.AffineTransformation;
+import nogbeter.transform.IToTransform;
+import nogbeter.transform.nonlinear.pathdeform.PathDeform;
 import bezier.util.STuple;
 import bezier.util.Tuple;
 import bezier.util.Util;
@@ -348,7 +351,7 @@ public class Line extends SimplePath {
 
 	@Override
 	public BBox makeBBox(){
-		return BBox.from2Points(getStartPoint(), getEndPoint());
+		return BBox.from2Points(start, end);
 	}
 	@Override
 	public Line getWithAdjustedStartPoint(Vec newStartPoint) {
@@ -360,6 +363,14 @@ public class Line extends SimplePath {
 		throw new Error("Cannot make" + this + "simpler!");
 	}
 	
+
+	public Vec getStartPoint(){
+		return start;
+	}
+	
+	public Vec getEndPoint(){
+		return end;
+	}
 	
 
 	public double length(){
@@ -376,7 +387,7 @@ public class Line extends SimplePath {
 
 	@Override
 	public Line transform(
-			AffineTransformation t) {
+			IToTransform t) {
 		return PathFactory.createLine(t.to(getStartPoint()), t.to(getEndPoint()));
 	}
 	
@@ -420,6 +431,31 @@ public class Line extends SimplePath {
 		}
 		result.add(PathFactory.createLine(s,e));
 	}
+
+	@Override
+	public Tuple<SimplePath, SimplePath> splitSimp(double t) {
+		Vec mid = getAtLocal(t);
+		Line left = PathFactory.createLine(start, mid, new Interval(tInterval.low, t));
+		Line right = PathFactory.createLine(mid, end, new Interval(t, tInterval.high));
+		return new Tuple<SimplePath, SimplePath>(left,right);
+	}
+
+	@Override
+	public
+	Line getWithAdjustedEndPointMono(Vec v) {
+		return PathFactory.createLine(start, v, tInterval);
+	}
+
+	@Override
+	public double findXFast(double splitPoint) {
+		return getTAtX(splitPoint);
+	}
+
+	@Override
+	public SimplePath getWithAdjustedStartPointMono(Vec v) {
+		return new Line(v, end, tInterval);
+	}
+
 
 
 }

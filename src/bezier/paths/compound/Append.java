@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import nogbeter.points.twod.Vec;
-import nogbeter.transform.ITransform;
+import nogbeter.transform.IToTransform;
 
 import bezier.paths.ConnectedPath;
 import bezier.paths.Path;
@@ -132,7 +132,7 @@ public class Append extends ConnectedPath implements ICompoundPath{
 	}
 
 	@Override
-	public  Path transform(ITransform m) {
+	public  Path transform(IToTransform m) {
 		List<SimplePath> result = new ArrayList<SimplePath>(curves.size());
 		for(SimplePath p : curves){
 			result.add((SimplePath)p.transform(m));

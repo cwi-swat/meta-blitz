@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import nogbeter.points.twod.Vec;
-import nogbeter.transform.ITransform;
+import nogbeter.transform.IToTransform;
 
 import bezier.paths.ConnectedPath;
 import bezier.paths.Path;
@@ -80,7 +80,7 @@ public class Paths extends Path implements ICompoundPath{
 	}
 
 	@Override
-	public  Path transform(ITransform m) {
+	public  Path transform(IToTransform m) {
 		Set<Path> ps = new HashSet<Path>(paths.size());
 		for(Path p : paths){
 			ps.add((Append)p.transform(m));

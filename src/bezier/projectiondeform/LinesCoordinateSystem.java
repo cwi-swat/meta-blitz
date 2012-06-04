@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import nogbeter.points.twod.Vec;
+import nogbeter.transform.nonlinear.pathdeform.TriangleCoordinateSystem;
 
 import bezier.composite.Path;
 import bezier.composite.Paths;

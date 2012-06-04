@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import nogbeter.points.twod.Vec;
-import nogbeter.transform.ITransform;
+import nogbeter.transform.IToTransform;
 
 import bezier.paths.awt.AWTPathIterator;
 import bezier.paths.awt.DummyAWTSHape;
@@ -53,7 +53,7 @@ public abstract class Path implements HasBBox{
 	public abstract ICompoundPath getCompound();
 	public abstract Vec getAt(PathParameter t);
 	public abstract Vec getTangentAt(PathParameter t);	
-	public abstract Path transform(ITransform m);
+	public abstract Path transform(IToTransform m);
 
 	public abstract Path getSubPath(PathParameter start, PathParameter end);
 	public abstract STuple<Path> splitSimpler();

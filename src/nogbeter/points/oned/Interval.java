@@ -243,5 +243,20 @@ public class Interval {
 	public String toString(){
 		return String.format("[%f,%f]", low,high);
 	}
-	
+
+	public Interval intSplitLeft() {
+		return new Interval(false,low,(int)middle());
+	}
+
+	public Interval intSplitRight() {
+		return new Interval(false,(int)middle(),high);
+	}
+
+	public boolean encloses(Interval xInterval) {
+		return low <= xInterval.low && high >= xInterval.high;
+	}
+
+	public Interval intIterval() {
+		return new Interval((int)low, Math.ceil(high));
+	}
 }

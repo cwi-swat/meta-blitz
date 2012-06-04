@@ -6,6 +6,7 @@ import java.util.List;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.SplittablePath;
+import nogbeter.paths.compound.Append;
 import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeSet;
 import nogbeter.paths.results.intersections.IIntersections;
@@ -15,6 +16,8 @@ import nogbeter.paths.simple.Line;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.points.oned.Interval;
+import nogbeter.points.twod.Vec;
+import nogbeter.transform.nonlinear.pathdeform.PathDeform;
 import bezier.util.Tuple;
 
 public abstract class Curve extends SimplePath {
@@ -98,6 +101,11 @@ public abstract class Curve extends SimplePath {
 	abstract SimplePath getSimplerApprox();
 
 	abstract Tuple<Curve,Curve> split(double t);
+	
+	public Tuple<SimplePath,SimplePath> splitSimp(double t){
+		Tuple<Curve, Curve> sp = split(t);
+		return new Tuple<SimplePath, SimplePath>(sp.l.getSimplerApprox(), sp.r.getSimplerApprox());
+	}
 
 	Tuple<Curve,Curve> split() {
 		return split(0.5);
@@ -188,4 +196,30 @@ public abstract class Curve extends SimplePath {
 		}
 		
 	}
+	
+	@Override
+	public Path pathDeform(PathDeform p) {
+		if(!isMonotomous()){
+			Tuple<Path,Path> sp = splitSimpler();
+			return new Append(sp.l.pathDeform(p.getSubList(sp.l.getBBox().xInterval)),
+					sp.r.pathDeform(p.getSubList(sp.r.getBBox().xInterval)));
+		} else {
+			return super.pathDeform(p);
+		}
+	
+	}
+	
+	public SimplePath getWithAdjustedStartPointMono(Vec v ) {
+		Curve c = (Curve) getWithAdjustedStartPoint(v);
+		c.xyRoots = Collections.EMPTY_LIST;
+		return c;
+	}
+
+	public SimplePath getWithAdjustedEndPointMono(Vec v){
+		Curve c = getWithAdjustedEndPoint(v);
+		c.xyRoots = Collections.EMPTY_LIST;
+		return c;
+	}
+
+	public abstract Curve getWithAdjustedEndPoint(Vec newEnd) ;
 }

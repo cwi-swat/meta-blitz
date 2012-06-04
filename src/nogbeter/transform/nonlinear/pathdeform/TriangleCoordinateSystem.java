@@ -1,9 +1,9 @@
-package bezier.projectiondeform;
+package nogbeter.transform.nonlinear.pathdeform;
 
+import nogbeter.paths.simple.Line;
 import nogbeter.points.twod.Vec;
-import bezier.paths.simple.Line;
 
-public final class TriangleCoordinateSystem implements CoordinateSystem{
+public final class TriangleCoordinateSystem{
 	
 	final double startX, lengthX;
 	final Vec start,end;
@@ -19,10 +19,10 @@ public final class TriangleCoordinateSystem implements CoordinateSystem{
 		this.dirB = dirB;
 	}
 	
-	public static TriangleCoordinateSystem create(double startX, double lengthX, Line line, Vec prevNormal, Vec normal, Vec nextNormal){
+	public static TriangleCoordinateSystem create(Line line, Vec prevNormal, Vec normal, Vec nextNormal){
 		Vec dirA = prevNormal.add(normal).div(1 + prevNormal.dot(normal));
 		Vec dirB = nextNormal.add(normal).div(1 + nextNormal.dot(normal));
-		return new TriangleCoordinateSystem(startX, lengthX, line.start, line.end, dirA, dirB);
+		return new TriangleCoordinateSystem(line.tInterval.low, line.tInterval.length, line.getStartPoint(), line.getEndPoint(), dirA, dirB);
 	}
 
 	public Vec getAt(Vec loc){

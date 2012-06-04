@@ -1,5 +1,7 @@
 package nogbeter.paths.compound;
 
+import images.AlphaMask;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +24,8 @@ import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.angles.AngularIntervalFactory;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
-import nogbeter.transform.AffineTransformation;
+import nogbeter.transform.IToTransform;
+import nogbeter.transform.nonlinear.pathdeform.PathDeform;
 
 public class ClosedPath extends Path<ClosedPathIndex>{
 	
@@ -145,7 +148,7 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 	}
 
 	@Override
-	public Path<ClosedPathIndex> transform(AffineTransformation t) {
+	public Path<ClosedPathIndex> transform(IToTransform t) {
 		return new ClosedPath(actual.transform(t));
 	}
 
@@ -254,4 +257,10 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 		CrossingsInfo<ClosedPathIndex, ClosedPathIndex> ci = crossingsInfo(this);
 		return !ci.isEmpty();
 	}
+
+	@Override
+	public Path<ClosedPathIndex> pathDeform(PathDeform p) {
+		return new ClosedPath(actual.pathDeform(p.getSubList(getBBox().xInterval)));
+	}
+
 }

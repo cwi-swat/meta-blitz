@@ -9,7 +9,7 @@ import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.oned.Interval;
 import nogbeter.points.twod.Vec;
-import nogbeter.transform.AffineTransformation;
+import nogbeter.transform.IToTransform;
 
 public abstract class SimplyIndexedPath extends SplittablePath<SimplePathIndex>{
 
@@ -63,7 +63,7 @@ public abstract class SimplyIndexedPath extends SplittablePath<SimplePathIndex>{
 		return unitTup;
 	}
 	
-	public abstract SimplyIndexedPath transform(AffineTransformation t);
+	public abstract SimplyIndexedPath transform(IToTransform t);
 	
 	public abstract SimplyIndexedPath getWithAdjustedStartPoint(Vec newStartPoint);
 	

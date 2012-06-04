@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nogbeter.points.twod.Vec;
-import nogbeter.transform.ITransform;
+import nogbeter.transform.IToTransform;
 
 import bezier.paths.ConnectedPath;
 import bezier.paths.Constants;
@@ -67,7 +67,7 @@ public final class CubicCurve extends NonLinearBezier {
 	}
 	
 	@Override
-	public Path transform(ITransform m) {
+	public Path transform(IToTransform m) {
 		return new CubicCurve(m.transform(p0), m.transform(p1), m.transform(p2), m.transform(p3),tStart,tEnd);
 	}
 

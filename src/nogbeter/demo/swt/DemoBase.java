@@ -280,7 +280,7 @@ public abstract class DemoBase implements KeyListener, MouseMoveListener, PaintL
 	@Override
 	public void paintControl(PaintEvent e) {
 		device = e.gc.getDevice();
-		Image image = new Image(shell.getDisplay(), canvas.getBounds());
+		AlphaMask image = new AlphaMask(shell.getDisplay(), canvas.getBounds());
 		GC gcImage = new GC(image);
 		gcImage.setAdvanced(true);
 		Rectangle rect = shell.getClientArea ();

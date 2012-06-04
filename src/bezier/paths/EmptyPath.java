@@ -3,7 +3,7 @@ package bezier.paths;
 import java.util.Iterator;
 
 import nogbeter.points.twod.Vec;
-import nogbeter.transform.ITransform;
+import nogbeter.transform.IToTransform;
 
 import bezier.paths.compound.ICompoundPath;
 import bezier.paths.simple.Line;
@@ -86,7 +86,7 @@ public class EmptyPath extends ConnectedPath {
 	}
 
 	@Override
-	public Path transform(ITransform m) {
+	public Path transform(IToTransform m) {
 		
 		return this;
 	}

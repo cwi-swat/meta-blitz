@@ -4,6 +4,8 @@ import static bezier.util.Util.findQuadraticPolynomialRoots;
 
 import java.awt.geom.PathIterator;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import nogbeter.paths.Path;
@@ -18,7 +20,7 @@ import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.points.oned.Interval;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
-import nogbeter.transform.AffineTransformation;
+import nogbeter.transform.IToTransform;
 import bezier.paths.Constants;
 import bezier.util.STuple;
 import bezier.util.Tuple;
@@ -157,10 +159,20 @@ public class CubicCurve extends Curve{
 	public CubicCurve getWithAdjustedStartPoint(Vec newStart) {
 		return PathFactory.createCubic(newStart,p1,p2,p3,tInterval);
 	}
+	
+	@Override
+	public CubicCurve getWithAdjustedEndPoint(Vec newEnd) {
+		CubicCurve c = PathFactory.createCubic(p0,p1,p2,newEnd,tInterval);
+		c.xyRoots = Collections.EMPTY_LIST;
+		return c;
+	}
 
 	@Override
 	public
 	BBox makeBBox() {
+		if(isMonotomous()){
+			return BBox.fromPoints(p0,p3);
+		}
 		return BBox.from4Points(p0,p1,p2,p3);
 	}
 
@@ -178,7 +190,7 @@ public class CubicCurve extends Curve{
 
 	@Override
 	public CubicCurve transform(
-			AffineTransformation t) {
+			IToTransform t) {
 		return PathFactory.createCubic(t.to(p0),t.to(p1),t.to(p2),t.to(p3),tInterval);
 	}
 
@@ -193,7 +205,35 @@ public class CubicCurve extends Curve{
 		return (Path)PathFactory.createCubic(p3, p2, p1, p0);
 	}
 
+
+	@Override
+	public
+	double findXFast(double x) {
+		return findNewton(p0.x,p1.x, p2.x, p3.x, x);
+	}
 	
+
+	private static double findNewton(double x0, double x1, double x2, double x3, double x) {
+		double t = 0.5;
+		double cderiv = (x1 - x0)*3;
+		double func;
+		double derv1 = (x3 - 3*x2 + 3*x1 - x0)*3;
+		double derv2 = (x2 - 2 * x1 +  x0)*6;
+		// find the root using newton's method for fast convergence
+		do{
+			double rt = 1.0 - t;
+			double rt2 = rt*rt;
+			double rt3 = rt2*rt;
+			double t2 = t*t;
+			double t3 = t*t2;
+			double c3rt2t = 3*rt2*t;
+			double c3rtt2 = 3*rt*t2;
+			func = rt3*x0 + c3rt2t*x1 + c3rtt2*x2 + t3*x3 - x;
+			double derivative = derv1* t2 + derv2*t + cderiv ;
+			t = t - func / derivative;
+		} while(Math.abs(func) > Constants.MAX_ERROR_X_POW_2);
+		return t;
+	}
 
 
 	

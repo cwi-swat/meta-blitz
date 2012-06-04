@@ -1,5 +1,7 @@
 package nogbeter.paths.compound;
 
+import images.AlphaMask;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -15,8 +17,10 @@ import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.angles.AngularIntervalFactory;
+import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
-import nogbeter.transform.AffineTransformation;
+import nogbeter.transform.IToTransform;
+import nogbeter.transform.nonlinear.pathdeform.PathDeform;
 import bezier.util.Tuple;
 
 public class Append 
@@ -63,7 +67,7 @@ public class Append
 
 
 	@Override
-	public Append transform(AffineTransformation t) {
+	public Append transform(IToTransform t) {
 		return new Append(left.transform(t),right.transform(t));
 	}
 	
@@ -197,6 +201,12 @@ public class Append
 	public Vec getArbPoint(){ return getStartPoint();}
 
 	public Vec getArbPointTan(){ return getStartTan();}
+
+	@Override
+	public Append pathDeform(PathDeform p) {
+		return new Append(left.pathDeform(p.getSubList(left.getBBox().xInterval)), 
+				right.pathDeform(p.getSubList(right.getBBox().xInterval)));
+	}
 
 
 }
