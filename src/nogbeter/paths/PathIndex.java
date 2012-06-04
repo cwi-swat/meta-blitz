@@ -4,7 +4,7 @@ import nogbeter.paths.simple.SimplePathIndex;
 
 public abstract class PathIndex implements Comparable<PathIndex>{
 	
-	public final PathIndex left.tInterval.high;
+	public final PathIndex next;
 	
 	public PathIndex(PathIndex next) {
 		this.next = next;
