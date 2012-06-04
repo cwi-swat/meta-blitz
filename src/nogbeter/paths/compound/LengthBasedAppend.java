@@ -1,5 +1,6 @@
 package nogbeter.paths.compound;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import bezier.util.Tuple;
@@ -181,5 +182,20 @@ public class LengthBasedAppend extends SimplyIndexedPath{
 
 	public Vec getArbPoint(){ return getStartPoint();}
 	public Vec getArbPointTan(){ return getStartTan();}
+
+
+	@Override
+	public List<Vec> getTangents(SimplePathIndex t) {
+		if(t.t == left.tInterval.high|| t.t == right.tInterval.low ){
+			List<Vec> res = new ArrayList<Vec>();
+			res.addAll(left.getTangents(new SimplePathIndex(left.tInterval.high)));
+			res.addAll(right.getTangents(new SimplePathIndex(right.tInterval.low)));
+			return res;
+		} else if(t.t < left.tInterval.high){
+			return left.getTangents(t);
+		} else {
+			return right.getTangents(t);
+		}
+	}
 	
 }
