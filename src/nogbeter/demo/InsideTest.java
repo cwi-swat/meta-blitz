@@ -6,6 +6,7 @@ import nogbeter.demo.awt.DemoBase;
 import nogbeter.paths.Path;
 import nogbeter.paths.PathIndex;
 import nogbeter.paths.compound.ClosedPath;
+import nogbeter.paths.compound.NotClosedException;
 import nogbeter.paths.factory.PathFactory;
 import nogbeter.paths.factory.TextFactory;
 import nogbeter.paths.results.intersections.IIntersections;
@@ -42,7 +43,7 @@ public class InsideTest extends DemoBase{
 
 		
 
-		public ClosedPath rectangle(){
+		public ClosedPath rectangle() throws NotClosedException{
 			Vec a = new Vec(100,100);
 			Vec b = new Vec(200,100);
 			Vec c = new Vec(200,200);

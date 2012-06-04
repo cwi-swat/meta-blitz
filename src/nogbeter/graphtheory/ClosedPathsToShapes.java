@@ -33,20 +33,15 @@ public class ClosedPathsToShapes {
 					contains[j][i] = true;
 				}
 			}
-			if(!found)
-			System.out.printf("Not contained in anything: %s\n", closed.get(j).getArbPoint());
+//			if(!found)
+//			System.out.printf("Not contained in anything: %s\n", closed.get(j).getArbPoint());
 		}
 		try{
 			List<Tree> forrest = new Graph(contains).getForrest();
 			List<Path> res = new ArrayList<Path>();
 //			System.out.printf("Number of shapes: %d\n", forrest.size());
 			for(Tree f : forrest){
-				if(!closed.get(f.root).isDefindedClockwise()){
-					ClosedPath p = closed.get(f.root);
-					System.err.printf("Not defined clockwise! %s\n", closed.get(f.root));
-					BestProject<ClosedPathIndex> b = p.project(p.getBBox().getLeftUp().sub(new Vec(10,10)));
-					System.err.printf("loc : %s %s %s\n", p.getBBox().getLeftUp().sub(new Vec(10,10)), p.getAt(b.t), b.t);
-				} else {
+				if(closed.get(f.root).isDefindedClockwise()){
 					res.add(makeShape(closed,f));
 				}
 			}

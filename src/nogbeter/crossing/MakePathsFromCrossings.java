@@ -107,14 +107,16 @@ public class MakePathsFromCrossings <L extends PathIndex,R extends PathIndex>{
 			
 			rightSegs.getSegment(res, beginIndex);
 			beginIndex = bidir.fromRightToLeft(rightSegs.getEndIndex(beginIndex));
-		} while((res.isEmpty() ||
-				!res.get(0).getStartPoint().isEqError(res.get(res.size()-1).getEndPoint())
-				&& !leftUsed[beginIndex]));
+		} while(!leftUsed[beginIndex] && (res.isEmpty() || !isClosed(res)));
 		if(res.isEmpty()){
 			return null;
 		}
 		res = makeContinous(res);
 		return PathFactory.createClosedPathUnsafe(res);
+	}
+
+	private boolean isClosed(List<Path> res) {
+		return res.get(0).getStartPoint().isEqError(res.get(res.size()-1).getEndPoint());
 	}
 
 	private List<Path> makeContinous(List<Path> segs) {
