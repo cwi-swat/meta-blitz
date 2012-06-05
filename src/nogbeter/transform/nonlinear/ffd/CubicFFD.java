@@ -34,9 +34,12 @@ public class CubicFFD extends QuadFFD{
 	
 	private static List<List<Vec>> makeCompleteControlPoints(double fadeDist,
 			Vec[][] cps, double[] gridX, double[] gridY) {
+		List<List<Vec>> res = new ArrayList<List<Vec>>();)
 		for(int y = -CubicPadding ; y < cps.length + CubicPadding; y++){
-			for(int x = -CubicPadding ; x < cps.length + CubicPadding; x++){
-				getControlPoint(fadeDist,cps,gridX,gridY,y,x);
+			List<Vec> ys = new ArrayList<Vec>();
+			for(int x = -CubicPadding ; x < cps[0].length + CubicPadding; x++){
+				ys.add(new Vec(getControlPointX(fadeDist,cps,gridX,gridY,y,x),
+						new Vec(getControlPointY(fadeDist,cps,gridX,y,x))));
 			}
 		}
 	}
@@ -46,15 +49,33 @@ public class CubicFFD extends QuadFFD{
 
 
 
+	private static double getControlPointX(double fadeDist, Vec[][] cps,
+			double[] gridX, double[] gridY, int y, int x) {
+		if(x <= -CubicPadding + 3 ){
+			return Double.NEGATIVE_INFINITY;
+		} else if( x >= cps[0].length + CubicPadding - 1 - 3){
+			return Double.POSITIVE_INFINITY;
+		} else if(x == -2){
+			return gridX[]
+		}
+	}
+
+
+
 	private static Vec getControlPoint(double fadeDist, Vec[][] cps,
 			double[] gridX, double[] gridY, int y, int x) {
-		if(y < 0 || y > gridY.){
-			if(y <= -CubicPadding + 3 ){
-				return Vec.ZeroVec;
-			} else if( y >= gridY.length -1 + 3){
-				return Vec.ZeroVec;
-			} else 
+		if(y <= -CubicPadding + 3 ){
+			return Vec.ZeroVec;
+		} else if( y >= cps.length -1 + 3){
+			return Vec.ZeroVec;
 		}
+		if(x <= -CubicPadding + 3 ){
+			return Vec.ZeroVec;
+		} else if( x >= cps[0].length -1 + 3){
+			return Vec.ZeroVec;
+		} 
+		if()
+		
 		
 	}
 
