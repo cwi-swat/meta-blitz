@@ -29,6 +29,8 @@ import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
 import nogbeter.transform.IToTransform;
+import nogbeter.transform.nonlinear.IDeform;
+import nogbeter.transform.nonlinear.ILineTransformer;
 import nogbeter.transform.nonlinear.pathdeform.PathDeform;
 import bezier.util.Tuple;
 
@@ -235,7 +237,7 @@ public abstract class Path
 		ConnectedIterator it = new ConnectedIterator(p);
 		List<Path> res = new ArrayList<Path>();
 		while(it.hasNext()){
-			res.add(pathDeform(new PathDeform(it.next())));
+			res.add(deform(new PathDeform(it.next())));
 		}
 		return PathFactory.createSet(res);
 //		try{
@@ -246,5 +248,10 @@ public abstract class Path
 //		}
 	}
 	
-	public abstract Path<PathParam> pathDeform(PathDeform p);
+	public abstract Path transformApproxLines(ILineTransformer t);	
+	public abstract Path<PathParam> deformActual(IDeform p);
+	
+	public Path<PathParam> deform(IDeform p){
+		return deformActual(p.subDeform(getBBox()));
+	}
 }

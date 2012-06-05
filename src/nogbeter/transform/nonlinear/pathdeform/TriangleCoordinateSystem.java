@@ -20,8 +20,8 @@ public final class TriangleCoordinateSystem{
 	}
 	
 	public static TriangleCoordinateSystem create(Line line, Vec prevNormal, Vec normal, Vec nextNormal){
-		Vec dirA = prevNormal.add(normal).div(1 + prevNormal.dot(normal));
-		Vec dirB = nextNormal.add(normal).div(1 + nextNormal.dot(normal));
+		Vec dirA = prevNormal.add(normal).div(1 + Math.abs(prevNormal.dot(normal)));
+		Vec dirB = nextNormal.add(normal).div(1 + Math.abs(nextNormal.dot(normal)));
 		return new TriangleCoordinateSystem(line.tInterval.low, line.tInterval.length, line.getStartPoint(), line.getEndPoint(), dirA, dirB);
 	}
 

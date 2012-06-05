@@ -9,6 +9,7 @@ import nogbeter.paths.SplittablePath;
 import nogbeter.paths.compound.Append;
 import nogbeter.paths.compound.SetIndex;
 import nogbeter.paths.compound.ShapeSet;
+import nogbeter.paths.factory.PathFactory;
 import nogbeter.paths.results.intersections.IIntersections;
 import nogbeter.paths.results.intersections.Intersections;
 import nogbeter.paths.results.project.BestProjectTup;
@@ -17,6 +18,8 @@ import nogbeter.paths.simple.SimplePath;
 import nogbeter.paths.simple.SimplePathIndex;
 import nogbeter.points.oned.Interval;
 import nogbeter.points.twod.Vec;
+import nogbeter.transform.nonlinear.IDeform;
+import nogbeter.transform.nonlinear.ILineTransformer;
 import nogbeter.transform.nonlinear.pathdeform.PathDeform;
 import bezier.util.Tuple;
 
@@ -198,13 +201,13 @@ public abstract class Curve extends SimplePath {
 	}
 	
 	@Override
-	public Path pathDeform(PathDeform p) {
+	public Path deformActual(IDeform p) {
 		if(!isMonotomous()){
 			Tuple<Path,Path> sp = splitSimpler();
-			return new Append(sp.l.pathDeform(p.getSubList(sp.l.getBBox().xInterval)),
-					sp.r.pathDeform(p.getSubList(sp.r.getBBox().xInterval)));
+			return new Append(sp.l.deform(p),
+					sp.r.deform(p));
 		} else {
-			return super.pathDeform(p);
+			return super.deformActual(p);
 		}
 	
 	}
@@ -222,4 +225,12 @@ public abstract class Curve extends SimplePath {
 	}
 
 	public abstract Curve getWithAdjustedEndPoint(Vec newEnd) ;
+	
+	@Override
+	public Path transformApproxLines(ILineTransformer t) {
+		Tuple<SimplePath,SimplePath> sp = splitSimplerCurve();
+		return PathFactory.createAppends(
+				sp.l.transformApproxLines(t),
+				sp.r.transformApproxLines(t));
+	}
 }

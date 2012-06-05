@@ -20,6 +20,8 @@ import nogbeter.points.angles.AngularIntervalFactory;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
 import nogbeter.transform.IToTransform;
+import nogbeter.transform.nonlinear.IDeform;
+import nogbeter.transform.nonlinear.ILineTransformer;
 import nogbeter.transform.nonlinear.pathdeform.PathDeform;
 import bezier.util.Tuple;
 
@@ -203,9 +205,15 @@ public class Append
 	public Vec getArbPointTan(){ return getStartTan();}
 
 	@Override
-	public Append pathDeform(PathDeform p) {
-		return new Append(left.pathDeform(p.getSubList(left.getBBox().xInterval)), 
-				right.pathDeform(p.getSubList(right.getBBox().xInterval)));
+	public Append deformActual(IDeform p) {
+		return new Append(left.deform(p), right.deform(p));
+	}
+
+
+
+	@Override
+	public Path transformApproxLines(ILineTransformer t) {
+		return new Append(left.transformApproxLines(t), right.transformApproxLines(t));
 	}
 
 

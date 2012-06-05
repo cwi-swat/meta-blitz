@@ -32,6 +32,7 @@ import nogbeter.points.oned.Interval;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
 import nogbeter.transform.IToTransform;
+import nogbeter.transform.nonlinear.ILineTransformer;
 import nogbeter.transform.nonlinear.pathdeform.PathDeform;
 import bezier.util.STuple;
 import bezier.util.Tuple;
@@ -454,6 +455,16 @@ public class Line extends SimplePath {
 	@Override
 	public SimplePath getWithAdjustedStartPointMono(Vec v) {
 		return new Line(v, end, tInterval);
+	}
+
+	@Override
+	public double findYFast(double splitPoint) {
+		return getTAtY(splitPoint);
+	}
+
+	@Override
+	public Path transformApproxLines(ILineTransformer t) {
+		return t.transform(this);
 	}
 
 

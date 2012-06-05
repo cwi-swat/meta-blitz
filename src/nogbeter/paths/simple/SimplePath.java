@@ -24,6 +24,7 @@ import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.angles.AngularIntervalFactory;
 import nogbeter.points.oned.Interval;
 import nogbeter.points.twod.Vec;
+import nogbeter.transform.nonlinear.IDeform;
 import nogbeter.transform.nonlinear.pathdeform.PathDeform;
 
 public abstract class SimplePath extends SimplyIndexedPath{
@@ -138,43 +139,62 @@ public abstract class SimplePath extends SimplyIndexedPath{
 	}
 	
 	@Override
-	public Path pathDeform(PathDeform p) {
-		if(p.isSimpleTransform()){
-			return transform(p);
-		} else {
-			double x = p.getSplitPoint();
+	public Path deformActual(IDeform p) {
+		if(p.isSimple()){
+			return p.deform(this);
+		} else if(!p.isSimpleX()){
+			double x = p.getSplitPointX();
 			double midt = findXFast(x);
 			
 			if(x == 0){
 				Vec mid = new Vec(x,getStartPoint().y);
 				Path z = getWithAdjustedStartPointMono(mid);
-				return z.pathDeform(p.getSubList(z.getBBox().xInterval));
+				return z.deform(p);
 			} 
 			if(x == 1){
 				Vec mid = new Vec(x,getEndPoint().y);
 				Path z = getWithAdjustedEndPointMono(mid);
-				return z.pathDeform(p.getSubList(z.getBBox().xInterval));
+				return z.deform(p);
 			} 
 			Tuple<SimplePath,SimplePath> simp = splitSimp(midt);
 			Vec mid = new Vec(x,simp.r.getStartPoint().y);
 			SimplePath left =simp.l.getWithAdjustedEndPointMono(mid);
 			SimplePath right = (SimplePath) simp.r.getWithAdjustedStartPointMono(mid);
-			if(left.getBBox().xInterval.high != x && left.getBBox().xInterval.low != x){
-				System.out.printf("Left wrong!! %f %s\n",x,left);
-			} 
-			if(right.getBBox().xInterval.high != x && right.getBBox().xInterval.low != x){
-				System.out.printf("Right wrong!! %f %f %f\n",x,right.getBBox().xInterval.low,right.getBBox().xInterval.high);
-			} 
 			if(left == null){
-				return right.pathDeform(p.getSubList(right.getBBox().xInterval));
+				return right.deform(p);
 			} else if(right == null){
-				return left.pathDeform(p.getSubList(left.getBBox().xInterval));
+				return left.deform(p);
 			}
-			return new Append(left.pathDeform(p.getSubList(left.getBBox().xInterval)),
-					right.pathDeform(p.getSubList(right.getBBox().xInterval)));
+			return new Append(left.deform(p),
+								right.deform(p));
+		} else {
+			double y = p.getSplitPointY();
+			double midt = findYFast(y);
+			
+			if(y == 0){
+				Vec mid = new Vec(getStartPoint().x,y);
+				Path z = getWithAdjustedStartPointMono(mid);
+				return z.deform(p);
+			} 
+			if(y == 1){
+				Vec mid = new Vec(getEndPoint().x,y);
+				Path z = getWithAdjustedEndPointMono(mid);
+				return z.deform(p);
+			} 
+			Tuple<SimplePath,SimplePath> simp = splitSimp(midt);
+			Vec mid = new Vec(simp.r.getStartPoint().x,y);
+			SimplePath left =simp.l.getWithAdjustedEndPointMono(mid);
+			SimplePath right = (SimplePath) simp.r.getWithAdjustedStartPointMono(mid);
+			if(left == null){
+				return right.deform(p);
+			} else if(right == null){
+				return left.deform(p);
+			}
+			return new Append(left.deform(p),right.deform(p));
 		}
 	}
 	
+
 	public abstract SimplePath getWithAdjustedStartPointMono(Vec mid) ;
 
 	public abstract SimplePath getWithAdjustedEndPointMono(Vec v);
@@ -182,5 +202,6 @@ public abstract class SimplePath extends SimplyIndexedPath{
 	public abstract Tuple<SimplePath, SimplePath> splitSimp(double midt) ;
 
 	public abstract double findXFast(double splitPoint);
+	public abstract double findYFast(double splitPoint);
 	
 }

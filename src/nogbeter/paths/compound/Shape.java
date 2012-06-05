@@ -21,6 +21,8 @@ import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
 import nogbeter.transform.IToTransform;
+import nogbeter.transform.nonlinear.IDeform;
+import nogbeter.transform.nonlinear.ILineTransformer;
 import nogbeter.transform.nonlinear.pathdeform.PathDeform;
 
 
@@ -169,10 +171,15 @@ public class Shape extends CompoundSplittablePath<ShapeIndex> {
 	public Vec getArbPointTan(){ return left.getArbPointTan();}
 
 	@Override
-	public Shape pathDeform(PathDeform p) {
-			return new Shape(left.pathDeform(p.getSubList(left.getBBox().xInterval)), 
-					right.pathDeform(p.getSubList(right.getBBox().xInterval)));
+	public Shape deformActual(IDeform p) {
+			return new Shape(left.deform(p), right.deform(p));
+	}
 
+
+
+	@Override
+	public Path transformApproxLines(ILineTransformer t) {
+		return new Shape(left.transformApproxLines(t), right.transformApproxLines(t));
 	}
 
 

@@ -184,5 +184,10 @@ public class QuadCurve extends Curve{
 	public double findXFast(double x) {
 		return findFast(p0.x, p1.x, p2.x, x);
 	}
+	
+	@Override
+	public double findYFast(double y) {
+		return findFast(p0.y, p1.y, p2.y, y);
+	}
 
 }

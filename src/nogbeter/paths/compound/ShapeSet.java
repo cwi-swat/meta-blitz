@@ -26,6 +26,8 @@ import nogbeter.points.angles.AngularInterval;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
 import nogbeter.transform.IToTransform;
+import nogbeter.transform.nonlinear.IDeform;
+import nogbeter.transform.nonlinear.ILineTransformer;
 import nogbeter.transform.nonlinear.pathdeform.PathDeform;
 
 import static nogbeter.paths.results.transformers.TupleTransformers.*;
@@ -306,10 +308,19 @@ public class ShapeSet extends Path<SetIndex>{
 	}
 
 	@Override
-	public Path<SetIndex> pathDeform(PathDeform p) {
+	public Path<SetIndex> deformActual(IDeform p) {
 		List<Path> res = new ArrayList<Path>(shapes.size());
 		for(Path s : shapes){
-			res.add(s.pathDeform(p.getSubList(s.getBBox().xInterval)));
+			res.add(s.deform(p));
+		}
+		return new ShapeSet(res);
+	}
+
+	@Override
+	public Path transformApproxLines(ILineTransformer t) {
+		List<Path> res = new ArrayList<Path>(shapes.size());
+		for(Path s : shapes){
+			res.add(s.transformApproxLines(t));
 		}
 		return new ShapeSet(res);
 	}

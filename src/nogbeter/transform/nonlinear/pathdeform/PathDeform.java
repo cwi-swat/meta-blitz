@@ -6,9 +6,11 @@ import nogbeter.paths.iterators.SimplePathIterator;
 import nogbeter.paths.simple.Line;
 import nogbeter.paths.simple.SimplePath;
 import nogbeter.points.oned.Interval;
+import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
 import nogbeter.transform.IToTransform;
 import nogbeter.transform.ITransform;
+import nogbeter.transform.nonlinear.IDeform;
 import nogbeter.util.BinarySearches;
 
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ import java.util.List;
 
 import bezier.util.Tuple;
 
-public class PathDeform implements IToTransform{
+public class PathDeform implements IDeform, IToTransform{
 	
 	final List<LineInfo> lines;
 	final List<Double> lengths;
@@ -101,23 +103,17 @@ public class PathDeform implements IToTransform{
 		}
 		
 	}
-
-	public double getStart(){
-		return lines.get(0).line.tInterval.low;
-	}
 	
-	public double getEnd(){
-		return lines.get(lines.size()-1).line.tInterval.high;
-	}
-	
-	public PathDeform getSubList(int start, int end){
+	private PathDeform getSubList(int start, int end){
 		return new PathDeform(lines.subList(start, end),
 				lengths.subList(start,end +1));
 	}
 	
 	
-	public PathDeform getSubList(Interval xInterval){
-		
+	private PathDeform getSubList(Interval xInterval){
+		if(xInterval.isEmpty()){
+			return this;
+		}
 		int start = BinarySearches.floorBinarySearch(lengths, xInterval.low);
 		int end = BinarySearches.floorBinarySearch(lengths, xInterval.high);
 		if(lengths.get(end)!=xInterval.high && end != lengths.size()-1){
@@ -138,12 +134,46 @@ public class PathDeform implements IToTransform{
 		return lines.size() == 1;
 	}
 
-	@Override
 	public Vec to(Vec d) {
 		return lines.get(0).coord.getAt(d);
 	}
 
 	public double getSplitPoint() {
 		return lengths.get(lengths.size()/2);
+	}
+
+	@Override
+	public IDeform subDeform(BBox b) {
+		return getSubList(b.xInterval);
+	}
+
+	@Override
+	public boolean isSimple() {
+		return isSimpleX();
+	}
+
+	@Override
+	public boolean isSimpleX() {
+		return lines.size() == 1;
+	}
+
+	@Override
+	public boolean isSimpleY() {
+		return true;
+	}
+
+	@Override
+	public double getSplitPointX() {
+		return lengths.get(lengths.size()/2);
+	}
+
+	@Override
+	public double getSplitPointY() {
+		throw new Error("No splitpoint defined!");
+	}
+
+	@Override
+	public Path deform(Path p) {
+		return p.transform(this);
 	}
 }

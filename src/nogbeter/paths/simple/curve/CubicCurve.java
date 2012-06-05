@@ -21,6 +21,7 @@ import nogbeter.points.oned.Interval;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
 import nogbeter.transform.IToTransform;
+import nogbeter.transform.nonlinear.ILineTransformer;
 import bezier.paths.Constants;
 import bezier.util.STuple;
 import bezier.util.Tuple;
@@ -212,6 +213,12 @@ public class CubicCurve extends Curve{
 		return findNewton(p0.x,p1.x, p2.x, p3.x, x);
 	}
 	
+	@Override
+	public
+	double findYFast(double y) {
+		return findNewton(p0.y,p1.y, p2.y, p3.y, y);
+	}
+	
 
 	private static double findNewton(double x0, double x1, double x2, double x3, double x) {
 		double t = 0.5;
@@ -234,6 +241,8 @@ public class CubicCurve extends Curve{
 		} while(Math.abs(func) > Constants.MAX_ERROR_X_POW_2);
 		return t;
 	}
+
+	
 
 
 	

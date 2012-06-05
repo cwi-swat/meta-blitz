@@ -17,7 +17,6 @@ import nogbeter.paths.compound.ClosedPath;
 import nogbeter.paths.compound.ClosedPathIndex;
 import nogbeter.paths.compound.NotClosedException;
 import nogbeter.paths.factory.TextFactory;
-import nogbeter.paths.iterators.AppendIterator;
 import nogbeter.paths.iterators.ClosedPathIterator;
 import nogbeter.paths.iterators.PathIterator;
 import nogbeter.paths.iterators.ShapeIterator;
@@ -69,10 +68,10 @@ public class SetOperationTest extends DemoBase{
 	boolean bla = false;
 	public SetOperationTest() {
 		r = rectangle().transform(id.scale(200).translate(400,400));
-		r = TextFactory.text2Paths("a").transform(id.scale(5).translate(200, 200));
+		r = TextFactory.text2Paths("atZe").transform(id.scale(5).translate(200, 200));
 		System.out.println("r");
 //		r = rectangle().transform(id.scale(30).translate(200, 200));
-		z = TextFactory.text2Paths("b").transform(id.scale(5));
+		z = TextFactory.text2Paths("Jurgen").transform(id.scale(5));
 //		z = rectangle().transform(id.scale(200));
 	}
 	

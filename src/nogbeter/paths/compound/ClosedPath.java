@@ -25,6 +25,8 @@ import nogbeter.points.angles.AngularIntervalFactory;
 import nogbeter.points.twod.BBox;
 import nogbeter.points.twod.Vec;
 import nogbeter.transform.IToTransform;
+import nogbeter.transform.nonlinear.IDeform;
+import nogbeter.transform.nonlinear.ILineTransformer;
 import nogbeter.transform.nonlinear.pathdeform.PathDeform;
 
 public class ClosedPath extends Path<ClosedPathIndex>{
@@ -259,8 +261,13 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 	}
 
 	@Override
-	public Path<ClosedPathIndex> pathDeform(PathDeform p) {
-		return new ClosedPath(actual.pathDeform(p.getSubList(getBBox().xInterval)));
+	public Path<ClosedPathIndex> deformActual(IDeform p) {
+		return new ClosedPath(actual.deform(p));
+	}
+
+	@Override
+	public Path transformApproxLines(ILineTransformer t) {
+		return new ClosedPath(actual.transformApproxLines(t));
 	}
 
 }
