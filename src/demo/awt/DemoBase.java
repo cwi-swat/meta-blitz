@@ -1,4 +1,4 @@
-package paths.demo.awt;
+package demo.awt;
 
 import static paths.paths.factory.PathFactory.createAppends;
 import static paths.paths.factory.PathFactory.createLine;
@@ -21,7 +21,8 @@ import java.awt.image.BufferedImage;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
-import paths.demo.DummyAWTSHape;
+import demo.DummyAWTSHape;
+
 import paths.paths.factory.PathFactory;
 import paths.paths.iterators.AWTPathIterator;
 import paths.paths.paths.Path;

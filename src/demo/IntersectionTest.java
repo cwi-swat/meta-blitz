@@ -1,7 +1,7 @@
-package paths.demo;
+package demo;
 
+import demo.awt.DemoBase;
 import paths.crossing.IntersectionsToCrossings;
-import paths.demo.awt.DemoBase;
 import paths.paths.factory.PathFactory;
 import paths.paths.factory.TextFactory;
 import paths.paths.paths.Path;

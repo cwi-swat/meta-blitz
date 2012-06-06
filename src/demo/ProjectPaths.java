@@ -1,6 +1,6 @@
-package paths.demo;
+package demo;
 
-import paths.demo.awt.DemoBase;
+import demo.awt.DemoBase;
 import paths.paths.factory.PathFactory;
 import paths.paths.factory.TextFactory;
 import paths.paths.paths.Path;
@@ -9,22 +9,23 @@ import paths.paths.results.intersections.IIntersections;
 import paths.paths.results.intersections.Intersection;
 import paths.paths.results.intersections.Intersections;
 import paths.paths.results.project.BestProject;
+import paths.paths.results.project.BestProjectTup;
 import paths.points.twod.Vec;
 import sun.java2d.loops.DrawLine;
 import static paths.paths.factory.PathFactory.*;
 import static paths.transform.AffineTransformation.*;
 
-public class ProjectVecTest extends DemoBase{
+public class ProjectPaths extends DemoBase{
 
 		public static void main(String[] argv){
-			new ProjectVecTest();
+			new ProjectPaths();
 		}
 
 
 		private Path r;
 		
-		public ProjectVecTest() {
-			r = TextFactory.text2Paths("s").transform(id.scale(5).translate(400, 400)).normaliseToLength();
+		public ProjectPaths() {
+			r = TextFactory.text2Paths("ws").transform(id.scale(5).translate(400, 400));
 //			System.out.println(r);
 		}
 		
@@ -32,16 +33,17 @@ public class ProjectVecTest extends DemoBase{
 		public void draw() {
 
 //			Path r = rectangle();
-//			Path q = rectangle().transform(id.translate(-150,-150).translate(mouse));
+			Path q = TextFactory.text2Paths("uvc").transform(id.translate(-150,-150).translate(mouse));
 			draw(r);
-			BestProject<PathIndex> best = r.project(mouse);
-			System.out.println(best);
+			draw(q);
+			BestProjectTup<PathIndex,PathIndex> best = q.project(r);
+//			System.out.println(best);
 //			System.out.println(r.getAt(best.t));
-			drawLine(r.getAt(best.t), mouse);
+			drawLine(q.getAt(best.l), r.getAt(best.r));
 
 
 		}
 
-	
+
 		
 	}

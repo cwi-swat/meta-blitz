@@ -1,4 +1,4 @@
-package paths.demo;
+package demo;
 
 import paths.paths.factory.PathFactory;
 import paths.paths.paths.compound.ClosedPath;

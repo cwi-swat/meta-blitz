@@ -1,11 +1,12 @@
-package paths.demo;
+package demo;
 
 import static paths.transform.AffineTransformation.id;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import paths.demo.awt.DemoBase;
+import demo.awt.DemoBase;
+
 import paths.paths.factory.PathFactory;
 import paths.paths.factory.TextFactory;
 import paths.paths.iterators.ConnectedIterator;

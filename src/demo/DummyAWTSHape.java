@@ -1,4 +1,4 @@
-package paths.demo;
+package demo;
 
 import java.awt.Rectangle;
 import java.awt.Shape;

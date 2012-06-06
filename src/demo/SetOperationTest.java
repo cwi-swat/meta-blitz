@@ -1,4 +1,4 @@
-package paths.demo;
+package demo;
 
 import static paths.transform.AffineTransformation.id;
 
@@ -8,9 +8,10 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import demo.awt.DemoBase;
+
 import paths.crossing.Crossing;
 import paths.crossing.IntersectionsToCrossings;
-import paths.demo.awt.DemoBase;
 import paths.paths.factory.TextFactory;
 import paths.paths.iterators.ClosedPathIterator;
 import paths.paths.iterators.PathIterator;
