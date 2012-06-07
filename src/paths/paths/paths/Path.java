@@ -3,9 +3,12 @@ package paths.paths.paths;
 import static util.Util.square;
 
 
+import java.awt.image.DataBufferByte;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import demo.DummyAWTSHape;
 
 import paths.crossing.Crossing;
 import paths.crossing.CrossingsInfo;
@@ -32,6 +35,9 @@ import paths.transform.nonlinear.IDeform;
 import paths.transform.nonlinear.ILineTransformer;
 import paths.transform.nonlinear.pathdeform.PathDeform;
 
+import textures.RenderPath;
+import textures.sample.Image;
+import textures.sample.Sample1;
 import util.Tuple;
 
 
@@ -40,8 +46,8 @@ public abstract class Path
 	{
 	
 	protected BBox bbox;
-	private Path lengthNormalized;
-	private double length;
+	private ExtraMemo extraMemo; // additional memo properties that are not used that often
+
 
 	public abstract BBox makeBBox();
 
@@ -144,16 +150,23 @@ public abstract class Path
 	
 	public double length(){
 		normaliseToLength();
-		return length;
+		return extraMemo.length;
+	}
+	
+	private void makeExtraMemo(){
+		if(extraMemo == null){
+			extraMemo = new ExtraMemo();
+		}
 	}
 	
 	public Path<PathParam> normaliseToLength(){
-		if(lengthNormalized == null){
+		makeExtraMemo();
+		if(extraMemo.lengthNormalized == null){
 			 Tuple<Path<PathParam>,Double> tp = normaliseToLength(0);
-			lengthNormalized = tp.l;
-			length = tp.r;
+			 extraMemo.lengthNormalized = tp.l;
+			 extraMemo.length = tp.r;
 		}
-		return lengthNormalized;
+		return extraMemo.lengthNormalized;
 	}
 	
 	public abstract Tuple<Path<PathParam>,Double> normaliseToLength(double prevLength);
@@ -254,5 +267,17 @@ public abstract class Path
 	
 	public Path<PathParam> deform(IDeform p){
 		return deformActual(p.subDeform(getBBox()));
+	}
+	
+	public DataBufferByte getImage(){
+		makeExtraMemo();
+		if(extraMemo.img == null){
+			extraMemo.img = RenderPath.render(this, 
+					getBBox().getXInt(),
+					getBBox().getYInt(),
+					getBBox().getWidthInt(), 
+					getBBox().getHeightInt());
+		}
+		return extraMemo.img;
 	}
 }

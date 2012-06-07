@@ -187,7 +187,7 @@ public class CubicCurve extends Curve{
 		coords[3] = (float)p2.y;
 		coords[4] = (float)p3.x;
 		coords[5] = (float)p3.y;
-		return PathIterator.SEG_QUADTO;
+		return PathIterator.SEG_CUBICTO;
 	}
 
 	@Override
@@ -246,7 +246,9 @@ public class CubicCurve extends Curve{
 	
 
 
-	
+	public String toString(){
+		return String.format("Cubic %s %s %s %s",p0,p1,p2,p3);
+	}
 
 
 

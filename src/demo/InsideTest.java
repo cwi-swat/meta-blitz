@@ -14,7 +14,7 @@ import paths.paths.results.project.BestProject;
 import paths.paths.results.project.BestProjectTup;
 import paths.points.twod.Vec;
 import sun.java2d.loops.DrawLine;
-import textures.generated.ColorsAlpha;
+import textures.old.generated.ColorsAlpha;
 import static paths.paths.factory.PathFactory.*;
 import static paths.transform.AffineTransformation.*;
 

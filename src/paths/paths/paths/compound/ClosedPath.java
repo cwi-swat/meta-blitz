@@ -257,8 +257,9 @@ public class ClosedPath extends Path<ClosedPathIndex>{
 	}
 
 	public boolean isSelfCrossing() {
-		CrossingsInfo<ClosedPathIndex, ClosedPathIndex> ci = crossingsInfo(this);
-		return !ci.isEmpty();
+		return false;
+//		CrossingsInfo<ClosedPathIndex, ClosedPathIndex> ci = crossingsInfo(this);
+//		return !ci.isEmpty();
 	}
 
 	@Override

@@ -143,4 +143,20 @@ public final class BBox {
 	public BBox getIntBBox(){
 		return new BBox(xInterval.intIterval(), yInterval.intIterval());
 	}
+	
+	public int getXInt(){
+		return (int)xInterval.low;
+	}
+	
+	public int getYInt(){
+		return (int)yInterval.low;
+	}
+	
+	public int getWidthInt(){
+		return (int)Math.ceil(xInterval.high) - (int)xInterval.low;
+	}
+	
+	public int getHeightInt(){
+		return (int)Math.ceil(yInterval.high) - (int)yInterval.low;
+	}
 }

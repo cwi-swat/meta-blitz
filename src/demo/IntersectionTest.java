@@ -10,8 +10,8 @@ import paths.paths.results.intersections.IIntersections;
 import paths.paths.results.intersections.Intersection;
 import paths.paths.results.intersections.Intersections;
 import paths.points.twod.Vec;
-import textures.generated.ColorsAlpha;
-import textures.generated.SampleInstances.Sample4;
+import textures.old.generated.ColorsAlpha;
+import textures.old.generated.SampleInstances.Sample4;
 import static paths.paths.factory.PathFactory.*;
 import static paths.transform.AffineTransformation.*;
 public class IntersectionTest extends DemoBase {

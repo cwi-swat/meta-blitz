@@ -74,30 +74,30 @@ public class FFDTest extends DemoBase{
         double rad3 = rad / 3.0;
         double dia = rad / Math.sqrt(2);
         double dia3 = dia / 3.0;
-        IDeform d= Fisheye.createFishEye(mouse, 200, 1.0 + wheel / 200);
-//        IDeform d = CubicFFD.makeFFD(90, 
-//        		new Double[] {mouse.x - dia, mouse.x + dia},
-//        		new Double[] {mouse.y - dia, mouse.y + dia},
-//        		new Vec[][]{ new Vec[] { 
-//        				new Vec(mouse.x - dia, mouse.y - dia), 
-//						new Vec(mouse.x -dia3, mouse.y - rad3),
-//						new Vec(mouse.x + dia3, mouse.y - rad3),
-//						new Vec(mouse.x + dia, mouse.y - dia)},
-//						new Vec[] { 
-//        				new Vec(mouse.x - dia, mouse.y - dia3), 
-//						new Vec(mouse.x -dia3, mouse.y - dia3),
-//						new Vec(mouse.x + dia3, mouse.y - dia3),
-//						new Vec(mouse.x + dia, mouse.y - dia3)},
-//						new Vec[] { 
-//        				new Vec(mouse.x - dia, mouse.y + dia3), 
-//						new Vec(mouse.x -dia3, mouse.y + dia3),
-//						new Vec(mouse.x + dia3, mouse.y + dia3),
-//						new Vec(mouse.x + dia, mouse.y + dia3)},
-//						new Vec[] { 
-//        				new Vec(mouse.x - dia, mouse.y + dia), 
-//						new Vec(mouse.x -dia3, mouse.y + rad3),
-//						new Vec(mouse.x + dia3, mouse.y + rad3),
-//						new Vec(mouse.x + dia, mouse.y + dia)}});				
+//        IDeform d= Fisheye.createFishEye(mouse, 200, 1.0 + wheel / 200);
+        IDeform d = CubicFFD.makeFFD(90, 
+        		new Double[] {mouse.x - dia, mouse.x + dia},
+        		new Double[] {mouse.y - dia, mouse.y + dia},
+        		new Vec[][]{ new Vec[] { 
+        				new Vec(mouse.x - dia, mouse.y - dia), 
+						new Vec(mouse.x -dia3, mouse.y - rad3),
+						new Vec(mouse.x + dia3, mouse.y - rad3),
+						new Vec(mouse.x + dia, mouse.y - dia)},
+						new Vec[] { 
+        				new Vec(mouse.x - dia, mouse.y - dia3), 
+						new Vec(mouse.x -dia3, mouse.y - dia3),
+						new Vec(mouse.x + dia3, mouse.y - dia3),
+						new Vec(mouse.x + dia, mouse.y - dia3)},
+						new Vec[] { 
+        				new Vec(mouse.x - dia, mouse.y + dia3), 
+						new Vec(mouse.x -dia3, mouse.y + dia3),
+						new Vec(mouse.x + dia3, mouse.y + dia3),
+						new Vec(mouse.x + dia, mouse.y + dia3)},
+						new Vec[] { 
+        				new Vec(mouse.x - dia, mouse.y + dia), 
+						new Vec(mouse.x -dia3, mouse.y + rad3),
+						new Vec(mouse.x + dia3, mouse.y + rad3),
+						new Vec(mouse.x + dia, mouse.y + dia)}});				
 //										
 //        								
        

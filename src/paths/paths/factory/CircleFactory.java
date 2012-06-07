@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import paths.paths.paths.Path;
+import paths.paths.paths.compound.NotClosedException;
 import paths.points.twod.Vec;
 import paths.transform.AffineTransformation;
 
@@ -22,7 +23,11 @@ public class CircleFactory {
 	}
 	
 	public static Path makeEllipse(Vec center, double width, double heigth){
-		return PathFactory.createClosedPath(makeEllipiticalArc(center, width, heigth, 0, 2*Math.PI));
+		try {
+			return PathFactory.createClosedPathUnsafe(makeEllipiticalArc(center, width, heigth, 0, 2*Math.PI));
+		} catch (NotClosedException e) {
+			throw new Error(e.getMessage());
+		}
 	}
 	
 	public static Vec getCircularCenter(Vec pointA, Vec pointB, double anglularLength){
@@ -69,8 +74,8 @@ public class CircleFactory {
 			rad+=radInc;
 			
 			Vec curPoint = getCircleVec(rad);
-			result.add(PathFactory.createCubic(prevPoint, prevPoint.add(prevPoint.perpendicularCCW().mul(kappa)),
-					curPoint.add(curPoint.perpendicularCW().mul(kappa)),curPoint));
+			result.add(PathFactory.createCubic(prevPoint, prevPoint.add(prevPoint.perpendicularCW().mul(kappa)),
+					curPoint.add(curPoint.perpendicularCCW().mul(kappa)),curPoint));
 			prevPoint = curPoint;
 		}
 		return PathFactory.createAppends(result);

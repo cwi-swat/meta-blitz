@@ -31,8 +31,10 @@ import paths.paths.paths.compound.ClosedPath;
 import paths.paths.paths.compound.NotClosedException;
 import paths.points.twod.Vec;
 
-import textures.generated.ColorsAlpha;
-import textures.generated.SampleInstances.Sample4;
+import textures.interfaces.ITexturedPath;
+import textures.old.generated.ColorsAlpha;
+import textures.old.generated.SampleInstances.Sample4;
+import textures.sample.ToAWT;
 
 
 
@@ -207,6 +209,10 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 			g.setColor(fromSample(border));
 			g.draw(new DummyAWTSHape(p));
 		}
+	}
+	
+	public void blit(ITexturedPath<textures.sample.Color> texPath){
+		ToAWT.toAWT(g, texPath);
 	}
 //	
 //	public void draw(Image<Sample4> img){

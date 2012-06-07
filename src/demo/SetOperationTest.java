@@ -30,8 +30,8 @@ import paths.points.angles.AngularIntervalFactory;
 import paths.points.twod.BBox;
 import paths.points.twod.Vec;
 
-import textures.generated.ColorsAlpha;
-import textures.generated.SampleInstances.Sample4;
+import textures.old.generated.ColorsAlpha;
+import textures.old.generated.SampleInstances.Sample4;
 
 public class SetOperationTest extends DemoBase{
 	public static void main(String[] argv){
