@@ -1,7 +1,7 @@
-package textures.functions;
+package textures.old.functions;
 
-import textures.Image;
-import textures.PixelArea;
+import textures.old.Image;
+import textures.old.PixelArea;
 
 public final class Constant<A> implements Image<A>{
 

@@ -1,10 +1,10 @@
-package textures.functions;
+package textures.old.functions;
 
-import textures.Image;
-import textures.PixelArea;
-import textures.Sample;
-import textures.generated.SampleInstances.Sample2;
-import textures.generated.SampleInstances.Sample4;
+import textures.old.Image;
+import textures.old.PixelArea;
+import textures.old.Sample;
+import textures.old.generated.SampleInstances.Sample2;
+import textures.old.generated.SampleInstances.Sample4;
 
 public class GetOther<A extends Sample<A>> implements Image<A>{
 

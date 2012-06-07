@@ -1,8 +1,8 @@
-package textures.functions;
+package textures.old.functions;
 
-import textures.Image;
-import textures.PixelArea;
-import textures.Sample;
+import textures.old.Image;
+import textures.old.PixelArea;
+import textures.old.Sample;
 
 public class DivSample<A extends Sample<A>> implements Image<A>{
 

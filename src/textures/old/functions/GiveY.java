@@ -1,8 +1,8 @@
-package textures.functions;
+package textures.old.functions;
 
-import textures.Image;
-import textures.PixelArea;
-import textures.generated.SampleInstances.Sample1;
+import textures.old.Image;
+import textures.old.PixelArea;
+import textures.old.generated.SampleInstances.Sample1;
 
 public class GiveY implements Image<Sample1> {
 

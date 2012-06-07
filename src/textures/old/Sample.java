@@ -1,4 +1,4 @@
-package textures;
+package textures.old;
 
 public interface Sample<A> {
 	

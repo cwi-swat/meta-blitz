@@ -1,4 +1,4 @@
-package textures;
+package textures.old;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -8,11 +8,11 @@ import java.awt.image.BufferedImage;
 
 import paths.transform.AffineTransformation;
 
-import textures.functions.Div;
-import textures.generated.RasterInstances;
-import textures.generated.SampleInstances;
-import textures.generated.RasterInstances.Raster1;
-import textures.generated.SampleInstances.Sample1;
+import textures.old.functions.Div;
+import textures.old.generated.RasterInstances;
+import textures.old.generated.SampleInstances;
+import textures.old.generated.RasterInstances.Raster1;
+import textures.old.generated.SampleInstances.Sample1;
 
 
 

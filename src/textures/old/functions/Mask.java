@@ -1,9 +1,9 @@
-package textures.functions;
+package textures.old.functions;
 
-import textures.Image;
-import textures.PixelArea;
-import textures.Sample;
-import textures.generated.SampleInstances.Sample1;
+import textures.old.Image;
+import textures.old.PixelArea;
+import textures.old.Sample;
+import textures.old.generated.SampleInstances.Sample1;
 
 public class Mask <A extends Sample<A>> implements Image<A>{
 

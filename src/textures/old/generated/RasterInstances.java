@@ -1,8 +1,8 @@
-package textures.generated;
+package textures.old.generated;
 
-import textures.Image;
-import textures.PixelArea;
-import static textures.generated.SampleInstances.*;
+import textures.old.Image;
+import textures.old.PixelArea;
+import static textures.old.generated.SampleInstances.*;
 public class RasterInstances{
 
 	

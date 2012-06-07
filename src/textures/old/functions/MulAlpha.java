@@ -1,10 +1,10 @@
-package textures.functions;
+package textures.old.functions;
 
-import textures.Image;
-import textures.PixelArea;
-import textures.generated.ColorsAlpha;
-import textures.generated.SampleInstances.Sample1;
-import textures.generated.SampleInstances.Sample4;
+import textures.old.Image;
+import textures.old.PixelArea;
+import textures.old.generated.ColorsAlpha;
+import textures.old.generated.SampleInstances.Sample1;
+import textures.old.generated.SampleInstances.Sample4;
 
 public class MulAlpha implements Image<Sample4>{
 

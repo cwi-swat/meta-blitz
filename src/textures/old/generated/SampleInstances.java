@@ -1,6 +1,6 @@
-package textures.generated;
+package textures.old.generated;
 
-import textures.Sample;
+import textures.old.Sample;
 import util.Util;
 public class SampleInstances{
 

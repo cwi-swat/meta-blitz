@@ -1,6 +1,6 @@
-package textures.generated;
+package textures.old.generated;
 
-import textures.generated.SampleInstances.Sample3;
+import textures.old.generated.SampleInstances.Sample3;
 
 public class Colors {
 	public static Sample3 aliceblue = new Sample3(0.9411764705882352941176470588235294117647058823529411764705882353,0.9725490196078431372549019607843137254901960784313725490196078431,1.);

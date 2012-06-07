@@ -1,6 +1,6 @@
-package textures.generated;
+package textures.old.generated;
 
-import textures.generated.SampleInstances.Sample4;
+import textures.old.generated.SampleInstances.Sample4;
 
 public class ColorsAlpha {
 	
