@@ -30,14 +30,12 @@ import paths.paths.results.project.BestProjectTup;
 import paths.points.angles.AngularInterval;
 import paths.points.twod.BBox;
 import paths.points.twod.Vec;
-import paths.transform.IToTransform;
-import paths.transform.nonlinear.IDeform;
-import paths.transform.nonlinear.ILineTransformer;
-import paths.transform.nonlinear.pathdeform.PathDeform;
 
 import textures.RenderPath;
-import textures.sample.Image;
-import textures.sample.Sample1;
+import transform.IToTransform;
+import transform.nonlinear.IDeform;
+import transform.nonlinear.ILineTransformer;
+import transform.nonlinear.pathdeform.PathDeform;
 import util.Tuple;
 
 

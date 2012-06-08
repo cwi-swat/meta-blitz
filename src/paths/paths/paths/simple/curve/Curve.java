@@ -18,10 +18,10 @@ import paths.paths.results.intersections.Intersections;
 import paths.paths.results.project.BestProjectTup;
 import paths.points.oned.Interval;
 import paths.points.twod.Vec;
-import paths.transform.nonlinear.IDeform;
-import paths.transform.nonlinear.ILineTransformer;
-import paths.transform.nonlinear.pathdeform.PathDeform;
 
+import transform.nonlinear.IDeform;
+import transform.nonlinear.ILineTransformer;
+import transform.nonlinear.pathdeform.PathDeform;
 import util.Tuple;
 
 

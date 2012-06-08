@@ -12,8 +12,8 @@ import com.sun.corba.se.spi.ior.Writeable;
 
 import paths.paths.factory.CircleFactory;
 import paths.points.twod.Vec;
-import paths.transform.AffineTransformation;
 import textures.RenderPath;
+import transform.AffineTransformation;
 
 public class TestAWTZooi {
 

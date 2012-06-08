@@ -1,8 +1,8 @@
-package paths.transform.nonlinear.ffd;
+package transform.nonlinear.ffd;
 
 import paths.paths.paths.Path;
 import paths.points.twod.BBox;
-import paths.transform.nonlinear.IDeform;
+import transform.nonlinear.IDeform;
 
 public class IdentityDeform implements IDeform{
 

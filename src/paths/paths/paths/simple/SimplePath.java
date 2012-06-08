@@ -23,9 +23,9 @@ import paths.points.angles.AngularInterval;
 import paths.points.angles.AngularIntervalFactory;
 import paths.points.oned.Interval;
 import paths.points.twod.Vec;
-import paths.transform.nonlinear.IDeform;
-import paths.transform.nonlinear.pathdeform.PathDeform;
 
+import transform.nonlinear.IDeform;
+import transform.nonlinear.pathdeform.PathDeform;
 import util.Tuple;
 
 

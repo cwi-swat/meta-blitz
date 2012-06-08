@@ -1,10 +1,10 @@
 package textures.old.functions;
 
 import paths.points.twod.Vec;
-import paths.transform.AffineTransformation;
 import textures.old.Image;
 import textures.old.PixelArea;
 import textures.old.Sample;
+import transform.AffineTransformation;
 
 public class ImageTransformation<A extends Sample<A>> implements Image<A> {
 

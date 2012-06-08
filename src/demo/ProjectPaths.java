@@ -13,7 +13,7 @@ import paths.paths.results.project.BestProjectTup;
 import paths.points.twod.Vec;
 import sun.java2d.loops.DrawLine;
 import static paths.paths.factory.PathFactory.*;
-import static paths.transform.AffineTransformation.*;
+import static transform.AffineTransformation.*;
 
 public class ProjectPaths extends DemoBase{
 

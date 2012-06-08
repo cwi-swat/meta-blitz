@@ -12,7 +12,7 @@ import paths.paths.results.project.BestProject;
 import paths.points.twod.Vec;
 import sun.java2d.loops.DrawLine;
 import static paths.paths.factory.PathFactory.*;
-import static paths.transform.AffineTransformation.*;
+import static transform.AffineTransformation.*;
 
 public class ProjectVecTest extends DemoBase{
 

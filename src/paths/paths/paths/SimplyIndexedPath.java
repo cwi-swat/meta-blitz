@@ -9,7 +9,7 @@ import paths.paths.results.transformers.PathIndexTupleTransformer;
 import paths.points.angles.AngularInterval;
 import paths.points.oned.Interval;
 import paths.points.twod.Vec;
-import paths.transform.IToTransform;
+import transform.IToTransform;
 
 public abstract class SimplyIndexedPath extends SplittablePath<SimplePathIndex>{
 

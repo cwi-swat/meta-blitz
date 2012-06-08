@@ -13,7 +13,7 @@ import paths.points.twod.Vec;
 import textures.old.generated.ColorsAlpha;
 import textures.old.generated.SampleInstances.Sample4;
 import static paths.paths.factory.PathFactory.*;
-import static paths.transform.AffineTransformation.*;
+import static transform.AffineTransformation.*;
 public class IntersectionTest extends DemoBase {
 
 	public static void main(String[] argv){

@@ -1,6 +1,6 @@
 package demo;
 
-import static paths.transform.AffineTransformation.id;
+import static transform.AffineTransformation.id;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +11,10 @@ import paths.paths.factory.TextFactory;
 import paths.paths.iterators.ConnectedIterator;
 import paths.paths.paths.Path;
 import paths.points.twod.Vec;
-import paths.transform.nonlinear.IDeform;
-import paths.transform.nonlinear.ffd.CubicFFD;
-import paths.transform.nonlinear.ffd.QuadFFD;
-import paths.transform.nonlinear.ffd.instances.Fisheye;
+import transform.nonlinear.IDeform;
+import transform.nonlinear.ffd.CubicFFD;
+import transform.nonlinear.ffd.QuadFFD;
+import transform.nonlinear.ffd.instances.Fisheye;
 
 
 public class FFDTest extends DemoBase{

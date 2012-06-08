@@ -1,8 +1,8 @@
-package paths.transform.nonlinear;
+package transform.nonlinear;
 
 import paths.paths.paths.Path;
 import paths.points.twod.BBox;
-import paths.transform.IToTransform;
+import transform.IToTransform;
 
 public interface IDeform{
 	Path deform(Path p);

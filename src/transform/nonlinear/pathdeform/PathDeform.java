@@ -1,4 +1,4 @@
-package paths.transform.nonlinear.pathdeform;
+package transform.nonlinear.pathdeform;
 
 
 import java.util.ArrayList;
@@ -13,10 +13,10 @@ import paths.paths.paths.simple.SimplePath;
 import paths.points.oned.Interval;
 import paths.points.twod.BBox;
 import paths.points.twod.Vec;
-import paths.transform.IToTransform;
-import paths.transform.ITransform;
-import paths.transform.nonlinear.IDeform;
 
+import transform.IToTransform;
+import transform.ITransform;
+import transform.nonlinear.IDeform;
 import util.BinarySearches;
 import util.Tuple;
 

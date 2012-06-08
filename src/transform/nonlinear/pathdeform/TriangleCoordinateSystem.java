@@ -1,4 +1,4 @@
-package paths.transform.nonlinear.pathdeform;
+package transform.nonlinear.pathdeform;
 
 import paths.paths.paths.simple.Line;
 import paths.points.twod.Vec;

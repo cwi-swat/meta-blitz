@@ -1,6 +1,6 @@
 package demo;
 
-import static paths.transform.AffineTransformation.id;
+import static transform.AffineTransformation.id;
 
 import java.awt.GradientPaint;
 
@@ -11,10 +11,15 @@ import paths.paths.paths.Path;
 import paths.paths.paths.PathIndex;
 import paths.paths.results.project.BestProject;
 import textures.examples.LinearHorizontalGradient;
+import textures.examples.RadialGradient;
+import textures.examples.TransformedTexture;
+import textures.interfaces.ITexture;
 import textures.old.generated.ColorsAlpha;
 import textures.sample.Color;
 import textures.sample.Colors;
 import textures.texturedpaths.TexturedPath;
+import transform.AffineTransformation;
+import transform.Matrix;
 
 public class TexturedPathTest extends DemoBase{
 
@@ -30,8 +35,11 @@ public class TexturedPathTest extends DemoBase{
 	
 	@Override
 	public void draw() {
-
-		blit(new TexturedPath<Color>(CircleFactory.makeCircle(mouse, 20 + wheel * 10),
-				new LinearHorizontalGradient(Colors.red,Colors.green)));
+		double size = Math.abs(20 + wheel * 10);
+		ITexture<Color> tex = new TransformedTexture<Color>(
+				AffineTransformation.id.scale(size),
+				new LinearHorizontalGradient(new Color(255,0,0),new Color(0,255,0)));
+		blit(new TexturedPath<Color>(CircleFactory.makeCircle(mouse, size),
+				tex));
 	}
 }

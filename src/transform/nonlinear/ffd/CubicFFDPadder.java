@@ -1,4 +1,4 @@
-package paths.transform.nonlinear.ffd;
+package transform.nonlinear.ffd;
 
 import java.util.ArrayList;
 import java.util.List;

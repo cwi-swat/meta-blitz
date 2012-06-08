@@ -10,9 +10,7 @@ import java.awt.image.DataBufferByte;
 import demo.DummyAWTSHape;
 
 import paths.paths.paths.Path;
-import paths.transform.AffineTransformation;
-import textures.sample.Image;
-import textures.sample.Sample1;
+import transform.AffineTransformation;
 
 public class RenderPath {
 

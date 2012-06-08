@@ -212,7 +212,7 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 	}
 	
 	public void blit(ITexturedPath<textures.sample.Color> texPath){
-		ToAWT.toAWT(g, texPath);
+		ToAWT.toAWT(g, texPath,(int)size.x,(int)size.y);
 	}
 //	
 //	public void draw(Image<Sample4> img){
@@ -250,6 +250,8 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
         int width = getSize().width-1;
         int height = getSize().height-1;
         size = new Vec(width,height);
+        g.setColor(Color.black);
+//        g.fillRect(0, 0, width+1, height);
    		draw();
    	}
 	

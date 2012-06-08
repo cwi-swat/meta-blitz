@@ -1,7 +1,7 @@
 package demo;
 
 import static paths.paths.factory.PathFactory.createLine;
-import static paths.transform.AffineTransformation.id;
+import static transform.AffineTransformation.id;
 
 import java.util.ArrayList;
 import java.util.Collections;

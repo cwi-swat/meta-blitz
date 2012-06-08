@@ -16,7 +16,7 @@ import paths.points.twod.Vec;
 import sun.java2d.loops.DrawLine;
 import textures.old.generated.ColorsAlpha;
 import static paths.paths.factory.PathFactory.*;
-import static paths.transform.AffineTransformation.*;
+import static transform.AffineTransformation.*;
 
 public class InsideTest extends DemoBase{
 

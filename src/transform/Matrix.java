@@ -1,4 +1,4 @@
-package paths.transform;
+package transform;
 
 import paths.points.twod.Vec;
 

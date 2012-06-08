@@ -10,17 +10,8 @@ import textures.texturedpaths.TexturedPath;
 public class ToAWT {
 
 	
-	public static void toAWT(Graphics2D g, ITexturedPath<Color> c){
-		BufferedImage bi = new BufferedImage(c.getPath().getBBox().getWidthInt(), 
-											c.getPath().getBBox().getHeightInt(),
-											BufferedImage.TYPE_3BYTE_BGR);
-		DataBuffer buf = bi.getRaster().getDataBuffer();
-		Image<Color> img = c.getImage();
-		int size = img.samples.length;
-		for(int i = 0 ; i <  size; i++){
-			int s = (int)(img.samples[i] * 255);
-			buf.setElem(i,s);
-		}
-		g.drawImage(bi, c.getPath().getBBox().getXInt(), c.getPath().getBBox().getYInt(), null);
+	public static void toAWT(Graphics2D g, ITexturedPath<Color> c, int width, int height){
+		c.render(0,0,width,height);
+		g.drawImage(c.getImage(), c.getPath().getBBox().getXInt(), c.getPath().getBBox().getYInt(), null);
 	}
 }

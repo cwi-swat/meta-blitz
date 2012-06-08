@@ -1,6 +1,6 @@
 package demo;
 
-import static paths.transform.AffineTransformation.id;
+import static transform.AffineTransformation.id;
 import demo.awt.DemoBase;
 import paths.paths.factory.CircleFactory;
 import paths.paths.factory.TextFactory;

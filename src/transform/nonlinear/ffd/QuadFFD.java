@@ -1,4 +1,4 @@
-package paths.transform.nonlinear.ffd;
+package transform.nonlinear.ffd;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,9 +12,9 @@ import paths.paths.paths.simple.Line;
 import paths.points.oned.Interval;
 import paths.points.twod.BBox;
 import paths.points.twod.Vec;
-import paths.transform.nonlinear.IDeform;
-import paths.transform.nonlinear.ILineTransformer;
 
+import transform.nonlinear.IDeform;
+import transform.nonlinear.ILineTransformer;
 import util.BinarySearches;
 import util.Tuple;
 

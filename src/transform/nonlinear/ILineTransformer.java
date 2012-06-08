@@ -1,4 +1,4 @@
-package paths.transform.nonlinear;
+package transform.nonlinear;
 
 import paths.paths.paths.Path;
 import paths.paths.paths.simple.Line;

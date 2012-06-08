@@ -21,9 +21,9 @@ import paths.paths.results.transformers.PathIndexTupleTransformer;
 import paths.points.oned.Interval;
 import paths.points.twod.BBox;
 import paths.points.twod.Vec;
-import paths.transform.IToTransform;
-import paths.transform.nonlinear.ILineTransformer;
 
+import transform.IToTransform;
+import transform.nonlinear.ILineTransformer;
 import util.Tuple;
 
 

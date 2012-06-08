@@ -13,8 +13,8 @@ import paths.paths.paths.simple.SimplePathIndex;
 import paths.points.oned.Interval;
 import paths.points.twod.BBox;
 import paths.points.twod.Vec;
-import paths.transform.IToTransform;
 
+import transform.IToTransform;
 import util.Tuple;
 import util.Util;
 
