@@ -37,21 +37,28 @@ public class TexturedPath<Sample extends ISample<Sample>>
 	}
 	
 	public void render(int fromX, int fromY, int width, int height){
-		int relx = fromX - path.getBBox().getXInt();
-		int rely = fromY - path.getBBox().getYInt();
-		int startx = Math.max(relx, 0);
-		int starty = Math.max(rely, 0);
-		int w= Math.min(width, path.getBBox().getWidthInt() - startx);
-		int h = Math.min(height,path.getBBox().getHeightInt() - starty);
+		int x = path.getBBox().getXInt();
+		int y = path.getBBox().getYInt();
+		int xr = x + path.getBBox().getWidthInt();
+		int yd = y + path.getBBox().getHeightInt();
+		fromX = Math.max(x,fromX); fromY = Math.max(y, fromY);
+		int toX = Math.min(xr,fromX + width); int toY = Math.min(yd,fromY + height);
+		int relx = fromX - x; int rely = fromY - y;
+		int relmx =  toX - x; int relmy = toY - y;
 
-		int index = starty * rowSize + startx * sampleSize;
-		int indexAlpha = starty * width + startx;
-		for(int y = starty ; y < h ; y++){
-			for(int x = startx ; x < w ; x++){
-				sample(indexAlpha,x,y).write(imageBuf, index);
+		int indexAlpha = rely * this.width + relx ;
+		int index = indexAlpha * sampleSize;
+		System.out.printf("%d %d %d %d %d\n", relx, relmx, rely, relmy, indexAlpha);
+		int endOfLineDiffAlpha = this.width - relmx + relx;
+		int endOfLineDiff = endOfLineDiffAlpha * sampleSize;
+		for(int iy = rely ; iy < relmy ; iy++){
+			for(int ix = relx ; ix < relmx ;ix++){
+				sample(indexAlpha,ix,iy).write(imageBuf, index);
 				index+=sampleSize;
 				indexAlpha++;
 			}
+			index+=endOfLineDiff;
+			indexAlpha+=endOfLineDiffAlpha;
 		}
 	}
 	

@@ -82,7 +82,22 @@ public class AWTPathIterator implements PathIterator{
 
 	@Override
 	public int currentSegment(double[] coords) {
-		throw new Error("Cur seg with doubles not implemented!");
+		switch(state){
+		case HEAD:
+			coords[0] = start.x;
+			coords[1] = start.y;
+			return PathIterator.SEG_MOVETO;
+		case BODY:
+			float[] coords2 = new float[coords.length];
+			int res =  cur.awtCurSeg(coords2);
+			for(int i = 0 ; i < coords.length; i++){
+				coords[i] = (float)coords2[i];
+			}
+			return res;
+		case TAIL:
+			return PathIterator.SEG_CLOSE;
+		}
+		throw new Error("Unkown state");
 	}
 
 }

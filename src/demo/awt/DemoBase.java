@@ -47,7 +47,7 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 	public String textInput;
 	public String lastLine;
 	public double wheel;
-	Graphics2D g;
+	public Graphics2D g;
 	
 	public DemoBase()  {
         mouse = new Vec(0,0);

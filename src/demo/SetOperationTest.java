@@ -118,15 +118,16 @@ public class SetOperationTest extends DemoBase{
 //		}
 		Path p = null;
 		try{
+			long start = System.currentTimeMillis();
 			p = r.intersectionOp(q);
-
+			System.out.printf("Took %d\n", System.currentTimeMillis() - start);
 		} catch(NotClosedException e){
 
 			draw(e.notClosed, ColorsAlpha.red);
 			System.out.println("Not closed! " + e.notClosed);
 		}
 		if(p != null){
-			draw(p);
+			fill(p);
 		}
 //		System.out.println(wheel);
 		if(bla){
