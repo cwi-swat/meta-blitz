@@ -53,7 +53,7 @@ public class TexturedPath<Sample extends ISample<Sample>>
 		int endOfLineDiff = endOfLineDiffAlpha * sampleSize;
 		for(int iy = rely ; iy < relmy ; iy++){
 			for(int ix = relx ; ix < relmx ;ix++){
-				sample(indexAlpha,ix,iy).write(imageBuf, index);
+				sample(indexAlpha,ix + 0.5,iy + 0.5).write(imageBuf, index);
 				index+=sampleSize;
 				indexAlpha++;
 			}
