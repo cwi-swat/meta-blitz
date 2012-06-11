@@ -2,7 +2,6 @@ package paths.paths.paths.simple;
 
 import paths.paths.paths.PathIndex;
 
-
 public class SimplePathIndex extends PathIndex {
 	public final double t;
 
@@ -11,17 +10,18 @@ public class SimplePathIndex extends PathIndex {
 		this.t = t;
 	}
 
-	public String toString(){
-		return "SimpInd("+t+")";
+	public String toString() {
+		return "SimpInd(" + t + ")";
 	}
 
 	@Override
 	public int compareTo(PathIndex o) {
-		if(o instanceof SimplePathIndex){
-			SimplePathIndex pi = (SimplePathIndex)o;
+		if (o instanceof SimplePathIndex) {
+			SimplePathIndex pi = (SimplePathIndex) o;
 			return Double.compare(t, pi.t);
 		} else {
-			throw new Error("Comparing incomparable pathindexes!" + this + " " + o);
+			throw new Error("Comparing incomparable pathindexes!" + this + " "
+					+ o);
 		}
 	}
 
@@ -35,5 +35,5 @@ public class SimplePathIndex extends PathIndex {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 }

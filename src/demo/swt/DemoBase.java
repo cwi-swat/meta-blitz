@@ -1,41 +1,18 @@
 package nogbeter.demo.swt;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.events.MouseWheelListener;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Layout;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
+import java.awt.Canvas;
+import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseWheelListener;
+import java.awt.event.PaintEvent;
 
-import static nogbeter.paths.factory.PathFactory.createAppends;
-import static nogbeter.paths.factory.PathFactory.createLine;
-
-
-import nogbeter.demo.DummyAWTSHape;
-import nogbeter.paths.Path;
-import nogbeter.paths.PathIndex;
-import nogbeter.paths.factory.PathFactory;
-import nogbeter.paths.iterators.AWTPathIterator;
-import nogbeter.points.twod.Vec;
-
-import bezier.image.generated.ColorsAlpha;
-import bezier.image.generated.SampleInstances.Sample4;
+import paths.paths.factory.PathFactory;
+import paths.paths.paths.PathIndex;
+import paths.points.twod.Vec;
+import sun.misc.GC;
+import textures.old.generated.ColorsAlpha;
+import textures.old.generated.SampleInstances.Sample4;
 
 
 

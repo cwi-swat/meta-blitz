@@ -1,79 +1,77 @@
 package paths.paths.paths;
 
 import static paths.paths.results.transformers.TupleTransformers.unitTup;
-import paths.paths.paths.compound.AppendIndex;
 import paths.paths.paths.simple.SimplePathIndex;
 import paths.paths.results.transformers.IPathIndexTransformer;
 import paths.paths.results.transformers.PITransformers;
 import paths.paths.results.transformers.PathIndexTupleTransformer;
-import paths.points.angles.AngularInterval;
 import paths.points.oned.Interval;
 import paths.points.twod.Vec;
 import transform.IToTransform;
 
-public abstract class SimplyIndexedPath extends SplittablePath<SimplePathIndex>{
+public abstract class SimplyIndexedPath extends SplittablePath {
 
 	public Interval tInterval;
-	
+
 	public SimplyIndexedPath(Interval tInterval) {
-		this.tInterval=tInterval;
+		this.tInterval = tInterval;
 	}
-	
+
 	public abstract Vec getAtSimply(double t);
-	
+
 	public abstract Vec getTangentAtSimply(double t);
-	
+
 	@Override
-	public Vec getAt(SimplePathIndex p){
-		return getAtSimply(p.t);
+	public Vec getAt(PathIndex p) {
+		return getAtSimply(((SimplePathIndex) p).t);
 	}
-	
+
 	@Override
-	public Vec getTangentAt(SimplePathIndex p){
-		return getTangentAtSimply(p.t);
+	public Vec getTangentAt(PathIndex p) {
+		return getTangentAtSimply(((SimplePathIndex) p).t);
 	}
-	
+
 	@Override
-	public IPathIndexTransformer<SimplePathIndex> getLeftTransformer() {
+	public IPathIndexTransformer getLeftTransformer() {
 		return PITransformers.unit;
 	}
 
 	@Override
-	public IPathIndexTransformer<SimplePathIndex> getRightTransformer() {
+	public IPathIndexTransformer getRightTransformer() {
 		return PITransformers.unit;
 	}
-	
+
 	@Override
-	public <B extends PathIndex> PathIndexTupleTransformer<SimplePathIndex, B> getLeftLeftTransformer() {
+	public PathIndexTupleTransformer getLeftLeftTransformer() {
 		return unitTup;
 	}
 
 	@Override
-	public <B extends PathIndex> PathIndexTupleTransformer<SimplePathIndex, B> getLeftRightTransformer() {
+	public PathIndexTupleTransformer getLeftRightTransformer() {
 		return unitTup;
 	}
 
 	@Override
-	public <B extends PathIndex> PathIndexTupleTransformer<B,SimplePathIndex> getRightLeftTransformer() {
+	public PathIndexTupleTransformer getRightLeftTransformer() {
 		return unitTup;
 	}
 
 	@Override
-	public <B extends PathIndex> PathIndexTupleTransformer<B,SimplePathIndex> getRightRightTransformer() {
+	public PathIndexTupleTransformer getRightRightTransformer() {
 		return unitTup;
 	}
-	
+
 	public abstract SimplyIndexedPath transform(IToTransform t);
-	
-	public abstract SimplyIndexedPath getWithAdjustedStartPoint(Vec newStartPoint);
-	
-	@Override
-	public Path getClosedPath(SimplePathIndex p) {
-		return this;
+
+	public abstract SimplyIndexedPath getWithAdjustedStartPoint(
+			Vec newStartPoint);
+
+	public SimplePathIndex minPathIndex() {
+		return new SimplePathIndex(tInterval.low);
 	}
-	
-	public SimplePathIndex minPathIndex(){ return new SimplePathIndex(tInterval.low); }
-	public SimplePathIndex maxPathIndex(){ return new SimplePathIndex(tInterval.high); }
-	
-	
+
+	public SimplePathIndex maxPathIndex() {
+		return new SimplePathIndex(tInterval.high);
+	}
+
 }

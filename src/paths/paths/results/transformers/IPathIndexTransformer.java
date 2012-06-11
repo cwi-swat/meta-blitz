@@ -2,9 +2,9 @@ package paths.paths.results.transformers;
 
 import paths.paths.paths.PathIndex;
 
-public interface IPathIndexTransformer<PI extends PathIndex> {
+public interface IPathIndexTransformer {
 	
-	PI transform(PathIndex p);
+	PathIndex transform(PathIndex p);
 	boolean doesNothing();
 
 }

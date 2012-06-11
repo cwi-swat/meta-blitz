@@ -1,14 +1,11 @@
 package paths.paths.paths.compound;
 
 import paths.paths.paths.PathIndex;
-import paths.paths.paths.simple.SimplePathIndex;
-
 
 public abstract class SplitIndex extends PathIndex {
-	
-	
-	public static enum SplitChoice implements Comparable<SplitChoice>{
-		Left,Right;
+
+	public static enum SplitChoice implements Comparable<SplitChoice> {
+		Left, Right;
 	}
 
 	public final SplitChoice choice;
@@ -17,23 +14,25 @@ public abstract class SplitIndex extends PathIndex {
 		super(next);
 		this.choice = choice;
 	}
-	
-	public String toString(){
-		return "Split("+choice+")" + (next == null? "" : "," + next.toString());
+
+	public String toString() {
+		return "Split(" + choice + ")"
+				+ (next == null ? "" : "," + next.toString());
 	}
-	
+
 	@Override
 	public int compareTo(PathIndex o) {
-		if(o instanceof SplitIndex){
-			SplitIndex pi = (SplitIndex)o;
+		if (o instanceof SplitIndex) {
+			SplitIndex pi = (SplitIndex) o;
 			int cmp = this.choice.compareTo(pi.choice);
-			if(cmp == 0){
+			if (cmp == 0) {
 				return this.next.compareTo(o.next);
 			} else {
 				return cmp;
 			}
 		} else {
-			throw new Error("Comparing incomparable pathindexes!" + this + " " + o);
+			throw new Error("Comparing incomparable pathindexes!" + this + " "
+					+ o);
 		}
 	}
 
@@ -41,6 +40,5 @@ public abstract class SplitIndex extends PathIndex {
 	public double getSimple() {
 		return next.getSimple();
 	}
-	
 
 }

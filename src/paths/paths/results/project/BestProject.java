@@ -8,19 +8,19 @@ import paths.paths.results.transformers.PathIndexTupleTransformer;
 
 
 
-public class BestProject<A extends PathIndex>{
+public class BestProject{
 
 	public static final BestProject noBestYet = new BestProject();
 	
 	public final double distSquared;
-	public final A t;
+	public final PathIndex t;
 	
 	public BestProject(){
 		this.distSquared = Double.POSITIVE_INFINITY;
 		this.t = null;
 	}
 	
-	public BestProject(double distSquared, A t) {
+	public BestProject(double distSquared, PathIndex t) {
 		this.distSquared = distSquared;
 		this.t = t;
 	}
@@ -30,7 +30,7 @@ public class BestProject<A extends PathIndex>{
 		this.t = null;
 	}
 
-	public BestProject<A> choose(BestProject<A> rhs){
+	public BestProject choose(BestProject rhs){
 		if(distSquared == rhs.distSquared){
 			if(t != null) {
 				return this;
@@ -45,12 +45,12 @@ public class BestProject<A extends PathIndex>{
 		}
 	}
 	
-	public<LPI extends PathIndex>
-	BestProject<LPI> transform(IPathIndexTransformer<LPI> trans){
+	public
+	BestProject transform(IPathIndexTransformer trans){
 		if(trans.doesNothing() || t == null){
-			return (BestProject<LPI>)this;
+			return this;
 		} else {
-			return new BestProject<LPI>(distSquared, trans.transform(t));
+			return new BestProject(distSquared, trans.transform(t));
 		}
 	}
 	

@@ -1,37 +1,14 @@
 package demo;
 
 import static transform.AffineTransformation.id;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-
-import demo.awt.DemoBase;
-
-import paths.crossing.Crossing;
-import paths.crossing.IntersectionsToCrossings;
 import paths.paths.factory.TextFactory;
-import paths.paths.iterators.ClosedPathIterator;
-import paths.paths.iterators.PathIterator;
-import paths.paths.iterators.ShapeIterator;
 import paths.paths.paths.Path;
-import paths.paths.paths.PathIndex;
 import paths.paths.paths.compound.Append;
-import paths.paths.paths.compound.ClosedPath;
 import paths.paths.paths.compound.ClosedPathIndex;
-import paths.paths.paths.compound.NotClosedException;
-import paths.paths.results.intersections.IIntersections;
-import paths.paths.results.intersections.Intersection;
-import paths.paths.results.project.BestProject;
-import paths.points.angles.AngularInterval;
-import paths.points.angles.AngularIntervalFactory;
 import paths.points.twod.BBox;
 import paths.points.twod.Vec;
-
 import textures.old.generated.ColorsAlpha;
-import textures.old.generated.SampleInstances.Sample4;
+import demo.awt.DemoBase;
 
 public class SetOperationTest extends DemoBase{
 	public static void main(String[] argv){

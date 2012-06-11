@@ -1,37 +1,32 @@
 package paths.paths.iterators;
 
-
-
-
 import java.awt.geom.PathIterator;
 
 import paths.paths.paths.Path;
 import paths.paths.paths.simple.SimplePath;
 import paths.points.twod.Vec;
 
+public class AWTPathIterator implements PathIterator {
 
-public class AWTPathIterator implements PathIterator{
-
-	static enum State{
-		HEAD,
-		BODY,
-		TAIL,
+	static enum State {
+		HEAD, BODY, TAIL,
 	}
-	
+
 	State state;
-	
+	final int x, y;
 	final ClosedPathIterator closed;
 	Vec start;
 	SimplePathIterator curSimple;
 	SimplePath cur;
-	
-	public AWTPathIterator(Path root){
+
+	public AWTPathIterator(Path root, int x, int y) {
 		closed = new ClosedPathIterator(root);
 		cur = null;
-		state =  State.TAIL;
+		state = State.TAIL;
+		this.x = x;
+		this.y = y;
 	}
-	
-	
+
 	@Override
 	public int getWindingRule() {
 		return PathIterator.WIND_EVEN_ODD;
@@ -44,21 +39,22 @@ public class AWTPathIterator implements PathIterator{
 
 	@Override
 	public void next() {
-		switch(state){
-		case HEAD : state = State.BODY; 
+		switch (state) {
+		case HEAD:
+			state = State.BODY;
 			cur = curSimple.next();
 			break;
 		case BODY:
-			if(curSimple.hasNext()){
+			if (curSimple.hasNext()) {
 				cur = curSimple.next();
 			} else {
 				state = State.TAIL;
 			}
 			break;
-		case TAIL : 
-			state = State.HEAD; 
+		case TAIL:
+			state = State.HEAD;
 			Path close = closed.next();
-			start = close.getStartPoint();
+			start = close.getAt(close.minPathIndex());
 			curSimple = new SimplePathIterator(close);
 			cur = null;
 			break;
@@ -67,13 +63,13 @@ public class AWTPathIterator implements PathIterator{
 
 	@Override
 	public int currentSegment(float[] coords) {
-		switch(state){
+		switch (state) {
 		case HEAD:
-			coords[0] = (float)start.x;
-			coords[1] = (float)start.y;
+			coords[0] = (float) start.x - x;
+			coords[1] = (float) start.y - y;
 			return PathIterator.SEG_MOVETO;
 		case BODY:
-			return cur.awtCurSeg(coords);
+			return cur.awtCurSeg(coords, x, y);
 		case TAIL:
 			return PathIterator.SEG_CLOSE;
 		}
@@ -82,16 +78,16 @@ public class AWTPathIterator implements PathIterator{
 
 	@Override
 	public int currentSegment(double[] coords) {
-		switch(state){
+		switch (state) {
 		case HEAD:
-			coords[0] = start.x;
-			coords[1] = start.y;
+			coords[0] = start.x - x;
+			coords[1] = start.y - y;
 			return PathIterator.SEG_MOVETO;
 		case BODY:
 			float[] coords2 = new float[coords.length];
-			int res =  cur.awtCurSeg(coords2);
-			for(int i = 0 ; i < coords.length; i++){
-				coords[i] = (float)coords2[i];
+			int res = cur.awtCurSeg(coords2, x, y);
+			for (int i = 0; i < coords.length; i++) {
+				coords[i] = (float) coords2[i];
 			}
 			return res;
 		case TAIL:

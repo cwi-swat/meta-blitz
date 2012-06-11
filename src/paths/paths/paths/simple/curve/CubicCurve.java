@@ -173,20 +173,20 @@ public class CubicCurve extends Curve{
 	public
 	BBox makeBBox() {
 		if(isMonotomous()){
-			return BBox.fromPoints(p0,p3);
+			return BBox.from2Points(p0,p3);
 		}
 		return BBox.from4Points(p0,p1,p2,p3);
 	}
 
 
 	@Override
-	public int awtCurSeg(float[] coords) {
-		coords[0] = (float)p1.x;
-		coords[1] = (float)p1.y;
-		coords[2] = (float)p2.x;
-		coords[3] = (float)p2.y;
-		coords[4] = (float)p3.x;
-		coords[5] = (float)p3.y;
+	public int awtCurSeg(float[] coords,int x, int y) {
+		coords[0] = (float)p1.x - x;
+		coords[1] = (float)p1.y - y;
+		coords[2] = (float)p2.x - x;
+		coords[3] = (float)p2.y - y;
+		coords[4] = (float)p3.x- x;
+		coords[5] = (float)p3.y - y;
 		return PathIterator.SEG_CUBICTO;
 	}
 
@@ -201,12 +201,6 @@ public class CubicCurve extends Curve{
 			SimplePath rsimp, Interval interval) {
 		return new CubicCurve(p0, p1, p2, p3, interval, lsimp, rsimp);
 	}
-
-	@Override
-	public Path<PathIndex> reverse() {
-		return (Path)PathFactory.createCubic(p3, p2, p1, p0);
-	}
-
 
 	@Override
 	public

@@ -1,16 +1,12 @@
 package demo;
 
 import static transform.AffineTransformation.id;
-import demo.awt.DemoBase;
 import paths.paths.factory.PathFactory;
 import paths.paths.factory.TextFactory;
 import paths.paths.paths.Path;
-import paths.paths.paths.PathIndex;
-import paths.paths.paths.compound.NotClosedException;
-import paths.paths.paths.simple.Line;
 import paths.paths.paths.simple.curve.QuadCurve;
-import paths.paths.results.project.BestProject;
 import paths.points.twod.Vec;
+import demo.awt.DemoBase;
 
 
 public class PathDeform extends DemoBase{

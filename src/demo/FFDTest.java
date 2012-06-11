@@ -5,16 +5,12 @@ import static transform.AffineTransformation.id;
 import java.util.ArrayList;
 import java.util.List;
 
-import demo.awt.DemoBase;
-
 import paths.paths.factory.TextFactory;
-import paths.paths.iterators.ConnectedIterator;
 import paths.paths.paths.Path;
 import paths.points.twod.Vec;
 import transform.nonlinear.IDeform;
 import transform.nonlinear.ffd.CubicFFD;
-import transform.nonlinear.ffd.QuadFFD;
-import transform.nonlinear.ffd.instances.Fisheye;
+import demo.awt.DemoBase;
 
 
 public class FFDTest extends DemoBase{

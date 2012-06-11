@@ -7,13 +7,12 @@ import paths.paths.results.transformers.IPathIndexTransformer;
 import paths.paths.results.transformers.PathIndexTupleTransformer;
 
 
-public interface IIntersections<LI extends PathIndex,RI extends PathIndex> extends Iterable<Intersection<LI,RI>> {
+public interface IIntersections extends Iterable<Intersection> {
 	
-	IIntersections<LI,RI> appendFlipped(FlippedIntersections<LI,RI> lhs);
-	IIntersections<LI,RI> appendNorm(Intersections<LI,RI> lhs);
-	IIntersections<LI,RI> append(IIntersections<LI,RI> r);
-	Iterator<Intersection<LI,RI>> iterator();
-	<LPI extends PathIndex,RPI extends PathIndex> 
-		IIntersections<LPI,RPI> transform(PathIndexTupleTransformer<LPI,RPI> trans);
-	IIntersections<RI,LI> flip();
+	IIntersections appendFlipped(FlippedIntersections lhs);
+	IIntersections appendNorm(Intersections lhs);
+	IIntersections append(IIntersections r);
+	Iterator<Intersection> iterator();
+	IIntersections transform(PathIndexTupleTransformer trans);
+	IIntersections flip();
 }

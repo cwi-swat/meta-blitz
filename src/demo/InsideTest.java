@@ -1,22 +1,12 @@
 package demo;
 
-import demo.awt.DemoBase;
-import paths.paths.factory.PathFactory;
+import static transform.AffineTransformation.id;
 import paths.paths.factory.TextFactory;
 import paths.paths.paths.Path;
 import paths.paths.paths.PathIndex;
-import paths.paths.paths.compound.ClosedPath;
-import paths.paths.paths.compound.NotClosedException;
-import paths.paths.results.intersections.IIntersections;
-import paths.paths.results.intersections.Intersection;
-import paths.paths.results.intersections.Intersections;
 import paths.paths.results.project.BestProject;
-import paths.paths.results.project.BestProjectTup;
-import paths.points.twod.Vec;
-import sun.java2d.loops.DrawLine;
 import textures.old.generated.ColorsAlpha;
-import static paths.paths.factory.PathFactory.*;
-import static transform.AffineTransformation.*;
+import demo.awt.DemoBase;
 
 public class InsideTest extends DemoBase{
 

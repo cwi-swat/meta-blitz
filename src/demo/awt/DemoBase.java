@@ -1,6 +1,5 @@
 package demo.awt;
 
-import static paths.paths.factory.PathFactory.createAppends;
 import static paths.paths.factory.PathFactory.createLine;
 
 import java.awt.Color;
@@ -16,25 +15,19 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
-import demo.DummyAWTSHape;
-
 import paths.paths.factory.PathFactory;
-import paths.paths.iterators.AWTPathIterator;
 import paths.paths.paths.Path;
-import paths.paths.paths.PathIndex;
-import paths.paths.paths.compound.ClosedPath;
-import paths.paths.paths.compound.NotClosedException;
+import paths.points.twod.BBox;
 import paths.points.twod.Vec;
-
 import textures.interfaces.ITexturedPath;
 import textures.old.generated.ColorsAlpha;
 import textures.old.generated.SampleInstances.Sample4;
-import textures.sample.ToAWT;
+import textures.sample.LocatedBufferedImage;
+import demo.DummyAWTSHape;
 
 
 
@@ -212,7 +205,9 @@ public abstract class DemoBase  extends JComponent implements KeyListener,MouseW
 	}
 	
 	public void blit(ITexturedPath<textures.sample.Color> texPath){
-		ToAWT.toAWT(g, texPath,(int)size.x,(int)size.y);
+		BBox b = new BBox(0,0,size.x,size.y);
+		LocatedBufferedImage img = texPath.render(b);
+		g.drawImage(img.img, null, img.x, img.y);
 	}
 //	
 //	public void draw(Image<Sample4> img){

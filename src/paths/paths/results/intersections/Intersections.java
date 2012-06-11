@@ -11,30 +11,30 @@ import util.Tuple;
 
 
 
-public class Intersections<LI extends PathIndex,RI extends PathIndex> implements IIntersections<LI, RI>, Iterable<Intersection<LI,RI>> {
+public class Intersections implements IIntersections, Iterable<Intersection> {
 	
 	public static final Intersections NoIntersections = new Intersections((Intersection)null, null);
 	
-	private final Intersection<LI,RI> first;
-	private final Intersection<LI,RI> last;
+	private final Intersection first;
+	private final Intersection last;
 	
-	public Intersections(LI l, RI r,Vec locl, Vec locr, Vec tanl, Vec tanr, IntersectionType typel, IntersectionType typer){
-		this.first = new Intersection<LI, RI>(l,r,locl, locr, tanl, tanr, typel, typer);
+	public Intersections(PathIndex l, PathIndex r,Vec locl, Vec locr, Vec tanl, Vec tanr, IntersectionType typel, IntersectionType typer){
+		this.first = new Intersection(l,r,locl, locr, tanl, tanr, typel, typer);
 		this.last = first;
 	}
 	
-	public Intersections(Intersection<LI, RI> first, Intersection<LI, RI> last) {
+	public Intersections(Intersection first, Intersection last) {
 		this.first = first;
 		this.last = last;
 	}
 	
-	public Iterator<Intersection<LI,RI>> iterator(){
-		return new IntersectionsIterator<LI,RI>(first);
+	public Iterator<Intersection> iterator(){
+		return new IntersectionsIterator(first);
 	}
 	
 	
 	@Override
-	public IIntersections<LI, RI> appendNorm(Intersections<LI, RI> lhs) {
+	public IIntersections appendNorm(Intersections lhs) {
 		if(lhs.first == null){
 			return this;
 		}
@@ -42,30 +42,30 @@ public class Intersections<LI extends PathIndex,RI extends PathIndex> implements
 			return lhs;
 		}
 		lhs.last.next = first;
-		return new Intersections<LI, RI>(lhs.first, last);
+		return new Intersections(lhs.first, last);
 	}
 	
 	@Override
-	public IIntersections<LI, RI> appendFlipped(FlippedIntersections<LI, RI> lhs) {
+	public IIntersections appendFlipped(FlippedIntersections lhs) {
 		return appendNorm(lhs.normalise());
 	}
 	
 	@Override
-	public IIntersections<RI, LI> flip() {
+	public IIntersections flip() {
 		if(first == null){
-			return (IIntersections<RI, LI>)(this);
+			return (this);
 		} else {
-			return new FlippedIntersections<RI, LI>(this);
+			return new FlippedIntersections(this);
 		}
 	}
 	
 	
-	private static class IntersectionsIterator<LI extends PathIndex,RI extends PathIndex> 
-		implements Iterator<Intersection<LI,RI>>{
+	private static class IntersectionsIterator
+		implements Iterator<Intersection>{
 
-		Intersection<LI,RI> cur;
+		Intersection cur;
 		
-		IntersectionsIterator(Intersection<LI,RI> first){
+		IntersectionsIterator(Intersection first){
 			cur = first;
 		}
 		@Override
@@ -74,8 +74,8 @@ public class Intersections<LI extends PathIndex,RI extends PathIndex> implements
 		}
 
 		@Override
-		public Intersection<LI,RI> next() {
-			Intersection<LI,RI> res = cur;
+		public Intersection next() {
+			Intersection res = cur;
 			cur = cur.next;
 			return res;
 		}
@@ -89,26 +89,26 @@ public class Intersections<LI extends PathIndex,RI extends PathIndex> implements
 
 
 	@Override
-	public <LPI extends PathIndex, RPI extends PathIndex> IIntersections<LPI, RPI> transform(
-			PathIndexTupleTransformer<LPI, RPI> trans) {
+	public IIntersections transform(
+			PathIndexTupleTransformer trans) {
 		if(trans.doesNothing || first == null){
-			return (IIntersections<LPI, RPI>)this;
+			return this;
 		} else {
-			Intersection <LPI,RPI> firstNew = first.transform(trans);
-			Intersection <LPI,RPI> prev = firstNew;
-			Intersection<LI,RI> cur = first.next;
+			Intersection firstNew = first.transform(trans);
+			Intersection prev = firstNew;
+			Intersection cur = first.next;
 			while(cur != null){
-				Intersection <LPI,RPI> curn = cur.transform(trans);
+				Intersection curn = cur.transform(trans);
 				prev.next = curn;
 				prev = curn;
 				cur = cur.next;
 			}
-			return new Intersections<LPI, RPI>(firstNew,prev);
+			return new Intersections(firstNew,prev);
 		}
 	}
 
 	@Override
-	public IIntersections<LI, RI> append(IIntersections<LI, RI> r) {
+	public IIntersections append(IIntersections r) {
 		return r.appendNorm(this);
 	}
 }

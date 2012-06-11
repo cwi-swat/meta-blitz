@@ -15,8 +15,8 @@ public class DummyAWTSHape implements Shape{
 
 	private final PathIterator it;
 	
-	public DummyAWTSHape(Path p ) {
-		this.it = new AWTPathIterator(p);
+	public DummyAWTSHape(Path p, int x, int y ) {
+		this.it = new AWTPathIterator(p, x, y);
 	}
 	
 	@Override

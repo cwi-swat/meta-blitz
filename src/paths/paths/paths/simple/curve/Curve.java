@@ -117,56 +117,46 @@ public abstract class Curve extends SimplePath {
 	}
 
 	@Override
-	public <RPP extends PathIndex> 
-		IIntersections<SimplePathIndex, RPP> intersection(
-			Path<RPP> other) {
+	public 
+		IIntersections intersection(
+			Path other) {
 		return other.intersectionLCurve(this);
 	}
 
 	@Override
-	public IIntersections<SimplePathIndex, SimplePathIndex> intersectionLLine(
+	public IIntersections intersectionLLine(
 			Line lhs) {
 		return super.intersectionLLine(lhs);
 	}
 	
-	@Override
-	public <LPP extends PathIndex> 
-		IIntersections<LPP, SimplePathIndex> intersectionLSplittable(
-			SplittablePath<LPP> lhs) {
-		if(isMonotomous() && lhs == this){
-			return (IIntersections<LPP, SimplePathIndex>) selfIntersection();
-		} else {
-			return super.intersectionLSplittable(lhs);
-		}
-	}
 	
 	@Override
-	public IIntersections<SetIndex, SimplePathIndex> intersectionLSet(
+	public IIntersections intersectionLSet(
 			ShapeSet lhs) {
 		return lhs.intersectionLCurve(this).flip();
 	}
 
 	@Override
-	public <RPP extends PathIndex>  
-		BestProjectTup<SimplePathIndex, RPP> project(
-			double best, Path<RPP> other) {
+	public 
+		BestProjectTup project(
+			double best, Path other) {
 		return other.projectLCurve(best, this);
 	}
 
 	@Override
-	public BestProjectTup<SetIndex, SimplePathIndex> projectLSet(double best,
+	public BestProjectTup projectLSet(double best,
 			ShapeSet lhs) {
 		return lhs.projectLCurve(best, this).flip();
 	}
 	
 	@Override
-	public Tuple<Path<SimplePathIndex>, Double> normaliseToLength(
+	public Tuple<Path, Double> normaliseToLength(
 			double prevLength) {
 		Tuple<SimplePath,SimplePath> sp = splitSimplerCurve();
-		Tuple<Path<SimplePathIndex>, Double> l = sp.l.normaliseToLength(prevLength);
-		Tuple<Path<SimplePathIndex>, Double> r = sp.r.normaliseToLength(l.r);
-		return new Tuple<Path<SimplePathIndex>, Double>(
-			(Path<SimplePathIndex>)getWithNewSimpleAndInterval(
+		Tuple<Path, Double> l = sp.l.normaliseToLength(prevLength);
+		Tuple<Path, Double> r = sp.r.normaliseToLength(l.r);
+		return new Tuple<Path, Double>(
+			getWithNewSimpleAndInterval(
 					(SimplePath)l.l, (SimplePath)r.l, new Interval(prevLength,r.r)),
 			r.r);
 	}
@@ -174,33 +164,6 @@ public abstract class Curve extends SimplePath {
 	abstract Curve getWithNewSimpleAndInterval(
 			SimplePath l, SimplePath l2, Interval interval) ;
 	
-
-	@Override
-	public void getSubPath(SimplePathIndex from, SimplePathIndex to, List<Path> result) {
-		Tuple<Curve,Curve> sl = split(from.t);
-		double splitRight = (to.t - from.t) / (1.0 - from.t);
-		Tuple<Curve,Curve> sr = sl.r.split(splitRight);
-		if(!sr.l.getStartPoint().isEqError(sr.l.getEndPoint())){
-			result.add(sr.l);
-		}
-	}
-	
-	@Override
-	public void getSubPathFrom(SimplePathIndex from, List<Path> result) {
-		Tuple<Curve,Curve> sl = split(from.t);
-		if(!sl.r.getStartPoint().isEqError(sl.r.getEndPoint())){
-			result.add(sl.r);
-		}
-	}
-
-	@Override
-	public void getSubPathTo(SimplePathIndex to, List<Path> result) {
-		Tuple<Curve,Curve> sl = split(to.t);
-		if(!sl.l.getStartPoint().isEqError(sl.l.getEndPoint())){
-			result.add(sl.l);
-		}
-		
-	}
 	
 	@Override
 	public Path deformActual(IDeform p) {

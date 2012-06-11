@@ -2,7 +2,7 @@ package paths.paths.paths.compound;
 
 import paths.paths.paths.PathIndex;
 
-public class ClosedPathIndex extends PathIndex{
+public class ClosedPathIndex extends PathIndex {
 
 	public ClosedPathIndex(PathIndex next) {
 		super(next);
@@ -10,8 +10,7 @@ public class ClosedPathIndex extends PathIndex{
 
 	@Override
 	public int compareTo(PathIndex o) {
-		if(o instanceof ClosedPathIndex){
-			ClosedPathIndex pi = (ClosedPathIndex)o;
+		if (o instanceof ClosedPathIndex) {
 			return this.next.compareTo(o.next);
 		} else {
 			throw new Error("Comparing incomparable pathindexes!");
@@ -22,8 +21,8 @@ public class ClosedPathIndex extends PathIndex{
 	public double getSimple() {
 		return next.getSimple();
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		return "Closed(" + next.toString() + ")";
 	}
 

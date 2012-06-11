@@ -5,14 +5,12 @@ import static transform.AffineTransformation.id;
 import java.util.ArrayList;
 import java.util.List;
 
-import demo.awt.DemoBase;
-
 import paths.paths.factory.PathFactory;
 import paths.paths.factory.TextFactory;
 import paths.paths.iterators.ConnectedIterator;
 import paths.paths.paths.Path;
-import paths.paths.paths.simple.curve.QuadCurve;
 import paths.points.twod.Vec;
+import demo.awt.DemoBase;
 
 
 public class PathDeform2 extends DemoBase{

@@ -135,17 +135,17 @@ public class QuadCurve extends Curve{
 	public
 	BBox makeBBox() {
 		if(isMonotomous()){
-			return BBox.fromPoints(p0,p2);
+			return BBox.from2Points(p0,p2);
 		}
-		return BBox.fromPoints(p0,p1,p2);
+		return BBox.from3Points(p0,p1,p2);
 	}
 
 	@Override
-	public int awtCurSeg(float[] coords) {
-		coords[0] = (float)p1.x;
-		coords[1] = (float)p1.y;
-		coords[2] = (float)p2.x;
-		coords[3] = (float)p2.y;
+	public int awtCurSeg(float[] coords, int x, int y) {
+		coords[0] = (float)p1.x - x;
+		coords[1] = (float)p1.y - y;
+		coords[2] = (float)p2.x - x;
+		coords[3] = (float)p2.y - y;
 		return PathIterator.SEG_QUADTO;
 	}
 
@@ -163,10 +163,6 @@ public class QuadCurve extends Curve{
 		return new QuadCurve(p0, p1, p2,  interval, lsimp, rsimp);
 	}
 
-	@Override
-	public Path<PathIndex> reverse() {
-		return (Path)PathFactory.createQuad(p2, p1, p0);
-	}
 	
 	double findFast(double x0,double x1, double x2, double x){
 		double a= x2 -2*x1 + x0;

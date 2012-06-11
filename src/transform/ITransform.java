@@ -1,5 +1,5 @@
 package transform;
 
-public interface ITransform extends IToTransform, IBackTransform{
+public interface ITransform extends IToTransform, IBackTransform {
 
 }

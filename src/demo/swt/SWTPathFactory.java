@@ -2,10 +2,7 @@ package nogbeter.demo.swt;
 
 import java.awt.geom.PathIterator;
 
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.Path;
-
-import nogbeter.paths.iterators.AWTPathIterator;
+import paths.paths.iterators.AWTPathIterator;
 
 public class SWTPathFactory {
 

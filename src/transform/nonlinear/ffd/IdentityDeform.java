@@ -4,7 +4,7 @@ import paths.paths.paths.Path;
 import paths.points.twod.BBox;
 import transform.nonlinear.IDeform;
 
-public class IdentityDeform implements IDeform{
+public class IdentityDeform implements IDeform {
 
 	public static IDeform instance = new IdentityDeform();
 
