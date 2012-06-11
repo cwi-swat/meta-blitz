@@ -18,13 +18,7 @@ public class TexturedPathTest extends SuperDemoBase{
 	public static void main(String[] argv){
 		new TexturedPathTest();
 	}
-	
-	private Path r;
-	
-	public TexturedPathTest() {
-		r = TextFactory.text2Paths("wso").transform(id.scale(5).translate(400, 400));
-	}
-	
+
 	@Override
 	public void draw() {
 		double size = Math.abs(20 + wheel * 10);
