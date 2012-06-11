@@ -1,7 +1,5 @@
 package transform.nonlinear.ffd.instances;
 
-import paths.points.twod.Vec;
-import transform.nonlinear.ffd.CubicFFD;
 
 public class Wave {
 

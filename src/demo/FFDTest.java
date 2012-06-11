@@ -10,7 +10,6 @@ import paths.paths.paths.Path;
 import paths.points.twod.Vec;
 import transform.nonlinear.IDeform;
 import transform.nonlinear.ffd.CubicFFD;
-import demo.awt.DemoBase;
 
 
 public class FFDTest extends DemoBase{

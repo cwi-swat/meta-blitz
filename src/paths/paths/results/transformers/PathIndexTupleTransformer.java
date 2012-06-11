@@ -1,7 +1,5 @@
 package paths.paths.results.transformers;
 
-import paths.paths.paths.PathIndex;
-import paths.paths.results.transformers.PITransformers;
 public class PathIndexTupleTransformer{
 
 	

@@ -1,9 +1,7 @@
 package paths.paths.results.project;
 
 import paths.paths.paths.PathIndex;
-import paths.paths.results.intersections.Intersection;
 import paths.paths.results.transformers.PathIndexTupleTransformer;
-import util.Tuple;
 
 public class BestProjectTup{
 	

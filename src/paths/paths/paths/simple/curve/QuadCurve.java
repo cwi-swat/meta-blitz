@@ -6,14 +6,10 @@ import java.util.List;
 
 import paths.Constants;
 import paths.paths.factory.PathFactory;
-import paths.paths.paths.Path;
-import paths.paths.paths.PathIndex;
 import paths.paths.paths.simple.SimplePath;
-import paths.paths.paths.simple.SimplePathIndex;
 import paths.points.oned.Interval;
 import paths.points.twod.BBox;
 import paths.points.twod.Vec;
-
 import transform.IToTransform;
 import util.Tuple;
 import util.Util;

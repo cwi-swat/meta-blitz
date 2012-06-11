@@ -3,9 +3,7 @@ package demo;
 import static transform.AffineTransformation.id;
 import paths.paths.factory.TextFactory;
 import paths.paths.paths.Path;
-import paths.paths.paths.PathIndex;
 import paths.paths.results.project.BestProjectTup;
-import demo.awt.DemoBase;
 
 public class ProjectPaths extends DemoBase{
 
@@ -25,10 +23,10 @@ public class ProjectPaths extends DemoBase{
 		public void draw() {
 
 //			Path r = rectangle();
-			Path q = TextFactory.text2Paths("uvc").transform(id.translate(-150,-150).translate(mouse));
+			Path q = TextFactory.text2Paths("uvc").transform(id.translate(mouse));
 			draw(r);
 			draw(q);
-			BestProjectTup<PathIndex,PathIndex> best = q.project(r);
+			BestProjectTup best = q.project(r);
 //			System.out.println(best);
 //			System.out.println(r.getAt(best.t));
 			drawLine(q.getAt(best.l), r.getAt(best.r));

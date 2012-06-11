@@ -3,7 +3,6 @@ package textures.old.functions;
 import textures.old.Image;
 import textures.old.PixelArea;
 import textures.old.Sample;
-import textures.old.generated.SampleInstances.Sample1;
 import textures.old.generated.SampleInstances.Sample2;
 
 public class Lerp2D<A extends Sample<A>> implements Image<A>{

@@ -6,7 +6,6 @@ import paths.paths.factory.TextFactory;
 import paths.paths.paths.Path;
 import paths.paths.paths.simple.curve.QuadCurve;
 import paths.points.twod.Vec;
-import demo.awt.DemoBase;
 
 
 public class PathDeform extends DemoBase{

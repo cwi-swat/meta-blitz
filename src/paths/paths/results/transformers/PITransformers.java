@@ -5,7 +5,6 @@ import paths.paths.paths.compound.AppendIndex;
 import paths.paths.paths.compound.ClosedPathIndex;
 import paths.paths.paths.compound.SetIndex;
 import paths.paths.paths.compound.SplitIndex;
-import paths.paths.paths.simple.SimplePathIndex;
 
 public class PITransformers{
 
@@ -74,6 +73,9 @@ public class PITransformers{
 			this.max = max;
 		}
 		public ClosedPathIndex transform(PathIndex p){
+			if(p == null){
+				return null;
+			}
 			if(p.isEq(max)){
 				p = min;
 			}

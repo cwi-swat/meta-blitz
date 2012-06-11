@@ -10,7 +10,6 @@ import paths.paths.factory.TextFactory;
 import paths.paths.iterators.ConnectedIterator;
 import paths.paths.paths.Path;
 import paths.points.twod.Vec;
-import demo.awt.DemoBase;
 
 
 public class PathDeform2 extends DemoBase{

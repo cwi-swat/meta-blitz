@@ -19,6 +19,10 @@ public class DummyAWTSHape implements Shape{
 		this.it = new AWTPathIterator(p, x, y);
 	}
 	
+	public DummyAWTSHape(Path p) {
+		this(p,0,0);
+	}
+
 	@Override
 	public Rectangle getBounds() {
 		throw new Error("NYI");

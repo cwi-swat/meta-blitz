@@ -8,7 +8,6 @@ import textures.examples.LinearHorizontalGradient;
 import textures.sample.Color;
 import textures.texturedpaths.TexturedPath;
 import transform.AffineTransformation;
-import demo.awt.DemoBase;
 
 public class TexturedPathTest extends DemoBase{
 

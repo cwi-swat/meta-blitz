@@ -3,12 +3,10 @@ package demo;
 import static transform.AffineTransformation.id;
 import paths.paths.factory.TextFactory;
 import paths.paths.paths.Path;
-import paths.paths.paths.PathIndex;
 import paths.paths.results.intersections.IIntersections;
 import paths.paths.results.intersections.Intersection;
 import paths.points.twod.Vec;
 import textures.old.generated.ColorsAlpha;
-import demo.awt.DemoBase;
 public class IntersectionTest extends DemoBase {
 
 	public static void main(String[] argv){
@@ -17,7 +15,7 @@ public class IntersectionTest extends DemoBase {
 
 
 
-	private Path<PathIndex> r;
+	private Path r;
 	
 	public IntersectionTest() {
 		r = // rectangle().transform(id.scale(200).translate(400,400));
@@ -27,14 +25,12 @@ public class IntersectionTest extends DemoBase {
 	@Override
 	public void draw() {
 		mouse = new Vec(0,500);
-		Path<PathIndex> q = TextFactory.text2Paths("nm").transform(id.scale(10).translate(mouse));
+		Path q = TextFactory.text2Paths("nm").transform(id.scale(10).translate(mouse));
 //		Path<PathIndex> q = rectangle().transform(id.scale(200).translate(mouse.add(mouse)));
-		long first = System.currentTimeMillis();
 		fill(r);
 		fill(q);
-		System.out.println(System.currentTimeMillis() - first);
-		IIntersections<PathIndex,PathIndex> ints = r.intersection(q);
-		for(Intersection<PathIndex, PathIndex> i : ints){
+		IIntersections ints = r.intersection(q);
+		for(Intersection i : ints){
 //			fillOval(i.loc, 5,ColorsAlpha.green);
 			drawLine(i.locl, i.locl.add(i.tanl.normalize().mul(75)),ColorsAlpha.red);
 //			drawLine(i.loc, i.loc.add(i.tanr.normalize().mul(75)),ColorsAlpha.green);

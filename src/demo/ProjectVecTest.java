@@ -3,9 +3,7 @@ package demo;
 import static transform.AffineTransformation.id;
 import paths.paths.factory.TextFactory;
 import paths.paths.paths.Path;
-import paths.paths.paths.PathIndex;
 import paths.paths.results.project.BestProject;
-import demo.awt.DemoBase;
 
 public class ProjectVecTest extends DemoBase{
 
@@ -27,7 +25,7 @@ public class ProjectVecTest extends DemoBase{
 //			Path r = rectangle();
 //			Path q = rectangle().transform(id.translate(-150,-150).translate(mouse));
 			draw(r);
-			BestProject<PathIndex> best = r.project(mouse);
+			BestProject best = r.project(mouse);
 			System.out.println(best);
 //			System.out.println(r.getAt(best.t));
 			drawLine(r.getAt(best.t), mouse);

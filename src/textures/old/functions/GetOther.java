@@ -4,7 +4,6 @@ import textures.old.Image;
 import textures.old.PixelArea;
 import textures.old.Sample;
 import textures.old.generated.SampleInstances.Sample2;
-import textures.old.generated.SampleInstances.Sample4;
 
 public class GetOther<A extends Sample<A>> implements Image<A>{
 

@@ -123,12 +123,12 @@ public class ClosedPath extends Path {
 
 	@Override
 	public PathIndex minPathIndex() {
-		throw new Error("ClosedPath does not have begin nor end!");
+		return new ClosedPathIndex(minPathIndex);
 	}
 
 	@Override
 	public PathIndex maxPathIndex() {
-		throw new Error("ClosedPath does not have begin nor end!");
+		return new ClosedPathIndex(maxPathIndex);
 	}
 
 	@Override

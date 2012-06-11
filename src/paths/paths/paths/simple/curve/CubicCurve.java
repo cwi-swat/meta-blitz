@@ -4,26 +4,16 @@ import static util.Util.findQuadraticPolynomialRoots;
 
 import java.awt.geom.PathIterator;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import paths.Constants;
 import paths.paths.factory.PathFactory;
-import paths.paths.paths.Path;
-import paths.paths.paths.PathIndex;
-import paths.paths.paths.compound.SetIndex;
-import paths.paths.paths.compound.ShapeSet;
 import paths.paths.paths.simple.SimplePath;
-import paths.paths.paths.simple.SimplePathIndex;
-import paths.paths.results.project.BestProjectTup;
-import paths.paths.results.transformers.PathIndexTupleTransformer;
 import paths.points.oned.Interval;
 import paths.points.twod.BBox;
 import paths.points.twod.Vec;
-
 import transform.IToTransform;
-import transform.nonlinear.ILineTransformer;
 import util.Tuple;
 
 

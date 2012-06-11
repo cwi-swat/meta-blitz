@@ -5,23 +5,16 @@ import java.util.List;
 
 import paths.paths.factory.PathFactory;
 import paths.paths.paths.Path;
-import paths.paths.paths.PathIndex;
-import paths.paths.paths.SplittablePath;
 import paths.paths.paths.compound.Append;
-import paths.paths.paths.compound.SetIndex;
 import paths.paths.paths.compound.ShapeSet;
 import paths.paths.paths.simple.Line;
 import paths.paths.paths.simple.SimplePath;
-import paths.paths.paths.simple.SimplePathIndex;
 import paths.paths.results.intersections.IIntersections;
-import paths.paths.results.intersections.Intersections;
 import paths.paths.results.project.BestProjectTup;
 import paths.points.oned.Interval;
 import paths.points.twod.Vec;
-
 import transform.nonlinear.IDeform;
 import transform.nonlinear.ILineTransformer;
-import transform.nonlinear.pathdeform.PathDeform;
 import util.Tuple;
 
 

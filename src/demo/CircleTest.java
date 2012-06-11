@@ -2,7 +2,6 @@ package demo;
 
 import paths.paths.factory.CircleFactory;
 import paths.paths.paths.Path;
-import demo.awt.DemoBase;
 
 public class CircleTest extends DemoBase{
 	public static void main(String[] argv){

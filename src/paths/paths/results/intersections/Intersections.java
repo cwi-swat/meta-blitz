@@ -3,11 +3,8 @@ package paths.paths.results.intersections;
 import java.util.Iterator;
 
 import paths.paths.paths.PathIndex;
-import paths.paths.results.transformers.IPathIndexTransformer;
 import paths.paths.results.transformers.PathIndexTupleTransformer;
 import paths.points.twod.Vec;
-
-import util.Tuple;
 
 
 

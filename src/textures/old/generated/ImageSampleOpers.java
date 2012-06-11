@@ -1,7 +1,13 @@
 package textures.old.generated;
 import textures.old.Image;
 import textures.old.PixelArea;
-import textures.old.generated.SampleInstances.*;
+import textures.old.generated.SampleInstances.Sample1;
+import textures.old.generated.SampleInstances.Sample2;
+import textures.old.generated.SampleInstances.Sample3;
+import textures.old.generated.SampleInstances.Sample4;
+import textures.old.generated.SampleInstances.Sample5;
+import textures.old.generated.SampleInstances.Sample6;
+import textures.old.generated.SampleInstances.Sample7;
 public class ImageSampleOpers{
 			
 		
