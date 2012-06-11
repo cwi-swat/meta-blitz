@@ -30,7 +30,7 @@ public class TexturedPath<Sample extends ISample<Sample>> implements
 		this.sampleSize = zero.getSize();
 	}
 
-	public LocatedBufferedImage render(BBox b) {
+	public void render(Graphics2D gb, BBox b) {
 		BBox me = path.getBBox();
 		BBox actual = b.intersections(me);
 		int w = actual.getWidthInt();
@@ -56,7 +56,7 @@ public class TexturedPath<Sample extends ISample<Sample>> implements
 				index += sampleSize;
 			}
 		}
-		return new LocatedBufferedImage(actual.getXInt(), actual.getYInt(), img);
+		gb.drawImage(img, null, actual.getXInt(), actual.getYInt());
 	}
 
 	private int getImageType(int size) {
@@ -97,7 +97,7 @@ public class TexturedPath<Sample extends ISample<Sample>> implements
 		return path;
 	}
 
-	public TexturedPath<Sample> transform(ITransform t) {
+	public ITexturedPath<Sample> transform(ITransform t) {
 		return new TransformedTexturedPath<Sample>(t, path, texture);
 	}
 

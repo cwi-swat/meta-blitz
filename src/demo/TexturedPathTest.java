@@ -5,11 +5,15 @@ import paths.paths.factory.CircleFactory;
 import paths.paths.factory.TextFactory;
 import paths.paths.paths.Path;
 import textures.examples.LinearHorizontalGradient;
+import textures.interfaces.ITexturedPath;
 import textures.sample.Color;
+import textures.texturedpaths.AWTPaintTexturedPath;
 import textures.texturedpaths.TexturedPath;
 import transform.AffineTransformation;
+import util.Tuple;
+import static util.SyntaxSugar.*;
 
-public class TexturedPathTest extends DemoBase{
+public class TexturedPathTest extends SuperDemoBase{
 
 	public static void main(String[] argv){
 		new TexturedPathTest();
@@ -24,10 +28,15 @@ public class TexturedPathTest extends DemoBase{
 	@Override
 	public void draw() {
 		double size = Math.abs(20 + wheel * 10);
-		TexturedPath<Color> t = new TexturedPath<Color>(
+		ITexturedPath<Color> t = new AWTPaintTexturedPath<Color>(
 				CircleFactory.makeCircle(),
-				new LinearHorizontalGradient(new Color(255,0,0),new Color(0,255,0)).transform(id.translate(-0.5,0)))
-				.transform(AffineTransformation.id.scale(size).translate(mouse));
+				new LinearHorizontalGradient(
+						tupleList(
+								tupdl(-0.7,new Color(255,0,0)),
+								tupdl(0.7,new Color(0,255,0))
+						)
+				)
+			).transform(AffineTransformation.id.scale(size).translate(mouse));
 		blit(t);
 	}
 }

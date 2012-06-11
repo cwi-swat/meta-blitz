@@ -52,4 +52,8 @@ public class Color implements ISample<Color> {
 		// mask)/255.0,(b & mask)/255.0);
 	}
 
+	public java.awt.Color toAWT() {
+		return new java.awt.Color(r, g, b);
+	}
+
 }

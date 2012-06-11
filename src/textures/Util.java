@@ -1,6 +1,10 @@
 package textures;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import textures.interfaces.ISample;
+import util.Tuple;
 
 public class Util {
 
@@ -28,5 +32,6 @@ public class Util {
 	public static double byteToDouble(int d) {
 		return d / 255.0;
 	}
+	
 
 }

@@ -9,14 +9,19 @@ import java.awt.geom.Rectangle2D;
 
 import paths.paths.iterators.AWTPathIterator;
 import paths.paths.paths.Path;
+import paths.points.twod.BBox;
 
 
 public class DummyAWTSHape implements Shape{
 
 	private final PathIterator it;
-	
+	private final Path p ;
+	private final int x,y;
 	public DummyAWTSHape(Path p, int x, int y ) {
 		this.it = new AWTPathIterator(p, x, y);
+		this.p = p;
+		this.x = x;
+		this.y = y;
 	}
 	
 	public DummyAWTSHape(Path p) {
@@ -30,7 +35,8 @@ public class DummyAWTSHape implements Shape{
 
 	@Override
 	public Rectangle2D getBounds2D() {
-		throw new Error("NYI");
+		BBox b = p.getBBox();
+		return new Rectangle2D.Double(b.getXInt() -x, b.getYInt() -y, b.getWidthInt(), b.getHeightInt());
 	}
 
 	@Override

@@ -71,4 +71,14 @@ public final class AffineTransformation implements ITransform {
 		return to.mul(d);
 	}
 
+	@Override
+	public boolean isAffine() {
+		return true;
+	}
+
+	@Override
+	public AffineTransformation getAffine() {
+		return this;
+	}
+
 }

@@ -28,5 +28,18 @@ public class BinarySearches {
 		}
 		return min;
 	}
+	
+	public static int floorBinarySearch(double[] elems, double toFind) {
+		int min = -1;
+		int max = elems.length;
+		while (max - min > 1) {
+			int mid = (max + min) / 2;
+			if (toFind < elems[mid])
+				max = mid;
+			else
+				min = mid;
+		}
+		return min;
+	}
 
 }
