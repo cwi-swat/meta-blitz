@@ -1,6 +1,6 @@
 package textures.examples;
 
-import paths.points.twod.Vec;
+import deform.Vec;
 import textures.interfaces.ISample;
 import transform.IBackTransform;
 

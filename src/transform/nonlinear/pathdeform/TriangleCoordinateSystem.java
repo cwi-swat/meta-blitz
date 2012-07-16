@@ -1,7 +1,7 @@
 package transform.nonlinear.pathdeform;
 
+import deform.Vec;
 import paths.paths.paths.simple.Line;
-import paths.points.twod.Vec;
 
 public final class TriangleCoordinateSystem {
 

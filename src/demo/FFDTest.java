@@ -5,9 +5,10 @@ import static transform.AffineTransformation.id;
 import java.util.ArrayList;
 import java.util.List;
 
+import deform.Vec;
+
 import paths.paths.factory.TextFactory;
 import paths.paths.paths.Path;
-import paths.points.twod.Vec;
 import transform.nonlinear.IDeform;
 import transform.nonlinear.ffd.CubicFFD;
 

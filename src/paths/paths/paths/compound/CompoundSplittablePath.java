@@ -1,10 +1,10 @@
 package paths.paths.paths.compound;
 
+import deform.BBox;
+import deform.Vec;
 import paths.paths.paths.Path;
 import paths.paths.paths.PathIndex;
 import paths.paths.paths.SplittablePath;
-import paths.points.twod.BBox;
-import paths.points.twod.Vec;
 import util.Tuple;
 
 public abstract class CompoundSplittablePath extends SplittablePath {

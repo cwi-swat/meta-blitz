@@ -5,8 +5,9 @@ import java.awt.event.*;
 import java.awt.image.*;
 import javax.swing.*;
 
-import paths.points.twod.BBox;
-import paths.points.twod.Vec;
+import deform.BBox;
+import deform.Vec;
+
 import textures.interfaces.ITexturedPath;
 
 import java.util.Random;

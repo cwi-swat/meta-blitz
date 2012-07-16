@@ -1,7 +1,7 @@
 package transform.nonlinear;
 
+import deform.BBox;
 import paths.paths.paths.Path;
-import paths.points.twod.BBox;
 
 public interface IDeform {
 	Path deform(Path p);

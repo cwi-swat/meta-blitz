@@ -1,11 +1,11 @@
 package demo;
 
 import static transform.AffineTransformation.id;
+import deform.Vec;
 import paths.paths.factory.TextFactory;
 import paths.paths.paths.Path;
 import paths.paths.results.intersections.IIntersections;
 import paths.paths.results.intersections.Intersection;
-import paths.points.twod.Vec;
 import textures.old.generated.ColorsAlpha;
 public class IntersectionTest extends DemoBase {
 

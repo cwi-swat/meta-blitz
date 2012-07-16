@@ -8,8 +8,9 @@ import static java.lang.Math.tan;
 import java.util.ArrayList;
 import java.util.List;
 
+import deform.Vec;
+
 import paths.paths.paths.Path;
-import paths.points.twod.Vec;
 import transform.AffineTransformation;
 
 public class CircleFactory {

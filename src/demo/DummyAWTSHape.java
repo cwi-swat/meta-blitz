@@ -7,9 +7,10 @@ import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
+import deform.BBox;
+
 import paths.paths.iterators.AWTPathIterator;
 import paths.paths.paths.Path;
-import paths.points.twod.BBox;
 
 
 public class DummyAWTSHape implements Shape{

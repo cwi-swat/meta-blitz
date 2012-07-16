@@ -5,6 +5,9 @@ import static util.Util.square;
 import java.util.ArrayList;
 import java.util.List;
 
+import deform.BBox;
+import deform.Vec;
+
 import paths.paths.factory.PathFactory;
 import paths.paths.iterators.ConnectedIterator;
 import paths.paths.paths.compound.ClosedPath;
@@ -14,8 +17,6 @@ import paths.paths.paths.simple.curve.Curve;
 import paths.paths.results.intersections.IIntersections;
 import paths.paths.results.project.BestProject;
 import paths.paths.results.project.BestProjectTup;
-import paths.points.twod.BBox;
-import paths.points.twod.Vec;
 import transform.IToTransform;
 import transform.nonlinear.IDeform;
 import transform.nonlinear.ILineTransformer;
@@ -40,42 +41,42 @@ public abstract class Path {
 	public abstract Vec getAt(PathIndex t);
 
 	public abstract Vec getTangentAt(PathIndex t);
+//
+//	public abstract IIntersections intersection(Path other);
+//
+//	public abstract IIntersections intersectionLLine(Line lhs);
+//
+//	public IIntersections intersectionLCurve(Curve lhs) {
+//		return intersectionLSplittable(lhs);
+//	}
+//
+//	public abstract IIntersections intersectionLSet(ShapeSet lhs);
+//
+//	public abstract IIntersections intersectionLSplittable(SplittablePath lhs);
 
-	public abstract IIntersections intersection(Path other);
-
-	public abstract IIntersections intersectionLLine(Line lhs);
-
-	public IIntersections intersectionLCurve(Curve lhs) {
-		return intersectionLSplittable(lhs);
-	}
-
-	public abstract IIntersections intersectionLSet(ShapeSet lhs);
-
-	public abstract IIntersections intersectionLSplittable(SplittablePath lhs);
-
-	public BestProject project(Vec p) {
-		;
-		return project(Double.POSITIVE_INFINITY, p);
-	}
-
-	public abstract BestProject project(double best, Vec p);
-
-	public BestProjectTup project(Path other) {
-		return project(Double.POSITIVE_INFINITY, other);
-	}
-
-	public abstract BestProjectTup project(double best, Path other);
-
-	public abstract BestProjectTup projectLLine(double best, Line lhs);
-
-	public BestProjectTup projectLCurve(double best, Curve lhs) {
-		return projectLSplittable(best, lhs);
-	}
-
-	public abstract BestProjectTup projectLSet(double best, ShapeSet lhs);
-
-	public abstract BestProjectTup projectLSplittable(double best,
-			SplittablePath lhs);
+//	public BestProject project(Vec p) {
+//		;
+//		return project(Double.POSITIVE_INFINITY, p);
+//	}
+//
+//	public abstract BestProject project(double best, Vec p);
+//
+//	public BestProjectTup project(Path other) {
+//		return project(Double.POSITIVE_INFINITY, other);
+//	}
+//
+//	public abstract BestProjectTup project(double best, Path other);
+//
+//	public abstract BestProjectTup projectLLine(double best, Line lhs);
+//
+//	public BestProjectTup projectLCurve(double best, Curve lhs) {
+//		return projectLSplittable(best, lhs);
+//	}
+//
+//	public abstract BestProjectTup projectLSet(double best, ShapeSet lhs);
+//
+//	public abstract BestProjectTup projectLSplittable(double best,
+//			SplittablePath lhs);
 
 	protected double minDistTo(BBox br) {
 		BBox bl = getBBox();

@@ -1,6 +1,6 @@
 package transform;
 
-import paths.points.twod.Vec;
+import deform.Vec;
 
 public class Matrix {
 	public final double x1, x2, x3;

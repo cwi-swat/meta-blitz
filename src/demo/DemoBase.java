@@ -19,10 +19,11 @@ import java.awt.event.WindowListener;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
+import deform.BBox;
+import deform.Vec;
+
 import paths.paths.factory.PathFactory;
 import paths.paths.paths.Path;
-import paths.points.twod.BBox;
-import paths.points.twod.Vec;
 import textures.interfaces.ITexturedPath;
 import textures.sample.LocatedBufferedImage;
 

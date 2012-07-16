@@ -1,5 +1,6 @@
 package paths.paths.paths.simple;
 
+import deform.Vec;
 import paths.paths.paths.Path;
 import paths.paths.paths.SimplyIndexedPath;
 import paths.paths.paths.compound.Append;
@@ -8,7 +9,6 @@ import paths.paths.results.intersections.IntersectionType;
 import paths.paths.results.intersections.Intersections;
 import paths.paths.results.project.BestProjectTup;
 import paths.points.oned.Interval;
-import paths.points.twod.Vec;
 import transform.nonlinear.IDeform;
 import util.Tuple;
 

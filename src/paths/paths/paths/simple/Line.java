@@ -4,6 +4,9 @@ import static paths.points.oned.Interval.interval01;
 
 import java.awt.geom.PathIterator;
 
+import deform.BBox;
+import deform.Vec;
+
 import paths.paths.factory.PathFactory;
 import paths.paths.paths.Path;
 import paths.paths.paths.SplittablePath;
@@ -13,8 +16,6 @@ import paths.paths.results.intersections.Intersections;
 import paths.paths.results.project.BestProject;
 import paths.paths.results.project.BestProjectTup;
 import paths.points.oned.Interval;
-import paths.points.twod.BBox;
-import paths.points.twod.Vec;
 import transform.IToTransform;
 import transform.nonlinear.ILineTransformer;
 import util.Tuple;

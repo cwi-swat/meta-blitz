@@ -3,6 +3,8 @@ package paths.paths.factory;
 import java.util.Arrays;
 import java.util.List;
 
+import deform.Vec;
+
 import paths.paths.paths.Path;
 import paths.paths.paths.compound.Append;
 import paths.paths.paths.compound.ClosedPath;
@@ -11,7 +13,6 @@ import paths.paths.paths.simple.Line;
 import paths.paths.paths.simple.curve.CubicCurve;
 import paths.paths.paths.simple.curve.QuadCurve;
 import paths.points.oned.Interval;
-import paths.points.twod.Vec;
 
 public class PathFactory {
 

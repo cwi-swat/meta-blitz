@@ -24,12 +24,12 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.RepaintManager;
 
+import deform.BBox;
+import deform.Vec;
 import demo.SuperDemoBase.UnRepaintManager;
 
 import paths.paths.factory.PathFactory;
 import paths.paths.paths.Path;
-import paths.points.twod.BBox;
-import paths.points.twod.Vec;
 import textures.interfaces.ITexturedPath;
 import textures.sample.LocatedBufferedImage;
 

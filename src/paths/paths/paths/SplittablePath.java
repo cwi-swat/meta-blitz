@@ -2,6 +2,7 @@ package paths.paths.paths;
 
 import static paths.paths.results.transformers.TupleTransformers.left;
 import static paths.paths.results.transformers.TupleTransformers.right;
+import deform.Vec;
 import paths.paths.paths.compound.ShapeSet;
 import paths.paths.paths.simple.Line;
 import paths.paths.results.intersections.IIntersections;
@@ -10,7 +11,6 @@ import paths.paths.results.project.BestProject;
 import paths.paths.results.project.BestProjectTup;
 import paths.paths.results.transformers.IPathIndexTransformer;
 import paths.paths.results.transformers.PathIndexTupleTransformer;
-import paths.points.twod.Vec;
 import util.Tuple;
 
 public abstract class SplittablePath extends Path {

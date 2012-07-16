@@ -2,9 +2,10 @@ package paths.paths.iterators;
 
 import java.awt.geom.PathIterator;
 
+import deform.Vec;
+
 import paths.paths.paths.Path;
 import paths.paths.paths.simple.SimplePath;
-import paths.points.twod.Vec;
 
 public class AWTPathIterator implements PathIterator {
 

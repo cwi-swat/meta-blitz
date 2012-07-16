@@ -1,4 +1,4 @@
-package paths.points.twod;
+package deform;
 
 import paths.Constants;
 
@@ -7,16 +7,10 @@ public final class Vec {
 	public static final Vec ZeroVec = new Vec(0, 0);
 
 	public final double x, y;
-	public final boolean point;
-
-	public Vec(double x, double y, boolean point) {
-		this.x = x;
-		this.y = y;
-		this.point = point;
-	}
 
 	public Vec(double x, double y) {
-		this(x, y, true);
+		this.x = x;
+		this.y = y;
 	}
 
 	public double normSquared() {
@@ -120,6 +114,10 @@ public final class Vec {
 
 	public boolean isEq(Vec vec) {
 		return x == vec.x && y == vec.y;
+	}
+
+	public Vec between(Vec end) {
+		return new Vec((x + end.x)/2,(y + end.y) /2);
 	}
 
 }

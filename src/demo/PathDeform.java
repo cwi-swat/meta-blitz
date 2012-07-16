@@ -1,11 +1,11 @@
 package demo;
 
 import static transform.AffineTransformation.id;
+import deform.Vec;
 import paths.paths.factory.PathFactory;
 import paths.paths.factory.TextFactory;
 import paths.paths.paths.Path;
 import paths.paths.paths.simple.curve.QuadCurve;
-import paths.points.twod.Vec;
 
 
 public class PathDeform extends DemoBase{

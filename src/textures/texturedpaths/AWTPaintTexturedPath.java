@@ -4,10 +4,10 @@ import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
+import deform.BBox;
 import demo.DummyAWTSHape;
 
 import paths.paths.paths.Path;
-import paths.points.twod.BBox;
 import textures.examples.AWTRenderedTexture;
 import textures.examples.Texture;
 import textures.interfaces.ISample;

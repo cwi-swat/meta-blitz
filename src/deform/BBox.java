@@ -1,4 +1,4 @@
-package paths.points.twod;
+package deform;
 
 import paths.points.oned.Interval;
 
@@ -6,6 +6,7 @@ public final class BBox {
 
 	public static BBox emptyBBox = new BBox(Interval.emptyInterval,
 			Interval.emptyInterval);
+	public static BBox everything = new BBox(Interval.everything,Interval.everything);
 
 	public final Interval xInterval, yInterval;
 

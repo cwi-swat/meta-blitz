@@ -1,6 +1,6 @@
 package transform;
 
-import paths.points.twod.Vec;
+import deform.Vec;
 
 public final class AffineTransformation implements ITransform {
 

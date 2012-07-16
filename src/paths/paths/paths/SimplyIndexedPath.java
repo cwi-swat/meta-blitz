@@ -1,12 +1,12 @@
 package paths.paths.paths;
 
 import static paths.paths.results.transformers.TupleTransformers.unitTup;
+import deform.Vec;
 import paths.paths.paths.simple.SimplePathIndex;
 import paths.paths.results.transformers.IPathIndexTransformer;
 import paths.paths.results.transformers.PITransformers;
 import paths.paths.results.transformers.PathIndexTupleTransformer;
 import paths.points.oned.Interval;
-import paths.points.twod.Vec;
 import transform.IToTransform;
 
 public abstract class SimplyIndexedPath extends SplittablePath {

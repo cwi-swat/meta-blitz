@@ -6,9 +6,10 @@ import java.awt.Color;
 import java.awt.LinearGradientPaint;
 import java.awt.geom.Point2D;
 
+import deform.Vec;
+
 import paths.paths.factory.CircleFactory;
 import paths.paths.paths.Path;
-import paths.points.twod.Vec;
 import textures.examples.LinearHorizontalGradient;
 import textures.texturedpaths.TexturedPath;
 import transform.AffineTransformation;

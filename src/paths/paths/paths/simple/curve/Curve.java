@@ -3,6 +3,8 @@ package paths.paths.paths.simple.curve;
 import java.util.Collections;
 import java.util.List;
 
+import deform.Vec;
+
 import paths.paths.factory.PathFactory;
 import paths.paths.paths.Path;
 import paths.paths.paths.compound.Append;
@@ -12,7 +14,6 @@ import paths.paths.paths.simple.SimplePath;
 import paths.paths.results.intersections.IIntersections;
 import paths.paths.results.project.BestProjectTup;
 import paths.points.oned.Interval;
-import paths.points.twod.Vec;
 import transform.nonlinear.IDeform;
 import transform.nonlinear.ILineTransformer;
 import util.Tuple;

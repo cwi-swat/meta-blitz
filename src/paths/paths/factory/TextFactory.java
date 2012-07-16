@@ -11,9 +11,10 @@ import java.util.List;
 
 import javax.swing.UIManager;
 
+import deform.Vec;
+
 import paths.paths.paths.Path;
 import paths.paths.paths.compound.ClosedPath;
-import paths.points.twod.Vec;
 
 public class TextFactory {
 

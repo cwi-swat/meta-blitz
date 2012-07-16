@@ -7,12 +7,12 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 
 import paths.paths.paths.Path;
-import paths.points.twod.BBox;
 import textures.examples.Texture;
 import textures.interfaces.ISample;
 import textures.interfaces.ITexturedPath;
 import textures.sample.LocatedBufferedImage;
 import transform.ITransform;
+import deform.BBox;
 import demo.DummyAWTSHape;
 
 public class TexturedPath<Sample extends ISample<Sample>> implements

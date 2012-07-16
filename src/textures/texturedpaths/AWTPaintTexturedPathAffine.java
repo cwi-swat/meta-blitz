@@ -3,8 +3,9 @@ package textures.texturedpaths;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
+import deform.BBox;
+
 import paths.paths.paths.Path;
-import paths.points.twod.BBox;
 import textures.examples.AWTRenderedTexture;
 import textures.interfaces.ISample;
 import transform.Matrix;

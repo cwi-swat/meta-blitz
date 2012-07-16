@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import deform.BBox;
+import deform.Vec;
+
 import paths.paths.paths.Path;
 import paths.paths.paths.PathIndex;
 import paths.paths.paths.SplittablePath;
@@ -15,8 +18,6 @@ import paths.paths.results.intersections.Intersections;
 import paths.paths.results.project.BestProject;
 import paths.paths.results.project.BestProjectTup;
 import paths.paths.results.transformers.PITransformers;
-import paths.points.twod.BBox;
-import paths.points.twod.Vec;
 import transform.IToTransform;
 import transform.nonlinear.IDeform;
 import transform.nonlinear.ILineTransformer;

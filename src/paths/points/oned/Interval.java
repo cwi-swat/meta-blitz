@@ -9,6 +9,8 @@ public class Interval {
 	public static final Interval interval01 = new Interval(0, 1);
 	public static final Interval emptyInterval = new Interval(true,
 			Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY);
+	public static final Interval everything = 
+			new Interval( Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
 
 	public final double low, high, length;
 

@@ -3,13 +3,14 @@ package transform.nonlinear.pathdeform;
 import java.util.ArrayList;
 import java.util.List;
 
+import deform.BBox;
+import deform.Vec;
+
 import paths.paths.iterators.SimplePathIterator;
 import paths.paths.paths.Path;
 import paths.paths.paths.simple.Line;
 import paths.paths.paths.simple.SimplePath;
 import paths.points.oned.Interval;
-import paths.points.twod.BBox;
-import paths.points.twod.Vec;
 import transform.IToTransform;
 import transform.nonlinear.IDeform;
 import util.BinarySearches;

@@ -3,7 +3,8 @@ package transform.nonlinear.ffd;
 import java.util.ArrayList;
 import java.util.List;
 
-import paths.points.twod.Vec;
+import deform.Vec;
+
 
 public class CubicFFDPadder {
 	List<Double> gridX, gridY;

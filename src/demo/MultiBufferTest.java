@@ -13,7 +13,6 @@ import java.awt.Window;
 import java.awt.image.BufferStrategy;
 
 import paths.paths.factory.CircleFactory;
-import paths.points.twod.Vec;
 import textures.examples.LinearHorizontalGradient;
 import textures.interfaces.ITexturedPath;
 import textures.texturedpaths.AWTPaintTexturedPath;
@@ -60,6 +59,8 @@ import transform.AffineTransformation;
  
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+
+import deform.Vec;
  
 public class MultiBufferTest {
      

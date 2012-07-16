@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import deform.Vec;
+
 import paths.paths.factory.CircleFactory;
-import paths.points.twod.Vec;
 import transform.nonlinear.ffd.CubicFFD;
 
 public class Fisheye {

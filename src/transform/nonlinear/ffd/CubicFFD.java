@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import deform.BBox;
+import deform.Vec;
+
 import paths.Constants;
 import paths.paths.factory.PathFactory;
 import paths.paths.paths.Path;
 import paths.paths.paths.simple.Line;
 import paths.points.oned.Interval;
-import paths.points.twod.BBox;
-import paths.points.twod.Vec;
 import transform.nonlinear.IDeform;
 import transform.nonlinear.ILineTransformer;
 import util.BinarySearches;

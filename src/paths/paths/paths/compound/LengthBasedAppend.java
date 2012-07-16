@@ -1,10 +1,10 @@
 package paths.paths.paths.compound;
 
+import deform.BBox;
+import deform.Vec;
 import paths.paths.paths.Path;
 import paths.paths.paths.SimplyIndexedPath;
 import paths.points.oned.Interval;
-import paths.points.twod.BBox;
-import paths.points.twod.Vec;
 import transform.IToTransform;
 import transform.nonlinear.IDeform;
 import transform.nonlinear.ILineTransformer;

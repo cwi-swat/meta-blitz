@@ -5,11 +5,12 @@ import static transform.AffineTransformation.id;
 import java.util.ArrayList;
 import java.util.List;
 
+import deform.Vec;
+
 import paths.paths.factory.PathFactory;
 import paths.paths.factory.TextFactory;
 import paths.paths.iterators.ConnectedIterator;
 import paths.paths.paths.Path;
-import paths.points.twod.Vec;
 
 
 public class PathDeform2 extends DemoBase{

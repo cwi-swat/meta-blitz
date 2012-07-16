@@ -4,12 +4,13 @@ import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
 
+import deform.BBox;
+import deform.Vec;
+
 import paths.Constants;
 import paths.paths.factory.PathFactory;
 import paths.paths.paths.simple.SimplePath;
 import paths.points.oned.Interval;
-import paths.points.twod.BBox;
-import paths.points.twod.Vec;
 import transform.IToTransform;
 import util.Tuple;
 import util.Util;
