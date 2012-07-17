@@ -1,5 +1,7 @@
 package deform;
 
+import deform.transform.CompositeTransform;
+
 public abstract class Transform {
 
 	
@@ -12,5 +14,12 @@ public abstract class Transform {
 		return false;
 	}
 	
+	public Transform compose(Transform rhs){
+		return new CompositeTransform(this,rhs);
+	}
+	
+	public Transform getForArea(BBox b){
+		return this;
+	}
 	
 }

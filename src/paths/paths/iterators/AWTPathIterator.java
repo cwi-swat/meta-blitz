@@ -6,6 +6,7 @@ import deform.Vec;
 
 import paths.paths.paths.Path;
 import paths.paths.paths.simple.SimplePath;
+import util.DebugPrint;
 
 public class AWTPathIterator implements PathIterator {
 

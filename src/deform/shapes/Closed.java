@@ -1,6 +1,7 @@
 package deform.shapes;
 
 import java.awt.geom.Path2D;
+import java.util.List;
 
 import deform.BBox;
 import deform.Transform;
@@ -15,29 +16,18 @@ public class Closed extends Shape{
 	final Path path;
 
 	public Closed(Path path) {
-		Vec s = path.getStart();
-		Vec e = path.getEnd();
-		if(!s.isEq(e)){
-			this.path = new Append(path,new Line(e,s));
-		} else {
-			this.path = path;
-		}
-	}
-	
-	BBox getBBox(){
-		return path.getBBox();
-	}
-	
-	java.awt.Shape toJava2D(){
-		Path2D res = SegPath.fromPath(path).toJava2d();
-		res.closePath();
-		return res;
+		super(path.bbox);
+		this.path = path;
 	}
 
 	@Override
-	public Shape transform(Transform t) {
-		return new Closed(path.transform(t));
+	public
+	void render(BBox area, Transform t, List<SegPath> res) {
+		if(area.overlaps(path.bbox)){
+			res.add(path.render(t));
+		}
 	}
+
 	
 
 }

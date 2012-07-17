@@ -1,24 +1,24 @@
 package textures.examples;
 
 import deform.Vec;
-import textures.interfaces.ISample;
+import textures.interfaces.ITexture;
+import textures.interfaces.Sample;
 import transform.IBackTransform;
 
-public class TransformedTexture<Sample extends ISample<Sample>> extends
-		Texture<Sample> {
+public class TransformedTexture implements ITexture {
 
-	final Texture<Sample> real;
+	final ITexture real;
 	final IBackTransform transform;
 
-	public TransformedTexture(IBackTransform transform, Texture<Sample> real) {
+	public TransformedTexture(IBackTransform transform, ITexture real) {
 		this.real = real;
 		this.transform = transform;
 	}
 
 	@Override
-	public Sample sample(double x, double y) {
-		Vec v = transform.from(new Vec(x, y));
-		return real.sample(v.x, v.y);
+	public Sample sample(Vec v) {
+		Vec w = transform.from(v);
+		return real.sample(w);
 	}
 
 }

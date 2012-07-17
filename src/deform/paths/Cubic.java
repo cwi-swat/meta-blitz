@@ -9,11 +9,13 @@ import deform.Transform;
 import deform.Vec;
 import deform.segments.CubicTo;
 import deform.segments.Segment;
+import deform.segments.SegmentsMaker;
 
 public class Cubic extends Path{
 	final Vec start, controll, controlr, end;
 
 	public Cubic(Vec start, Vec controll, Vec controlr, Vec end) {
+		super(BBox.from4Points(start, controll, controlr, end));
 		this.start = start;
 		this.controll = controll;
 		this.controlr = controlr;
@@ -21,20 +23,21 @@ public class Cubic extends Path{
 	}
 
 	@Override
-	public BBox makeBBox() {
-		return BBox.from4Points(start, controll, controlr, end);
+	void renderAffine(Transform t, SegmentsMaker res) {
+		res.cubic(start, controll, controlr, end);
 	}
 
+
 	@Override
-	void getSimpleLines(Transform t,List<Path> res) {
+	void renderNonAffine(Transform t, SegmentsMaker res) {
 		if(start.distanceSquared(end) <= Constants.MAX_ERROR_TRANSFORM_POW2
-			&& start.distanceSquared(controll) <= Constants.MAX_ERROR_TRANSFORM_POW2 
-			&& controlr.distanceSquared(end) <= Constants.MAX_ERROR_TRANSFORM_POW2 )
+				&& start.distanceSquared(controll) <= Constants.MAX_ERROR_TRANSFORM_POW2 
+				&& controlr.distanceSquared(end) <= Constants.MAX_ERROR_TRANSFORM_POW2 )
 		{
 			Vec nstart = t.to(start);
 			Vec nend = t.to(end);
 			if(nstart.distanceSquared(nend) <= Constants.MAX_ERROR_TRANSFORM_POW2){
-				res.add(new Line(nstart,nend));
+				res.line(nstart,nend);
 				return;
 			} 
 		}
@@ -44,30 +47,7 @@ public class Cubic extends Path{
 		Vec controllr = controlll.between(inter);
 		Vec controlrl = inter.between(controlrr);
 		Vec middle = controllr.between(controlrl);
-		new Cubic(start,controlll,controllr,middle).getSimpleLines(t,res);
-		new Cubic(middle, controlrl, controlrr, end).getSimpleLines(t,res);
+		new Cubic(start,controlll,controllr,middle).renderNonAffine(t,res);
+		new Cubic(middle, controlrl, controlrr, end).renderNonAffine(t,res);
 	}
-
-	@Override
-	public Path transformAffine(Transform t) {
-		return new Cubic(t.to(start), t.to(controll), t.to(controlr), t.to(end));
-	}
-
-	@Override
-	public
-	void getSegments(List<Segment> res) {
-		res.add(new CubicTo(controll,controlr,end));
-		
-	}
-
-	@Override
-	public Vec getStart() {
-		return start;
-	}
-
-	@Override
-	public Vec getEnd() {
-		return end;
-	}
-	
 }

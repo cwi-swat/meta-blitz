@@ -8,57 +8,40 @@ import deform.Transform;
 import deform.Vec;
 import deform.segments.LineTo;
 import deform.segments.Segment;
+import deform.segments.SegmentsMaker;
 
 public class Line extends Path{
 
 	final Vec start ,end;
 
 	public Line(Vec start, Vec end) {
+		super(BBox.from2Points(start, end));
 		this.start = start;
 		this.end = end;
 	}
 
-	@Override
-	public BBox makeBBox() {
-		return BBox.from2Points(start, end);
+
+
+
+	void renderAffine(Transform t, SegmentsMaker res) {
+		res.line(start, end);
 	}
 
 
-	@Override
-	public Path transformAffine(Transform t) {
-		return new Line(t.to(start), t.to(end));
-	}
-	
-	@Override
-	void getSimpleLines(Transform t, List<Path> res) {
+	void renderNonAffine(Transform t, SegmentsMaker res) {
 		if(start.distanceSquared(end) <= Constants.MAX_ERROR_TRANSFORM_POW2){
 			Vec nstart = t.to(start);
 			Vec nend = t.to(end);
 			if(nstart.distanceSquared(nend) <= Constants.MAX_ERROR_TRANSFORM_POW2){
-				res.add(new Line(nstart,nend));
+				res.line(nstart,nend);
 				return;
 			} 
 		}
 		Vec mid = start.between(end);
-		new Line(start,mid).getSimpleLines(t,res);
-		new Line(mid, end).getSimpleLines(t,res);
+		new Line(start,mid).renderNonAffine(t,res);
+		new Line(mid, end).renderNonAffine(t,res);
 		
 	}
 
-	@Override
-	public
-	void getSegments(List<Segment> res) {
-		res.add(new LineTo(end));
-	}
-	
-	@Override
-	public Vec getStart() {
-		return start;
-	}
-
-	@Override
-	public Vec getEnd() {
-		return end;
-	}
 	
 }

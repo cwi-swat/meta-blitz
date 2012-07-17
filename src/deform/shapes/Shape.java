@@ -11,18 +11,16 @@ import deform.segments.SegPath;
 
 public abstract class Shape {
 
-	abstract BBox getBBox();
+	public final BBox bbox;
 	
-	abstract java.awt.Shape toJava2D();
-	
-	public abstract Shape transform(Transform t);
-	
-	static Shape fromJava2D(PathIterator it){
-		List<Shape> res = new ArrayList<Shape>();
-		while(!it.isDone()){
-			res.add(new Closed(SegPath.fromJava2d(it).toPath()));
-			it.next();
-		}
-		return new ShapeSet(res);
+	Shape(BBox bbox) {
+		this.bbox = bbox;
 	}
+	
+	
+	public abstract void render(BBox area, Transform t, List<SegPath> res);
+
+
+
+	
 }

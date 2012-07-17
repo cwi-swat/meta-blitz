@@ -44,12 +44,6 @@ public class SegPath {
 	}
 	
 	
-	public static SegPath fromPath(Path p){
-		SegPath res = new SegPath();
-		res.start = p.getStart();
-		p.getSegments(res.segs);
-		return res;
-	}
 	public static SegPath fromJava2d(Path2D p){
 		PathIterator it = p.getPathIterator(null);
 		return fromJava2d(it);

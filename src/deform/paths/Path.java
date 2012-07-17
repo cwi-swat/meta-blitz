@@ -1,47 +1,32 @@
 package deform.paths;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 import deform.BBox;
 import deform.Transform;
-import deform.Vec;
 import deform.segments.SegPath;
-import deform.segments.Segment;
+import deform.segments.SegmentsMaker;
 
 public abstract class Path {
 
-	protected BBox bbox;
+	public final BBox bbox;
+	
+	public Path(BBox bbox) {
+		this.bbox = bbox;
+	}
 
-	public abstract BBox makeBBox();
-
-	public BBox getBBox() {
-		if (bbox == null) {
-			bbox = makeBBox();
-		}
-		return bbox;
+	public SegPath render(Transform t){
+		SegmentsMaker res = new SegmentsMaker();
+		render(t, res);
+		return res.done();
 	}
 	
-	abstract void getSimpleLines(Transform t,List<Path> res);
-	
-	public abstract Path transformAffine(Transform t);
-	
-	public Path transform(Transform t){
+	void render(Transform t, SegmentsMaker res){
 		if(t.isAffine()){
-			return transformAffine(t);
+			renderAffine(t,res);
 		} else {
-			List<Path> res = new ArrayList<Path>();
-			getSimpleLines(t,res);
-			return Append.createAppends(res);
+			renderNonAffine(t, res);
 		}
 	}
-	
-	
-	public abstract void getSegments(List<Segment> res);
-	
-
-	public abstract Vec getStart();
-	public abstract Vec getEnd();
+	abstract void renderAffine(Transform t, SegmentsMaker res);
+	abstract void renderNonAffine(Transform t, SegmentsMaker res);
 	
 }

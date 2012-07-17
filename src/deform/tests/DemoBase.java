@@ -1,4 +1,5 @@
-package demo;
+package deform.tests;
+
 
 import java.awt.*;
 import java.awt.event.*;
@@ -6,14 +7,16 @@ import java.awt.image.*;
 import javax.swing.*;
 
 import deform.BBox;
+import deform.Combinators;
 import deform.Vec;
+import deform.texturedshape.TexturedShape;
 
 import textures.interfaces.ITexture;
 
 
 import java.util.Random;
 
-public abstract class SuperDemoBase extends JFrame implements KeyListener,MouseWheelListener,MouseListener, MouseMotionListener, WindowListener //, ComponentListener
+public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelListener,MouseListener, MouseMotionListener, WindowListener //, ComponentListener
 {
 	public Vec size;
     private Insets insets;
@@ -29,7 +32,7 @@ public abstract class SuperDemoBase extends JFrame implements KeyListener,MouseW
 	public double wheel;
      
     
-    public SuperDemoBase()
+    public DemoBase()
     {
         super();
         mouse = new Vec(0,0);
@@ -114,7 +117,11 @@ public abstract class SuperDemoBase extends JFrame implements KeyListener,MouseW
             try
             {
                 g = (Graphics2D)bufferStrategy.getDrawGraphics();
-                draw(g); // enter the method to draw everything                 
+                this.lg = g;
+                g.setBackground(Color.black);
+                g.clearRect(0, 0, (int)size.x, (int)size.y);
+                draw(); // enter the method to draw everything
+                
             }
             finally
             {
@@ -149,11 +156,6 @@ public abstract class SuperDemoBase extends JFrame implements KeyListener,MouseW
     }
     
 
-	public void blit(textures.texturedpaths.ITexturedPath texPath){
-		BBox b = new BBox(0,0,size.x,size.y);
-		texPath.render(lg, b);
-	}
-    
     abstract void draw();
     /**
      * Draws the whole program, including all animations and Swing components
@@ -185,6 +187,10 @@ public abstract class SuperDemoBase extends JFrame implements KeyListener,MouseW
         g.drawImage(drawing, insets.left, insets.top, null);
         
         drawingBoard.dispose();
+    }
+    
+    public void draw(TexturedShape s){
+    	Combinators.render(lg, new BBox(0,0,size.x,size.y), s);
     }
     
    
