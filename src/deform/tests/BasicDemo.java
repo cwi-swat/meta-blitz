@@ -42,7 +42,7 @@ public class BasicDemo extends DemoBase{
 		rect = transform(translate(100,600).compose(scale(50)),text("Atze"));
 		TexturedShape s =fill(rect //, transform(scale(100),horGradient(new Color(255,0,0,255),new Color(0,255,0,255))));
 				,multip);
-//		s = over(fill(stroke(rect,15),fillColor(new Color(0,140,0))),s);
+		s = over(fill(stroke(rect,15),fillColor(new Color(0,140,0))),s);
 //				,new Texture() {
 //			
 //			@Override
@@ -61,7 +61,7 @@ public class BasicDemo extends DemoBase{
 //		});
 //		double d = Math.abs(wheel)/100  == 0 ? 1 : Math.abs(wheel)/100 ;
 //		s = transform(fisheye(mouse,Math.abs(wheel)/100 , 200), s);
-		s = transform(coneLens(mouse, 100),s);
+		s = transform(coneLens(mouse, 100 + wheel),s);
 //		s = transform(rotate(wheel/100*Math.PI),s);
 //		System.out.println(translate(new Vec(w/2,h/2)).compose(rotate(wheel/100*Math.PI).compose(translate(new Vec(-w/2,-h/2)))));
 //		s = transform(translate(mouse).compose(rotate(wheel/100*Math.PI).compose(translate(new Vec(-w/2,-h/2)))),s);
