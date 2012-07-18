@@ -67,7 +67,7 @@ public class Matrix {
 	}
 
 	public java.awt.geom.AffineTransform toJava2DTransform(){
-		return new java.awt.geom.AffineTransform(x1, x2, y1, y2, x3, y3);
+		return new java.awt.geom.AffineTransform(x1, y1, x2, y2, x3, y3);
 	}
 	
 	public String toString() {

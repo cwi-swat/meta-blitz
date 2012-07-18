@@ -48,7 +48,7 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
         ((JComponent)getContentPane()).addMouseMotionListener(this);
        ((JComponent)getContentPane()).addMouseListener(this);
        ((JComponent)getContentPane()). addMouseWheelListener(this);
-       ((JComponent)getContentPane()). addKeyListener(this);
+        addKeyListener(this);
         // set up our UnRepaintManager
         RepaintManager repaintManager = new UnRepaintManager();
         repaintManager.setDoubleBufferingEnabled(false);

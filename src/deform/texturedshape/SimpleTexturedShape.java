@@ -18,6 +18,7 @@ import deform.Transform;
 import deform.segments.SegPath;
 import deform.segments.ShapesMaker;
 import deform.shapes.Shape;
+import deform.tests.BasicDemo;
 import deform.texture.Java2DTexture;
 import deform.texture.TransformTexture;
 import deform.transform.affine.IdentityTransform;
@@ -46,13 +47,17 @@ public class SimpleTexturedShape extends TexturedShape{
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_RENDERING,
 				RenderingHints.VALUE_RENDER_QUALITY);
+
 		Texture tex = Combinators.transform(t, this.tex);
-		boolean java2dPaint = tex instanceof Java2DTexture;
+		boolean java2dPaint = BasicDemo.awt && tex instanceof Java2DTexture;
+		
 		if(java2dPaint){
 			g.setPaint(((Java2DTexture)tex).getPaint());
 		} else {
+			
 			g.setColor(java.awt.Color.white);
 		}
+
 
 		if(trans!=null) g.setTransform(trans);
 		g.translate(-actual.getXInt(), -actual.getYInt());

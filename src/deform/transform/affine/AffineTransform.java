@@ -77,4 +77,8 @@ public class AffineTransform extends Transform{
 				Matrix.shear(-x, -y));
 	}
 	
+	public String toString(){
+		return to.toString();
+	}
+	
 }

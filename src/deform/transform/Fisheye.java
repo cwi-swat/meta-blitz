@@ -11,7 +11,7 @@ public class Fisheye extends Transform{
 	
 	public Fisheye(Vec center, double mag, double maxDist){
 		this.center = center;
-		this.mag = mag;
+		this.mag = mag ;
 		this.maxDist = maxDist;
 		inv = (1-mag)/maxDist;
 		mag2 = mag * mag;

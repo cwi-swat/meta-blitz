@@ -7,6 +7,7 @@ import static textures.Util.clamp;
 
 public class Color {
 	public final static int SampleSize = 4;
+	public static Color transparent = new Color(0,0,0,0);
 	public final int r, g, b, a;
 
 	public Color(int r, int g, int b, int a) {
@@ -17,6 +18,11 @@ public class Color {
 	}
 
 	
+	public Color(int i, int j, int k) {
+		this(i,j,k,255);
+	}
+
+
 	public Color mul(int d) {
 		d = clamp(d);
 		return new Color((r * d >> 8), (g * d >> 8), (b * d >> 8),
