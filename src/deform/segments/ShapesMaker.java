@@ -30,6 +30,12 @@ public class ShapesMaker {
 		}
 	}
 	
+	public static Shape fromJava2dToShape(PathIterator it){
+		List<SegPath> res = new ArrayList<SegPath>();
+		fromJava2D(it,res);
+		return makeShape(res);
+	}
+	
 	public static Shape makeShape(List<SegPath> res){
 		List<Shape> shapes = new ArrayList<Shape>();
 		for(SegPath p : res){

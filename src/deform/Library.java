@@ -3,9 +3,17 @@ package deform;
 import static deform.Combinators.*;
 
 import java.awt.BasicStroke;
+import java.awt.Font;
+import java.awt.font.FontRenderContext;
+import java.awt.font.GlyphVector;
+import java.awt.geom.PathIterator;
+import java.util.ArrayList;
+import java.util.List;
+
 
 import deform.paths.Path;
 import deform.segments.Segment;
+import deform.segments.ShapesMaker;
 import deform.shapes.Shape;
 import deform.shapes.StrokedPath;
 import deform.shapes.StrokedShape;
@@ -19,13 +27,23 @@ import deform.texture.gradients.HorReflectMultipleGradient;
 import deform.texture.gradients.RadialCyclicGradient;
 import deform.texture.gradients.RadialNonCyclicGradient;
 import deform.texture.gradients.RadialReflectGradient;
+import deform.texturedshape.Over;
+import deform.texturedshape.TexturedShape;
+import deform.transform.ConeEye;
 import deform.transform.Fisheye;
 import deform.transform.affine.AffineTransform;
 import deform.transform.affine.IdentityTransform;
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
+import java.awt.font.FontRenderContext;
+import java.awt.font.GlyphVector;
 
+import javax.swing.UIManager;
 public class Library {
 
 	
+	private static final int DefaultFontSize = 11;
+
 	public static Segment lineTo(double x, double y){
 		return deform.Combinators.lineTo(new Vec(x,y));
 	}
@@ -71,6 +89,10 @@ public class Library {
 		return new Fisheye(center,mag,maxdist);
 	}
 	
+	public static Transform coneLens(Vec center,  double maxdist){
+		return new ConeEye(center,maxdist);
+	}
+	
 	public static Shape stroke(Path p, double width){
 		return new StrokedPath(p,width,new BasicStroke((float)width));
 	}
@@ -81,6 +103,33 @@ public class Library {
 	
 	public static Texture fillColor(Color c){
 		return new FillColor(c);
+	}
+	
+	public static TexturedShape over(TexturedShape ... ts){
+		return new Over(ts);
+	}
+	
+	public static Shape text(String text, int fontSize) {
+		return text(defaultFontName(), fontSize, text);
+	}
+	
+	public static Shape text(String text) {
+		return text(defaultFontName(),  DefaultFontSize, text);
+	}
+
+	private static String defaultFontName() {
+		return UIManager.getDefaults().getFont("Label.font").getName();
+	}
+	
+	public static Shape text(String font,int fontSize, String text) {
+
+			Font f = new Font(font, Font.PLAIN, fontSize);
+			FontRenderContext ctx = new FontRenderContext(new java.awt.geom.AffineTransform(), true, true);
+			GlyphVector v = f.createGlyphVector(ctx, text);
+			java.awt.Shape res = v.getOutline();
+			return ShapesMaker.fromJava2dToShape(res.getPathIterator(null));
+			
+		
 	}
 	
 	// a gradient of width 1
