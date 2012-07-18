@@ -10,6 +10,7 @@ import deform.shapes.Shape;
 import deform.shapes.StrokedPath;
 import deform.shapes.StrokedShape;
 import deform.texture.FillColor;
+import deform.texture.HorGradient;
 import deform.transform.Fisheye;
 import deform.transform.affine.AffineTransform;
 
@@ -36,6 +37,22 @@ public class Library {
 		return AffineTransform.translate(v);
 	}
 	
+	public static Transform scale(double x, double y){
+		return AffineTransform.scale(x, y);
+	}
+	
+	public static Transform scale(double s){
+		return scale(s,s);
+	}
+	
+	public static Transform rotate(double rads){
+		return AffineTransform.rotate(rads);
+	}
+	
+	public static Transform shear(double x, double y){
+		return AffineTransform.shear(x,y);
+	}
+	
 	public static Transform fisheye(Vec center, double mag, double maxdist){
 		return new Fisheye(center,mag,maxdist);
 	}
@@ -50,5 +67,10 @@ public class Library {
 	
 	public static Texture fillColor(Color c){
 		return new FillColor(c);
+	}
+	
+	// a cyclic gradient of width 1
+	public static Texture horGradient(Color a, Color b){
+		return new HorGradient(a,b);
 	}
 }

@@ -29,7 +29,7 @@ public class Quad extends Path{
 
 	@Override
 	void renderAffine(Transform t, SegmentsMaker res) {
-		res.quad(start, control, end);
+		res.quad(t.to(start), t.to(control), t.to(end));
 		
 	}
 

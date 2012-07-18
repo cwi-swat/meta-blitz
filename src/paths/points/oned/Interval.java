@@ -63,42 +63,31 @@ public class Interval {
 
 	public Interval(double a, double b, double c, double d) {
 		// manual sorting for speed
-		if (a < b) {
-			if (c < d) {
-				// if b < c already right
-				if (b >= c) {
-					a = c;
-					d = a;
-				}
-			} else {
-				if (b < d) {
-					d = c;
-				} else {
-					a = d;
-					d = b;
-				}
-			}
+		double lowleft, lowright, highleft, highright;
+		if(a < b){
+			lowleft = a;
+			highleft = b;
 		} else {
-			if (c < d) {
-				if (a < c) {
-					a = b;
-				} else {
-					d = a;
-					a = c;
-				}
-			} else {
-				if (a < d) {
-					a = b;
-					d = c;
-				} else {
-					c = d;
-					d = a;
-					a = c;
-				}
-			}
+			lowleft = b;
+			highleft = a;
 		}
-		this.low = a;
-		this.high = d;
+		if(c < d){
+			lowright = c;
+			highright = d;
+		} else {
+			lowright = d;
+			highright = c;
+		}
+		if(lowleft < lowright){
+			this.low = lowleft;
+		} else {
+			this.low = lowright;
+		}
+		if(highleft > highright){
+			this.high = highleft;
+		} else {
+			this.high = highright;
+		}
 		this.length = d - a;
 	}
 

@@ -16,6 +16,7 @@ import deform.shapes.Shape;
 import deform.shapes.SymDiffShapes;
 import deform.shapes.TransformShape;
 import deform.shapes.UnionShapes;
+import deform.texture.AffineTransformableTex;
 import deform.texture.CombineTex;
 import deform.texture.TransformTexture;
 import deform.texturedshape.CombineTexturedShape;
@@ -23,6 +24,7 @@ import deform.texturedshape.LocatedImage;
 import deform.texturedshape.SimpleTexturedShape;
 import deform.texturedshape.TexturedShape;
 import deform.texturedshape.TransformTexturedShape;
+import deform.transform.affine.AffineTransform;
 import deform.transform.affine.IdentityTransform;
 
 public class Combinators {
@@ -80,6 +82,9 @@ public class Combinators {
 	}
 	
 	public static Texture transform(Transform t, Texture tex){
+		if(t instanceof AffineTransform && tex instanceof AffineTransformableTex){
+			return ((AffineTransformableTex)tex).transform(t);
+		}
 		return new TransformTexture(t,tex);
 	}
 	
@@ -93,7 +98,6 @@ public class Combinators {
 	
 	public static void render(Graphics2D g, BBox b, TexturedShape s){
 		LocatedImage i = s.render(IdentityTransform.Instance, b);
-		
 		i.draw(g);
 	}
 	

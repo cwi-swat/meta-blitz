@@ -24,7 +24,7 @@ public class Cubic extends Path{
 
 	@Override
 	void renderAffine(Transform t, SegmentsMaker res) {
-		res.cubic(start, controll, controlr, end);
+		res.cubic(t.to(start), t.to(controll), t.to(controlr), t.to(end));
 	}
 
 

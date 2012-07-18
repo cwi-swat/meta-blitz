@@ -26,14 +26,19 @@ public class AffineTransform extends Transform{
 	}
 	
 	public BBox transformBBox(BBox b){
-		return BBox.from4Points(to(b.getLeftDown()),
+//		return BBox.everything;
+		BBox res = BBox.from4Points(to(b.getLeftDown()),
 				to(b.getLeftUp()),
 				to(b.getRightDown()),
 				to(b.getRightUp()));
+		return BBox.everything;
 	}
 	
 
 	public Transform compose(Transform rhs){
+		if(rhs instanceof IdentityTransform){
+			return this;
+		}
 		if(rhs instanceof AffineTransform){
 			AffineTransform ar = (AffineTransform)rhs; 
 			return new AffineTransform(to.mul(ar.to), ar.from.mul(from));
@@ -67,7 +72,7 @@ public class AffineTransform extends Transform{
 	}
 
 
-	public AffineTransform shear(double x,double y) {
+	public static AffineTransform shear(double x,double y) {
 		return new AffineTransform(Matrix.shear(x,y),
 				Matrix.shear(-x, -y));
 	}

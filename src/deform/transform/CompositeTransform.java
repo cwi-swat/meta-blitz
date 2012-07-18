@@ -12,6 +12,10 @@ public class CompositeTransform extends Transform {
 		this.l = l;
 		this.r = r;
 	}
+	
+	public BBox transformBBox(BBox b){
+		return r.transformBBox(l.transformBBox(b));
+	}
 
 	@Override
 	public Vec to(Vec from) {

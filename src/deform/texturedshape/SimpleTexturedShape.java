@@ -12,6 +12,7 @@ import java.util.List;
 
 import deform.BBox;
 import deform.Color;
+import deform.Combinators;
 import deform.Texture;
 import deform.Transform;
 import deform.segments.SegPath;
@@ -31,11 +32,10 @@ public class SimpleTexturedShape extends TexturedShape{
 	}
 	
 	public LocatedImage render(Transform t,BBox b, java.awt.geom.AffineTransform trans) {
-		BBox me = t.transformBBox(b);
+		BBox me = t.transformBBox(shape.bbox);
 		if(!me.overlaps(b)){
 			return LocatedImage.empty;
 		}
-
 		BBox actual = b.intersections(me);
 		int w = actual.getWidthInt();
 		int h = actual.getHeightInt();
@@ -46,16 +46,19 @@ public class SimpleTexturedShape extends TexturedShape{
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_RENDERING,
 				RenderingHints.VALUE_RENDER_QUALITY);
+		Texture tex = Combinators.transform(t, this.tex);
 		boolean java2dPaint = tex instanceof Java2DTexture;
 		if(java2dPaint){
 			g.setPaint(((Java2DTexture)tex).getPaint());
 		} else {
 			g.setColor(java.awt.Color.white);
 		}
+
 		if(trans!=null) g.setTransform(trans);
+		g.translate(-actual.getXInt(), -actual.getYInt());
 		List<SegPath> res = new ArrayList<SegPath>();
 		shape.render(b, t, res);
-		Texture tex = new TransformTexture(t, this.tex);
+
 		g.fill(ShapesMaker.makePath(res));
 		g.dispose();
 		if(!java2dPaint){

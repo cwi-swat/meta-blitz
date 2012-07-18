@@ -24,7 +24,7 @@ public class Line extends Path{
 
 
 	void renderAffine(Transform t, SegmentsMaker res) {
-		res.line(start, end);
+		res.line(t.to(start), t.to(end));
 	}
 
 

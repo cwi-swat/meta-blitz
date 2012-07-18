@@ -23,7 +23,7 @@ public class BasicDemo extends DemoBase{
 	
 	@Override
 	void draw() {
-		final Vec lu = new Vec(100,100);
+		final Vec lu = new Vec(0,0);
 		final double w = 500;
 		final double h = 500;
 		Vec ru = new Vec(lu.x + w, lu.y);
@@ -31,27 +31,27 @@ public class BasicDemo extends DemoBase{
 		Vec rd = new Vec(lu.x + w , lu.y + h);
 		Shape rect = close(
 				path(lu, lineTo(ru), lineTo(rd), lineTo(ld),lineTo(lu)));
-		rect = stroke(rect,30);
-		List<SegPath> res = new ArrayList<SegPath>();
-		TexturedShape s =fill(rect,fillColor(new Color(255,0,0,255)));
-//				,new Texture() {
-//			
-//			@Override
-//			public Color sample(Vec point) {
-////				return new Color(255,0,0,255);
-//				
-//				if((int)(point.x /10) % 2 == 0 ^  (int)(point.y /10) % 2 ==0){
-//					double frac = (point.x - lu.x) /w;
-//					return new Color(255,0,0,255).lerp(frac, new Color(0,255,0,255));
-//				} else {
-//					double frac = (point.y - lu.y) /h;
-//					return new Color(255,0,0,255).lerp(1.0 - frac, new Color(0,255,0,255));
-//				}
-//				
-//			}
-//		});
+//		rect = stroke(rect,30);
+		TexturedShape s =fill(rect //, transform(scale(100),horGradient(new Color(255,0,0,255),new Color(0,255,0,255))));
+				,new Texture() {
+			
+			@Override
+			public Color sample(Vec point) {
+//				return new Color(255,0,0,255);
+				
+				if((int)(point.x /10) % 2 == 0 ^  (int)(point.y /10) % 2 ==0){
+					double frac = (point.x - lu.x) /w;
+					return new Color(255,0,0,255).lerp(frac, new Color(0,255,0,255));
+				} else {
+					double frac = (point.y - lu.y) /h;
+					return new Color(255,0,0,255).lerp(1.0 - frac, new Color(0,255,0,255));
+				}
+				
+			}
+		});
 //		s = transform(fisheye(mouse,1+ Math.abs(wheel)/100, 200), s);
-		s = transform(translate(mouse),s);
+//		s = transform(rotate(wheel/100*Math.PI),s);
+		s = transform(translate(mouse).compose(rotate(wheel/100*Math.PI)).compose(translate(new Vec(-w/2,-h/2))),s);
 		draw(s);
 		
 	}
