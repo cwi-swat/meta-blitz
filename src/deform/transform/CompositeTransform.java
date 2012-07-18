@@ -24,7 +24,7 @@ public class CompositeTransform extends Transform {
 
 	@Override
 	public Vec from(Vec to) {
-		return l.from(r.from(to));
+		return r.from(l.from(to));
 	}
 	
 	
