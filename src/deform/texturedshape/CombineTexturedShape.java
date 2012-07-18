@@ -13,10 +13,9 @@ import deform.ColorCombine;
 import deform.Transform;
 import deform.segments.SegPath;
 import deform.segments.ShapesMaker;
-import deform.transform.IdentityTransform;
-import deform.transform.TransformBBox;
+import deform.transform.affine.IdentityTransform;
 
-public class CombineTexturedShape implements TexturedShape{
+public class CombineTexturedShape extends TexturedShape{
 	
 	final TexturedShape a, b;
 	final ColorCombine comb;
@@ -75,13 +74,13 @@ public class CombineTexturedShape implements TexturedShape{
 
 
 	@Override
-	public LocatedImage render(Transform t,BBox b) {
+	public LocatedImage render(Transform t,BBox b, java.awt.geom.AffineTransform trans) {
 		LocatedImage la = LocatedImage.empty;
-		if(TransformBBox.transformBBox(t,a.getBBox()).overlaps(b)){
+		if(t.transformBBox(a.getBBox()).overlaps(b)){
 			la = a.render(t,b);
 		}
 		LocatedImage lb = LocatedImage.empty;
-		if(TransformBBox.transformBBox(t,this.b.getBBox()).overlaps(b)){
+		if(t.transformBBox(this.b.getBBox()).overlaps(b)){
 			lb = this.b.render(t,b);
 		}
 		if(la == LocatedImage.empty) return lb;
@@ -114,5 +113,11 @@ public class CombineTexturedShape implements TexturedShape{
 	@Override
 	public BBox getBBox() {
 		return a.getBBox().union(b.getBBox());
+	}
+
+
+	@Override
+	public boolean isJava2DRenderable() {
+		return false;
 	}
 }

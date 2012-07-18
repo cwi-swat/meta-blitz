@@ -43,6 +43,17 @@ public class SegPath {
 		return res;
 	}
 	
+	public String toString(){
+		StringBuffer buf = new StringBuffer();
+		buf.append(start.toString());
+		buf.append("\n");
+		for(Segment s : segs){
+			buf.append(s.toString());
+			buf.append("\n");
+		}
+		return buf.toString();
+	}
+	
 	
 	public static SegPath fromJava2d(Path2D p){
 		PathIterator it = p.getPathIterator(null);
@@ -66,6 +77,7 @@ public class SegPath {
 			case PathIterator.SEG_CLOSE: return res;
 			default: throw new Error("Unkown segment constant!");
 			}
+			it.next();
 		}
 		throw new Error("Not closed?");
 	}

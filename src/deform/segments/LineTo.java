@@ -24,5 +24,8 @@ public class LineTo extends Segment{
 		s.lineTo(to.x, to.y);
 	}
 	
+	public String toString(){
+		return "lineTo(" + to + ")";
+	}
 	
 }

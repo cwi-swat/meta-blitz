@@ -24,4 +24,8 @@ public class CubicTo extends Segment{
 	void makeAWT(Path2D s) {
 		s.curveTo(control1.x, control1.y, control2.x, control2.y, to.x, to.y);
 	}
+	
+	public String toString(){
+		return "cubicTo(" + control1 + ", " + control2 + ", " +  to + ")";
+	}
 }

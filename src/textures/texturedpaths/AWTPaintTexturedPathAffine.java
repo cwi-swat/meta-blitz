@@ -4,11 +4,11 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 import deform.BBox;
+import deform.transform.affine.Matrix;
 
 import paths.paths.paths.Path;
 import textures.examples.AWTRenderedTexture;
 import textures.interfaces.ISample;
-import transform.Matrix;
 
 public class AWTPaintTexturedPathAffine<Sample extends ISample<Sample>> extends AWTPaintTexturedPath<Sample>{
 

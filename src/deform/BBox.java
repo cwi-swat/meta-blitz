@@ -150,4 +150,8 @@ public final class BBox {
 	public int getHeightInt() {
 		return (int) Math.ceil(yInterval.high) - (int) yInterval.low;
 	}
+
+	public BBox grow(double width) {
+		return new BBox(xInterval.grow(width), yInterval.grow(width));
+	}
 }

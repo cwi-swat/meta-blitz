@@ -6,7 +6,7 @@ import deform.ColorCombine;
 import deform.Texture;
 import deform.Vec;
 
-public class CombineTex extends Texture{
+public class CombineTex implements Texture{
 
 	final Texture l, r;
 	final ColorCombine comb;
@@ -23,9 +23,6 @@ public class CombineTex extends Texture{
 		return comb.combine(l.sample(point), r.sample(point));
 	}
 	
-	public BBox bounds(){
-		return l.bounds().union(r.bounds());
-	}
 	
 	
 	

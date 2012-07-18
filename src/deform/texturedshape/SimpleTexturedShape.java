@@ -17,11 +17,11 @@ import deform.Transform;
 import deform.segments.SegPath;
 import deform.segments.ShapesMaker;
 import deform.shapes.Shape;
+import deform.texture.Java2DTexture;
 import deform.texture.TransformTexture;
-import deform.transform.IdentityTransform;
-import deform.transform.TransformBBox;
+import deform.transform.affine.IdentityTransform;
 
-public class SimpleTexturedShape implements TexturedShape{
+public class SimpleTexturedShape extends TexturedShape{
 	final Texture tex;
 	final Shape shape;
 	
@@ -30,8 +30,8 @@ public class SimpleTexturedShape implements TexturedShape{
 		this.shape = shape;
 	}
 	
-	public LocatedImage render(Transform t,BBox b) {
-		BBox me = TransformBBox.transformBBox(t,b);
+	public LocatedImage render(Transform t,BBox b, java.awt.geom.AffineTransform trans) {
+		BBox me = t.transformBBox(b);
 		if(!me.overlaps(b)){
 			return LocatedImage.empty;
 		}
@@ -46,36 +46,49 @@ public class SimpleTexturedShape implements TexturedShape{
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_RENDERING,
 				RenderingHints.VALUE_RENDER_QUALITY);
-		g.setColor(java.awt.Color.white);
+		boolean java2dPaint = tex instanceof Java2DTexture;
+		if(java2dPaint){
+			g.setPaint(((Java2DTexture)tex).getPaint());
+		} else {
+			g.setColor(java.awt.Color.white);
+		}
+		if(trans!=null) g.setTransform(trans);
 		List<SegPath> res = new ArrayList<SegPath>();
 		shape.render(b, t, res);
 		Texture tex = new TransformTexture(t, this.tex);
 		g.fill(ShapesMaker.makePath(res));
 		g.dispose();
-		DataBuffer imageBuf = img.getRaster().getDataBuffer();
-		int toX = actual.getXInt() + w;
-		int toY = actual.getYInt() + h;
-		int index = 0;
-		for (int iy = actual.getYInt(); iy < toY; iy++) {
-			for (int ix = actual.getXInt(); ix < toX; ix++) {
-				int alpha = imageBuf.getElem(index) ;
-				if(alpha!= 0){
-					Color c= tex.sample(new deform.Vec(ix + 0.5, iy + 0.5)).mul(alpha);
-					imageBuf.setElem(index++,c.a);
-					imageBuf.setElem(index++,c.b);
-					imageBuf.setElem(index++,c.g);
-					imageBuf.setElem(index++,c.r);
-				} else {
-					index += Color.SampleSize;
+		if(!java2dPaint){
+			DataBuffer imageBuf = img.getRaster().getDataBuffer();
+			int toX = actual.getXInt() + w;
+			int toY = actual.getYInt() + h;
+			int index = 0;
+			for (int iy = actual.getYInt(); iy < toY; iy++) {
+				for (int ix = actual.getXInt(); ix < toX; ix++) {
+					int alpha = imageBuf.getElem(index) ;
+					if(alpha!= 0){
+						Color c= tex.sample(new deform.Vec(ix + 0.5, iy + 0.5)).mul(alpha);
+						imageBuf.setElem(index++,c.a);
+						imageBuf.setElem(index++,c.b);
+						imageBuf.setElem(index++,c.g);
+						imageBuf.setElem(index++,c.r);
+					} else {
+						index += Color.SampleSize;
+					}
 				}
 			}
-		}
+		} 
 		return new LocatedImage(actual.getLeftUp(), img);
 	}
 
 	@Override
 	public BBox getBBox() {
 		return shape.bbox;
+	}
+
+	@Override
+	public boolean isJava2DRenderable() {
+		return tex instanceof Java2DTexture;
 	}
 	
 	

@@ -5,7 +5,6 @@ import java.util.List;
 import deform.BBox;
 import deform.Transform;
 import deform.segments.SegPath;
-import deform.transform.TransformBBox;
 
 public class TransformShape extends Shape{
 
@@ -13,7 +12,7 @@ public class TransformShape extends Shape{
 	final Transform t;
 	
 	public TransformShape(Shape s, Transform t) {
-		super(TransformBBox.transformBBox(t,s.bbox));
+		super(t.transformBBox(s.bbox));
 		this.s = s;
 		this.t = t;
 	}

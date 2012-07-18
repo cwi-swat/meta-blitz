@@ -23,7 +23,7 @@ import deform.texturedshape.LocatedImage;
 import deform.texturedshape.SimpleTexturedShape;
 import deform.texturedshape.TexturedShape;
 import deform.texturedshape.TransformTexturedShape;
-import deform.transform.IdentityTransform;
+import deform.transform.affine.IdentityTransform;
 
 public class Combinators {
 	

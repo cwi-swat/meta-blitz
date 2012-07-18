@@ -1,6 +1,7 @@
 package transform;
 
 import deform.Vec;
+import deform.transform.affine.Matrix;
 
 public final class AffineTransformation implements ITransform {
 

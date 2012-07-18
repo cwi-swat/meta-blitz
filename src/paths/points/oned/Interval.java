@@ -262,4 +262,8 @@ public class Interval {
 	public Interval intIterval() {
 		return new Interval((int) low, Math.ceil(high));
 	}
+
+	public Interval grow(double width) {
+		return new Interval(low - width/2, high + width/2);
+	}
 }

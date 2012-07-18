@@ -25,4 +25,8 @@ public class QuadTo extends Segment {
 	void makeAWT(Path2D s) {
 		s.quadTo(control.x, control.y, to.x, to.y);
 	}
+	
+	public String toString(){
+		return "quadTo(" + control + ", " + to + ")";
+	}
 }

@@ -24,6 +24,7 @@ public class ShapesMaker {
 	
 	public static void fromJava2D(PathIterator it, List<SegPath> res){
 		while(!it.isDone()){
+			
 			res.add(SegPath.fromJava2d(it));
 			it.next();
 		}

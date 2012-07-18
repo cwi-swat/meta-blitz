@@ -4,6 +4,7 @@ import deform.BBox;
 import deform.Transform;
 import deform.segments.SegPath;
 import deform.segments.SegmentsMaker;
+import deform.transform.affine.AffineTransform;
 
 public abstract class Path {
 
@@ -20,7 +21,7 @@ public abstract class Path {
 	}
 	
 	void render(Transform t, SegmentsMaker res){
-		if(t.isAffine()){
+		if(t instanceof AffineTransform){
 			renderAffine(t,res);
 		} else {
 			renderNonAffine(t, res);

@@ -1,4 +1,4 @@
-package transform;
+package deform.transform.affine;
 
 import deform.Vec;
 
@@ -32,8 +32,8 @@ public class Matrix {
 	}
 
 	public Vec mul(Vec v) {
-		return new Vec(x1 * v.x + x2 * v.y + (v.point ? x3 : 0), y1 * v.x + y2
-				* v.y + (v.point ? y3 : 0), v.point);
+		return new Vec(x1 * v.x + x2 * v.y + x3 , 
+					y1 * v.x + y2* v.y + y3 );
 	}
 
 	public static Matrix identitiy() {
@@ -46,32 +46,19 @@ public class Matrix {
 		return new Matrix(c, s, 0, -s, c, 0);
 	}
 
-	public static Matrix translate(double x, double y) {
-		return new Matrix(1, 0, x, 0, 1, y);
-	}
-
 	public static Matrix translate(Vec v) {
-		return translate(v.x, v.y);
+		return new Matrix(1, 0, v.x, 0, 1, v.y);
 	}
 
 	public static Matrix scale(double x, double y) {
 		return new Matrix(x, 0, 0, 0, y, 0);
 	}
-
-	public static Matrix scale(Vec v) {
-		return scale(v.x, v.y);
-	}
-
 	public static Matrix scale(double d) {
 		return scale(d, d);
 	}
 
-	public static Matrix shearX(double x) {
-		return new Matrix(1, x, 0, 0, 1, 0);
-	}
-
-	public static Matrix shearY(double x) {
-		return new Matrix(1, 0, 0, x, 1, 0);
+	public static Matrix shear(double x,double y) {
+		return new Matrix(1, x, 0, y, 1, 0);
 	}
 
 	public static Matrix rotateAroundPoint(Vec v, double rads) {
@@ -79,6 +66,10 @@ public class Matrix {
 		return translate(v).mul(rotate(rads)).mul(translate(rotBack.mul(v)));
 	}
 
+	public java.awt.geom.AffineTransform toJava2DTransform(){
+		return new java.awt.geom.AffineTransform(x1, x2, y1, y2, x3, y3);
+	}
+	
 	public String toString() {
 		return String
 				.format("[%7.3f %7.3f %7.3f]\n[%7.3f %7.3f %7.3f]\n[%7.3f %7.3f %7.3f]\n",

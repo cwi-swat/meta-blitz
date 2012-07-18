@@ -6,9 +6,9 @@ import deform.BBox;
 import deform.Transform;
 import deform.shapes.TransformShape;
 import deform.texture.TransformTexture;
-import deform.transform.TransformBBox;
+import deform.transform.affine.AffineTransform;
 
-public class TransformTexturedShape implements TexturedShape{
+public class TransformTexturedShape extends TexturedShape{
 
 	final TexturedShape texs;
 	final Transform t;
@@ -17,10 +17,16 @@ public class TransformTexturedShape implements TexturedShape{
 		this.texs = texs;
 		this.t = t;
 	}
+	
 	@Override
-	public LocatedImage render(Transform t, BBox b) {
-		if(TransformBBox.transformBBox(t, getBBox()).overlaps(b)){
-			return texs.render(t.compose(this.t), b);
+	public LocatedImage render(Transform t, BBox b, java.awt.geom.AffineTransform trans ) {
+		if(t.transformBBox(getBBox()).overlaps(b)){
+			Transform composed = t.compose(this.t);
+			if(composed instanceof AffineTransform && texs.isJava2DRenderable()){
+				return texs.render(t, b, ((AffineTransform)composed).toJava2DTransform());
+			} else {
+				return texs.render(t.compose(this.t), b);
+			}
 		} else {
 			return LocatedImage.empty;
 		}
@@ -28,9 +34,9 @@ public class TransformTexturedShape implements TexturedShape{
 	}
 	@Override
 	public BBox getBBox() {
-		return TransformBBox.transformBBox(t, texs.getBBox());
+		return t.transformBBox(texs.getBBox());
 	}
-	
+
 	
 	
 }

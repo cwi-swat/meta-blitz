@@ -1,11 +1,17 @@
-package deform.transform;
+package deform.transform.affine;
 
 import deform.Transform;
 import deform.Vec;
 
 
 
-public class IdentityTransform extends Transform {
+public class IdentityTransform extends AffineTransform {
+
+	IdentityTransform() {
+		super(null,null);
+	}
+
+
 
 	public static final IdentityTransform Instance = new IdentityTransform();
 	@Override
@@ -18,12 +24,11 @@ public class IdentityTransform extends Transform {
 		return to;
 	}
 	
-	public boolean isAffine(){
-		return true;
+
+	public java.awt.geom.AffineTransform toJava2DTransform(){
+		return null;
 	}
 	
-	
-
 	public Transform compose(Transform rhs){
 		return rhs;
 	}

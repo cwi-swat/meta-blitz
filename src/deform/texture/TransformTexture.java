@@ -5,9 +5,8 @@ import deform.Color;
 import deform.Texture;
 import deform.Transform;
 import deform.Vec;
-import deform.transform.TransformBBox;
 
-public class TransformTexture extends Texture{
+public class TransformTexture implements Texture{
 
 	final Transform t;
 	final Texture tex;
@@ -20,10 +19,6 @@ public class TransformTexture extends Texture{
 	@Override
 	public Color sample(Vec point) {
 		return tex.sample(t.from(point));
-	}
-	
-	public BBox bounds(){
-		return TransformBBox.transformBBox(t, tex.bounds());
 	}
 
 }
