@@ -92,6 +92,9 @@ public class Combinators {
 	}
 	
 	public static Texture transform(Transform t, Texture tex){
+		if(t instanceof IdentityTransform){
+			return tex;
+		}
 		if(t instanceof AffineTransform && tex instanceof AffineTransformableTex){
 			return ((AffineTransformableTex)tex).transform(t);
 		} else if(tex instanceof FillColor){

@@ -18,6 +18,8 @@ import deform.shapes.Shape;
 import deform.shapes.StrokedPath;
 import deform.shapes.StrokedShape;
 import deform.texture.FillColor;
+import deform.texture.ImageTex;
+import deform.texture.RepeatingImage;
 import deform.texture.gradients.HorCycleMultipleGradient;
 import deform.texture.gradients.HorCyclicGradient;
 import deform.texture.gradients.HorGradient;
@@ -181,5 +183,13 @@ public class Library {
 		case Cycle: return new RadialCyclicGradient(cfs, IdentityTransform.Instance );
 		}
 		throw new Error("Unkown cycle type!");
+	}
+	
+	public static Texture image(String path){
+		return new ImageTex(path);
+	}
+	
+	public static Texture tiledImage(String path){
+		return new RepeatingImage(path);
 	}
 }

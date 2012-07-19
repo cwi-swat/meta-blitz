@@ -75,4 +75,8 @@ public class Matrix {
 				.format("[%7.3f %7.3f %7.3f]\n[%7.3f %7.3f %7.3f]\n[%7.3f %7.3f %7.3f]\n",
 						x1, x2, x3, y1, y2, y3, 0.0, 0.0, 1.0);
 	}
+
+	public boolean isTranslation() {
+		return x1 == 1 && x2 == 0 && y1 == 0 && y2 == 0;
+	}
 }

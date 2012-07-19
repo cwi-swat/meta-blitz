@@ -19,7 +19,7 @@ public class SegPath {
 		segs = new ArrayList<Segment>();
 	}
 	
-	public SegPath(Vec start, Segment[] segs){
+	public SegPath(Vec start, Segment ... segs){
 		this.start = start;
 		this.segs = Arrays.asList(segs);
 	}

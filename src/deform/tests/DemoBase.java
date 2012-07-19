@@ -79,8 +79,11 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
         bufferStrategy = getBufferStrategy();
         
         isRunning = true;
+        init();
         gameLoop(); // enter the game loop
     }
+    
+    public abstract void init();
     
     /**
      * Method containing the game's loop.

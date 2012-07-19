@@ -80,5 +80,10 @@ public class AffineTransform extends Transform{
 	public String toString(){
 		return to.toString();
 	}
+
+
+	public boolean isTranslation() {
+		return to.isTranslation();
+	}
 	
 }

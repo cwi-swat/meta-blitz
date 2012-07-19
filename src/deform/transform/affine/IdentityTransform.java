@@ -33,4 +33,7 @@ public class IdentityTransform extends AffineTransform {
 		return rhs;
 	}
 
+	public boolean isTranslation() {
+		return true;
+	}
 }

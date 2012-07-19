@@ -22,8 +22,11 @@ import deform.segments.SegPath;
 import deform.segments.ShapesMaker;
 import deform.shapes.Shape;
 import deform.tests.BasicDemo;
+import deform.texture.ImageTex;
 import deform.texture.Java2DTexture;
+import deform.texture.RepeatingImage;
 import deform.texture.TransformTexture;
+import deform.transform.affine.AffineTransform;
 import deform.transform.affine.IdentityTransform;
 
 public class SimpleTexturedShape extends TexturedShape{
@@ -41,14 +44,26 @@ public class SimpleTexturedShape extends TexturedShape{
 			return;
 		}
 		BBox actual = ctx.area.intersections(me);
+		if(tex instanceof ImageTex && t instanceof AffineTransform){
+			ctx.renderImage(((ImageTex)tex).i,(AffineTransform)t,shape);
+			return;
+		}
+		boolean java2dPaint ;
+		Texture tex = this.tex;
+		if(tex instanceof RepeatingImage && t instanceof AffineTransform && ((AffineTransform)t).isTranslation()){
 
-		Texture tex = Combinators.transform(t, this.tex);
-		boolean java2dPaint = tex instanceof Java2DTexture;
-		
-		if(java2dPaint){
-			ctx.setPaint(((Java2DTexture)tex).getPaint());
+			ctx.setPaint(((RepeatingImage)tex).getTranslatedPaint(t));
+			java2dPaint = true;
 		} else {
-			ctx.setPaint(java.awt.Color.white);
+			tex = Combinators.transform(t, this.tex);
+			
+			java2dPaint =  tex instanceof Java2DTexture;
+			
+			if(java2dPaint){
+				ctx.setPaint(((Java2DTexture)tex).getPaint());
+			} else {
+				ctx.setPaint(java.awt.Color.white);
+			}
 		}
 
 		if(!java2dPaint){

@@ -13,6 +13,7 @@ import java.util.List;
 import deform.BBox;
 import deform.Color;
 import deform.Transform;
+import deform.segments.LineTo;
 import deform.segments.SegPath;
 import deform.segments.ShapesMaker;
 
@@ -100,6 +101,24 @@ public class RenderContext {
 		s.render(area, t, res);
 		g.fill(ShapesMaker.makePath(res));
 		
+	}
+
+	public void renderImage(BufferedImage i, deform.transform.affine.AffineTransform t,
+			deform.shapes.Shape s) {
+		List<SegPath> res = new ArrayList<SegPath>();
+		s.render(area, t, res);
+//		res.add(
+//				new SegPath(area.getLeftUp(),
+//						new LineTo(area.getRightUp()),
+//						new LineTo(area.getRightDown()),
+//						new LineTo(area.getLeftDown()),
+//						new LineTo(area.getLeftUp())));
+		g.setClip(ShapesMaker.makePath(res));
+		AffineTransform trans = t.toJava2DTransform();
+		if(trans!=null) g.setTransform(trans);
+		g.drawImage( i, 0, 0, null);
+		g.setClip(null);
+		resetTransform();
 	}
 	
 	
