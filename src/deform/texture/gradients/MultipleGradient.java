@@ -22,6 +22,7 @@ public abstract class MultipleGradient implements Texture, Java2DTexture, Affine
 	final double[] lengths;
 	final Color[] colors;
 	final AffineTransform aff;
+	final double avrg;
 	
 
 	MultipleGradient(double[] fractions, Color[] colors, AffineTransform aff) {
@@ -29,6 +30,7 @@ public abstract class MultipleGradient implements Texture, Java2DTexture, Affine
 		this.colors = colors;
 		this.aff = aff;
 		this.lengths = makeLengths(fractions);
+		this.avrg = 1.0/ (double)(fractions.length-1);
 	}
 
 
@@ -53,6 +55,7 @@ public abstract class MultipleGradient implements Texture, Java2DTexture, Affine
 		}
 		this.aff = aff;	
 		this.lengths = makeLengths(fractions);
+		this.avrg = 1.0/ (double)(fractions.length-1);
 	}
 	
 	static double[] makeLengths(double[] fracs){
@@ -65,10 +68,11 @@ public abstract class MultipleGradient implements Texture, Java2DTexture, Affine
 
 	
 	Color getColor(double frac){
-		int start =  BinarySearches.floorBinarySearch(fractions, frac);
-		if(start == fractions.length-1){
-			return colors[fractions.length-1];
+		int start;
+		for( start = 0 ; start < fractions.length -1 && fractions[start] <= frac ; start++){
+			
 		}
+		start--;
 		double l = (frac - fractions[start]) / lengths[start];
 		return colors[start].lerp(l, colors[start+1]);
 	}

@@ -11,6 +11,8 @@ import deform.BBox;
 import deform.Combinators;
 import deform.Texture;
 import deform.Transform;
+import deform.render.LocatedImage;
+import deform.render.RenderContext;
 import deform.segments.SegPath;
 import deform.segments.ShapesMaker;
 import deform.tests.BasicDemo;
@@ -40,25 +42,17 @@ public class Over extends TexturedShape{
 	}
 
 	@Override
-	LocatedImage render(Transform t, BBox b, AffineTransform trans) {
+	public
+	void render(Transform t,  RenderContext ctx) {
 		BBox nb = t.transformBBox(this.b);
-		if(nb.overlaps(b)){
-			nb = nb.intersections(b);
-			BufferedImage img = new BufferedImage(nb.getWidthInt(),
-					nb.getHeightInt(), BufferedImage.TYPE_4BYTE_ABGR);
-			Graphics2D g = (Graphics2D) img.getGraphics();
+		if(nb.overlaps(ctx.area)){
+			nb = nb.intersections(ctx.area);
 
-//			if(trans!=null) g.setTransform(trans);
-			g.translate(-nb.getXInt(), -nb.getYInt());
 			
 			for(TexturedShape ts : shapes){
-				ts.render(t, b,trans).draw(g);
+				ts.render(t,ctx);
 			}
-			g.dispose();
-			return new LocatedImage(nb.getLeftUp(), img);
-		} else {
-			return LocatedImage.empty;
-		}
+		} 
 	}
 
 	

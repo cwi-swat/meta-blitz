@@ -10,26 +10,44 @@ public class Color {
 	public static Color transparent = new Color(0,0,0,0);
 	public final int r, g, b, a;
 
-	public Color(int r, int g, int b, int a) {
+	Color(int r, int g, int b, int a) {
 		this.r = r;
 		this.g = g;
 		this.b = b;
 		this.a = a;
 	}
-
 	
-	public Color(int i, int j, int k) {
-		this(i,j,k,255);
+	public static Color color(int r, int g, int b){
+		return new Color(r, g, b, 255);
 	}
-
+	
+	public static Color color(int r, int g, int b , int a){
+		return new Color(r, g, b, a);
+	}
 
 	public Color mul(int d) {
 		d = clamp(d);
 		return new Color((r * d >> 8), (g * d >> 8), (b * d >> 8),
 				(a * d) >> 8);
 	}
+	
+	public Color mulMulAlpha(int a) {
+		return new Color((r * a >> 8), (g * a >> 8), (b * a >> 8),
+				a);
+	}
+	
 
 	public Color add(Color rhs) {
+		if(rhs.a == 255) return rhs;
+		if(a==0){
+			return rhs;
+		}
+		if(a + rhs.a > 255){
+			int na = 255 - rhs.a;
+			return color((r * na >> 8) + (rhs.r* rhs.a >> 8) , 
+					(g * na >> 8) + (rhs.g* rhs.a >> 8), 
+					(b * na >> 8) + (rhs.b* rhs.a >> 8));
+		}
 		return new Color(clamp(r + rhs.r), clamp(g + rhs.g), clamp(b
 				+ rhs.b), clamp(a + rhs.a));
 	}
@@ -45,6 +63,10 @@ public class Color {
 				(g * rd >> 8) + (other.g * d >> 8),
 				(b * rd >> 8) + (other.b * d >> 8),
 				(a * rd >> 8) + (other.a * d >> 8));
+	}
+	
+	public String toString(){
+		return String.format("Color(%d,%d,%d,%d)",r,g,b,a);
 	}
 
 }

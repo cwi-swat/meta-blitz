@@ -4,6 +4,8 @@ import java.awt.Graphics2D;
 
 import deform.BBox;
 import deform.Transform;
+import deform.render.LocatedImage;
+import deform.render.RenderContext;
 import deform.shapes.TransformShape;
 import deform.tests.BasicDemo;
 import deform.texture.TransformTexture;
@@ -21,17 +23,16 @@ public class TransformTexturedShape extends TexturedShape{
 	}
 	
 	@Override
-	public LocatedImage render(Transform t, BBox b, java.awt.geom.AffineTransform trans ) {
-		if(t.transformBBox(getBBox()).overlaps(b)){
+	public void render(Transform t,   RenderContext ctx) {
+		if(t.transformBBox(getBBox()).overlaps(ctx.area)){
 			Transform composed = t.compose(this.t);
 			if(BasicDemo.awt && composed instanceof AffineTransform && texs.isJava2DRenderable()){
-				return texs.render(IdentityTransform.Instance, b, ((AffineTransform)composed).toJava2DTransform());
+				ctx.setTransform(((AffineTransform)composed).toJava2DTransform());
+				texs.render(IdentityTransform.Instance,  ctx);
 			} else {
-				return texs.render(t.compose(this.t), b);
+				texs.render(composed, ctx);
 			}
-		} else {
-			return LocatedImage.empty;
-		}
+		} 
 		
 	}
 	@Override

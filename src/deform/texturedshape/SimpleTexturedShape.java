@@ -15,6 +15,9 @@ import deform.Color;
 import deform.Combinators;
 import deform.Texture;
 import deform.Transform;
+import deform.render.LocatedImage;
+import deform.render.RenderContext;
+import deform.render.ScanLiner;
 import deform.segments.SegPath;
 import deform.segments.ShapesMaker;
 import deform.shapes.Shape;
@@ -32,61 +35,43 @@ public class SimpleTexturedShape extends TexturedShape{
 		this.shape = shape;
 	}
 	
-	public LocatedImage render(Transform t,BBox b, java.awt.geom.AffineTransform trans) {
+	public void render(Transform t,RenderContext ctx) {
 		BBox me = t.transformBBox(shape.bbox);
-		if(!me.overlaps(b)){
-			return LocatedImage.empty;
+		if(!me.overlaps(ctx.area)){
+			return;
 		}
-		BBox actual = b.intersections(me);
-		int w = actual.getWidthInt();
-		int h = actual.getHeightInt();
-		BufferedImage img = new BufferedImage(actual.getWidthInt(),
-				actual.getHeightInt(), BufferedImage.TYPE_4BYTE_ABGR);
-		Graphics2D g = (Graphics2D) img.getGraphics();
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, // Anti-alias!
-				RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setRenderingHint(RenderingHints.KEY_RENDERING,
-				RenderingHints.VALUE_RENDER_QUALITY);
+		BBox actual = ctx.area.intersections(me);
 
 		Texture tex = Combinators.transform(t, this.tex);
-		boolean java2dPaint = BasicDemo.awt && tex instanceof Java2DTexture;
+		boolean java2dPaint = tex instanceof Java2DTexture;
 		
 		if(java2dPaint){
-			g.setPaint(((Java2DTexture)tex).getPaint());
+			ctx.setPaint(((Java2DTexture)tex).getPaint());
 		} else {
-			
-			g.setColor(java.awt.Color.white);
+			ctx.setPaint(java.awt.Color.white);
 		}
 
-
-		if(trans!=null) g.setTransform(trans);
-		g.translate(-actual.getXInt(), -actual.getYInt());
-		List<SegPath> res = new ArrayList<SegPath>();
-		shape.render(b, t, res);
-
-		g.fill(ShapesMaker.makePath(res));
-		g.dispose();
 		if(!java2dPaint){
-			DataBuffer imageBuf = img.getRaster().getDataBuffer();
-			int toX = actual.getXInt() + w;
-			int toY = actual.getYInt() + h;
-			int index = 0;
+			ctx.setShape(t, shape);
+			ScanLiner it = new ScanLiner(ctx.area, actual);
+
+			int toX = actual.getXInt() + actual.getWidthInt();
+			int toY = actual.getYInt() + actual.getHeightInt();
 			for (int iy = actual.getYInt(); iy < toY; iy++) {
 				for (int ix = actual.getXInt(); ix < toX; ix++) {
-					int alpha = imageBuf.getElem(index) ;
+					int alpha = ctx.getAlpha(it.curFill);
+
 					if(alpha!= 0){
 						Color c= tex.sample(new deform.Vec(ix + 0.5, iy + 0.5)).mul(alpha);
-						imageBuf.setElem(index++,c.a);
-						imageBuf.setElem(index++,c.b);
-						imageBuf.setElem(index++,c.g);
-						imageBuf.setElem(index++,c.r);
-					} else {
-						index += Color.SampleSize;
+						
+						ctx.addElem(it.cur, c);
 					}
+					it.increment();
 				}
 			}
-		} 
-		return new LocatedImage(actual.getLeftUp(), img);
+		} else {
+			ctx.directShape(t,shape);
+		}
 	}
 
 	@Override

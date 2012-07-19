@@ -3,7 +3,6 @@ package deform.texturedshape;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +10,8 @@ import deform.BBox;
 import deform.Color;
 import deform.ColorCombine;
 import deform.Transform;
+import deform.render.LocatedImage;
+import deform.render.ScanLiner;
 import deform.segments.SegPath;
 import deform.segments.ShapesMaker;
 import deform.transform.affine.IdentityTransform;
@@ -26,53 +27,6 @@ public class CombineTexturedShape extends TexturedShape{
 		this.comb = comb;
 	}
 	
-	static class ScanLiner{
-		
-		final BBox whole, part;
-		int endOfLineInc, cur, curLine, width, height, y;
-		final DataBuffer buf;
-		ScanLiner(BufferedImage img,BBox whole, BBox part) {
-			this.buf = img.getRaster().getDataBuffer();
-			this.whole = whole;
-			this.part = part;
-			int wholeWidth = whole.getWidthInt();
-			this.width = part.getWidthInt();
-			this.height = part.getHeightInt();
-			curLine = 0;
-			y = 0;
-			cur = (wholeWidth * (part.getYInt() - whole.getWidthInt()) 
-					+ (part.getXInt() - whole.getXInt())) * Color.SampleSize;
-			endOfLineInc = ((whole.getWidthInt() - part.getWidthInt()) - (part.getXInt() - whole.getXInt()) ) * Color.SampleSize;
-		}
-		
-		Color getColor(){
-			return new Color(buf.getElem(cur+3),buf.getElem(cur+2), buf.getElem(cur+1), buf.getElem(cur));
-		}
-		
-		void setElem(Color c){
-			buf.setElem(cur,c.a);
-			buf.setElem(cur+1,c.b);
-			buf.setElem(cur+2,c.g);
-			buf.setElem(cur+3,c.r);
-		}
-		
-		void increment(){
-			if(curLine == width - 1){
-				cur+=endOfLineInc;
-				curLine = 0;
-				y++;
-			} else {
-				cur+=Color.SampleSize;
-				curLine++;
-			}
-		}
-		
-		boolean isDone(){
-			return y == height;
-		}
-	}
-
-
 	@Override
 	public LocatedImage render(Transform t,BBox b, java.awt.geom.AffineTransform trans) {
 		LocatedImage la = LocatedImage.empty;

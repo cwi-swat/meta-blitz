@@ -4,6 +4,8 @@ import java.awt.Graphics2D;
 
 import deform.paths.Path;
 import deform.paths.TransformPath;
+import deform.render.LocatedImage;
+import deform.render.RenderContext;
 import deform.segments.CubicTo;
 import deform.segments.LineTo;
 import deform.segments.QuadTo;
@@ -18,9 +20,9 @@ import deform.shapes.TransformShape;
 import deform.shapes.UnionShapes;
 import deform.texture.AffineTransformableTex;
 import deform.texture.CombineTex;
+import deform.texture.FillColor;
 import deform.texture.TransformTexture;
 import deform.texturedshape.CombineTexturedShape;
-import deform.texturedshape.LocatedImage;
 import deform.texturedshape.SimpleTexturedShape;
 import deform.texturedshape.TexturedShape;
 import deform.texturedshape.TransformTexturedShape;
@@ -28,6 +30,14 @@ import deform.transform.affine.AffineTransform;
 import deform.transform.affine.IdentityTransform;
 
 public class Combinators {
+	
+	public static Color color(int r, int g, int b){
+		return Color.color(r, g, b);
+	}
+	
+	public static Color color(int r, int g , int b, int a){
+		return Color.color(r, g, b, a);
+	}
 	
 	public static Segment lineTo(Vec to){
 		return new LineTo(to);
@@ -84,6 +94,8 @@ public class Combinators {
 	public static Texture transform(Transform t, Texture tex){
 		if(t instanceof AffineTransform && tex instanceof AffineTransformableTex){
 			return ((AffineTransformableTex)tex).transform(t);
+		} else if(tex instanceof FillColor){
+			return tex;
 		}
 		return new TransformTexture(t,tex);
 	}
@@ -96,9 +108,8 @@ public class Combinators {
 		return new CombineTexturedShape(a,b,comb);
 	}
 	
-	public static void render(Graphics2D g, BBox b, TexturedShape s){
-		LocatedImage i = s.render(IdentityTransform.Instance, b);
-		i.draw(g);
+	public static void render(RenderContext ctx,TexturedShape s){
+		s.render(IdentityTransform.Instance,ctx);
 	}
 	
 }

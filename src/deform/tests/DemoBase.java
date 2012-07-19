@@ -9,6 +9,7 @@ import javax.swing.*;
 import deform.BBox;
 import deform.Combinators;
 import deform.Vec;
+import deform.render.RenderContext;
 import deform.texturedshape.TexturedShape;
 
 import textures.interfaces.ITexture;
@@ -30,7 +31,7 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
 	public String textInput;
 	public String lastLine;
 	public double wheel;
-     
+    private RenderContext ctx;
     
     public DemoBase()
     {
@@ -120,8 +121,9 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
                 this.lg = g;
                 g.setBackground(Color.black);
                 g.clearRect(0, 0, (int)size.x, (int)size.y);
+                this.ctx = new RenderContext(new BBox(0,0,size.x,size.y), null, null);
                 draw(); // enter the method to draw everything
-                
+                g.drawImage(ctx.img, 0, 0,null);
             }
             finally
             {
@@ -190,7 +192,7 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
     }
     
     public void draw(TexturedShape s){
-    	Combinators.render(lg, new BBox(0,0,size.x,size.y), s);
+    	Combinators.render(ctx,  s);
     }
     
    

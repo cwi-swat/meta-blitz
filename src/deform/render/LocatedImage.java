@@ -1,4 +1,4 @@
-package deform.texturedshape;
+package deform.render;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -13,7 +13,7 @@ public class LocatedImage {
 	
 	final Vec pos;
 	final BufferedImage img;
-	LocatedImage(Vec pos, BufferedImage img) {
+	public LocatedImage(Vec pos, BufferedImage img) {
 		this.pos = pos;
 		this.img = img;
 	
