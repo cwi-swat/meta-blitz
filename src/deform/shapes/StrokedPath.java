@@ -27,7 +27,7 @@ public class StrokedPath extends Shape{
 	@Override
 	public void render(BBox area, Transform t, List<SegPath> res) {
 		SegPath sp = s.render( t);
-		java.awt.Shape js = stroke.createStrokedShape(ShapesMaker.makePath(Collections.singletonList(sp)));
+		java.awt.Shape js = stroke.createStrokedShape(sp.toJava2d());
 		ShapesMaker.fromJava2D(js.getPathIterator(null), res);
 		
 	}

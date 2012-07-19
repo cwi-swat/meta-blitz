@@ -6,7 +6,7 @@ import java.awt.geom.AffineTransform;
 import deform.BBox;
 import deform.transform.affine.Matrix;
 
-import paths.paths.paths.Path;
+import paths.paths.paths.QueryPath;
 import textures.examples.AWTRenderedTexture;
 import textures.interfaces.ISample;
 
@@ -17,7 +17,7 @@ public class AWTPaintTexturedPathAffine<Sample extends ISample<Sample>> extends 
 	AffineTransform awtTrans;
 	
 	
-	public AWTPaintTexturedPathAffine(Matrix m, Path path,
+	public AWTPaintTexturedPathAffine(Matrix m, QueryPath path,
 			AWTRenderedTexture<Sample> texture) {
 		super(path, texture);
 		this.matrix = m;

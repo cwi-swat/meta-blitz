@@ -7,7 +7,7 @@ import java.awt.geom.Rectangle2D;
 import deform.BBox;
 import demo.DummyAWTSHape;
 
-import paths.paths.paths.Path;
+import paths.paths.paths.QueryPath;
 import textures.examples.AWTRenderedTexture;
 import textures.examples.Texture;
 import textures.interfaces.ISample;
@@ -16,16 +16,16 @@ import transform.ITransform;
 
 public class AWTPaintTexturedPath <Sample extends ISample<Sample>> implements
 ITexturedPath<Sample> {
-	public final Path path;
+	public final QueryPath path;
 	public final AWTRenderedTexture<Sample> texture;
 
-	public AWTPaintTexturedPath(Path path, AWTRenderedTexture<Sample> texture) {
+	public AWTPaintTexturedPath(QueryPath path, AWTRenderedTexture<Sample> texture) {
 		this.path = path;
 		this.texture = texture;
 	}
 
 	@Override
-	public Path getPath() {
+	public QueryPath getPath() {
 		return path;
 	}
 

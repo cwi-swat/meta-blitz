@@ -4,6 +4,9 @@ import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import paths.paths.factory.QueryPathFactory;
+import paths.paths.paths.QueryPath;
+
 import deform.BBox;
 import deform.Transform;
 import deform.segments.SegPath;
@@ -44,4 +47,14 @@ public class ShapeSet extends Shape{
 		return buf.toString();
 	}
 
+	@Override
+	public QueryPath toQueryPath(){
+		List<QueryPath> res = new ArrayList<QueryPath>();
+		for(Shape s : closed){
+			res.add(s.toQueryPath());
+		}
+		return QueryPathFactory.createSet(res);
+	}
+
+	
 }

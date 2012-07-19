@@ -3,6 +3,9 @@ package deform.shapes;
 import java.awt.geom.Path2D;
 import java.util.List;
 
+import paths.paths.factory.QueryPathFactory;
+import paths.paths.paths.QueryPath;
+
 import deform.BBox;
 import deform.Transform;
 import deform.Vec;
@@ -31,6 +34,11 @@ public class Closed extends Shape{
 	
 	public String toString(){
 		return "Close(" + path.toString() + ")";
+	}
+	
+	@Override
+	public QueryPath toQueryPath(){
+		return QueryPathFactory.createClosedPath(path.toQueryPath());
 	}
 
 	

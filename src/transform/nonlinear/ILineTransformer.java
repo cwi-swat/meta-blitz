@@ -1,8 +1,8 @@
 package transform.nonlinear;
 
-import paths.paths.paths.Path;
+import paths.paths.paths.QueryPath;
 import paths.paths.paths.simple.Line;
 
 public interface ILineTransformer {
-	Path transform(Line l);
+	QueryPath transform(Line l);
 }

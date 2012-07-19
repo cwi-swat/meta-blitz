@@ -1,10 +1,12 @@
 package deform.paths;
 
+import paths.paths.paths.QueryPath;
 import deform.BBox;
 import deform.Transform;
 import deform.segments.SegPath;
 import deform.segments.SegmentsMaker;
 import deform.transform.affine.AffineTransform;
+import deform.transform.affine.IdentityTransform;
 
 public abstract class Path {
 
@@ -30,4 +32,12 @@ public abstract class Path {
 	abstract void renderAffine(Transform t, SegmentsMaker res);
 	abstract void renderNonAffine(Transform t, SegmentsMaker res);
 	
+	
+	public abstract QueryPath toQueryPath();
+	
+	public Path normalise(){
+		SegmentsMaker res = new SegmentsMaker();
+		render(IdentityTransform.Instance,res);
+		return res.done().toPath();
+	}
 }

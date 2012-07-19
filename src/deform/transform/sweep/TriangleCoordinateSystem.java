@@ -1,4 +1,4 @@
-package transform.nonlinear.pathdeform;
+package deform.transform.sweep;
 
 import deform.Vec;
 import paths.paths.paths.simple.Line;

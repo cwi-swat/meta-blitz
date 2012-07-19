@@ -2,7 +2,7 @@ package paths.paths.paths.compound;
 
 import java.util.List;
 
-import paths.paths.paths.Path;
+import paths.paths.paths.QueryPath;
 import paths.paths.paths.PathIndex;
 import paths.paths.paths.compound.SplitIndex.SplitChoice;
 import paths.paths.results.transformers.IPathIndexTransformer;
@@ -18,13 +18,13 @@ public class Append extends CompoundSplittablePath {
 
 	final PathIndex borderLeft, borderRight;
 
-	public Append(Path left, Path right) {
+	public Append(QueryPath left, QueryPath right) {
 		super(left, right);
 		borderLeft = new AppendIndex(SplitChoice.Left, left.maxPathIndex());
 		borderRight = new AppendIndex(SplitChoice.Right, right.minPathIndex());
 	}
 
-	private static Path createAppend(List<Path> paths, int start, int end) {
+	private static QueryPath createAppend(List<QueryPath> paths, int start, int end) {
 		if (start == end - 1) {
 			return paths.get(start);
 		} else {
@@ -34,13 +34,8 @@ public class Append extends CompoundSplittablePath {
 		}
 	}
 
-	public static Path createAppends(List<Path> paths) {
+	public static QueryPath createAppends(List<QueryPath> paths) {
 		return createAppend(paths, 0, paths.size());
-	}
-
-	@Override
-	public Append transform(IToTransform t) {
-		return new Append(left.transform(t), right.transform(t));
 	}
 
 	@Override
@@ -49,10 +44,10 @@ public class Append extends CompoundSplittablePath {
 	}
 
 	@Override
-	public Tuple<Path, Double> normaliseToLength(double prevLength) {
-		Tuple<Path, Double> ln = left.normaliseToLength(prevLength);
-		Tuple<Path, Double> rn = right.normaliseToLength(ln.r);
-		return new Tuple<Path, Double>(new Append(ln.l, rn.l), rn.r);
+	public Tuple<QueryPath, Double> normaliseToLength(double prevLength) {
+		Tuple<QueryPath, Double> ln = left.normaliseToLength(prevLength);
+		Tuple<QueryPath, Double> rn = right.normaliseToLength(ln.r);
+		return new Tuple<QueryPath, Double>(new Append(ln.l, rn.l), rn.r);
 	}
 
 	@Override
@@ -83,17 +78,6 @@ public class Append extends CompoundSplittablePath {
 	@Override
 	public PathIndexTupleTransformer getRightRightTransformer() {
 		return TupleTransformers.arightRight;
-	}
-
-	@Override
-	public Append deformActual(IDeform p) {
-		return new Append(left.deform(p), right.deform(p));
-	}
-
-	@Override
-	public Path transformApproxLines(ILineTransformer t) {
-		return new Append(left.transformApproxLines(t),
-				right.transformApproxLines(t));
 	}
 
 }

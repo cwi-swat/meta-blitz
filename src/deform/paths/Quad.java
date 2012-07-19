@@ -3,6 +3,8 @@ package deform.paths;
 import java.util.List;
 
 import paths.Constants;
+import paths.paths.factory.QueryPathFactory;
+import paths.paths.paths.QueryPath;
 
 import deform.BBox;
 import deform.Transform;
@@ -57,6 +59,13 @@ public class Quad extends Path{
 	public String toString() {
 		return "Quad [" + start + ", " + control + ", " + end
 				+ "]";
+	}
+
+
+	@Override
+	public
+	QueryPath toQueryPath() {
+		return QueryPathFactory.createQuad(start, control, end);
 	}
 
 	

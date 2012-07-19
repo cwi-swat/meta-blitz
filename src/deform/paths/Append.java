@@ -2,6 +2,9 @@ package deform.paths;
 
 import java.util.List;
 
+import paths.paths.factory.QueryPathFactory;
+import paths.paths.paths.QueryPath;
+
 
 import deform.BBox;
 import deform.Transform;
@@ -49,5 +52,11 @@ public class Append extends Path{
 	@Override
 	public String toString() {
 		return "Append [" + left + ", " + right + "]";
+	}
+
+	@Override
+	public
+	QueryPath toQueryPath() {
+		return QueryPathFactory.createAppends(left.toQueryPath(),right.toQueryPath());
 	}
 }

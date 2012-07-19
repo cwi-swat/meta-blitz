@@ -1,7 +1,7 @@
 package transform.nonlinear.ffd;
 
 import deform.BBox;
-import paths.paths.paths.Path;
+import paths.paths.paths.QueryPath;
 import transform.nonlinear.IDeform;
 
 public class IdentityDeform implements IDeform {
@@ -9,7 +9,7 @@ public class IdentityDeform implements IDeform {
 	public static IDeform instance = new IdentityDeform();
 
 	@Override
-	public Path deform(Path p) {
+	public QueryPath deform(QueryPath p) {
 		return p;
 	}
 

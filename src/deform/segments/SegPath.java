@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import paths.paths.paths.QueryPath;
+
 
 import deform.Vec;
 import deform.paths.Append;

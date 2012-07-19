@@ -3,15 +3,15 @@ package paths.paths.iterators;
 import java.util.Iterator;
 import java.util.Stack;
 
-import paths.paths.paths.Path;
+import paths.paths.paths.QueryPath;
 
-public class PathIterator<P extends Path> implements Iterator<Path> {
+public class PathIterator<P extends QueryPath> implements Iterator<QueryPath> {
 
 	static class PathChild {
-		public final Path p;
+		public final QueryPath p;
 		public int i;
 
-		public PathChild(Path p) {
+		public PathChild(QueryPath p) {
 			this.p = p;
 			this.i = 0;
 		}
@@ -20,7 +20,7 @@ public class PathIterator<P extends Path> implements Iterator<Path> {
 	final Stack<PathChild> paths;
 	final PathSelect select;
 
-	public PathIterator(PathSelect select, Path root) {
+	public PathIterator(PathSelect select, QueryPath root) {
 		this.paths = new Stack<PathChild>();
 		paths.push(new PathChild(root));
 		this.select = select;

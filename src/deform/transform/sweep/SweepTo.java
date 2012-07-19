@@ -1,4 +1,4 @@
-package transform.nonlinear.pathdeform;
+package deform.transform.sweep;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,7 @@ import deform.BBox;
 import deform.Vec;
 
 import paths.paths.iterators.SimplePathIterator;
-import paths.paths.paths.Path;
+import paths.paths.paths.QueryPath;
 import paths.paths.paths.simple.Line;
 import paths.paths.paths.simple.SimplePath;
 import paths.points.oned.Interval;
@@ -16,7 +16,7 @@ import transform.nonlinear.IDeform;
 import util.BinarySearches;
 import util.Tuple;
 
-public class PathDeform implements IDeform, IToTransform {
+class SweepTo{
 
 	final List<LineInfo> lines;
 	final List<Double> lengths;
@@ -37,13 +37,12 @@ public class PathDeform implements IDeform, IToTransform {
 		}
 	}
 
-	public PathDeform(List<LineInfo> lines, List<Double> lengths) {
+	SweepTo(List<LineInfo> lines, List<Double> lengths) {
 		this.lines = lines;
 		this.lengths = lengths;
 	}
 
-	public PathDeform(Path p) {
-		p = p.normaliseToLength();
+	SweepTo(QueryPath p) {
 		this.lines = makeLines(p);
 		lengths = makeLengths();
 		makeCoords(p);
@@ -59,7 +58,7 @@ public class PathDeform implements IDeform, IToTransform {
 		return lengths;
 	}
 
-	private void makeCoords(Path p) {
+	private void makeCoords(QueryPath p) {
 		if (lines.size() == 1) {
 			lines.get(0).makeCoord(lines.get(0).normal, lines.get(0).normal);
 			return;
@@ -85,7 +84,7 @@ public class PathDeform implements IDeform, IToTransform {
 		}
 	}
 
-	private List<LineInfo> makeLines(Path p) {
+	private List<LineInfo> makeLines(QueryPath p) {
 		List<LineInfo> lines = new ArrayList<LineInfo>();
 		SimplePathIterator it = new SimplePathIterator(p);
 		while (it.hasNext()) {
@@ -93,87 +92,99 @@ public class PathDeform implements IDeform, IToTransform {
 		}
 		return lines;
 	}
+	
+	Vec to(Vec d) {
+		int start = BinarySearches.floorBinarySearch(lengths, d.x);
+		if(start < 0){
+			start = 0;
+		} 
+		if(start >= lines.size()){
+			start = lines.size()-1;
+		}
+		return lines.get(start).coord.getAt(d);
+		
+	}
 
 	private void makeAndExpandLines(List<LineInfo> lines, SimplePath next) {
 		if (next instanceof Line) {
 			lines.add(new LineInfo((Line) next));
 		} else {
-			Tuple<Path, Path> simp = next.splitSimpler();
+			Tuple<QueryPath, QueryPath> simp = next.splitSimpler();
 			makeAndExpandLines(lines, (SimplePath) simp.l);
 			makeAndExpandLines(lines, (SimplePath) simp.r);
 		}
 
 	}
-
-	private PathDeform getSubList(int start, int end) {
-		return new PathDeform(lines.subList(start, end), lengths.subList(start,
-				end + 1));
-	}
-
-	private PathDeform getSubList(Interval xInterval) {
-		if (xInterval.isEmpty()) {
-			return this;
-		}
-		int start = BinarySearches.floorBinarySearch(lengths, xInterval.low);
-		int end = BinarySearches.floorBinarySearch(lengths, xInterval.high);
-		if (lengths.get(end) != xInterval.high && end != lengths.size() - 1) {
-			end += 1;
-		}
-		if (start == end) {
-			// vertical line
-			if (end >= lines.size()) {
-				start--;
-			} else {
-				end++;
-			}
-		}
-		return getSubList(start, end);
-	}
-
-	public Boolean isSimpleTransform() {
-		return lines.size() == 1;
-	}
-
-	public Vec to(Vec d) {
-		return lines.get(0).coord.getAt(d);
-	}
-
-	public double getSplitPoint() {
-		return lengths.get(lengths.size() / 2);
-	}
-
-	@Override
-	public IDeform subDeform(BBox b) {
-		return getSubList(b.xInterval);
-	}
-
-	@Override
-	public boolean isSimple() {
-		return isSimpleX();
-	}
-
-	@Override
-	public boolean isSimpleX() {
-		return lines.size() == 1;
-	}
-
-	@Override
-	public boolean isSimpleY() {
-		return true;
-	}
-
-	@Override
-	public double getSplitPointX() {
-		return lengths.get(lengths.size() / 2);
-	}
-
-	@Override
-	public double getSplitPointY() {
-		throw new Error("No splitpoint defined!");
-	}
-
-	@Override
-	public Path deform(Path p) {
-		return p.transform(this);
-	}
+//
+//	private PathDeform getSubList(int start, int end) {
+//		return new PathDeform(lines.subList(start, end), lengths.subList(start,
+//				end + 1));
+//	}
+//
+//	private PathDeform getSubList(Interval xInterval) {
+//		if (xInterval.isEmpty()) {
+//			return this;
+//		}
+//		int start = BinarySearches.floorBinarySearch(lengths, xInterval.low);
+//		int end = BinarySearches.floorBinarySearch(lengths, xInterval.high);
+//		if (lengths.get(end) != xInterval.high && end != lengths.size() - 1) {
+//			end += 1;
+//		}
+//		if (start == end) {
+//			// vertical line
+//			if (end >= lines.size()) {
+//				start--;
+//			} else {
+//				end++;
+//			}
+//		}
+//		return getSubList(start, end);
+//	}
+//
+//	public Boolean isSimpleTransform() {
+//		return lines.size() == 1;
+//	}
+//
+//	public Vec to(Vec d) {
+//		return lines.get(0).coord.getAt(d);
+//	}
+//
+//	public double getSplitPoint() {
+//		return lengths.get(lengths.size() / 2);
+//	}
+//
+//	@Override
+//	public IDeform subDeform(BBox b) {
+//		return getSubList(b.xInterval);
+//	}
+//
+//	@Override
+//	public boolean isSimple() {
+//		return isSimpleX();
+//	}
+//
+//	@Override
+//	public boolean isSimpleX() {
+//		return lines.size() == 1;
+//	}
+//
+//	@Override
+//	public boolean isSimpleY() {
+//		return true;
+//	}
+//
+//	@Override
+//	public double getSplitPointX() {
+//		return lengths.get(lengths.size() / 2);
+//	}
+//
+//	@Override
+//	public double getSplitPointY() {
+//		throw new Error("No splitpoint defined!");
+//	}
+//
+//	@Override
+//	public QueryPath deform(QueryPath p) {
+//		return p.transform(this);
+//	}
 }

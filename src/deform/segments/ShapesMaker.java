@@ -5,6 +5,8 @@ import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
 
+import paths.paths.paths.QueryPath;
+
 import deform.shapes.Closed;
 import deform.shapes.Shape;
 import deform.shapes.ShapeSet;
@@ -45,6 +47,7 @@ public class ShapesMaker {
 		}
 		return new ShapeSet(shapes);
 	}
+
 	
 
 }

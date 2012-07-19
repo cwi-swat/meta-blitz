@@ -6,7 +6,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 
-import paths.paths.paths.Path;
+import paths.paths.paths.QueryPath;
 import paths.points.twod.Vec;
 import textures.interfaces.ITexture;
 import textures.interfaces.Sample;
@@ -18,11 +18,11 @@ import demo.DummyAWTSHape;
 
 public class TexturedPath implements ITexturedPath {
 
-	public final Path path;
+	public final QueryPath path;
 	public final ITexture texture;
 	private OnDemandAlpha alphaOnDemand;
 	
-	public TexturedPath(Path path, ITexture texture) {
+	public TexturedPath(QueryPath path, ITexture texture) {
 		this.path = path;
 		this.texture = texture;
 		alphaOnDemand = new OnDemandAlpha(path);

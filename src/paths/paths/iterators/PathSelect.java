@@ -1,7 +1,7 @@
 package paths.paths.iterators;
 
-import paths.paths.paths.Path;
+import paths.paths.paths.QueryPath;
 
 public interface PathSelect {
-	boolean select(Path p);
+	boolean select(QueryPath p);
 }

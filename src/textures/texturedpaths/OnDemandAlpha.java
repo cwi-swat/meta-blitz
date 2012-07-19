@@ -11,7 +11,7 @@ import java.awt.image.DataBuffer;
 
 import demo.DummyAWTSHape;
 
-import paths.paths.paths.Path;
+import paths.paths.paths.QueryPath;
 import paths.points.twod.BBox;
 import paths.points.twod.Vec;
 import textures.interfaces.ITexture;
@@ -20,14 +20,14 @@ import textures.interfaces.Sample;
 public class OnDemandAlpha{
 	private static final int PrerenderDistance = 50;
 	private static final Vec PrerenderVec = new Vec(PrerenderDistance, PrerenderDistance);
-	public final Path p;
+	public final QueryPath p;
 	private BufferedImage alphaLocal;
 	private DataBuffer buf;
 	private BBox alphaBBox;
 	
 	
 	
-	public OnDemandAlpha(Path p) {
+	public OnDemandAlpha(QueryPath p) {
 		this.p = p;
 		alphaBBox = BBox.emptyBBox;
 	}

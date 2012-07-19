@@ -1,7 +1,7 @@
 package paths.paths.paths;
 
 public class ExtraMemo {
-	Path lengthNormalized;
+	QueryPath lengthNormalized;
 	double length;
 
 }

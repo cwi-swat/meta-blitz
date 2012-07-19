@@ -35,12 +35,16 @@ import deform.transform.ConeEye;
 import deform.transform.Fisheye;
 import deform.transform.affine.AffineTransform;
 import deform.transform.affine.IdentityTransform;
+import deform.transform.sweep.Sweep;
+
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 
 import javax.swing.UIManager;
+
+import paths.paths.factory.CircleFactory;
 public class Library {
 
 	
@@ -102,6 +106,23 @@ public class Library {
 	public static Shape stroke(Shape p,double width){
 		return new StrokedShape(p,width,new BasicStroke((float)width));
 	}
+	
+	public static Path arc(double startAngle, double endAngle){
+		return CircleFactory.makeArc(startAngle, endAngle);
+	}
+	
+	public static Path arc(Vec center,double startAngle, double diameter, double endAngle){
+		return CircleFactory.makeCircularArc(center, diameter, startAngle, endAngle);
+	}
+	
+	public static Path ellipticalArc(Vec center,double width, double height,double startAngle, double endAngle){
+		return CircleFactory.makeEllipiticalArc(center, width, height, startAngle, endAngle);
+	}
+	
+	public static Shape circle(){
+		return CircleFactory.makeCircle();
+	}
+	
 	
 	public static Texture fillColor(Color c){
 		return new FillColor(c);
@@ -191,5 +212,15 @@ public class Library {
 	
 	public static Texture tiledImage(String path){
 		return new RepeatingImage(path);
+	}
+	
+	public static Transform sweep(Path p){
+		return new Sweep(p);
+	}
+	
+	
+
+	public static Texture fillColor(int i, int j, int k) {
+		return fillColor(color(i,j,k));
 	}
 }

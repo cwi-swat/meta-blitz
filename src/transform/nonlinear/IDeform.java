@@ -1,10 +1,10 @@
 package transform.nonlinear;
 
 import deform.BBox;
-import paths.paths.paths.Path;
+import paths.paths.paths.QueryPath;
 
 public interface IDeform {
-	Path deform(Path p);
+	QueryPath deform(QueryPath p);
 
 	IDeform subDeform(BBox b);
 

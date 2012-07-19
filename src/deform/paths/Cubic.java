@@ -3,6 +3,8 @@ package deform.paths;
 import java.util.List;
 
 import paths.Constants;
+import paths.paths.factory.QueryPathFactory;
+import paths.paths.paths.QueryPath;
 
 import deform.BBox;
 import deform.Transform;
@@ -55,6 +57,12 @@ public class Cubic extends Path{
 	public String toString() {
 		return "Cubic [" + start + ", " + controll
 				+ ", " + controlr + ", " + end + "]";
+	}
+
+	@Override
+	public
+	QueryPath toQueryPath() {
+		return QueryPathFactory.createCubic(start, controll, controlr, end);
 	}
 	
 	

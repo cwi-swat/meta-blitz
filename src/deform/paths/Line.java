@@ -3,6 +3,8 @@ package deform.paths;
 import java.util.List;
 
 import paths.Constants;
+import paths.paths.factory.QueryPathFactory;
+import paths.paths.paths.QueryPath;
 import deform.BBox;
 import deform.Transform;
 import deform.Vec;
@@ -53,6 +55,15 @@ public class Line extends Path{
 	@Override
 	public String toString() {
 		return "Line [" + start + ", " + end + "]";
+	}
+
+
+
+
+	@Override
+	public
+	QueryPath toQueryPath() {
+		return QueryPathFactory.createLine(start, end);
 	}
 
 	

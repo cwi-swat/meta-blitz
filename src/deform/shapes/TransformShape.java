@@ -30,4 +30,11 @@ public class TransformShape extends Shape{
 		
 	}
 
+
+
+	@Override
+	public String toString() {
+		return "TransformShape [s=" + s + ", t=" + t + "]";
+	}
+
 }

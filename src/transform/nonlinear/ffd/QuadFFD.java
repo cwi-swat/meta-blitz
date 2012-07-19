@@ -7,8 +7,8 @@ import deform.BBox;
 import deform.Vec;
 
 import paths.Constants;
-import paths.paths.factory.PathFactory;
-import paths.paths.paths.Path;
+import paths.paths.factory.QueryPathFactory;
+import paths.paths.paths.QueryPath;
 import paths.paths.paths.simple.Line;
 import paths.points.oned.Interval;
 import transform.nonlinear.IDeform;
@@ -197,23 +197,23 @@ public class QuadFFD implements IDeform, ILineTransformer {
 	}
 
 	@Override
-	public Path deform(Path p) {
+	public QueryPath deform(QueryPath p) {
 		return p.transformApproxLines(this);
 	}
 
 	@Override
-	public Path transform(Line l) {
+	public QueryPath transform(Line l) {
 		return transform(l.start, l.end);
 	}
 
-	public Path transform(Vec start, Vec end) {
+	public QueryPath transform(Vec start, Vec end) {
 		Vec a = to(start);
 		Vec b = to(end);
 		if (a.distanceSquared(b) <= Constants.MAX_ERROR_FFD) {
-			return PathFactory.createLine(a, b);
+			return QueryPathFactory.createLine(a, b);
 		} else {
 			Vec mid = start.add(end).div(2);
-			return PathFactory.createAppends(transform(start, mid),
+			return QueryPathFactory.createAppends(transform(start, mid),
 					transform(mid, end));
 		}
 	}
