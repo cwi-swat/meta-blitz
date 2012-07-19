@@ -46,4 +46,8 @@ public class Append extends Path{
 		
 	}
 	
+	@Override
+	public String toString() {
+		return "Append [" + left + ", " + right + "]";
+	}
 }

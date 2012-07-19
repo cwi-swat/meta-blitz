@@ -23,9 +23,14 @@ public class Closed extends Shape{
 	@Override
 	public
 	void render(BBox area, Transform t, List<SegPath> res) {
-		if(area.overlaps(path.bbox)){
+		if(area.overlaps(t.transformBBox(path.bbox))){
+			
 			res.add(path.render(t));
 		}
+	}
+	
+	public String toString(){
+		return "Close(" + path.toString() + ")";
 	}
 
 	

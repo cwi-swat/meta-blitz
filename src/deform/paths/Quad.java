@@ -13,6 +13,7 @@ import deform.segments.Segment;
 import deform.segments.SegmentsMaker;
 
 public class Quad extends Path{
+	
 	final Vec start, control, end;
 
 	public Quad(Vec start, Vec control, Vec end) {
@@ -50,6 +51,12 @@ public class Quad extends Path{
 			new Quad(start,controlLeft,middle).renderNonAffine(t,res);
 			new Quad(middle,controlRight,end).renderNonAffine(t,res);
 		
+	}
+
+	@Override
+	public String toString() {
+		return "Quad [" + start + ", " + control + ", " + end
+				+ "]";
 	}
 
 	

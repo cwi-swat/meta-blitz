@@ -45,6 +45,7 @@ public class SegPath {
 	
 	public String toString(){
 		StringBuffer buf = new StringBuffer();
+		buf.append("SegPath\n");
 		buf.append(start.toString());
 		buf.append("\n");
 		for(Segment s : segs){

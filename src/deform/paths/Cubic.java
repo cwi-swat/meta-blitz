@@ -50,4 +50,12 @@ public class Cubic extends Path{
 		new Cubic(start,controlll,controllr,middle).renderNonAffine(t,res);
 		new Cubic(middle, controlrl, controlrr, end).renderNonAffine(t,res);
 	}
+
+	@Override
+	public String toString() {
+		return "Cubic [" + start + ", " + controll
+				+ ", " + controlr + ", " + end + "]";
+	}
+	
+	
 }

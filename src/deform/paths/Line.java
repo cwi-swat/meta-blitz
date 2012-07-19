@@ -47,5 +47,13 @@ public class Line extends Path{
 		
 	}
 
+
+
+
+	@Override
+	public String toString() {
+		return "Line [" + start + ", " + end + "]";
+	}
+
 	
 }

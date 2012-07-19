@@ -100,28 +100,14 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
         while(isRunning)
         {
             // relating to updating animations and calculating FPS
-            long elapsedTime = System.nanoTime() - oldTime;
-            oldTime = oldTime + elapsedTime; //update for the next loop iteration
-            nanoseconds = nanoseconds + elapsedTime;
-            frames = frames + 1;
-            if (nanoseconds >= 1000000000)
-            {
-                fps = frames;
-                nanoseconds = nanoseconds - 1000000000;
-                frames = 0;
-            }
-            // enter the method to update everything
-            update(elapsedTime);
-            
-            // related to drawing
+//  
             Graphics2D g = null;
             try
             {
                 g = (Graphics2D)bufferStrategy.getDrawGraphics();
-                this.lg = g;
-                g.setBackground(Color.black);
-                g.clearRect(0, 0, (int)size.x, (int)size.y);
                 this.ctx = new RenderContext(new BBox(0,0,size.x,size.y), null, null);
+                g.setBackground(Color.black);
+                g.clearRect(0, 0, (int)size.x,(int)size.y);
                 draw(); // enter the method to draw everything
                 g.drawImage(ctx.img, 0, 0,null);
             }
@@ -133,18 +119,18 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
             {
                 bufferStrategy.show();
             }
-            Toolkit.getDefaultToolkit().sync(); // prevents possible event queue problems in Linux
+//            Toolkit.getDefaultToolkit().sync(); // prevents possible event queue problems in Linux
             
-            if (isFpsLimited)
-            {
-                // sleep to let the processor handle other programs running
-                try
-                {
-                    // comment this out to not limit the FPS
-                    Thread.sleep(10);
-                }
-            catch (Exception e){};
-            }
+//            if (isFpsLimited)
+//            {
+//                // sleep to let the processor handle other programs running
+//                try
+//                {
+//                    // comment this out to not limit the FPS
+//                    Thread.sleep(10);
+//                }
+//            catch (Exception e){};
+//            }
         }
     }
     
@@ -165,30 +151,30 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
      */
     public void draw(Graphics2D g)
     {
-        Graphics2D drawingBoard = drawing.createGraphics();
-        drawingBoard.setColor(Color.black);
-        drawingBoard.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                                      RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-        drawingBoard.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                                      RenderingHints.VALUE_ANTIALIAS_ON);
-        // draw over it to create a blank background again, (or you could draw
-        // a background image if you had one
-        drawingBoard.fillRect(0, 0, drawing.getWidth(), drawing.getHeight());
-        this.lg = drawingBoard;
-        draw();
-        // now draw everything to drawingBoard, location 0,0 will be top left corner
-        // within the borders of the window
-
-        drawingBoard.setColor(Color.WHITE);
-        drawingBoard.drawString("FPS: " + fps, 0, drawingBoard.getFont().getSize());
-        // NOTE: this will now cap the FPS (frames per second), of the program to
-        // a max of 100 (1000 nanoseconds in a second, divided by 10 nanoseconds
-        // of rest per update = 100 updates max).
-    
-        // now draw the drawing board to correct area of the JFrame's buffer
-        g.drawImage(drawing, insets.left, insets.top, null);
-        
-        drawingBoard.dispose();
+//        Graphics2D drawingBoard = drawing.createGraphics();
+//        drawingBoard.setColor(Color.black);
+//        drawingBoard.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+//                                      RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+//        drawingBoard.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+//                                      RenderingHints.VALUE_ANTIALIAS_ON);
+//        // draw over it to create a blank background again, (or you could draw
+//        // a background image if you had one
+//        drawingBoard.fillRect(0, 0, drawing.getWidth(), drawing.getHeight());
+//        this.lg = drawingBoard;
+//        draw();
+//        // now draw everything to drawingBoard, location 0,0 will be top left corner
+//        // within the borders of the window
+//
+//        drawingBoard.setColor(Color.WHITE);
+//        drawingBoard.drawString("FPS: " + fps, 0, drawingBoard.getFont().getSize());
+//        // NOTE: this will now cap the FPS (frames per second), of the program to
+//        // a max of 100 (1000 nanoseconds in a second, divided by 10 nanoseconds
+//        // of rest per update = 100 updates max).
+//    
+//        // now draw the drawing board to correct area of the JFrame's buffer
+//        g.drawImage(drawing, insets.left, insets.top, null);
+//        
+//        drawingBoard.dispose();
     }
     
     public void draw(TexturedShape s){

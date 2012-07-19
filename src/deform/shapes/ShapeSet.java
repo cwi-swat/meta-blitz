@@ -27,12 +27,21 @@ public class ShapeSet extends Shape{
 	@Override
 	public
 	void render(BBox area, Transform t, List<SegPath> res) {
-		if(area.overlaps(bbox)){
+		if(area.overlaps(t.transformBBox(bbox))){
 			for(Shape s : closed){
 				s.render(area, t, res);
 			}
 		}
-		
+	}
+	
+	public String toString(){
+		StringBuffer buf = new StringBuffer();
+		buf.append('{');
+		for(Shape s: closed){
+			buf.append(s.toString());
+		}
+		buf.append('}');
+		return buf.toString();
 	}
 
 }

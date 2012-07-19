@@ -23,8 +23,9 @@ public class ShapesMaker {
 	}
 	
 	public static void fromJava2D(PathIterator it, List<SegPath> res){
+		int i = 0 ;
 		while(!it.isDone()){
-			
+			i++;
 			res.add(SegPath.fromJava2d(it));
 			it.next();
 		}
@@ -33,7 +34,8 @@ public class ShapesMaker {
 	public static Shape fromJava2dToShape(PathIterator it){
 		List<SegPath> res = new ArrayList<SegPath>();
 		fromJava2D(it,res);
-		return makeShape(res);
+		Shape s =  makeShape(res);
+		return s;
 	}
 	
 	public static Shape makeShape(List<SegPath> res){
