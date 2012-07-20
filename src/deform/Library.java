@@ -15,6 +15,7 @@ import deform.paths.Path;
 import deform.segments.Segment;
 import deform.segments.ShapesMaker;
 import deform.shapes.Shape;
+import deform.shapes.ShapeSet;
 import deform.shapes.StrokedPath;
 import deform.shapes.StrokedShape;
 import deform.texture.FillColor;
@@ -244,5 +245,9 @@ public class Library {
 	
 	public static Texture fillColor(int i, int j, int k) {
 		return fillColor(color(i,j,k));
+	}
+	
+	public static Shape set(Shape ... shapes){
+		return new ShapeSet(shapes);
 	}
 }

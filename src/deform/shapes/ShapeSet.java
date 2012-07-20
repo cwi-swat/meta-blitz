@@ -2,6 +2,7 @@ package deform.shapes;
 
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import paths.paths.factory.QueryPathFactory;
@@ -17,6 +18,10 @@ public class ShapeSet extends Shape{
 	public ShapeSet(List<Shape> closed) {
 		super(getBBox(closed));
 		this.closed = closed;
+	}
+
+	public ShapeSet(Shape[] shapes) {
+		this(Arrays.asList(shapes));
 	}
 
 	static BBox getBBox(List<Shape> closed) {
