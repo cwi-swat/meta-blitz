@@ -26,12 +26,11 @@ public class AffineTransform extends Transform{
 	}
 	
 	public BBox transformBBox(BBox b){
-//		return BBox.everything;
 		BBox res = BBox.from4Points(to(b.getLeftDown()),
 				to(b.getLeftUp()),
 				to(b.getRightDown()),
 				to(b.getRightUp()));
-		return BBox.everything;
+		return res;
 	}
 	
 

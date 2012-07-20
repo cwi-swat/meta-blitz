@@ -10,7 +10,7 @@ import deform.render.RenderContext;
 
 public abstract class TexturedShape {
 
-	abstract BBox getBBox();
+	public abstract BBox getBBox();
 	public abstract void render(Transform t,  RenderContext ctx) ;
 	
 	boolean isJava2DRenderable(){

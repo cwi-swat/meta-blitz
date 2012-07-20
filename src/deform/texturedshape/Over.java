@@ -37,6 +37,7 @@ public class Over extends TexturedShape{
 	}
 	
 	@Override
+	public
 	BBox getBBox() {
 		return b;
 	}

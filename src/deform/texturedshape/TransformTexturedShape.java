@@ -32,7 +32,9 @@ public class TransformTexturedShape extends TexturedShape{
 			} else {
 				texs.render(composed, ctx);
 			}
-		} 
+		} else {
+
+		}
 		
 	}
 	@Override

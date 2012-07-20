@@ -21,7 +21,7 @@ public class ScanLiner{
 		curFill =  (wholeWidth * (part.getYInt() - whole.getYInt()) 
 				+ (part.getXInt() - whole.getXInt()));
 		cur = curFill* Color.SampleSize;
-		endOfLineIncFill = ((whole.getWidthInt() - part.getWidthInt()) - (part.getXInt() - whole.getXInt()) ) + 1;
+		endOfLineIncFill = (whole.getWidthInt() - part.getWidthInt()) + 1;
 		endOfLineInc = endOfLineIncFill * Color.SampleSize;
 	}
 	

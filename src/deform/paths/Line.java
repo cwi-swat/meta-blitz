@@ -33,6 +33,9 @@ public class Line extends Path{
 
 	void renderNonAffine(Transform t, SegmentsMaker res) {
 		depth++;
+		if(depth > 100){
+			System.out.println("huh");
+		}
 		if(start.distanceSquared(end) <= Constants.MAX_ERROR_TRANSFORM_POW2){
 			Vec nstart = t.to(start);
 			Vec nend = t.to(end);

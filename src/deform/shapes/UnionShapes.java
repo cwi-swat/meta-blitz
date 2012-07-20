@@ -23,9 +23,9 @@ public class UnionShapes extends Shape{
 	@Override
 	public
 	void render(BBox area, Transform t, List<SegPath> res) {
-		if(!area.overlaps(r.bbox)){
+		if(!area.overlaps(t.transformBBox(r.bbox))){
 			l.render(area, t, res);
-		} else if(!area.overlaps(l.bbox)){
+		} else if(!area.overlaps(t.transformBBox(l.bbox))){
 			r.render(area, t, res);
 		} else {
 			List<SegPath> rl = new ArrayList<SegPath>();

@@ -50,6 +50,10 @@ public class Library {
 	
 	private static final int DefaultFontSize = 11;
 
+	public static Vec vec(double x, double y){
+		return new Vec(x, y);
+	}
+	
 	public static Segment lineTo(double x, double y){
 		return deform.Combinators.lineTo(new Vec(x,y));
 	}
@@ -218,8 +222,26 @@ public class Library {
 		return new Sweep(p);
 	}
 	
+	public static Shape sweep(Shape s, Path p){
+		Vec trans = s.bbox.getLeftUp().negate();
+		trans = new Vec(trans.x,trans.y - s.bbox.height()/2);
+		s = transform(scale(length(p)/s.bbox.width()).compose(translate(trans)),s);
+		return transform(sweep(p),s);
+	}
 	
-
+	public static TexturedShape sweep(TexturedShape s, Path p){
+		System.out.println(s.getBBox());
+		Vec trans = s.getBBox().getLeftUp().negate();
+		trans = new Vec(trans.x,trans.y - s.getBBox().height()/2);
+		s = transform(scale(length(p)/s.getBBox().width()).compose(translate(trans)),s);
+		return transform(sweep(p),s);
+	}
+	
+	public static double length(Path p){
+		return p.normalise().toQueryPath().length();
+	}
+	
+	
 	public static Texture fillColor(int i, int j, int k) {
 		return fillColor(color(i,j,k));
 	}

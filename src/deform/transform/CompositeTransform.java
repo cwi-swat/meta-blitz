@@ -14,7 +14,7 @@ public class CompositeTransform extends Transform {
 	}
 	
 	public BBox transformBBox(BBox b){
-		return r.transformBBox(l.transformBBox(b));
+		return l.transformBBox(r.transformBBox(b));
 	}
 
 	@Override
@@ -25,6 +25,11 @@ public class CompositeTransform extends Transform {
 	@Override
 	public Vec from(Vec to) {
 		return r.from(l.from(to));
+	}
+
+	@Override
+	public String toString() {
+		return "CompositeTransform [l=" + l + ", r=" + r + "]";
 	}
 	
 	

@@ -16,6 +16,9 @@ public class Matrix {
 		this.y1 = y1;
 		this.y2 = y2;
 		this.y3 = y3;
+		if(Double.isNaN(x3) || Double.isInfinite(x3)){
+			throw new Error("NAN in matrix!");
+		}
 	}
 
 	public Matrix(double x1, double x2, double x3, double y1, double y2,
