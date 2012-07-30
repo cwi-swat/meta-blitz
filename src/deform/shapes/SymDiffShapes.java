@@ -22,6 +22,7 @@ public class SymDiffShapes extends Shape{
 	@Override
 	public
 	void render(BBox area, Transform t, List<SegPath> res) {
+		if(area.overlaps(t.transformBBox(bbox))){
 		List<SegPath> rl = new ArrayList<SegPath>();
 		l.render(area, t, rl);
 		List<SegPath> rr = new ArrayList<SegPath>();
@@ -30,5 +31,6 @@ public class SymDiffShapes extends Shape{
 		Area ra = new Area(ShapesMaker.makePath(rr));
 		la.exclusiveOr(ra);
 		ShapesMaker.fromJava2D(la.getPathIterator(null), res);
+		}
 	}
 }

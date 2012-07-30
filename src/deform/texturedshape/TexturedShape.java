@@ -7,14 +7,10 @@ import deform.BBox;
 import deform.Transform;
 import deform.render.LocatedImage;
 import deform.render.RenderContext;
+import deform.shapes.Shape;
 
 public abstract class TexturedShape {
 
 	public abstract BBox getBBox();
-	public abstract void render(Transform t,  RenderContext ctx) ;
-	
-	boolean isJava2DRenderable(){
-		return false;
-	}
-
+	public abstract void render(Transform t,  Shape clip, RenderContext ctx) ;
 }

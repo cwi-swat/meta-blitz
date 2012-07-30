@@ -13,7 +13,7 @@ import paths.paths.results.transformers.IPathIndexTransformer;
 import paths.paths.results.transformers.PathIndexTupleTransformer;
 import util.Tuple;
 
-public abstract class SplittablePath extends Path {
+public abstract class SplittablePath extends QueryPath {
 
 	public abstract IPathIndexTransformer getLeftTransformer();
 
@@ -29,13 +29,13 @@ public abstract class SplittablePath extends Path {
 	public abstract PathIndexTupleTransformer getRightRightTransformer();
 
 	@Override
-	public IIntersections intersection(Path other) {
+	public IIntersections intersection(QueryPath other) {
 		return other.intersectionLSplittable(this);
 	}
 
 	private IIntersections intersectionLine(Line lhs) {
 		if (lhs.overlaps(getBBox())) {
-			Tuple<Path, Path> sp = splitSimpler();
+			Tuple<QueryPath, QueryPath> sp = splitSimpler();
 			return lhs
 					.intersection(sp.l)
 					.transform(getRightLeftTransformer())
@@ -62,14 +62,14 @@ public abstract class SplittablePath extends Path {
 			return Intersections.NoIntersections;
 		}
 		if (getBBox().area() > lhs.getBBox().area()) {
-			Tuple<Path, Path> simp = splitSimpler();
+			Tuple<QueryPath, QueryPath> simp = splitSimpler();
 			IIntersections l = lhs.intersection(simp.l).transform(
 					getRightLeftTransformer());
 			IIntersections r = lhs.intersection(simp.r).transform(
 					getRightRightTransformer());
 			return l.append(r);
 		} else {
-			Tuple<Path, Path> simp = lhs.splitSimpler();
+			Tuple<QueryPath, QueryPath> simp = lhs.splitSimpler();
 			IIntersections l = simp.l.intersection(this).transform(
 					lhs.getLeftLeftTransformer());
 			IIntersections r = simp.r.intersection(this).transform(
@@ -83,7 +83,7 @@ public abstract class SplittablePath extends Path {
 		if (getBBox().getNearestPoint(p).distanceSquared(p) > best) {
 			return BestProject.noBestYet;
 		}
-		Tuple<Path, Path> sp = splitSimpler();
+		Tuple<QueryPath, QueryPath> sp = splitSimpler();
 		if (sp.l.getBBox().avgDistSquared(p) < sp.r.getBBox().avgDistSquared(p)) {
 			BestProject res = sp.l.project(best, p).transform(
 					getLeftTransformer());
@@ -99,7 +99,7 @@ public abstract class SplittablePath extends Path {
 
 	private BestProjectTup projectLine(double best, Line lhs) {
 		if (best > lhs.minDistSquaredTo(getBBox())) {
-			Tuple<Path, Path> sp = splitSimpler();
+			Tuple<QueryPath, QueryPath> sp = splitSimpler();
 			if (lhs.distanceSquared(sp.l.getBBox().getMiddle()) < lhs
 					.distanceSquared(sp.r.getBBox().getMiddle())) {
 				BestProjectTup fsbest = lhs.project(best, sp.l).transform(
@@ -118,7 +118,7 @@ public abstract class SplittablePath extends Path {
 	}
 
 	@Override
-	public BestProjectTup project(double best, Path other) {
+	public BestProjectTup project(double best, QueryPath other) {
 		return other.projectLSplittable(best, this);
 	}
 
@@ -137,7 +137,7 @@ public abstract class SplittablePath extends Path {
 			return BestProjectTup.noBestYet;
 		}
 		if (getBBox().area() > lhs.getBBox().area()) {
-			Tuple<Path, Path> sp = splitSimpler();
+			Tuple<QueryPath, QueryPath> sp = splitSimpler();
 			if (sp.l.getBBox().avgDistSquared(lhs.getBBox().getMiddle()) < sp.l
 					.getBBox().avgDistSquared(lhs.getBBox().getMiddle())) {
 				BestProjectTup res = lhs.project(best, sp.l).transform(
@@ -151,7 +151,7 @@ public abstract class SplittablePath extends Path {
 						getRightLeftTransformer()));
 			}
 		} else {
-			Tuple<Path, Path> sp = lhs.splitSimpler();
+			Tuple<QueryPath, QueryPath> sp = lhs.splitSimpler();
 			if (sp.l.getBBox().avgDistSquared(getBBox().getMiddle()) < sp.l
 					.getBBox().avgDistSquared(getBBox().getMiddle())) {
 				BestProjectTup res = sp.l.project(best, this).transform(
@@ -168,6 +168,6 @@ public abstract class SplittablePath extends Path {
 
 	}
 
-	public abstract Tuple<Path, Path> splitSimpler();
+	public abstract Tuple<QueryPath, QueryPath> splitSimpler();
 
 }

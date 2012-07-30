@@ -9,8 +9,7 @@ public class Interval {
 	public static final Interval interval01 = new Interval(0, 1);
 	public static final Interval emptyInterval = new Interval(true,
 			Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY);
-	public static final Interval everything = 
-			new Interval( Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+	public static Interval everything = new Interval(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
 
 	public final double low, high, length;
 
@@ -63,31 +62,42 @@ public class Interval {
 
 	public Interval(double a, double b, double c, double d) {
 		// manual sorting for speed
-		double lowleft, lowright, highleft, highright;
-		if(a < b){
-			lowleft = a;
-			highleft = b;
+		if (a < b) {
+			if (c < d) {
+				// if b < c already right
+				if (b >= c) {
+					a = c;
+					d = a;
+				}
+			} else {
+				if (b < d) {
+					d = c;
+				} else {
+					a = d;
+					d = b;
+				}
+			}
 		} else {
-			lowleft = b;
-			highleft = a;
+			if (c < d) {
+				if (a < c) {
+					a = b;
+				} else {
+					d = a;
+					a = c;
+				}
+			} else {
+				if (a < d) {
+					a = b;
+					d = c;
+				} else {
+					c = d;
+					d = a;
+					a = c;
+				}
+			}
 		}
-		if(c < d){
-			lowright = c;
-			highright = d;
-		} else {
-			lowright = d;
-			highright = c;
-		}
-		if(lowleft < lowright){
-			this.low = lowleft;
-		} else {
-			this.low = lowright;
-		}
-		if(highleft > highright){
-			this.high = highleft;
-		} else {
-			this.high = highright;
-		}
+		this.low = a;
+		this.high = d;
 		this.length = d - a;
 	}
 
@@ -253,6 +263,6 @@ public class Interval {
 	}
 
 	public Interval grow(double width) {
-		return new Interval(low - width/2, high + width/2);
+		return new Interval(low - width, high + width);
 	}
 }

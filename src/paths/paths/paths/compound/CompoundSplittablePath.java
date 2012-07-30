@@ -2,17 +2,17 @@ package paths.paths.paths.compound;
 
 import deform.BBox;
 import deform.Vec;
-import paths.paths.paths.Path;
+import paths.paths.paths.QueryPath;
 import paths.paths.paths.PathIndex;
 import paths.paths.paths.SplittablePath;
 import util.Tuple;
 
 public abstract class CompoundSplittablePath extends SplittablePath {
 
-	public final Path left;
-	public final Path right;
+	public final QueryPath left;
+	public final QueryPath right;
 
-	public CompoundSplittablePath(Path left, Path right) {
+	public CompoundSplittablePath(QueryPath left, QueryPath right) {
 		this.left = left;
 		this.right = right;
 	}
@@ -45,15 +45,15 @@ public abstract class CompoundSplittablePath extends SplittablePath {
 	}
 
 	@Override
-	public Tuple<Path, Path> splitSimpler() {
-		return new Tuple<Path, Path>(left, right);
+	public Tuple<QueryPath, QueryPath> splitSimpler() {
+		return new Tuple<QueryPath, QueryPath>(left, right);
 	}
 
 	public int nrChildren() {
 		return 2;
 	}
 
-	public Path getChild(int i) {
+	public QueryPath getChild(int i) {
 		return i == 0 ? left : right;
 	}
 

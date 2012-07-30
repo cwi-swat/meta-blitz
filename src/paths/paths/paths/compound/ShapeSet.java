@@ -9,7 +9,7 @@ import java.util.List;
 import deform.BBox;
 import deform.Vec;
 
-import paths.paths.paths.Path;
+import paths.paths.paths.QueryPath;
 import paths.paths.paths.PathIndex;
 import paths.paths.paths.SplittablePath;
 import paths.paths.paths.simple.Line;
@@ -23,22 +23,22 @@ import transform.nonlinear.IDeform;
 import transform.nonlinear.ILineTransformer;
 import util.Tuple;
 
-public class ShapeSet extends Path {
+public class ShapeSet extends QueryPath {
 
-	public final List<Path> shapes;
+	public final List<QueryPath> shapes;
 
-	public ShapeSet(List<Path> shapes) {
+	public ShapeSet(List<QueryPath> shapes) {
 		this.shapes = shapes;
 	}
 
-	public ShapeSet(Path[] shapes) {
+	public ShapeSet(QueryPath[] shapes) {
 		this(Arrays.asList(shapes));
 	}
 
 	@Override
 	public BBox makeBBox() {
 		BBox total = BBox.emptyBBox;
-		for (Path p : shapes) {
+		for (QueryPath p : shapes) {
 			total = total.union(p.getBBox());
 		}
 		return total;
@@ -55,15 +55,15 @@ public class ShapeSet extends Path {
 	}
 
 	@Override
-	public IIntersections intersection(Path other) {
+	public IIntersections intersection(QueryPath other) {
 		return other.intersectionLSet(this);
 	}
 
-	private IIntersections intersections(Path lhs) {
+	private IIntersections intersections(QueryPath lhs) {
 		IIntersections res = Intersections.NoIntersections;
 		if (lhs.getBBox().overlaps(getBBox())) {
 			for (int i = 0; i < shapes.size(); i++) {
-				Path p = shapes.get(i);
+				QueryPath p = shapes.get(i);
 				res = res.append(lhs.intersection(p).transform(setRight(i)));
 			}
 		}
@@ -92,7 +92,7 @@ public class ShapeSet extends Path {
 		}
 		BestProject res = new BestProject(best);
 		for (int i = 0; i < shapes.size(); i++) {
-			Path path = shapes.get(i);
+			QueryPath path = shapes.get(i);
 			res = res.choose(path.project(res.distSquared, p).transform(
 					PITransformers.setTrans(i)));
 		}
@@ -100,16 +100,16 @@ public class ShapeSet extends Path {
 	}
 
 	@Override
-	public BestProjectTup project(double best, Path other) {
+	public BestProjectTup project(double best, QueryPath other) {
 		return other.projectLSet(best, this);
 	}
 
-	private BestProjectTup projects(double best, Path lhs) {
+	private BestProjectTup projects(double best, QueryPath lhs) {
 
 		BestProjectTup res = new BestProjectTup(best);
 		if (minDistTo(lhs.getBBox()) < best) {
 			for (int i = 0; i < shapes.size(); i++) {
-				Path p = shapes.get(i);
+				QueryPath p = shapes.get(i);
 				res = res.choose(lhs.project(best, p).transform(setRight(i)));
 			}
 		}
@@ -136,7 +136,7 @@ public class ShapeSet extends Path {
 		if (getBBox().area() / shapes.size() > lhs.getBBox().area() / 2.0) {
 			return projects(best, lhs);
 		} else {
-			Tuple<Path, Path> sp = lhs.splitSimpler();
+			Tuple<QueryPath, QueryPath> sp = lhs.splitSimpler();
 			if (sp.l.getBBox().avgDistSquared(getBBox().getMiddle()) < sp.l
 					.getBBox().avgDistSquared(getBBox().getMiddle())) {
 				BestProjectTup res = sp.l.project(best, this).transform(
@@ -157,7 +157,7 @@ public class ShapeSet extends Path {
 		return shapes.size();
 	}
 
-	public Path getChild(int i) {
+	public QueryPath getChild(int i) {
 		return shapes.get(i);
 	}
 
@@ -165,19 +165,10 @@ public class ShapeSet extends Path {
 		return false;
 	}
 
-	@Override
-	public ShapeSet transform(IToTransform t) {
-		List<Path> res = new ArrayList<Path>(shapes.size());
-		for (Path p : shapes) {
-			res.add(p.transform(t));
-		}
-		return new ShapeSet(res);
-	}
-
 	public String toString() {
 		StringBuilder build = new StringBuilder();
 		build.append("ShapeSet(");
-		for (Path p : shapes) {
+		for (QueryPath p : shapes) {
 			build.append(p.toString());
 			build.append("\n, ");
 		}
@@ -186,7 +177,7 @@ public class ShapeSet extends Path {
 	}
 
 	@Override
-	public Tuple<Path, Double> normaliseToLength(double prevLength) {
+	public Tuple<QueryPath, Double> normaliseToLength(double prevLength) {
 		throw new Error("Cannot length normalise set!");
 	}
 
@@ -198,24 +189,6 @@ public class ShapeSet extends Path {
 	@Override
 	public PathIndex maxPathIndex() {
 		throw new Error("Shape does not have begin nor end!");
-	}
-
-	@Override
-	public Path deformActual(IDeform p) {
-		List<Path> res = new ArrayList<Path>(shapes.size());
-		for (Path s : shapes) {
-			res.add(s.deform(p));
-		}
-		return new ShapeSet(res);
-	}
-
-	@Override
-	public Path transformApproxLines(ILineTransformer t) {
-		List<Path> res = new ArrayList<Path>(shapes.size());
-		for (Path s : shapes) {
-			res.add(s.transformApproxLines(t));
-		}
-		return new ShapeSet(res);
 	}
 
 }

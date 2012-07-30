@@ -7,8 +7,8 @@ import java.awt.geom.PathIterator;
 import deform.BBox;
 import deform.Vec;
 
-import paths.paths.factory.PathFactory;
-import paths.paths.paths.Path;
+import paths.paths.factory.QueryPathFactory;
+import paths.paths.paths.QueryPath;
 import paths.paths.paths.SplittablePath;
 import paths.paths.paths.compound.ShapeSet;
 import paths.paths.results.intersections.IIntersections;
@@ -165,7 +165,7 @@ public class Line extends SimplePath {
 	}
 
 	@Override
-	public IIntersections intersection(Path other) {
+	public IIntersections intersection(QueryPath other) {
 		return other.intersectionLLine(this);
 	}
 
@@ -261,7 +261,7 @@ public class Line extends SimplePath {
 	}
 
 	@Override
-	public BestProjectTup project(double best, Path other) {
+	public BestProjectTup project(double best, QueryPath other) {
 		return other.projectLLine(best, this);
 	}
 
@@ -292,11 +292,11 @@ public class Line extends SimplePath {
 
 	@Override
 	public Line getWithAdjustedStartPoint(Vec newStartPoint) {
-		return PathFactory.createLine(newStartPoint, getEndPoint(), tInterval);
+		return QueryPathFactory.createLine(newStartPoint, getEndPoint(), tInterval);
 	}
 
 	@Override
-	public Tuple<Path, Path> splitSimpler() {
+	public Tuple<QueryPath, QueryPath> splitSimpler() {
 		throw new Error("Cannot make" + this + "simpler!");
 	}
 
@@ -320,32 +320,27 @@ public class Line extends SimplePath {
 		return PathIterator.SEG_LINETO;
 	}
 
-	@Override
-	public Line transform(IToTransform t) {
-		return PathFactory.createLine(t.to(getStartPoint()),
-				t.to(getEndPoint()));
-	}
 
 	@Override
-	public Tuple<Path, Double> normaliseToLength(double prevLength) {
+	public Tuple<QueryPath, Double> normaliseToLength(double prevLength) {
 		double nl = prevLength + length();
-		return new Tuple<Path, Double>(PathFactory.createLine(getStartPoint(),
+		return new Tuple<QueryPath, Double>(QueryPathFactory.createLine(getStartPoint(),
 				getEndPoint(), new Interval(prevLength, nl)), nl);
 	}
 
 	@Override
 	public Tuple<SimplePath, SimplePath> splitSimp(double t) {
 		Vec mid = getAtLocal(t);
-		Line left = PathFactory.createLine(start, mid, new Interval(
+		Line left = QueryPathFactory.createLine(start, mid, new Interval(
 				tInterval.low, t));
-		Line right = PathFactory.createLine(mid, end, new Interval(t,
+		Line right = QueryPathFactory.createLine(mid, end, new Interval(t,
 				tInterval.high));
 		return new Tuple<SimplePath, SimplePath>(left, right);
 	}
 
 	@Override
 	public Line getWithAdjustedEndPointMono(Vec v) {
-		return PathFactory.createLine(start, v, tInterval);
+		return QueryPathFactory.createLine(start, v, tInterval);
 	}
 
 	@Override
@@ -361,11 +356,6 @@ public class Line extends SimplePath {
 	@Override
 	public double findYFast(double splitPoint) {
 		return getTAtY(splitPoint);
-	}
-
-	@Override
-	public Path transformApproxLines(ILineTransformer t) {
-		return t.transform(this);
 	}
 
 }

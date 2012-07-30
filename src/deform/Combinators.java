@@ -1,6 +1,9 @@
 package deform;
 
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import deform.paths.Path;
 import deform.paths.TransformPath;
@@ -15,6 +18,7 @@ import deform.shapes.Closed;
 import deform.shapes.IntersectionShapes;
 import deform.shapes.MinusShapes;
 import deform.shapes.Shape;
+import deform.shapes.ShapeSet;
 import deform.shapes.SymDiffShapes;
 import deform.shapes.TransformShape;
 import deform.shapes.UnionShapes;
@@ -23,6 +27,8 @@ import deform.texture.CombineTex;
 import deform.texture.FillColor;
 import deform.texture.TransformTexture;
 import deform.texturedshape.CombineTexturedShape;
+import deform.texturedshape.IntersectionTexturedShape;
+import deform.texturedshape.MinusTexturedShape;
 import deform.texturedshape.SimpleTexturedShape;
 import deform.texturedshape.TexturedShape;
 import deform.texturedshape.TransformTexturedShape;
@@ -59,6 +65,23 @@ public class Combinators {
 		return new Closed(p);
 	}
 	
+
+	public static Shape set(List<Shape> shapes) {
+		List<Shape> res = new ArrayList<Shape>();
+		for(Shape s : shapes){
+			if(s instanceof ShapeSet){
+				res.addAll(((ShapeSet)s).closed);
+			} else {
+				res.add(s);
+			}
+		}
+		return new ShapeSet(res);
+	}
+	
+	public static Shape set(Shape ... shapes){
+		return set(Arrays.asList(shapes));
+	}
+	
 	public static Shape union(Shape a, Shape b){
 		return new UnionShapes(a,b) ;
 	}
@@ -67,8 +90,26 @@ public class Combinators {
 		return new IntersectionShapes(a,b) ;
 	}
 	
+	
+	public static TexturedShape intersection(TexturedShape a, Shape b){
+		return new IntersectionTexturedShape(a,b) ;
+	}
+	
+	public static TexturedShape intersection(Shape b,TexturedShape a){
+		return new IntersectionTexturedShape(a,b) ;
+	}
+	
 	public static Shape minus(Shape a, Shape b){
 		return new MinusShapes(a,b) ;
+	}
+	
+	public static TexturedShape minus(TexturedShape a, Shape b){
+		return new MinusTexturedShape(a,b) ;
+	}
+	
+	
+	public static TexturedShape minus(Shape b, TexturedShape a){
+		return new MinusTexturedShape(a,b) ;
 	}
 	
 	public static Shape symdiff(Shape a, Shape b){
@@ -112,7 +153,8 @@ public class Combinators {
 	}
 	
 	public static void render(RenderContext ctx,TexturedShape s){
-		s.render(IdentityTransform.Instance,ctx);
+		s.render(IdentityTransform.Instance,null, ctx);
 	}
+
 	
 }

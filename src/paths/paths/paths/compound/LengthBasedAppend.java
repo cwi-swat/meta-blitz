@@ -2,7 +2,7 @@ package paths.paths.paths.compound;
 
 import deform.BBox;
 import deform.Vec;
-import paths.paths.paths.Path;
+import paths.paths.paths.QueryPath;
 import paths.paths.paths.SimplyIndexedPath;
 import paths.points.oned.Interval;
 import transform.IToTransform;
@@ -50,8 +50,8 @@ public class LengthBasedAppend extends SimplyIndexedPath {
 	}
 
 	@Override
-	public Tuple<Path, Path> splitSimpler() {
-		return new Tuple<Path, Path>(left, right);
+	public Tuple<QueryPath, QueryPath> splitSimpler() {
+		return new Tuple<QueryPath, QueryPath>(left, right);
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class LengthBasedAppend extends SimplyIndexedPath {
 	}
 
 	@Override
-	public Path getChild(int i) {
+	public QueryPath getChild(int i) {
 		return i == 0 ? left : right;
 	}
 
@@ -70,26 +70,11 @@ public class LengthBasedAppend extends SimplyIndexedPath {
 				left.getWithAdjustedStartPoint(newStartPoint), right, tInterval);
 	}
 
-	@Override
-	public LengthBasedAppend transform(IToTransform t) {
-		return new LengthBasedAppend(left.transform(t), right.transform(t),
-				tInterval);
-	}
+	
 
 	@Override
-	public Tuple<Path, Double> normaliseToLength(double prevLength) {
-		return new Tuple<Path, Double>(this, right.tInterval.high);
-	}
-
-	@Override
-	public Path deformActual(IDeform p) {
-		return new Append(left.deform(p), right.deform(p));
-	}
-
-	@Override
-	public Path transformApproxLines(ILineTransformer t) {
-		return new Append(left.transformApproxLines(t),
-				right.transformApproxLines(t));
+	public Tuple<QueryPath, Double> normaliseToLength(double prevLength) {
+		return new Tuple<QueryPath, Double>(this, right.tInterval.high);
 	}
 
 }

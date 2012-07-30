@@ -27,7 +27,7 @@ public class UnionShapes extends Shape{
 			l.render(area, t, res);
 		} else if(!area.overlaps(t.transformBBox(l.bbox))){
 			r.render(area, t, res);
-		} else {
+		} else if(area.overlaps(t.transformBBox(bbox))){
 			List<SegPath> rl = new ArrayList<SegPath>();
 			l.render(area, t, rl);
 			List<SegPath> rr = new ArrayList<SegPath>();

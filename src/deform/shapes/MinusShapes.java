@@ -23,6 +23,7 @@ public class MinusShapes extends Shape{
 	@Override
 	public
 	void render(BBox area, Transform t, List<SegPath> res) {
+		if(area.overlaps(t.transformBBox(bbox))){
 		List<SegPath> rl = new ArrayList<SegPath>();
 		l.render(area, t, rl);
 		List<SegPath> rr = new ArrayList<SegPath>();
@@ -31,6 +32,7 @@ public class MinusShapes extends Shape{
 		Area ra = new Area(ShapesMaker.makePath(rr));
 		la.subtract(ra);
 		ShapesMaker.fromJava2D(la.getPathIterator(null), res);
+		}
 	}
 	
 }

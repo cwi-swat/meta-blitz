@@ -12,7 +12,6 @@ import deform.Vec;
 import deform.render.RenderContext;
 import deform.texturedshape.TexturedShape;
 
-import textures.interfaces.ITexture;
 
 
 import java.util.Random;
@@ -40,7 +39,7 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
 
         textInput = "";
         lastLine ="";
-        size = new Vec(1400,1400);
+        size = new Vec(1400,900);
         setTitle("Superawesome demo");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
@@ -226,11 +225,12 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
+		mouse = new Vec(e.getX(),e.getY());
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {	
-		mouse = new Vec(e.getX(),e.getY());
+		mouse = new Vec(e.getX() + insets.left,e.getY() + insets.top);
 	}
 
 	@Override
@@ -247,7 +247,11 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
+		handleMouseRelease(e.getButton());
+		
+	}
+
+	public void handleMouseRelease(int button) {
 		
 	}
 
@@ -298,9 +302,14 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		wheel += e.getUnitsToScroll();
+		handleMouseWheel(e.getUnitsToScroll());
 	}
  
-    /**
+    public void handleMouseWheel(int unitsToScroll) {
+		
+	}
+
+	/**
      * UnRepaintManager is a RepaintManager that removes the functionality
      * of the original RepaintManager for us so we don't have to worry about
      * Java repainting on it's own.

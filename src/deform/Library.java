@@ -6,6 +6,7 @@ import java.awt.BasicStroke;
 import java.awt.Font;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
+import java.awt.font.LineMetrics;
 import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.List;
@@ -128,6 +129,9 @@ public class Library {
 		return CircleFactory.makeCircle();
 	}
 	
+	public static Shape rectangle(){
+		return close(path(-1,-1,lineTo(1,-1),lineTo(1,1),lineTo(-1,1),lineTo(-1,-1)));
+	}
 	
 	public static Texture fillColor(Color c){
 		return new FillColor(c);
@@ -150,14 +154,36 @@ public class Library {
 	}
 	
 	public static Shape text(String font,int fontSize, String text) {
-
-			Font f = new Font(font, Font.PLAIN, fontSize);
-			FontRenderContext ctx = new FontRenderContext(new java.awt.geom.AffineTransform(), true, true);
-			GlyphVector v = f.createGlyphVector(ctx, text);
+		Font f = new Font(font, Font.PLAIN, fontSize);
+		FontRenderContext ctx = new FontRenderContext(null, true, true);
+		LineMetrics lm = f.getLineMetrics(text, ctx);
+		double height = lm.getHeight();
+		String[] lines = text.split("\\n");
+		int i = 0;
+		List<Shape> shapes = new ArrayList<Shape>();
+		for(String line : lines){
+			if(line.trim().isEmpty()){
+				continue;
+			}
+			GlyphVector v = f.createGlyphVector(ctx, line);
 			java.awt.Shape res = v.getOutline();
-			return ShapesMaker.fromJava2dToShape(res.getPathIterator(null));
-			
+			shapes.add(
+					transform(translate(0,i*height),ShapesMaker.fromJava2dToShape(res.getPathIterator(null))));
+			i++;
+			}
+		return Combinators.set(shapes);
 		
+		
+	
+}
+
+	private static java.awt.Shape textSingleLine(String font, int fontSize,
+			String text) {
+		Font f = new Font(font, Font.PLAIN, fontSize);
+		FontRenderContext ctx = new FontRenderContext(null, true, true);
+		GlyphVector v = f.createGlyphVector(ctx, text);
+		java.awt.Shape res = v.getOutline();
+		return res;
 	}
 	
 	// a gradient of width 1
@@ -247,7 +273,8 @@ public class Library {
 		return fillColor(color(i,j,k));
 	}
 	
-	public static Shape set(Shape ... shapes){
-		return new ShapeSet(shapes);
+
+	public static Texture fillColor(int i, int j, int k, int l) {
+		return fillColor(color(i,j,k,l));
 	}
 }

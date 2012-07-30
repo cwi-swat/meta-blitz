@@ -9,18 +9,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import deform.Vec;
+import deform.paths.Path;
+import deform.segments.SegPath;
+import deform.segments.SegmentsMaker;
+import deform.shapes.Shape;
 
-import paths.paths.paths.Path;
-import transform.AffineTransformation;
+import static deform.Combinators.*;
+import static deform.Library.*;
 
 public class CircleFactory {
 
-	public static Path makeCircle(Vec center, double diameter) {
-		return makeEllipse(center, diameter, diameter);
+	public static Shape makeCircle(Vec center, double diameter) {
+		return close(makeArc(0, 2 * Math.PI));
 	}
 
-	public static Path makeEllipse(Vec center, double width, double heigth) {
-		return PathFactory.createClosedPath(makeEllipiticalArc(center, width,
+	public static Shape makeEllipse(Vec center, double width, double heigth) {
+		return close(makeEllipiticalArc(center, width,
 				heigth, 0, 2 * Math.PI));
 	}
 
@@ -51,8 +55,7 @@ public class CircleFactory {
 	public static Path makeEllipiticalArc(Vec center, double width,
 			double height, double startAngle, double endAngle) {
 		Path result = makeArc(startAngle, endAngle);
-		return result.transform(AffineTransformation.id.scale(width / 2,
-				height / 2).translate(center));
+		return transform(scale(width/2,height/2).compose(translate(center)),result);
 	}
 
 	public static double getKappa(double angularLength) {
@@ -62,6 +65,7 @@ public class CircleFactory {
 	}
 
 	public static Path makeArc(double startAngle, double endAngle) {
+		SegmentsMaker maker = new SegmentsMaker();
 		double angleDiff = endAngle - startAngle;
 		int segs = (int) Math.ceil(Math.abs((angleDiff) / (0.25 * Math.PI)));
 		double radInc = angleDiff / segs;
@@ -69,30 +73,29 @@ public class CircleFactory {
 		double prevRad = startAngle;
 		Vec prevPoint = getCircleVec(prevRad);
 		double rad = prevRad;
-		List<Path> result = new ArrayList<Path>();
 		for (int i = 0; i < segs; i++) {
 			rad += radInc;
 
 			Vec curPoint = getCircleVec(rad);
-			result.add(PathFactory.createCubic(prevPoint,
+			maker.cubic(prevPoint,
 					prevPoint.add(prevPoint.perpendicularCW().mul(kappa)),
 					curPoint.add(curPoint.perpendicularCCW().mul(kappa)),
-					curPoint));
+					curPoint);
 			prevPoint = curPoint;
 		}
-		return PathFactory.createAppends(result);
+		return maker.done().toPath();
 	}
 
 	public static Vec getCircleVec(double d) {
 		return new Vec(Math.cos(d), Math.sin(d));
 	}
 
-	public static Path makeCircle(double size) {
+	public static Shape makeCircle(double size) {
 		return makeCircle(Vec.ZeroVec, size);
 	}
 
-	public static Path makeCircle() {
-		return makeCircle(1);
+	public static Shape makeCircle() {
+		return close(makeArc(0, 2 * Math.PI));
 	}
 
 }

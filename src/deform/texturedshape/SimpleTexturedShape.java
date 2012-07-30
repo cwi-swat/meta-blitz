@@ -20,6 +20,7 @@ import deform.render.RenderContext;
 import deform.render.ScanLiner;
 import deform.segments.SegPath;
 import deform.segments.ShapesMaker;
+import deform.shapes.IntersectionShapes;
 import deform.shapes.Shape;
 import deform.tests.BasicDemo;
 import deform.texture.ImageTex;
@@ -38,54 +39,50 @@ public class SimpleTexturedShape extends TexturedShape{
 		this.shape = shape;
 	}
 	
-	public void render(Transform t,RenderContext ctx) {
+	public void render(Transform t,Shape clip, RenderContext ctx) {
 		BBox me = t.transformBBox(shape.bbox);
 		if(!me.overlaps(ctx.area)){
+			System.out.println("Skip! stt");
 			return;
 		}
+		Shape shape = this.shape;
 		BBox actual = ctx.area.intersections(me);
 		if(tex instanceof ImageTex && t instanceof AffineTransform){
 			ctx.renderImage(((ImageTex)tex).i,(AffineTransform)t,shape);
 			return;
-		}
-		boolean java2dPaint ;
-		Texture tex = this.tex;
+		} 
 		if(tex instanceof RepeatingImage && t instanceof AffineTransform && ((AffineTransform)t).isTranslation()){
-
-			ctx.setPaint(((RepeatingImage)tex).getTranslatedPaint(t));
-			java2dPaint = true;
+			ctx.renderJava2dPaintShape(((RepeatingImage)tex).getTranslatedPaint(t),t,shape);
+			return;
+			
 		} else {
-			tex = Combinators.transform(t, this.tex);
-			
-			java2dPaint =  tex instanceof Java2DTexture;
-			
-			if(java2dPaint){
-				ctx.setPaint(((Java2DTexture)tex).getPaint());
+			Texture tex = Combinators.transform(t, this.tex);
+			if( tex instanceof Java2DTexture){
+				ctx.renderJava2dPaintShape(((Java2DTexture)tex).getPaint(), t, shape);
+//				System.out.println("Using java2d");
+				return;
 			} else {
-				ctx.setPaint(java.awt.Color.white);
+				ctx.renderShapeOutline(t, shape);
+				setPixels(ctx, actual, tex);
 			}
 		}
+	}
 
-		if(!java2dPaint){
-			ctx.setShape(t, shape);
-			ScanLiner it = new ScanLiner(ctx.area, actual);
+	private void setPixels(RenderContext ctx, BBox actual, Texture tex) {
+		ScanLiner it = new ScanLiner(ctx.size, actual);
+		int toX = actual.getXInt() + actual.getWidthInt();
+		int toY = actual.getYInt() + actual.getHeightInt();
+		for (int iy = actual.getYInt(); iy < toY; iy++) {
+			for (int ix = actual.getXInt(); ix < toX; ix++) {
+				int alpha = ctx.getAlpha(it.curFill);
 
-			int toX = actual.getXInt() + actual.getWidthInt();
-			int toY = actual.getYInt() + actual.getHeightInt();
-			for (int iy = actual.getYInt(); iy < toY; iy++) {
-				for (int ix = actual.getXInt(); ix < toX; ix++) {
-					int alpha = ctx.getAlpha(it.curFill);
-
-					if(alpha!= 0){
-						Color c= tex.sample(new deform.Vec(ix + 0.5, iy + 0.5)).mul(alpha);
-						
-						ctx.addElem(it.cur, c);
-					}
-					it.increment();
+				if(alpha!= 0){
+					Color c= tex.sample(new deform.Vec(ix + 0.5, iy + 0.5)).mul(alpha);
+					
+					ctx.addElem(it.cur, c);
 				}
+				it.increment();
 			}
-		} else {
-			ctx.directShape(t,shape);
 		}
 	}
 
@@ -94,11 +91,6 @@ public class SimpleTexturedShape extends TexturedShape{
 		return shape.bbox;
 	}
 
-	@Override
-	public boolean isJava2DRenderable() {
-		return tex instanceof Java2DTexture;
-	}
-	
 	
 	
 

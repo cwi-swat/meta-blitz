@@ -61,7 +61,6 @@ public abstract class SimplyIndexedPath extends SplittablePath {
 		return unitTup;
 	}
 
-	public abstract SimplyIndexedPath transform(IToTransform t);
 
 	public abstract SimplyIndexedPath getWithAdjustedStartPoint(
 			Vec newStartPoint);

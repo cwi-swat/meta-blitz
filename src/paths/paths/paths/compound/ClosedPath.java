@@ -2,7 +2,7 @@ package paths.paths.paths.compound;
 
 import deform.BBox;
 import deform.Vec;
-import paths.paths.paths.Path;
+import paths.paths.paths.QueryPath;
 import paths.paths.paths.PathIndex;
 import paths.paths.paths.SplittablePath;
 import paths.paths.paths.simple.Line;
@@ -13,19 +13,17 @@ import paths.paths.results.transformers.IPathIndexTransformer;
 import paths.paths.results.transformers.PITransformers;
 import paths.paths.results.transformers.PathIndexTupleTransformer;
 import paths.paths.results.transformers.TupleTransformers;
-import transform.IToTransform;
-import transform.nonlinear.IDeform;
 import transform.nonlinear.ILineTransformer;
 import util.Tuple;
 
-public class ClosedPath extends Path {
+public class ClosedPath extends QueryPath {
 
-	final Path actual;
+	final QueryPath actual;
 	final PathIndexTupleTransformer closeLeft, closeRight;
 	final IPathIndexTransformer closeTransformer;
 	final PathIndex minPathIndex, maxPathIndex;
 
-	public ClosedPath(Path actual) {
+	public ClosedPath(QueryPath actual) {
 		this.actual = actual;
 		this.minPathIndex = actual.minPathIndex();
 		this.maxPathIndex = actual.maxPathIndex();
@@ -51,7 +49,7 @@ public class ClosedPath extends Path {
 	}
 
 	@Override
-	public IIntersections intersection(Path other) {
+	public IIntersections intersection(QueryPath other) {
 		return actual.intersection(other).transform(closeLeft);
 	}
 
@@ -76,7 +74,7 @@ public class ClosedPath extends Path {
 	}
 
 	@Override
-	public BestProjectTup project(double best, Path other) {
+	public BestProjectTup project(double best, QueryPath other) {
 		return actual.project(other).transform(closeLeft);
 	}
 
@@ -101,19 +99,14 @@ public class ClosedPath extends Path {
 	}
 
 	@Override
-	public Path getChild(int i) {
+	public QueryPath getChild(int i) {
 		return actual;
 	}
 
 	@Override
-	public Path transform(IToTransform t) {
-		return new ClosedPath(actual.transform(t));
-	}
-
-	@Override
-	public Tuple<Path, Double> normaliseToLength(double prevLength) {
-		Tuple<Path, Double> resDeep = actual.normaliseToLength(prevLength);
-		return new Tuple<Path, Double>(new ClosedPath(resDeep.l), resDeep.r);
+	public Tuple<QueryPath, Double> normaliseToLength(double prevLength) {
+		Tuple<QueryPath, Double> resDeep = actual.normaliseToLength(prevLength);
+		return new Tuple<QueryPath, Double>(new ClosedPath(resDeep.l), resDeep.r);
 	}
 
 	@Override
@@ -129,16 +122,6 @@ public class ClosedPath extends Path {
 	@Override
 	public PathIndex maxPathIndex() {
 		return new ClosedPathIndex(maxPathIndex);
-	}
-
-	@Override
-	public Path deformActual(IDeform p) {
-		return new ClosedPath(actual.deform(p));
-	}
-
-	@Override
-	public Path transformApproxLines(ILineTransformer t) {
-		return new ClosedPath(actual.transformApproxLines(t));
 	}
 
 }

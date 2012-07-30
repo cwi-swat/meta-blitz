@@ -11,7 +11,7 @@ import deform.BBox;
 import deform.Vec;
 
 import paths.Constants;
-import paths.paths.factory.PathFactory;
+import paths.paths.factory.QueryPathFactory;
 import paths.paths.paths.simple.SimplePath;
 import paths.points.oned.Interval;
 import transform.IToTransform;
@@ -150,12 +150,12 @@ public class CubicCurve extends Curve{
 
 	@Override
 	public CubicCurve getWithAdjustedStartPoint(Vec newStart) {
-		return PathFactory.createCubic(newStart,p1,p2,p3,tInterval);
+		return QueryPathFactory.createCubic(newStart,p1,p2,p3,tInterval);
 	}
 	
 	@Override
 	public CubicCurve getWithAdjustedEndPoint(Vec newEnd) {
-		CubicCurve c = PathFactory.createCubic(p0,p1,p2,newEnd,tInterval);
+		CubicCurve c = QueryPathFactory.createCubic(p0,p1,p2,newEnd,tInterval);
 		c.xyRoots = Collections.EMPTY_LIST;
 		return c;
 	}
@@ -179,12 +179,6 @@ public class CubicCurve extends Curve{
 		coords[4] = (float)p3.x- x;
 		coords[5] = (float)p3.y - y;
 		return PathIterator.SEG_CUBICTO;
-	}
-
-	@Override
-	public CubicCurve transform(
-			IToTransform t) {
-		return PathFactory.createCubic(t.to(p0),t.to(p1),t.to(p2),t.to(p3),tInterval);
 	}
 
 	@Override

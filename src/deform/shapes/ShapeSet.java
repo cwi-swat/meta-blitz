@@ -13,7 +13,7 @@ import deform.Transform;
 import deform.segments.SegPath;
 
 public class ShapeSet extends Shape{
-	final List<Shape> closed;
+	public final List<Shape> closed;
 	
 	public ShapeSet(List<Shape> closed) {
 		super(getBBox(closed));
@@ -37,8 +37,12 @@ public class ShapeSet extends Shape{
 	void render(BBox area, Transform t, List<SegPath> res) {
 		if(area.overlaps(t.transformBBox(bbox))){
 			for(Shape s : closed){
+				
 				s.render(area, t, res);
 			}
+			
+		} else {
+//			System.out.println("SKIP!");
 		}
 	}
 	

@@ -1,7 +1,7 @@
 package paths.paths.paths.simple;
 
 import deform.Vec;
-import paths.paths.paths.Path;
+import paths.paths.paths.QueryPath;
 import paths.paths.paths.SimplyIndexedPath;
 import paths.paths.paths.compound.Append;
 import paths.paths.results.intersections.IIntersections;
@@ -73,70 +73,13 @@ public abstract class SimplePath extends SimplyIndexedPath {
 		return 0;
 	}
 
-	public Path getChild(int i) {
+	public QueryPath getChild(int i) {
 		return null;
 	}
 
 	public abstract int awtCurSeg(float[] coords, int x, int y);
 
-	public abstract Tuple<Path, Double> normaliseToLength(double prevLength);
-
-	@Override
-	public Path deformActual(IDeform p) {
-		if (p.isSimple()) {
-			return p.deform(this);
-		} else if (!p.isSimpleX()) {
-			double x = p.getSplitPointX();
-			double midt = findXFast(x);
-
-			if (x == 0) {
-				Vec mid = new Vec(x, getStartPoint().y);
-				Path z = getWithAdjustedStartPointMono(mid);
-				return z.deform(p);
-			}
-			if (x == 1) {
-				Vec mid = new Vec(x, getEndPoint().y);
-				Path z = getWithAdjustedEndPointMono(mid);
-				return z.deform(p);
-			}
-			Tuple<SimplePath, SimplePath> simp = splitSimp(midt);
-			Vec mid = new Vec(x, simp.r.getStartPoint().y);
-			SimplePath left = simp.l.getWithAdjustedEndPointMono(mid);
-			SimplePath right = (SimplePath) simp.r
-					.getWithAdjustedStartPointMono(mid);
-			if (left == null) {
-				return right.deform(p);
-			} else if (right == null) {
-				return left.deform(p);
-			}
-			return new Append(left.deform(p), right.deform(p));
-		} else {
-			double y = p.getSplitPointY();
-			double midt = findYFast(y);
-
-			if (y == 0) {
-				Vec mid = new Vec(getStartPoint().x, y);
-				Path z = getWithAdjustedStartPointMono(mid);
-				return z.deform(p);
-			}
-			if (y == 1) {
-				Vec mid = new Vec(getEndPoint().x, y);
-				Path z = getWithAdjustedEndPointMono(mid);
-				return z.deform(p);
-			}
-			Tuple<SimplePath, SimplePath> simp = splitSimp(midt);
-			Vec mid = new Vec(simp.r.getStartPoint().x, y);
-			SimplePath left = simp.l.getWithAdjustedEndPointMono(mid);
-			SimplePath right = (SimplePath) simp.r
-					.getWithAdjustedStartPointMono(mid);
-			if (left == null) {
-				return right.deform(p);
-			} else if (right == null) {
-				return left.deform(p);
-			}
-			return new Append(left.deform(p), right.deform(p));
-		}
-	}
+	public abstract Tuple<QueryPath, Double> normaliseToLength(double prevLength);
 
 	public abstract SimplePath getWithAdjustedStartPointMono(Vec mid);
 

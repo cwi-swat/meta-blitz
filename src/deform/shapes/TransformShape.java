@@ -22,7 +22,8 @@ public class TransformShape extends Shape{
 	@Override
 	public
 	void render(BBox area, Transform t, List<SegPath> res) {
-		if(!area.overlaps(bbox)){
+		if(!area.overlaps(t.transformBBox(bbox))){
+//			System.out.println("Hiero!");
 			return;
 		} else {
 			s.render(area, t.compose(this.t), res);

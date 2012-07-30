@@ -5,8 +5,8 @@ import java.util.List;
 
 import deform.Vec;
 
-import paths.paths.factory.PathFactory;
-import paths.paths.paths.Path;
+import paths.paths.factory.QueryPathFactory;
+import paths.paths.paths.QueryPath;
 import paths.paths.paths.compound.Append;
 import paths.paths.paths.compound.ShapeSet;
 import paths.paths.paths.simple.Line;
@@ -78,7 +78,7 @@ public abstract class Curve extends SimplePath {
 	}
 	
 	
-	public Tuple<Path,Path> splitSimpler(){
+	public Tuple<QueryPath,QueryPath> splitSimpler(){
 		return (Tuple)splitSimplerCurve();
 	}
 
@@ -113,7 +113,7 @@ public abstract class Curve extends SimplePath {
 	@Override
 	public 
 		IIntersections intersection(
-			Path other) {
+			QueryPath other) {
 		return other.intersectionLCurve(this);
 	}
 
@@ -133,7 +133,7 @@ public abstract class Curve extends SimplePath {
 	@Override
 	public 
 		BestProjectTup project(
-			double best, Path other) {
+			double best, QueryPath other) {
 		return other.projectLCurve(best, this);
 	}
 
@@ -144,12 +144,12 @@ public abstract class Curve extends SimplePath {
 	}
 	
 	@Override
-	public Tuple<Path, Double> normaliseToLength(
+	public Tuple<QueryPath, Double> normaliseToLength(
 			double prevLength) {
 		Tuple<SimplePath,SimplePath> sp = splitSimplerCurve();
-		Tuple<Path, Double> l = sp.l.normaliseToLength(prevLength);
-		Tuple<Path, Double> r = sp.r.normaliseToLength(l.r);
-		return new Tuple<Path, Double>(
+		Tuple<QueryPath, Double> l = sp.l.normaliseToLength(prevLength);
+		Tuple<QueryPath, Double> r = sp.r.normaliseToLength(l.r);
+		return new Tuple<QueryPath, Double>(
 			getWithNewSimpleAndInterval(
 					(SimplePath)l.l, (SimplePath)r.l, new Interval(prevLength,r.r)),
 			r.r);
@@ -159,17 +159,6 @@ public abstract class Curve extends SimplePath {
 			SimplePath l, SimplePath l2, Interval interval) ;
 	
 	
-	@Override
-	public Path deformActual(IDeform p) {
-		if(!isMonotomous()){
-			Tuple<Path,Path> sp = splitSimpler();
-			return new Append(sp.l.deform(p),
-					sp.r.deform(p));
-		} else {
-			return super.deformActual(p);
-		}
-	
-	}
 	
 	public SimplePath getWithAdjustedStartPointMono(Vec v ) {
 		Curve c = (Curve) getWithAdjustedStartPoint(v);
@@ -184,12 +173,5 @@ public abstract class Curve extends SimplePath {
 	}
 
 	public abstract Curve getWithAdjustedEndPoint(Vec newEnd) ;
-	
-	@Override
-	public Path transformApproxLines(ILineTransformer t) {
-		Tuple<SimplePath,SimplePath> sp = splitSimplerCurve();
-		return PathFactory.createAppends(
-				sp.l.transformApproxLines(t),
-				sp.r.transformApproxLines(t));
-	}
+
 }

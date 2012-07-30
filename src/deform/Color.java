@@ -1,8 +1,5 @@
 package deform;
 
-import static textures.Util.clamp;
-
-
 
 
 public class Color {
@@ -31,6 +28,16 @@ public class Color {
 				(a * d) >> 8);
 	}
 	
+	private int clamp(int d) {
+		if(d > 255){
+			return 255;
+		} else if(d < 0){
+			return 0;
+		} else {
+			return d;
+		}
+	}
+
 	public Color mulMulAlpha(int a) {
 		return new Color((r * a >> 8), (g * a >> 8), (b * a >> 8),
 				a);
@@ -54,6 +61,15 @@ public class Color {
 
 	public Color lerp(double frac, Color other){
 		return lerp((int)(frac * 255.0),other);
+	}
+	
+	public Color lerpNoAlpha(double frac,Color other){
+		int d = clamp((int)(frac*255));
+		int rd = 255 - d;
+		return new Color((r * rd >> 8) + (other.r * d >> 8),
+				(g * rd >> 8) + (other.g * d >> 8),
+				(b * rd >> 8) + (other.b * d >> 8),
+				a);
 	}
 	
 	public Color lerp(int d, Color other){

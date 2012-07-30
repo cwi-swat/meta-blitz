@@ -6,10 +6,12 @@ import deform.BBox;
 import deform.Transform;
 import deform.render.LocatedImage;
 import deform.render.RenderContext;
+import deform.shapes.Shape;
 import deform.shapes.TransformShape;
 import deform.tests.BasicDemo;
 import deform.texture.TransformTexture;
 import deform.transform.affine.AffineTransform;
+import deform.transform.affine.BackwardsAffineTransform;
 import deform.transform.affine.IdentityTransform;
 
 public class TransformTexturedShape extends TexturedShape{
@@ -23,17 +25,12 @@ public class TransformTexturedShape extends TexturedShape{
 	}
 	
 	@Override
-	public void render(Transform t,   RenderContext ctx) {
+	public void render(Transform t,   Shape clip, RenderContext ctx) {
 		if(t.transformBBox(getBBox()).overlaps(ctx.area)){
 			Transform composed = t.compose(this.t);
-			if(BasicDemo.awt && composed instanceof AffineTransform && texs.isJava2DRenderable()){
-				ctx.setTransform(((AffineTransform)composed).toJava2DTransform());
-				texs.render(IdentityTransform.Instance,  ctx);
-			} else {
-				texs.render(composed, ctx);
-			}
+				texs.render(composed, clip, ctx);
 		} else {
-
+//			System.out.println("Skip!");
 		}
 		
 	}

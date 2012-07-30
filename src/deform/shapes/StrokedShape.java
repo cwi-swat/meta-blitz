@@ -25,11 +25,13 @@ public class StrokedShape extends Shape{
 
 	@Override
 	public void render(BBox area, Transform t, List<SegPath> res) {
+		if(area.overlaps(t.transformBBox(bbox))){
 		List<SegPath> segs = new ArrayList<SegPath>();
 		s.render(area, t, segs);
 		java.awt.Shape ps = ShapesMaker.makePath(segs);
 		java.awt.Shape js = stroke.createStrokedShape(ps);
 		ShapesMaker.fromJava2D(js.getPathIterator(null), res);
+		}
 		
 	}
 

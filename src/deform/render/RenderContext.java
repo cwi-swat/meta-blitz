@@ -16,22 +16,26 @@ import deform.Transform;
 import deform.segments.LineTo;
 import deform.segments.SegPath;
 import deform.segments.ShapesMaker;
+import deform.shapes.IntersectionShapes;
+import deform.transform.affine.IdentityTransform;
 
 public class RenderContext {
-	public final BBox area;
-	final AffineTransform trans;
+	public BBox area;
+	public BBox size;
+	final deform.transform.affine.AffineTransform trans;
 	public final BufferedImage img;
 	final DataBuffer imgBuf;
 	final Graphics2D g;
 	final BufferedImage imgFill;
 	final DataBuffer fillBuf;
 	final Graphics2D gFill;
-	final Shape clip;
+	deform.shapes.Shape clip;
 	
-	public RenderContext(BBox area,AffineTransform trans, Shape clip) {
+	public RenderContext(BBox area,deform.transform.affine.AffineTransform trans, deform.shapes.Shape clip) {
 		this.trans = trans;
 		this.clip = clip;
 		this.area = area;
+		this.size = area;
 		img = new BufferedImage(area.getWidthInt(),
 				area.getHeightInt(), BufferedImage.TYPE_4BYTE_ABGR_PRE);
 		g = (Graphics2D) img.getGraphics();
@@ -48,22 +52,29 @@ public class RenderContext {
 		gFill.setRenderingHint(RenderingHints.KEY_RENDERING,
 				RenderingHints.VALUE_RENDER_QUALITY);
 		fillBuf = imgFill.getRaster().getDataBuffer();
-		if(trans!=null){
-			g.setTransform(trans);
-			gFill.setTransform(trans);
-		}
 	}
 	
-	public void setPaint(Paint p){
-		g.setPaint(p);
-	}
 	
-	public void setShape(Transform t, deform.shapes.Shape s){
+	public void renderShapeOutline(Transform t, deform.shapes.Shape s){
 		List<SegPath> res = new ArrayList<SegPath>();
+		
+		if(clip!=null){
+			res = new ArrayList<SegPath>();
+			clip.render(area, IdentityTransform.Instance, res);
+			gFill.setClip(ShapesMaker.makePath(res));
+			res.clear();
+		} else {
+			gFill.setClip(null);
+		}
 		s.render(area, t, res);
-		BBox c = s.bbox;
+//		for(SegPath ss : res){
+//			System.out.println(ss);
+//		}
+		BBox c = t.transformBBox(s.bbox);
+		
 		gFill.clearRect(c.getXInt(), c.getYInt(), c.getWidthInt(), c.getHeightInt());
 		gFill.fill(ShapesMaker.makePath(res));
+		gFill.setClip(null);
 	}
 	
 	public int getAlpha(int loc){
@@ -84,28 +95,45 @@ public class RenderContext {
 		imgBuf.setElem(a, nc.a);
 	}
 
-	public void setTransform(java.awt.geom.AffineTransform java2dTransform) {
-		if(java2dTransform!=null){
-			g.setTransform(java2dTransform);
-			gFill.setTransform(java2dTransform);
-		}
-		
+	public deform.transform.affine.AffineTransform getTransform(){
+		return trans;
 	}
 	
-	public void resetTransform(){
-		setTransform(new java.awt.geom.AffineTransform());
+	public void setTransform(Transform t) {
+		
 	}
 
-	public void directShape(Transform t, deform.shapes.Shape s) {
+	public void renderJava2dPaintShape(Paint p,Transform t, deform.shapes.Shape s) {
 		List<SegPath> res = new ArrayList<SegPath>();
+		if(clip!=null){
+			res = new ArrayList<SegPath>();
+			clip.render(area, IdentityTransform.Instance, res);
+			g.setClip(ShapesMaker.makePath(res));
+			res.clear();
+		}
+
+		g.setPaint(p);
 		s.render(area, t, res);
 		g.fill(ShapesMaker.makePath(res));
+		g.setClip(null);
 		
+
+	}
+	
+	public deform.shapes.Shape getClip(){
+		return clip;
+	}
+	
+	public void setClip(deform.shapes.Shape s){
+		this.clip = s;
 	}
 
 	public void renderImage(BufferedImage i, deform.transform.affine.AffineTransform t,
 			deform.shapes.Shape s) {
 		List<SegPath> res = new ArrayList<SegPath>();
+		if(clip!=null){
+			s = new IntersectionShapes(clip, s);
+		}
 		s.render(area, t, res);
 //		res.add(
 //				new SegPath(area.getLeftUp(),
@@ -118,7 +146,15 @@ public class RenderContext {
 		if(trans!=null) g.setTransform(trans);
 		g.drawImage( i, 0, 0, null);
 		g.setClip(null);
-		resetTransform();
+	}
+
+
+	public BBox getBBox() {
+		return area;
+	}
+	
+	public void setBBox(BBox b){
+		this.area = b;
 	}
 	
 	

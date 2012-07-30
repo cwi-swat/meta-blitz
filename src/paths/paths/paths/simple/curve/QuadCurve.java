@@ -8,7 +8,7 @@ import deform.BBox;
 import deform.Vec;
 
 import paths.Constants;
-import paths.paths.factory.PathFactory;
+import paths.paths.factory.QueryPathFactory;
 import paths.paths.paths.simple.SimplePath;
 import paths.points.oned.Interval;
 import transform.IToTransform;
@@ -93,7 +93,7 @@ public class QuadCurve extends Curve{
 	@Override
 	protected
 	SimplePath getSimplerApprox() {
-		SimplePath l = PathFactory.createLine(p0, p2,tInterval);
+		SimplePath l = QueryPathFactory.createLine(p0, p2,tInterval);
 		if(getAtLocal(0.5).distanceSquared(l.getAtLocal(0.5)) <= Constants.HALF_MAX_ERROR_POW2){
 			return l;
 		} else {
@@ -120,12 +120,12 @@ public class QuadCurve extends Curve{
 
 	@Override
 	public QuadCurve getWithAdjustedStartPoint(Vec newStartPoint) {
-		return PathFactory.createQuad(newStartPoint,p1,p2,tInterval);
+		return QueryPathFactory.createQuad(newStartPoint,p1,p2,tInterval);
 	}
 	
 	@Override
 	public QuadCurve getWithAdjustedEndPoint(Vec newEnd) {
-		return PathFactory.createQuad(p0,p1,newEnd,tInterval);
+		return QueryPathFactory.createQuad(p0,p1,newEnd,tInterval);
 	}
 
 	@Override
@@ -144,13 +144,6 @@ public class QuadCurve extends Curve{
 		coords[2] = (float)p2.x - x;
 		coords[3] = (float)p2.y - y;
 		return PathIterator.SEG_QUADTO;
-	}
-
-
-	@Override
-	public QuadCurve transform(
-			IToTransform t) {
-		return PathFactory.createQuad(t.to(p0),t.to(p1),t.to(p2),tInterval);
 	}
 
 

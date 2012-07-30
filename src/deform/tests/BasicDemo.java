@@ -2,7 +2,6 @@ package deform.tests;
 
 import static deform.Combinators.*;
 import static deform.Library.*;
-import textures.texturedpaths.TexturedPath;
 
 import deform.Color;
 import deform.Library;
@@ -12,6 +11,8 @@ import deform.Vec;
 import deform.paths.Path;
 import deform.shapes.Shape;
 import deform.texturedshape.TexturedShape;
+import deform.transform.lenses.BasicLens;
+import deform.transform.lenses.BasicLensNumericTo;
 
 public class BasicDemo extends DemoBase{
 
@@ -24,7 +25,7 @@ public class BasicDemo extends DemoBase{
 	
 	@Override
 	public void init(){
-		img = tiledImage("/home/ploeg/marble.jpg");
+//		img = tiledImage("/home/ploeg/marble.jpg");
 	}
 	Texture img;
 	@Override
@@ -80,7 +81,8 @@ public class BasicDemo extends DemoBase{
 //		
 		
 		s = transform(sweep(p),s);
-		s = transform(coneLens(mouse, 100 + wheel),s);
+		s = transform(new BasicLensNumericTo(mouse, 5,100,200),s);
+//		s = transform(coneLens(mouse, 100 + wheel),s);
 //		s = transform(fisheye(mouse,Math.abs(wheel)/100 , 200), s);
 		TexturedShape line = fill(stroke(p,10),fillColor(0,255,0));
 		s = over(line,s);

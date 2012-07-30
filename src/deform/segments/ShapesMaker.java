@@ -15,12 +15,16 @@ public class ShapesMaker {
 	
 	public static Path2D makePath(List<SegPath> sp){
 		Path2D res = new Path2D.Double();
+		res.setWindingRule(Path2D.WIND_EVEN_ODD);
+		int i = 0;
 		for(SegPath s: sp){
 			Path2D r = s.toJava2d();
 			r.closePath();
-			
+			i++;
 			res.append(r,false);
 		}
+//		res.closePath();
+//		System.out.println(i);
 		return res;
 	}
 	
