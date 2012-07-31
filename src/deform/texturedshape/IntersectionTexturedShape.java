@@ -26,7 +26,7 @@ public class IntersectionTexturedShape extends TexturedShape {
 	}
 
 	@Override
-	public void render(Transform t, Shape clip, RenderContext ctx) {
+	public void render(Transform t, RenderContext ctx) {
 		BBox me = t.transformBBox(getBBox());
 		if(!me.overlaps(ctx.area)){
 			System.out.printf("Not rendering!\n");
@@ -45,7 +45,7 @@ public class IntersectionTexturedShape extends TexturedShape {
 		BBox b = ctx.getBBox();
 //		System.out.printf("%s %s -> %s\n", myClip.bbox,b, b.intersections(myClip.bbox));
 		ctx.setBBox(b.intersections(myClip.bbox));
-		orig.render(t, null, ctx);
+		orig.render(t, ctx);
 		ctx.setClip(curClip);
 		ctx.setBBox(b);
 

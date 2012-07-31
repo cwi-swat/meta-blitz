@@ -33,6 +33,14 @@ public class Matrix {
 		r.x1 * y1 + r.y1 * y2, r.x2 * y1 + r.y2 * y2, r.x3 * y1 + r.y3 * y2
 				+ y3);
 	}
+	
+	public boolean isEqExTranslation(Matrix other){
+		return x1 == other.x1 && x2 == other.x2 && y1 == other.y1 && y2 == other.y2;
+	}
+	
+	public Vec getTranslation(){
+		return new Vec(x3,y3);
+	}
 
 	public Vec mul(Vec v) {
 		return new Vec(x1 * v.x + x2 * v.y + x3 , 

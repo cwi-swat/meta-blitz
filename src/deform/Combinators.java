@@ -28,6 +28,7 @@ import deform.texture.FillColor;
 import deform.texture.TransformTexture;
 import deform.texturedshape.CombineTexturedShape;
 import deform.texturedshape.IntersectionTexturedShape;
+import deform.texturedshape.MemoTexturedShape;
 import deform.texturedshape.MinusTexturedShape;
 import deform.texturedshape.SimpleTexturedShape;
 import deform.texturedshape.TexturedShape;
@@ -132,6 +133,10 @@ public class Combinators {
 		return new TransformShape(p, t);
 	}
 	
+	public static TexturedShape memo(TexturedShape s){
+		return new MemoTexturedShape(s);
+	}
+	
 	public static Texture transform(Transform t, Texture tex){
 		if(t instanceof IdentityTransform){
 			return tex;
@@ -153,7 +158,7 @@ public class Combinators {
 	}
 	
 	public static void render(RenderContext ctx,TexturedShape s){
-		s.render(IdentityTransform.Instance,null, ctx);
+		s.render(IdentityTransform.Instance,ctx);
 	}
 
 	

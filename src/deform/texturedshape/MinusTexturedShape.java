@@ -30,7 +30,7 @@ public class MinusTexturedShape extends TexturedShape{
 	}
 
 	@Override
-	public void render(Transform t, Shape clip, RenderContext ctx) {
+	public void render(Transform t, RenderContext ctx) {
 		BBox me = t.transformBBox(getBBox());
 		if(!me.overlaps(ctx.area)){
 			return;
@@ -50,7 +50,7 @@ public class MinusTexturedShape extends TexturedShape{
 		ctx.setClip(myClip);
 //		System.out.printf("%s %s -> %s\n", myClip.bbox,b, b.intersections(myClip.bbox));
 //		ctx.setBBox(b.intersections(myClip.bbox));
-		orig.render(t, null, ctx);
+		orig.render(t, ctx);
 		ctx.setClip(curClip);
 
 	}

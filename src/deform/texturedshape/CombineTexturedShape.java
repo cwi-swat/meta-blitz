@@ -31,11 +31,11 @@ public class CombineTexturedShape extends TexturedShape{
 	public LocatedImage render(Transform t,BBox b, java.awt.geom.AffineTransform trans) {
 		LocatedImage la = LocatedImage.empty;
 		if(t.transformBBox(a.getBBox()).overlaps(b)){
-			la = a.render(t,null, b);
+			la = a.render(t,b);
 		}
 		LocatedImage lb = LocatedImage.empty;
 		if(t.transformBBox(this.b.getBBox()).overlaps(b)){
-			lb = this.b.render(t,null, b);
+			lb = this.b.render(t,b);
 		}
 		if(la == LocatedImage.empty) return lb;
 		if(lb == LocatedImage.empty) return la;

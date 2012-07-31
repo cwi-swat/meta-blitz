@@ -6,7 +6,6 @@ import deform.BBox;
 import deform.Transform;
 import deform.render.LocatedImage;
 import deform.render.RenderContext;
-import deform.shapes.Shape;
 import deform.shapes.TransformShape;
 import deform.tests.BasicDemo;
 import deform.texture.TransformTexture;
@@ -25,10 +24,10 @@ public class TransformTexturedShape extends TexturedShape{
 	}
 	
 	@Override
-	public void render(Transform t,   Shape clip, RenderContext ctx) {
+	public void render(Transform t,   RenderContext ctx) {
 		if(t.transformBBox(getBBox()).overlaps(ctx.area)){
 			Transform composed = t.compose(this.t);
-				texs.render(composed, clip, ctx);
+				texs.render(composed, ctx);
 		} else {
 //			System.out.println("Skip!");
 		}

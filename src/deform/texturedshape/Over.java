@@ -15,7 +15,6 @@ import deform.render.LocatedImage;
 import deform.render.RenderContext;
 import deform.segments.SegPath;
 import deform.segments.ShapesMaker;
-import deform.shapes.Shape;
 import deform.tests.BasicDemo;
 import deform.texture.Java2DTexture;
 
@@ -41,14 +40,14 @@ public class Over extends TexturedShape{
 
 	@Override
 	public
-	void render(Transform t,  Shape clip, RenderContext ctx) {
+	void render(Transform t,  RenderContext ctx) {
 		BBox nb = t.transformBBox(this.b);
 		if(nb.overlaps(ctx.area)){
 			nb = nb.intersections(ctx.area);
 
 			
 			for(TexturedShape ts : shapes){
-				ts.render(t,clip, ctx);
+				ts.render(t,ctx);
 			}
 		} else {
 			System.out.println("Skip!!!!!!");

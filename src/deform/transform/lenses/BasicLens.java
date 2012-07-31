@@ -51,8 +51,8 @@ public class BasicLens extends Transform{
 	}
 
 	private double norm(Vec fromCenter) {
-//		return fromCenter.norm();
-		return Math.max(Math.abs(fromCenter.x) ,Math.abs(fromCenter.y));
+		return fromCenter.norm();
+//		return Math.max(Math.abs(fromCenter.x) ,Math.abs(fromCenter.y));
 	}
 
 	private Vec toNorm(Vec fromCenter, double oldNorm, double norm){

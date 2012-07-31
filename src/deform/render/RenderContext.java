@@ -13,6 +13,7 @@ import java.util.List;
 import deform.BBox;
 import deform.Color;
 import deform.Transform;
+import deform.Vec;
 import deform.segments.LineTo;
 import deform.segments.SegPath;
 import deform.segments.ShapesMaker;
@@ -155,6 +156,20 @@ public class RenderContext {
 	
 	public void setBBox(BBox b){
 		this.area = b;
+	}
+
+
+	public void renderMemo(Vec leftUp, BufferedImage i) {
+		List<SegPath> res = new ArrayList<SegPath>();
+		if(clip!=null){
+			res = new ArrayList<SegPath>();
+			clip.render(area, IdentityTransform.Instance, res);
+			g.setClip(ShapesMaker.makePath(res));
+			res.clear();
+		}
+		g.drawImage( i, (int)leftUp.x, (int)leftUp.y, null);
+		g.setClip(null);
+		
 	}
 	
 	

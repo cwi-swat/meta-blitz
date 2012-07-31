@@ -39,7 +39,7 @@ public class SimpleTexturedShape extends TexturedShape{
 		this.shape = shape;
 	}
 	
-	public void render(Transform t,Shape clip, RenderContext ctx) {
+	public void render(Transform t,RenderContext ctx) {
 		BBox me = t.transformBBox(shape.bbox);
 		if(!me.overlaps(ctx.area)){
 			System.out.println("Skip! stt");

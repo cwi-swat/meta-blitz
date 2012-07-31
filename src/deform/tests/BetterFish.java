@@ -36,12 +36,19 @@ public class BetterFish extends DemoBase{
 		new BetterFish();
 	}
 	Shape r, rect;
+	Texture multip;
+	TexturedShape s;
 	
 	@Override
 	public void init(){
 		 r = text("Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n Aliquam ultrices quam rhoncus diam sollicitudin at posuere nibh\n consequat. Quisque laoreet consequat diam ac pharetra.\n Curabitur nisl enim, lacinia at placerat a, pretium eu felis.\n Cras feugiat lobortis porttitor. Suspendisse ante lectus,\n hendrerit ullamcorper lacinia sed, porta quis augue. Vestibulum\n tristique sagittis nisl, quis tempus diam tincidunt id.\n Praesent facilisis, urna non accumsan euismod, elit nunc\n pharetra velit, quis sodales nisi ligula sit amet eros.\n Maecenas condimentum viverra lacus, non feugiat nibh fermentum\n at. Pellentesque ac enim dolor. Duis a lorem ante. Curabitur\n feugiat nisl eu leo tristique pharetra. Etiam in leo eu erat interdum pellentesque ut non erat.\n Donec fermentum sapien eget\n risus congue a feugiat risus luctus. Sed sollicitudin velit\n ut tellus feugiat posuere.\n\nDuis urna elit, viverra quis scelerisque nec, interdum commodo\n ligula. Fusce blandit mollis metus et molestie. Cras rutrum\n ultrices diam volutpat viverra. Mauris dapibus eros ut\n sapien convallis sit amet tempor elit iaculis. Sed sit amet\n dolor dui. Phasellus elementum condimentum lacus fringilla\n convallis. Curabitur velit metus, iaculis in pulvinar eget,\n tincidunt sit amet velit. Fusce et nisl nunc. Vestibulum\n suscipit, lacus vel blandit pretium, tortor orci sodales enim,\n sit amet aliquet est dui sit amet lacus. Fusce pellentesque\n lacus sit amet mauris facilisis sollicitudin. In convallis\n nisl vitae libero mattis blandit.");
 		rect = transform(translate(10,100).compose(scale(2)),
 				r);
+		multip = 
+				transform(scale(250).compose(translate(1,1)),radialGradient(new ColorAndFraction(0,color(255,0,0)),
+						new ColorAndFraction(0.7,color(0,255,0)),
+						new ColorAndFraction(1.0,color(0,0,255))));
+		s = memo(fill(rect,multip));
 	}
 	Texture img;
 	@Override
@@ -57,16 +64,7 @@ public class BetterFish extends DemoBase{
 //				path(lu, lineTo(ru), lineTo(rd), lineTo(ld),lineTo(lu)));
 //		rect = stroke(rect,30);
 
-		Texture multip = // fillColor(255,255,255);
-		transform(scale(250).compose(translate(1,1)),radialGradient(new ColorAndFraction(0,color(255,0,0)),
-								new ColorAndFraction(0.7,color(0,255,0)),
-								new ColorAndFraction(1.0,color(0,0,255))));
-//		Shape r = text("Hallo!");
-//		Shape rect = transform(translate(400,400).compose(scale(400)),circle());
-//		System.out.println(rect);
-//		Path p = path(0,h/2, quadTo(mouse,new Vec(w,h/2)));
-		TexturedShape s =fill(rect //, transform(scale(100),horGradient(new Color(255,0,0,255),new Color(0,255,0,255))));
-				,multip);
+
 		
 //		
 //				,new Texture() {
@@ -116,7 +114,8 @@ public class BetterFish extends DemoBase{
 //		return new MinusTexturedShape(onto,transform(translate(mouse),outerShape));
 //		return borderArea;
 //		return transform(new BasicLens(mouse,zoom,inner,outer),onto);
-		return over(borderArea,zoomedArea);
+		TexturedShape rest = minus(onto,transform(translate(mouse),outerShape));
+		return over(rest,borderArea,zoomedArea);
 //		return over(minus(onto,transform(translate(mouse),outerShape)),borderArea,zoomedArea);
 	}
 
