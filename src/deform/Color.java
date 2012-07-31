@@ -66,19 +66,19 @@ public class Color {
 	public Color lerpNoAlpha(double frac,Color other){
 		int d = clamp((int)(frac*255));
 		int rd = 255 - d;
-		return new Color((r * rd >> 8) + (other.r * d >> 8),
-				(g * rd >> 8) + (other.g * d >> 8),
-				(b * rd >> 8) + (other.b * d >> 8),
+		return new Color((r * rd + other.r * d) >> 8,
+				(g * rd + other.g * d) >> 8,
+				(b * rd  + other.b * d) >> 8,
 				a);
 	}
 	
 	public Color lerp(int d, Color other){
 		d = clamp(d);
 		int rd = 255 - d;
-		return new Color((r * rd >> 8) + (other.r * d >> 8),
-				(g * rd >> 8) + (other.g * d >> 8),
-				(b * rd >> 8) + (other.b * d >> 8),
-				(a * rd >> 8) + (other.a * d >> 8));
+		return new Color((r * rd + other.r * d) >> 8,
+				(g * rd + other.g * d) >> 8,
+				(b * rd  + other.b * d) >> 8,
+				(a * rd + other.a * d) >> 8);
 	}
 	
 	public String toString(){

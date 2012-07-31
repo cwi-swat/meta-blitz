@@ -39,7 +39,7 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
 
         textInput = "";
         lastLine ="";
-        size = new Vec(1400,900);
+        size = new Vec(400,400);
         setTitle("Superawesome demo");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
