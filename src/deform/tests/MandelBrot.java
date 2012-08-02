@@ -120,8 +120,7 @@ public class MandelBrot extends DemoBase{
 		speed+=mouseSpeed;
 		speed*=0.5;
 //		System.out.println(speed);
-		double zoom = speed >= 600 ? 1 : Math.pow(((600 - speed)/600),2) * 11 + 1;
-//		double zoom = Math.max(1,Math.min(10,1/(speed/100)));
+		double zoom = Math.max(1,(1 - Math.sqrt(speed/300)) * 11 ) ;
 		if(prevMouse!=null){
 			c.move(prevMouse.sub(mouse));
 			prevMouse = mouse;

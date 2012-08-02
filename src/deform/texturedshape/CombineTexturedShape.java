@@ -2,15 +2,20 @@ package deform.texturedshape;
 
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import paths.points.oned.Interval;
+
 import deform.BBox;
 import deform.Color;
 import deform.ColorCombine;
+import deform.Combinators;
+import deform.Texture;
 import deform.Transform;
-import deform.render.LocatedImage;
+import deform.render.RenderContext;
 import deform.render.ScanLiner;
 import deform.segments.SegPath;
 import deform.segments.ShapesMaker;
@@ -27,41 +32,7 @@ public class CombineTexturedShape extends TexturedShape{
 		this.comb = comb;
 	}
 	
-	@Override
-	public LocatedImage render(Transform t,BBox b, java.awt.geom.AffineTransform trans) {
-		LocatedImage la = LocatedImage.empty;
-		if(t.transformBBox(a.getBBox()).overlaps(b)){
-			la = a.render(t,b);
-		}
-		LocatedImage lb = LocatedImage.empty;
-		if(t.transformBBox(this.b.getBBox()).overlaps(b)){
-			lb = this.b.render(t,b);
-		}
-		if(la == LocatedImage.empty) return lb;
-		if(lb == LocatedImage.empty) return la;
-		
-		BBox actual = b.intersections(a.getBBox().union(this.b.getBBox()));
-		int w = actual.getWidthInt();
-		int h = actual.getHeightInt();
-		BufferedImage img = new BufferedImage(actual.getWidthInt(),
-				actual.getHeightInt(), BufferedImage.TYPE_4BYTE_ABGR);
-		Graphics2D g = (Graphics2D) img.getGraphics();
-		la.draw(g);
-		lb.draw(g);
-		g.dispose();
-		BBox overlap = a.getBBox().intersections(this.b.getBBox());
-		ScanLiner overlapscan = new ScanLiner(img,b, overlap);
-		ScanLiner lascan = new ScanLiner(la.img,this.a.getBBox(), overlap);
-		ScanLiner lbscan = new ScanLiner(lb.img,this.b.getBBox(), overlap);
-		while(!overlapscan.isDone()){
-			Color c = comb.combine(lascan.getColor(), lbscan.getColor());
-			overlapscan.setElem(c);
-			overlapscan.increment();
-			lascan.increment();
-			lbscan.increment();
-		}
-		return new LocatedImage(actual.getLeftUp(), img);
-	}
+
 
 
 	@Override
@@ -70,8 +41,58 @@ public class CombineTexturedShape extends TexturedShape{
 	}
 
 
+
+
 	@Override
-	public boolean isJava2DRenderable() {
-		return false;
+	public void render(Transform t, RenderContext ctx) {
+		BBox me = t.transformBBox(getBBox());
+		if(!me.overlaps(ctx.area)){
+			return;
+		}
+		me = me.intersections(ctx.area);
+		BBox ab = t.transformBBox(a.getBBox());
+		if(!ab.overlaps(ctx.area)){
+			b.render(t, ctx);
+			return;
+		}
+		ab = ab.intersections(ctx.area);
+		BBox bb = t.transformBBox(b.getBBox());
+		if(!bb.overlaps(ctx.area)){
+			a.render(t, ctx);
+			return;
+		}
+		bb = bb.intersections(ctx.area);
+		ab = new BBox(new Interval(10,ab.xInterval.high), new Interval(10, ab.yInterval.high));
+		bb = new BBox(new Interval(10,bb.xInterval.high), new Interval(10, bb.yInterval.high));
+		System.out.printf("%s %s %s\n", ab, bb, ctx.size);
+		RenderContext ctxa = new RenderContext(ab, ctx.getClip());
+		a.render(t, ctxa);
+		RenderContext ctxb= new RenderContext(bb, ctx.getClip());
+		b.render(t, ctxb);
+		
+		ScanLiner it = new ScanLiner(ctx.size, ctx.size);
+		ScanLiner ita = new ScanLiner(ab, ab);
+		ScanLiner itb = new ScanLiner(bb, bb);
+		while(!it.isDone()){
+			Color a = Color.transparent;
+			if(ab.isInsideExRightBoder(it.getLoc())){
+				a = ctxa.getElem(ita.cur);
+				ita.increment();
+			}
+			Color b = Color.transparent;
+			if(bb.isInsideExRightBoder(it.getLoc())){
+				b = ctxb.getElem(itb.cur);
+				itb.increment();
+			}
+			if(a.a != 0 || b.b != 0){
+				ctx.addElem(it.cur, comb.combine(a, b));
+			}
+
+			it.increment();
+		}
+		
+		
 	}
+
+
 }

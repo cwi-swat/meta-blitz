@@ -1,6 +1,7 @@
 package deform.render;
 
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Paint;
 import java.awt.RenderingHints;
 import java.awt.Shape;
@@ -23,101 +24,81 @@ import deform.transform.affine.IdentityTransform;
 public class RenderContext {
 	public BBox area;
 	public BBox size;
-	final deform.transform.affine.AffineTransform trans;
-	public final BufferedImage img;
-	final DataBuffer imgBuf;
-	public final Graphics2D g;
-	final BufferedImage imgFill;
-	final DataBuffer fillBuf;
-	final Graphics2D gFill;
+	final ColorBufferGraphics img;
+	final FillBufferGraphics fill;
+	
 	deform.shapes.Shape clip;
 	
-	public RenderContext(BBox area,deform.transform.affine.AffineTransform trans, deform.shapes.Shape clip) {
-		this.trans = trans;
+	public RenderContext(BBox area,deform.shapes.Shape clip) {
 		this.clip = clip;
 		this.area = area;
 		this.size = area;
-		img = new BufferedImage(area.getWidthInt(),
-				area.getHeightInt(), BufferedImage.TYPE_4BYTE_ABGR_PRE);
-		g = (Graphics2D) img.getGraphics();
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, // Anti-alias!
-				RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setRenderingHint(RenderingHints.KEY_RENDERING,
-				RenderingHints.VALUE_RENDER_QUALITY);
-		imgBuf = img.getRaster().getDataBuffer();
-		imgFill = new BufferedImage(area.getWidthInt(),
-				area.getHeightInt(), BufferedImage.TYPE_BYTE_GRAY);
-		gFill = (Graphics2D) imgFill.getGraphics();
-		gFill.setRenderingHint(RenderingHints.KEY_ANTIALIASING, // Anti-alias!
-				RenderingHints.VALUE_ANTIALIAS_ON);
-		gFill.setRenderingHint(RenderingHints.KEY_RENDERING,
-				RenderingHints.VALUE_RENDER_QUALITY);
-		fillBuf = imgFill.getRaster().getDataBuffer();
+		this.img = new ColorBufferGraphics(area);
+		this.fill = new FillBufferGraphics(area);
+	
 	}
 	
 	
 	public void renderShapeOutline(Transform t, deform.shapes.Shape s){
+		t = modTrans(t);
 		List<SegPath> res = new ArrayList<SegPath>();
-		
 		if(clip!=null){
 			res = new ArrayList<SegPath>();
 			clip.render(area, IdentityTransform.Instance, res);
-			gFill.setClip(ShapesMaker.makePath(res));
+			fill.g.setClip(ShapesMaker.makePath(res));
 			res.clear();
 		} else {
-			gFill.setClip(null);
+			fill.g.setClip(null);
 		}
 		s.render(area, t, res);
-//		for(SegPath ss : res){
-//			System.out.println(ss);
-//		}
 		BBox c = t.transformBBox(s.bbox);
 		
-		gFill.clearRect(c.getXInt(), c.getYInt(), c.getWidthInt(), c.getHeightInt());
-		gFill.fill(ShapesMaker.makePath(res));
-		gFill.setClip(null);
+		fill.g.clearRect(c.getXInt(), c.getYInt(), c.getWidthInt(), c.getHeightInt());
+		fill.g.fill(ShapesMaker.makePath(res));
+		fill.g.setClip(null);
 	}
 	
+	private Transform modTrans(Transform t) {
+		if(!size.getLeftUp().isEq(Vec.ZeroVec)){
+			return deform.transform.affine.AffineTransform.translate(size.getLeftUp().negate()).compose(t);
+		} else {
+			return t;
+		}
+	}
+
+
 	public int getAlpha(int loc){
-		return fillBuf.getElem(loc);
+		return fill.imgBuf.getElem(loc);
 	}
 	
 	public void addElem(int elem, Color c){
-		int r = elem + 3;
-		int g = elem + 2;
-		int b = elem + 1;
-		int a = elem;
-		Color nc = 
-				c.add(Color.color(imgBuf.getElem(r), imgBuf.getElem(g), imgBuf.getElem(b), imgBuf.getElem(a)))
-		;
-		imgBuf.setElem(r, nc.r);
-		imgBuf.setElem(g, nc.g);
-		imgBuf.setElem(b, nc.b);
-		imgBuf.setElem(a, nc.a);
-	}
-
-	public deform.transform.affine.AffineTransform getTransform(){
-		return trans;
+		img.addElem(elem, c);
 	}
 	
+	public Color getElem(int elem){
+		return img.getElem(elem);
+	}
 
 
 	public void renderJava2dPaintShape(Paint p,deform.transform.affine.AffineTransform t, deform.shapes.Shape s) {
+		t = (deform.transform.affine.AffineTransform) modTrans(t);
 		List<SegPath> res = new ArrayList<SegPath>();
-		AffineTransform oldTrans = g.getTransform();
+		AffineTransform oldTrans = img.g.getTransform();
+
 		if(clip!=null){
 			res = new ArrayList<SegPath>();
 			clip.render(area, IdentityTransform.Instance, res);
-			g.setClip(ShapesMaker.makePath(res));
+			img.g.setClip(ShapesMaker.makePath(res));
 			res.clear();
 		}
-		g.setPaint(p);
-		g.setTransform(t.toJava2DTransform());
-
+		img.g.setPaint(p);
+		
+		img.g.setTransform(t.toJava2DTransform());
+		System.out.println(s.bbox);
 		s.render(BBox.everything, IdentityTransform.Instance, res);
-		g.fill(ShapesMaker.makePath(res));
-		g.setClip(null);
-		g.setTransform(oldTrans);
+		img.g.fill(ShapesMaker.makePath(res));
+		img.g.setClip(null);
+		img.g.setTransform(oldTrans);
 
 	}
 	
@@ -136,17 +117,18 @@ public class RenderContext {
 			s = new IntersectionShapes(clip, s);
 		}
 		s.render(area, t, res);
-//		res.add(
-//				new SegPath(area.getLeftUp(),
-//						new LineTo(area.getRightUp()),
-//						new LineTo(area.getRightDown()),
-//						new LineTo(area.getLeftDown()),
-//						new LineTo(area.getLeftUp())));
-		g.setClip(ShapesMaker.makePath(res));
-		AffineTransform trans = t.toJava2DTransform();
-		if(trans!=null) g.setTransform(trans);
-		g.drawImage( i, 0, 0, null);
-		g.setClip(null);
+		img.g.setClip(ShapesMaker.makePath(res));
+		if(!size.getLeftUp().isEq(Vec.ZeroVec)){
+			img.g.translate(-size.getXInt(), -size.getYInt());
+			AffineTransform p = img.g.getTransform();
+			p.concatenate(t.toJava2DTransform());
+			img.g.setTransform(p);
+			} else {
+			AffineTransform trans = t.toJava2DTransform();
+			if(trans!=null) img.g.setTransform(trans);
+		}
+		img.g.drawImage( i, 0, 0, null);
+		img.g.setClip(null);
 	}
 
 
@@ -164,12 +146,17 @@ public class RenderContext {
 		if(clip!=null){
 			res = new ArrayList<SegPath>();
 			clip.render(area, IdentityTransform.Instance, res);
-			g.setClip(ShapesMaker.makePath(res));
+			img.g.setClip(ShapesMaker.makePath(res));
 			res.clear();
 		}
-		g.drawImage( i, (int)leftUp.x, (int)leftUp.y, null);
-		g.setClip(null);
+		img.g.drawImage( i, (int)leftUp.x, (int)leftUp.y, null);
+		img.g.setClip(null);
 		
+	}
+
+
+	public BufferedImage getImage() {
+		return img.img;
 	}
 	
 	

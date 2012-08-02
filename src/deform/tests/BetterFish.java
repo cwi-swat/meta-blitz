@@ -16,6 +16,8 @@ import static deform.Library.sweep;
 import static deform.Library.text;
 import static deform.Library.tiledImage;
 import static deform.Library.translate;
+import deform.Color;
+import deform.ColorCombine;
 import deform.Combinators;
 import deform.Texture;
 import deform.Vec;
@@ -99,8 +101,21 @@ public class BetterFish extends DemoBase{
 //		TexturedShape line = fill(stroke(p,10),fillColor(0,255,0));
 //		s = over(line,s);
 //		draw(transform(translate(mouse).compose(scale(5)),fill(Combinators.set(circle(),transform(scale(5),circle())),fillColor(255,0,0))));
+		Texture rad = radialGradient(new ColorAndFraction[] { new ColorAndFraction(0, color(255,0,0)),  new ColorAndFraction(1, color(0,255,0))});
+		Texture h = horGradient(new ColorAndFraction[] { new ColorAndFraction(0, color(255,255,255)),  new ColorAndFraction(1, color(0,0,0))});
 		TexturedShape b = fisheyeNew(mouse, 1 + wheel /100, 100, 200, s);
-		draw(b);
+		TexturedShape r = transform(translate(300,300).compose(scale(100)),fill(circle(),rad));
+		TexturedShape q = transform(translate(400,300).compose(scale(100)),fill(circle(),h));
+		TexturedShape z = combine(new ColorCombine() {
+			
+			@Override
+			public Color combine(Color a, Color b) {
+				return a.mul(b.r);
+			}
+		},r,q);
+		draw(z);
+//		draw(z);
+//		draw(b);
 		
 	}
 	

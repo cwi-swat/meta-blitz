@@ -29,9 +29,9 @@ public class MemoTexturedShape extends TexturedShape{
 		}
 		if(t instanceof IdentityTransform){
 			if(img == null || !prevArea.encloses(ctx.size)){
-				RenderContext ctxlocal = new RenderContext(ctx.size, ctx.getTransform(),null);
+				RenderContext ctxlocal = new RenderContext(ctx.size, null);
 				actual.render(t,ctxlocal);
-				this.img = ctxlocal.img;
+				this.img = ctxlocal.getImage();
 			} 
 			ctx.renderMemo(new Vec(0,0),img);
 			this.prevArea = ctx.size;

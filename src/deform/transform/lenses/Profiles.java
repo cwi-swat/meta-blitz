@@ -19,6 +19,7 @@ public class Profiles {
 		
 		@Override
 		public double prof(double d) {
+			
 			return 1 - (Math.exp(-(d*d)*4) - end) /interval;
 		}
 

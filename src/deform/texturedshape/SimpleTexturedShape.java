@@ -15,7 +15,6 @@ import deform.Color;
 import deform.Combinators;
 import deform.Texture;
 import deform.Transform;
-import deform.render.LocatedImage;
 import deform.render.RenderContext;
 import deform.render.ScanLiner;
 import deform.segments.SegPath;
@@ -44,7 +43,6 @@ public class SimpleTexturedShape extends TexturedShape{
 	public void render(Transform t,RenderContext ctx) {
 		BBox me = t.transformBBox(shape.bbox);
 		if(!me.overlaps(ctx.area)){
-			System.out.println("Skip! stt");
 			return;
 		}
 		Shape shape = this.shape;
@@ -52,18 +50,9 @@ public class SimpleTexturedShape extends TexturedShape{
 		if(tex instanceof ImageTex && t instanceof AffineTransform){
 			ctx.renderImage(((ImageTex)tex).i,(AffineTransform)t,shape);
 			return;
-//		} 
-//		if(tex instanceof RepeatingImage && t instanceof AffineTransform && ((AffineTransform)t).isTranslation()){
-//			ctx.renderJava2dPaintShape(((RepeatingImage)tex).getTranslatedPaint(t),t,shape);
-//			return;
-//			
 		} else {
-			
-			
 			if( tex instanceof Java2DTexture && t instanceof AffineTransform){
-				
 				ctx.renderJava2dPaintShape(((Java2DTexture)tex).getPaint(), (AffineTransform)t, shape);
-//				System.out.println("Using java2d");
 				return;
 			} else {
 				Texture tex = Combinators.transform(t, this.tex);

@@ -87,6 +87,11 @@ public final class BBox {
 	public Vec getRightDown() {
 		return new Vec(xInterval.high, yInterval.high);
 	}
+	
+	public boolean isInsideExRightBoder(Vec p){
+		return xInterval.isInside(p.x) && yInterval.isInside(p.y) 
+				&& xInterval.high != p.x && yInterval.high != p.y; 
+	}
 
 	public boolean isInside(Vec p) {
 		return xInterval.isInside(p.x) && yInterval.isInside(p.y);

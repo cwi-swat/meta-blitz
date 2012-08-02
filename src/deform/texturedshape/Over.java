@@ -11,7 +11,6 @@ import deform.BBox;
 import deform.Combinators;
 import deform.Texture;
 import deform.Transform;
-import deform.render.LocatedImage;
 import deform.render.RenderContext;
 import deform.segments.SegPath;
 import deform.segments.ShapesMaker;

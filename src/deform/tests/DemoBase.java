@@ -118,12 +118,12 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
             try
             {
                 g = (Graphics2D)bufferStrategy.getDrawGraphics();
-                this.ctx = new RenderContext(new BBox(0,0,size.x,size.y), null, null);
+                this.ctx = new RenderContext(new BBox(0,0,size.x,size.y), null);
                 g.setBackground(Color.black);
                 g.clearRect(0, 0, (int)size.x,(int)size.y);
                 draw(); // enter the method to draw everything
                
-                g.drawImage(ctx.img, 0, 0,null);
+                g.drawImage(ctx.getImage(), 0, 0,null);
         		g.setColor(Color.WHITE);
         		int fontHeight = g.getFontMetrics(this.getFont()).getHeight();
         		g.drawString("FPS/UPS: " + String.format("%3.2f",fps), insets.left, insets.top + fontHeight);

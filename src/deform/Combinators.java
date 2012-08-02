@@ -7,7 +7,6 @@ import java.util.List;
 
 import deform.paths.Path;
 import deform.paths.TransformPath;
-import deform.render.LocatedImage;
 import deform.render.RenderContext;
 import deform.segments.CubicTo;
 import deform.segments.LineTo;

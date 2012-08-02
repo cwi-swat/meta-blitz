@@ -4,7 +4,6 @@ import java.awt.Graphics2D;
 
 import deform.BBox;
 import deform.Transform;
-import deform.render.LocatedImage;
 import deform.render.RenderContext;
 import deform.shapes.TransformShape;
 import deform.tests.BasicDemo;
@@ -29,7 +28,6 @@ public class TransformTexturedShape extends TexturedShape{
 			Transform composed = t.compose(this.t);
 				texs.render(composed, ctx);
 		} else {
-//			System.out.println("Skip!");
 		}
 		
 	}

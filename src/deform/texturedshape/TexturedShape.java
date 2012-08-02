@@ -5,7 +5,6 @@ import java.awt.Image;
 
 import deform.BBox;
 import deform.Transform;
-import deform.render.LocatedImage;
 import deform.render.RenderContext;
 
 public abstract class TexturedShape {

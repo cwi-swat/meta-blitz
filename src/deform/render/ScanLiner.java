@@ -3,6 +3,7 @@ package deform.render;
 
 import deform.BBox;
 import deform.Color;
+import deform.Vec;
 
 public class ScanLiner{
 	
@@ -34,6 +35,10 @@ public class ScanLiner{
 	
 	public int getRealY(){
 		return yReal;
+	}
+	
+	public Vec getLoc(){
+		return new Vec(xReal,yReal);
 	}
 	
 	public void increment(){
