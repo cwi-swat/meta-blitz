@@ -24,7 +24,7 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
     private boolean isRunning;
     private boolean isFpsLimited;
     private BufferedImage drawing;
-    private int fps;
+    private double fps;
     private Graphics2D lg;
 	public Vec mouse;
 	public String textInput;
@@ -39,7 +39,7 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
 
         textInput = "";
         lastLine ="";
-        size = new Vec(1400,800);
+        size = new Vec(1600,1200);
         setTitle("Superawesome demo");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
@@ -91,9 +91,11 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
      */
     public void gameLoop()
     {
-        long oldTime = System.nanoTime();
+        long oldTime = System.currentTimeMillis();
         long nanoseconds = 0;
         int frames = 0;
+        long times[] = new long[10];
+        int timesIndex = 0;
         fps = 0;
         
         // create a image to draw to to match 0,0 up correctly.
@@ -102,8 +104,17 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
         while(isRunning)
         {
             // relating to updating animations and calculating FPS
-//  
+//  	
+        	long time = System.currentTimeMillis();
+        	times[timesIndex] = time - oldTime;
+        	timesIndex = (timesIndex + 1) % times.length;
+        	long total =0;
+        	for(long l : times){
+        		total+=l;
+        	}
+        	fps = 1000.0 / (total / times.length);
             Graphics2D g = null;
+            oldTime = time;
             try
             {
                 g = (Graphics2D)bufferStrategy.getDrawGraphics();
@@ -111,7 +122,11 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
                 g.setBackground(Color.black);
                 g.clearRect(0, 0, (int)size.x,(int)size.y);
                 draw(); // enter the method to draw everything
+               
                 g.drawImage(ctx.img, 0, 0,null);
+        		g.setColor(Color.WHITE);
+        		int fontHeight = g.getFontMetrics(this.getFont()).getHeight();
+        		g.drawString("FPS/UPS: " + String.format("%3.2f",fps), insets.left, insets.top + fontHeight);
             }
             finally
             {
@@ -147,37 +162,7 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
     
 
     abstract void draw();
-    /**
-     * Draws the whole program, including all animations and Swing components
-     * @param g The program's window's graphics object to draw too
-     */
-    public void draw(Graphics2D g)
-    {
-//        Graphics2D drawingBoard = drawing.createGraphics();
-//        drawingBoard.setColor(Color.black);
-//        drawingBoard.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-//                                      RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-//        drawingBoard.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-//                                      RenderingHints.VALUE_ANTIALIAS_ON);
-//        // draw over it to create a blank background again, (or you could draw
-//        // a background image if you had one
-//        drawingBoard.fillRect(0, 0, drawing.getWidth(), drawing.getHeight());
-//        this.lg = drawingBoard;
-//        draw();
-//        // now draw everything to drawingBoard, location 0,0 will be top left corner
-//        // within the borders of the window
-//
-//        drawingBoard.setColor(Color.WHITE);
-//        drawingBoard.drawString("FPS: " + fps, 0, drawingBoard.getFont().getSize());
-//        // NOTE: this will now cap the FPS (frames per second), of the program to
-//        // a max of 100 (1000 nanoseconds in a second, divided by 10 nanoseconds
-//        // of rest per update = 100 updates max).
-//    
-//        // now draw the drawing board to correct area of the JFrame's buffer
-//        g.drawImage(drawing, insets.left, insets.top, null);
-//        
-//        drawingBoard.dispose();
-    }
+   
     
     public void draw(TexturedShape s){
     	Combinators.render(ctx,  s);

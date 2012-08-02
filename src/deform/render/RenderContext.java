@@ -26,7 +26,7 @@ public class RenderContext {
 	final deform.transform.affine.AffineTransform trans;
 	public final BufferedImage img;
 	final DataBuffer imgBuf;
-	final Graphics2D g;
+	public final Graphics2D g;
 	final BufferedImage imgFill;
 	final DataBuffer fillBuf;
 	final Graphics2D gFill;
@@ -100,24 +100,24 @@ public class RenderContext {
 		return trans;
 	}
 	
-	public void setTransform(Transform t) {
-		
-	}
 
-	public void renderJava2dPaintShape(Paint p,Transform t, deform.shapes.Shape s) {
+
+	public void renderJava2dPaintShape(Paint p,deform.transform.affine.AffineTransform t, deform.shapes.Shape s) {
 		List<SegPath> res = new ArrayList<SegPath>();
+		AffineTransform oldTrans = g.getTransform();
 		if(clip!=null){
 			res = new ArrayList<SegPath>();
 			clip.render(area, IdentityTransform.Instance, res);
 			g.setClip(ShapesMaker.makePath(res));
 			res.clear();
 		}
-
 		g.setPaint(p);
-		s.render(area, t, res);
+		g.setTransform(t.toJava2DTransform());
+
+		s.render(BBox.everything, IdentityTransform.Instance, res);
 		g.fill(ShapesMaker.makePath(res));
 		g.setClip(null);
-		
+		g.setTransform(oldTrans);
 
 	}
 	

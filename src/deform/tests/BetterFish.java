@@ -24,8 +24,11 @@ import deform.paths.Path;
 import deform.shapes.Shape;
 import deform.texturedshape.MinusTexturedShape;
 import deform.texturedshape.TexturedShape;
-import deform.transform.lenses.BasicLens;
-import deform.transform.lenses.BasicLensNumericTo;
+import deform.transform.lenses.Lens;
+import deform.transform.lenses.LinearLens;
+import deform.transform.lenses.Norms;
+import deform.transform.lenses.NumericToLens;
+import deform.transform.lenses.Profiles;
 
 public class BetterFish extends DemoBase{
 
@@ -39,9 +42,11 @@ public class BetterFish extends DemoBase{
 	Texture multip;
 	TexturedShape s;
 	
+	public static String txt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n Aliquam ultrices quam rhoncus diam sollicitudin at posuere nibh\n consequat. Quisque laoreet consequat diam ac pharetra.\n Curabitur nisl enim, lacinia at placerat a, pretium eu felis.\n Cras feugiat lobortis porttitor. Suspendisse ante lectus,\n hendrerit ullamcorper lacinia sed, porta quis augue. Vestibulum\n tristique sagittis nisl, quis tempus diam tincidunt id.\n Praesent facilisis, urna non accumsan euismod, elit nunc\n pharetra velit, quis sodales nisi ligula sit amet eros.\n Maecenas condimentum viverra lacus, non feugiat nibh fermentum\n at. Pellentesque ac enim dolor. Duis a lorem ante. Curabitur\n feugiat nisl eu leo tristique pharetra. Etiam in leo eu erat interdum\n pellentesque ut non erat.\n Donec fermentum sapien eget\n risus congue a feugiat risus luctus. Sed sollicitudin velit\n ut tellus feugiat posuere.\n\nDuis urna elit, viverra quis scelerisque nec, interdum commodo\n ligula. Fusce blandit mollis metus et molestie. Cras rutrum\n ultrices diam volutpat viverra. Mauris dapibus eros ut\n sapien convallis sit amet tempor elit iaculis. Sed sit amet\n dolor dui. Phasellus elementum condimentum lacus fringilla\n convallis. Curabitur velit metus, iaculis in pulvinar eget,\n tincidunt sit amet velit. Fusce et nisl nunc. Vestibulum\n suscipit, lacus vel blandit pretium, tortor orci sodales enim,\n sit amet aliquet est dui sit amet lacus. Fusce pellentesque\n lacus sit amet mauris facilisis sollicitudin. In convallis\n nisl vitae libero mattis blandit.";
+	
 	@Override
 	public void init(){
-		 r = text("Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n Aliquam ultrices quam rhoncus diam sollicitudin at posuere nibh\n consequat. Quisque laoreet consequat diam ac pharetra.\n Curabitur nisl enim, lacinia at placerat a, pretium eu felis.\n Cras feugiat lobortis porttitor. Suspendisse ante lectus,\n hendrerit ullamcorper lacinia sed, porta quis augue. Vestibulum\n tristique sagittis nisl, quis tempus diam tincidunt id.\n Praesent facilisis, urna non accumsan euismod, elit nunc\n pharetra velit, quis sodales nisi ligula sit amet eros.\n Maecenas condimentum viverra lacus, non feugiat nibh fermentum\n at. Pellentesque ac enim dolor. Duis a lorem ante. Curabitur\n feugiat nisl eu leo tristique pharetra. Etiam in leo eu erat interdum pellentesque ut non erat.\n Donec fermentum sapien eget\n risus congue a feugiat risus luctus. Sed sollicitudin velit\n ut tellus feugiat posuere.\n\nDuis urna elit, viverra quis scelerisque nec, interdum commodo\n ligula. Fusce blandit mollis metus et molestie. Cras rutrum\n ultrices diam volutpat viverra. Mauris dapibus eros ut\n sapien convallis sit amet tempor elit iaculis. Sed sit amet\n dolor dui. Phasellus elementum condimentum lacus fringilla\n convallis. Curabitur velit metus, iaculis in pulvinar eget,\n tincidunt sit amet velit. Fusce et nisl nunc. Vestibulum\n suscipit, lacus vel blandit pretium, tortor orci sodales enim,\n sit amet aliquet est dui sit amet lacus. Fusce pellentesque\n lacus sit amet mauris facilisis sollicitudin. In convallis\n nisl vitae libero mattis blandit.");
+		 r = text(txt,11);
 		rect = transform(translate(10,100).compose(scale(2)),
 				r);
 		multip = 
@@ -102,20 +107,22 @@ public class BetterFish extends DemoBase{
 	TexturedShape fisheyeNew(Vec center, double zoom, double inner, double outer, TexturedShape onto){
 		Shape innerShape = transform(scale(inner/Math.sqrt(2)),rectangle());
 		Shape outerShape = transform(scale(outer),rectangle());
-		Shape border = transform(translate(mouse),set(outerShape,innerShape));
+		Shape border = transform(translate(mouse),outerShape);
 //		System.out.println(border);
 //		return fill(innerShape,fillColor(255,0,0));\
 		
-		TexturedShape zoomedArea = transform(scale(zoom).compose(translate(mouse.negate())),onto);
-		zoomedArea = transform(translate(mouse),intersection(zoomedArea,innerShape));
-		TexturedShape borderArea = intersection(transform(new BasicLens(mouse,zoom,inner,outer),onto),border);
+//		TexturedShape zoomedArea = transform(scale(zoom).compose(translate(mouse.negate())),onto);
+//		zoomedArea = transform(translate(mouse),intersection(zoomedArea,innerShape));
+		TexturedShape borderArea = intersection(transform(
+				new NumericToLens(Norms.circlerect,Profiles.gauss,
+				mouse,zoom,inner,outer),onto),border);
 		
 //		return borderArea;
 //		return new MinusTexturedShape(onto,transform(translate(mouse),outerShape));
 //		return borderArea;
 //		return transform(new BasicLens(mouse,zoom,inner,outer),onto);
 		TexturedShape rest = minus(onto,transform(translate(mouse),outerShape));
-		return over(rest,borderArea,zoomedArea);
+		return over(rest,borderArea);
 //		return over(minus(onto,transform(translate(mouse),outerShape)),borderArea,zoomedArea);
 	}
 

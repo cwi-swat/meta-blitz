@@ -154,4 +154,5 @@ public final class BBox {
 	public BBox grow(double width) {
 		return new BBox(xInterval.grow(width), yInterval.grow(width));
 	}
+
 }

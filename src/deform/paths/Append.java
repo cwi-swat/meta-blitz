@@ -36,19 +36,7 @@ public class Append extends Path{
 		return createAppend(paths, 0, paths.size());
 	}
 
-	@Override
-	void renderAffine(Transform t, SegmentsMaker res) {
-		left.renderAffine(t, res);
-		right.renderAffine(t, res);
-	}
 
-	@Override
-	void renderNonAffine(Transform t, SegmentsMaker res) {
-		left.render(t, res);
-		right.render(t, res);
-		
-	}
-	
 	@Override
 	public String toString() {
 		return "Append [" + left + ", " + right + "]";
@@ -58,5 +46,12 @@ public class Append extends Path{
 	public
 	QueryPath toQueryPath() {
 		return QueryPathFactory.createAppends(left.toQueryPath(),right.toQueryPath());
+	}
+
+	@Override
+	void render(BBox area, Transform t, SegmentsMaker res) {
+		left.render(area, t,res);
+		right.render(area, t,res);
+		
 	}
 }

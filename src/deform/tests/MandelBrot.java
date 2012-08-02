@@ -8,7 +8,10 @@ import deform.Transform;
 import deform.Vec;
 import deform.library.Camera;
 import deform.texturedshape.TexturedShape;
-import deform.transform.lenses.BasicLens;
+import deform.transform.lenses.Lens;
+import deform.transform.lenses.Norms;
+import deform.transform.lenses.NumericToLens;
+import deform.transform.lenses.Profiles;
 
 public class MandelBrot extends DemoBase{
 
@@ -26,6 +29,9 @@ public class MandelBrot extends DemoBase{
 		zoom = 1;
 		c = new Camera();
 		mandelRect = transform(translate(size.div(2)).compose(scale(size.x/4*3)),new MandelBrotTex());
+		lastTime = System.currentTimeMillis();
+		lastMouse = new Vec(0,0);
+		speed = 0;
 	}
 	
 	static class MandelBrotTex implements Texture{
@@ -100,14 +106,31 @@ public class MandelBrot extends DemoBase{
 			c.zoom(mouse, unitsToScroll  > 0 ? 0.8 : 1.2);
 	}
 
+	long lastTime;
+	Vec lastMouse;
+	double speed;
 	@Override
 	void draw() {
+		long time = System.currentTimeMillis();
+		long elapsed = time - lastTime;
+		lastTime = time;
+		double seconds = 1000.0 / (double)elapsed;
+		double mouseSpeed = lastMouse.distance(mouse) * seconds;
+		lastMouse = mouse;
+		speed+=mouseSpeed;
+		speed*=0.5;
+//		System.out.println(speed);
+		double zoom = speed >= 600 ? 1 : Math.pow(((600 - speed)/600),2) * 11 + 1;
+//		double zoom = Math.max(1,Math.min(10,1/(speed/100)));
 		if(prevMouse!=null){
 			c.move(prevMouse.sub(mouse));
 			prevMouse = mouse;
 		}
-		Transform t = fisheye? new BasicLens(mouse, 5, 100, 180).compose(c.getTransform()) : c.getTransform();
-		TexturedShape s = fill(transform(scale(Math.max(size.x,size.y)),rectangle()),
+
+
+		Transform t = fisheye? new NumericToLens(Norms.circlerect,Profiles.gauss,
+				mouse,zoom,100,200).compose(c.getTransform()) : c.getTransform();
+		TexturedShape s = fillPar(125000,transform(scale(Math.max(size.x,size.y)),rectangle()),
 				
 				transform(t,mandelRect));
 		draw(s);

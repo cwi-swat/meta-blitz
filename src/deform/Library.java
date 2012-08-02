@@ -50,7 +50,7 @@ import paths.paths.factory.CircleFactory;
 public class Library {
 
 	
-	private static final int DefaultFontSize = 11;
+	private static final int DefaultFontSize = 16;
 
 	public static Vec vec(double x, double y){
 		return new Vec(x, y);

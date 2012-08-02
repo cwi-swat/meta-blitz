@@ -23,50 +23,53 @@ public class Line extends Path{
 		this.end = end;
 	}
 
-
-
-
-	void renderAffine(Transform t, SegmentsMaker res) {
-		res.line(t.to(start), t.to(end));
-	}
-
-
-	void renderNonAffine(Transform t, SegmentsMaker res) {
-		depth++;
-//		if(depth > 100){
-//			System.out.println("huh");
-//		}
-		if(depth > 60 || start.distanceSquared(end) <= Constants.MAX_ERROR_TRANSFORM_POW2){
-			Vec nstart = t.to(start);
-			Vec nend = t.to(end);
-			if(depth > 60 ||  nstart.distanceSquared(nend) <= Constants.MAX_ERROR_TRANSFORM_POW2){
-				res.line(nstart,nend);
-				depth--;
-				return;
-			} 
-		}
-		Vec mid = start.between(end);
-		new Line(start,mid).renderNonAffine(t,res);
-		new Line(mid, end).renderNonAffine(t,res);
-		depth--;
-		
-	}
-
-
-
-
 	@Override
 	public String toString() {
 		return "Line [" + start + ", " + end + "]";
 	}
 
-
-
-
 	@Override
 	public
 	QueryPath toQueryPath() {
 		return QueryPathFactory.createLine(start, end);
+	}
+
+	void renderSub(BBox b, Transform t,  Vec fromStart, Vec fromEnd,SegmentsMaker res){
+		BBox me = BBox.from2Points(fromStart, fromEnd);
+		BBox met = t.transformBBox(me);
+		if(!b.overlaps(met) || t.isAffine(me)){
+			res.line(t.to(fromStart),t.to(fromEnd));
+		} else if(fromStart.distanceSquared(fromEnd) <= Constants.MAX_ERROR_TRANSFORM_FROM_POW2){
+			renderSubTo(t,fromStart,fromEnd, t.to(fromStart),t.to(fromEnd),res);
+		} else {
+			Vec mid = fromStart.between(fromEnd);
+			renderSub(b,t, fromStart,mid,res);
+			renderSub(b,t,mid,fromEnd,res);
+		}
+	}
+
+
+	private void renderSubTo(Transform t, Vec fromStart, Vec fromEnd, Vec toStart, Vec toEnd ,SegmentsMaker res) {
+		if(toStart.distanceSquared(toEnd) <= Constants.MAX_ERROR_TRANSFORM_POW2){
+			res.line(toStart, toEnd);
+		} else {
+			Vec mid = fromStart.between(fromEnd);
+			Vec midTo = t.to(mid);
+			renderSubTo(t, fromStart,mid, toStart,midTo,res);
+			renderSubTo(t, mid,fromEnd, midTo,toEnd,res);
+		}
+		
+	}
+
+	@Override
+	void render(BBox area,Transform t, SegmentsMaker res) {
+		BBox met = t.transformBBox(bbox);
+		if(!area.overlaps(met) || t.isAffine(bbox)){
+			res.line(t.to(start), t.to(end));
+		} else {
+			renderSub(area,t,start,end,res);
+		}
+		
 	}
 
 	

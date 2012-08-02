@@ -12,9 +12,15 @@ public abstract class Transform {
 		return BBox.everything;
 	}
 	
+	public boolean isAffine(BBox b){
+		return false;
+	}
+	
 	public Transform compose(Transform rhs){
 		return new CompositeTransform(this,rhs);
 	}
 	
-	
+	public Transform composeRev(Transform rhs){
+		return rhs.compose(this);
+	}
 }

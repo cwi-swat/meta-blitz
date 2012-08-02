@@ -28,7 +28,7 @@ public class Closed extends Shape{
 	void render(BBox area, Transform t, List<SegPath> res) {
 		if(area.overlaps(t.transformBBox(path.bbox))){
 			
-			res.add(path.render(t));
+			res.add(path.render(area,t));
 		} else {
 //			System.out.println("Skip! " + this);
 		}

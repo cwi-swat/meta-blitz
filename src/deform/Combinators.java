@@ -30,6 +30,7 @@ import deform.texturedshape.CombineTexturedShape;
 import deform.texturedshape.IntersectionTexturedShape;
 import deform.texturedshape.MemoTexturedShape;
 import deform.texturedshape.MinusTexturedShape;
+import deform.texturedshape.ParallelTexturedShape;
 import deform.texturedshape.SimpleTexturedShape;
 import deform.texturedshape.TexturedShape;
 import deform.texturedshape.TransformTexturedShape;
@@ -123,6 +124,10 @@ public class Combinators {
 	
 	public static TexturedShape fill(Shape shape, Texture tex){
 		return new SimpleTexturedShape(tex, shape);
+	}
+	
+	public static TexturedShape fillPar(int blockSize,Shape shape, Texture tex){
+		return new ParallelTexturedShape(blockSize,tex, shape);
 	}
 	
 	public static Path transform(Transform t, Path p){

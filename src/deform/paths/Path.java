@@ -18,21 +18,14 @@ public abstract class Path {
 		this.bbox = bbox;
 	}
 
-	public SegPath render(Transform t){
+	public SegPath render(BBox area,Transform t){
 		SegmentsMaker res = new SegmentsMaker();
-		render(t, res);
+		render(area,t, res);
 		return res.done();
 	}
 	
-	void render(Transform t, SegmentsMaker res){
-		if(t instanceof AffineTransform){
-			renderAffine(t,res);
-		} else {
-			renderNonAffine(t, res);
-		}
-	}
-	abstract void renderAffine(Transform t, SegmentsMaker res);
-	abstract void renderNonAffine(Transform t, SegmentsMaker res);
+	abstract void render(BBox area,Transform t, SegmentsMaker res);
+	
 	
 	public QueryPath getQueryPath(){
 		if(qpath == null){
@@ -46,7 +39,7 @@ public abstract class Path {
 	public Path normalise(){
 		if(normalized == null){
 			SegmentsMaker res = new SegmentsMaker();
-			render(IdentityTransform.Instance,res);
+			render(BBox.everything,IdentityTransform.Instance,res);
 			normalized =  res.done().toPath();
 		}
 		return normalized;

@@ -1,5 +1,6 @@
 package deform.transform.affine;
 
+import deform.BBox;
 import deform.Transform;
 import deform.Vec;
 
@@ -26,7 +27,7 @@ public class IdentityTransform extends AffineTransform {
 	
 
 	public java.awt.geom.AffineTransform toJava2DTransform(){
-		return null;
+		return new java.awt.geom.AffineTransform();
 	}
 	
 	public Transform compose(Transform rhs){
@@ -34,6 +35,10 @@ public class IdentityTransform extends AffineTransform {
 	}
 
 	public boolean isTranslation() {
+		return true;
+	}
+	
+	public boolean isAffine(BBox b){
 		return true;
 	}
 }

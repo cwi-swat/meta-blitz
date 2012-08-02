@@ -11,8 +11,8 @@ import deform.Vec;
 import deform.paths.Path;
 import deform.shapes.Shape;
 import deform.texturedshape.TexturedShape;
-import deform.transform.lenses.BasicLens;
-import deform.transform.lenses.BasicLensNumericTo;
+import deform.transform.lenses.Lens;
+import deform.transform.lenses.NumericToLens;
 
 public class BasicDemo extends DemoBase{
 
@@ -81,7 +81,7 @@ public class BasicDemo extends DemoBase{
 //		
 		
 		s = transform(sweep(p),s);
-		s = transform(new BasicLensNumericTo(mouse, 5,100,200),s);
+		s = transform(new NumericToLens(mouse, 5,100,200),s);
 //		s = transform(coneLens(mouse, 100 + wheel),s);
 //		s = transform(fisheye(mouse,Math.abs(wheel)/100 , 200), s);
 		TexturedShape line = fill(stroke(p,10),fillColor(0,255,0));

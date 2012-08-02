@@ -24,33 +24,56 @@ public class Cubic extends Path{
 		this.end = end;
 	}
 
-	@Override
-	void renderAffine(Transform t, SegmentsMaker res) {
-		res.cubic(t.to(start), t.to(controll), t.to(controlr), t.to(end));
+
+	
+
+	void renderSub(BBox b, Transform t, SegmentsMaker res){
+		BBox met = t.transformBBox(bbox);
+		if(!b.overlaps(met) || t.isAffine(bbox)){
+			res.cubic(t.to(start),t.to(controll),t.to(controlr), t.to(end));
+		} else if(start.distanceSquared(end) <= Constants.MAX_ERROR_TRANSFORM_FROM_POW2 &&
+				start.distanceSquared(controll) <= Constants.MAX_ERROR_TRANSFORM_FROM_POW2 &&
+				start.distanceSquared(controlr) <= Constants.MAX_ERROR_TRANSFORM_FROM_POW2){
+			renderSubTo(t,t.to(start),t.to(end),res);
+		} else {
+			Vec controlll = start.between(controll);
+			Vec controlrr = controlr.between(end);
+			Vec inter = controll.between(controlr);
+			Vec controllr = controlll.between(inter);
+			Vec controlrl = inter.between(controlrr);
+			Vec middle = controllr.between(controlrl);
+			new Cubic(start,controlll,controllr,middle).renderSub(b,t,res);
+			new Cubic(middle, controlrl, controlrr, end).renderSub(b,t,res);
+		}
 	}
 
 
-	@Override
-	void renderNonAffine(Transform t, SegmentsMaker res) {
-		if(start.distanceSquared(end) <= Constants.MAX_ERROR_TRANSFORM_POW2
-				&& start.distanceSquared(controll) <= Constants.MAX_ERROR_TRANSFORM_POW2 
-				&& controlr.distanceSquared(end) <= Constants.MAX_ERROR_TRANSFORM_POW2 )
-		{
-			Vec nstart = t.to(start);
-			Vec nend = t.to(end);
-			if(nstart.distanceSquared(nend) <= Constants.MAX_ERROR_TRANSFORM_POW2){
-				res.line(nstart,nend);
-				return;
-			} 
+	private void renderSubTo(Transform t, Vec toStart, Vec toEnd ,SegmentsMaker res) {
+		if(toStart.distanceSquared(toEnd) <= Constants.MAX_ERROR_TRANSFORM_POW2){
+			res.line(toStart, toEnd);
+		} else {
+			Vec controlll = start.between(controll);
+			Vec controlrr = controlr.between(end);
+			Vec inter = controll.between(controlr);
+			Vec controllr = controlll.between(inter);
+			Vec controlrl = inter.between(controlrr);
+			Vec middle = controllr.between(controlrl);
+			Vec middleTo = t.to(middle);
+			new Cubic(start,controlll,controllr,middle).renderSubTo(t,toStart,middleTo,res);
+			new Cubic(middle, controlrl, controlrr, end).renderSubTo(t,middleTo,toEnd,res);
 		}
-		Vec controlll = start.between(controll);
-		Vec controlrr = controlr.between(end);
-		Vec inter = controll.between(controlr);
-		Vec controllr = controlll.between(inter);
-		Vec controlrl = inter.between(controlrr);
-		Vec middle = controllr.between(controlrl);
-		new Cubic(start,controlll,controllr,middle).renderNonAffine(t,res);
-		new Cubic(middle, controlrl, controlrr, end).renderNonAffine(t,res);
+		
+	}
+
+	@Override
+	void render(BBox area,Transform t, SegmentsMaker res) {
+		BBox met = t.transformBBox(bbox);
+		if(!area.overlaps(met) || t.isAffine(bbox)){
+			res.cubic(t.to(start),t.to(controll),t.to(controlr), t.to(end));
+		} else {
+			renderSub(area,t,res);
+		}
+		
 	}
 
 	@Override

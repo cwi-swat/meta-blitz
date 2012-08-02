@@ -17,17 +17,6 @@ public class TransformPath extends Path{
 
 	
 
-	@Override
-	void renderAffine(Transform t, SegmentsMaker res) {
-		p.render(t.compose(this.t), res);
-		
-	}
-
-	@Override
-	void renderNonAffine(Transform t, SegmentsMaker res) {
-		p.render(t.compose(this.t), res);
-	}
-
 
 
 	@Override
@@ -41,6 +30,13 @@ public class TransformPath extends Path{
 	@Override
 	public String toString() {
 		return "TransformPath [p=" + p + ", t=" + t + "]";
+	}
+
+
+
+	@Override
+	void render(BBox area, Transform t, SegmentsMaker res) {
+		p.render(area,t.compose(this.t), res);
 	}
 	
 	

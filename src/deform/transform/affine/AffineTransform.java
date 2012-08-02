@@ -85,4 +85,8 @@ public class AffineTransform extends Transform{
 		return to.isTranslation();
 	}
 	
+	public boolean isAffine(BBox b){
+		return true;
+	}
+	
 }

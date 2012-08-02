@@ -9,6 +9,7 @@ public class ScanLiner{
 	final BBox whole, part;
 	int endOfLineInc,  curLine, width, height, y, endOfLineIncFill;
 	public int cur, curFill;
+	int xReal, yReal;
 	
 	public ScanLiner(BBox whole, BBox part) {
 		this.whole = whole;
@@ -18,6 +19,8 @@ public class ScanLiner{
 		this.height = part.getHeightInt();
 		curLine = 0;
 		y = 0;
+		xReal = part.getXInt();
+		yReal = part.getYInt();
 		curFill =  (wholeWidth * (part.getYInt() - whole.getYInt()) 
 				+ (part.getXInt() - whole.getXInt()));
 		cur = curFill* Color.SampleSize;
@@ -25,15 +28,25 @@ public class ScanLiner{
 		endOfLineInc = endOfLineIncFill * Color.SampleSize;
 	}
 	
+	public int getRealX(){
+		return xReal;
+	}
+	
+	public int getRealY(){
+		return yReal;
+	}
 	
 	public void increment(){
 		if(curLine == width - 1){
 			cur+=endOfLineInc;
 			curFill+=endOfLineIncFill;
 			curLine = 0;
+			xReal = part.getXInt();
+			yReal++;
 			y++;
 		} else {
 			cur+=Color.SampleSize;
+			xReal++;
 			curFill++;
 			curLine++;
 		}
