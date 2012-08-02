@@ -19,8 +19,4 @@ public abstract class Transform {
 	public Transform compose(Transform rhs){
 		return new CompositeTransform(this,rhs);
 	}
-	
-	public Transform composeRev(Transform rhs){
-		return rhs.compose(this);
-	}
 }

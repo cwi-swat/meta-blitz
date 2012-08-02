@@ -257,7 +257,6 @@ public class Library {
 	}
 	
 	public static TexturedShape sweep(TexturedShape s, Path p){
-		System.out.println(s.getBBox());
 		Vec trans = s.getBBox().getLeftUp().negate();
 		trans = new Vec(trans.x,trans.y - s.getBBox().height()/2);
 		s = transform(scale(length(p)/s.getBBox().width()).compose(translate(trans)),s);

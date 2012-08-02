@@ -22,6 +22,7 @@ import deform.segments.ShapesMaker;
 import deform.shapes.IntersectionShapes;
 import deform.shapes.Shape;
 import deform.tests.BasicDemo;
+import deform.texture.FillColor;
 import deform.texture.ImageTex;
 import deform.texture.Java2DTexture;
 import deform.texture.RepeatingImage;
@@ -41,6 +42,7 @@ public class SimpleTexturedShape extends TexturedShape{
 
 	
 	public void render(Transform t,RenderContext ctx) {
+		System.out.println(t);
 		BBox me = t.transformBBox(shape.bbox);
 		if(!me.overlaps(ctx.area)){
 			return;
@@ -51,11 +53,16 @@ public class SimpleTexturedShape extends TexturedShape{
 			ctx.renderImage(((ImageTex)tex).i,(AffineTransform)t,shape);
 			return;
 		} else {
-			if( tex instanceof Java2DTexture && t instanceof AffineTransform){
+			if(tex instanceof FillColor){
+				ctx.renderConstantColor(((Java2DTexture)tex).getPaint(), t, shape);
+				return;
+			}
+			if( tex instanceof Java2DTexture && t instanceof AffineTransform ){
 				ctx.renderJava2dPaintShape(((Java2DTexture)tex).getPaint(), (AffineTransform)t, shape);
 				return;
 			} else {
 				Texture tex = Combinators.transform(t, this.tex);
+				System.out.println(tex);
 				ctx.renderShapeOutline(t, shape);
 				setPixels(ctx, actual, tex);
 			}

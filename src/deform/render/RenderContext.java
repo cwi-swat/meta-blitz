@@ -52,8 +52,9 @@ public class RenderContext {
 		}
 		s.render(area, t, res);
 		BBox c = t.transformBBox(s.bbox);
+		System.out.println(c);
 		
-		fill.g.clearRect(c.getXInt(), c.getYInt(), c.getWidthInt(), c.getHeightInt());
+//		fill.g.clearRect(c.getXInt(), c.getYInt(), c.getWidthInt(), c.getHeightInt());
 		fill.g.fill(ShapesMaker.makePath(res));
 		fill.g.setClip(null);
 	}
@@ -79,12 +80,10 @@ public class RenderContext {
 		return img.getElem(elem);
 	}
 
-
-	public void renderJava2dPaintShape(Paint p,deform.transform.affine.AffineTransform t, deform.shapes.Shape s) {
-		t = (deform.transform.affine.AffineTransform) modTrans(t);
+	public void renderConstantColor(Paint p,Transform  t, deform.shapes.Shape s) {
+		t = modTrans(t);
 		List<SegPath> res = new ArrayList<SegPath>();
 		AffineTransform oldTrans = img.g.getTransform();
-
 		if(clip!=null){
 			res = new ArrayList<SegPath>();
 			clip.render(area, IdentityTransform.Instance, res);
@@ -92,9 +91,26 @@ public class RenderContext {
 			res.clear();
 		}
 		img.g.setPaint(p);
-		
+		s.render(BBox.everything, t, res);
+		img.g.fill(ShapesMaker.makePath(res));
+		img.g.setClip(null);
+		img.g.setTransform(oldTrans);
+
+	}
+	
+
+	public void renderJava2dPaintShape(Paint p,deform.transform.affine.AffineTransform t, deform.shapes.Shape s) {
+		t = (deform.transform.affine.AffineTransform) modTrans(t);
+		List<SegPath> res = new ArrayList<SegPath>();
+		AffineTransform oldTrans = img.g.getTransform();
+		if(clip!=null){
+			res = new ArrayList<SegPath>();
+			clip.render(area, IdentityTransform.Instance, res);
+			img.g.setClip(ShapesMaker.makePath(res));
+			res.clear();
+		}
+		img.g.setPaint(p);
 		img.g.setTransform(t.toJava2DTransform());
-		System.out.println(s.bbox);
 		s.render(BBox.everything, IdentityTransform.Instance, res);
 		img.g.fill(ShapesMaker.makePath(res));
 		img.g.setClip(null);

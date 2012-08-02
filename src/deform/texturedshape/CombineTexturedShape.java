@@ -1,25 +1,12 @@
 package deform.texturedshape;
 
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-
 import paths.points.oned.Interval;
-
 import deform.BBox;
 import deform.Color;
 import deform.ColorCombine;
-import deform.Combinators;
-import deform.Texture;
 import deform.Transform;
 import deform.render.RenderContext;
 import deform.render.ScanLiner;
-import deform.segments.SegPath;
-import deform.segments.ShapesMaker;
-import deform.transform.affine.IdentityTransform;
 
 public class CombineTexturedShape extends TexturedShape{
 	
@@ -62,9 +49,6 @@ public class CombineTexturedShape extends TexturedShape{
 			return;
 		}
 		bb = bb.intersections(ctx.area);
-		ab = new BBox(new Interval(10,ab.xInterval.high), new Interval(10, ab.yInterval.high));
-		bb = new BBox(new Interval(10,bb.xInterval.high), new Interval(10, bb.yInterval.high));
-		System.out.printf("%s %s %s\n", ab, bb, ctx.size);
 		RenderContext ctxa = new RenderContext(ab, ctx.getClip());
 		a.render(t, ctxa);
 		RenderContext ctxb= new RenderContext(bb, ctx.getClip());

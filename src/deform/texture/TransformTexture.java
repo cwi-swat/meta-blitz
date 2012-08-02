@@ -18,7 +18,8 @@ public class TransformTexture implements Texture{
 	
 	@Override
 	public Color sample(Vec point) {
-		return tex.sample(t.from(point));
+		Vec p = t.from(point);
+		return tex.sample(p);
 	}
 
 }
