@@ -40,5 +40,10 @@ public class Camera{
 	public Transform getTransform(){
 		return real;
 	}
+
+
+	public double getZoom() {
+		return zoom;
+	}
 	
 }

@@ -11,6 +11,8 @@ import java.awt.image.DataBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import paths.points.oned.Interval;
+
 import deform.BBox;
 import deform.Color;
 import deform.Transform;
@@ -26,6 +28,7 @@ public class RenderContext {
 	public BBox size;
 	final ColorBufferGraphics img;
 	final FillBufferGraphics fill;
+	final BBox zeroBased;
 	
 	deform.shapes.Shape clip;
 	
@@ -33,6 +36,7 @@ public class RenderContext {
 		this.clip = clip;
 		this.area = area;
 		this.size = area;
+		this.zeroBased = new BBox(new Interval(0, area.getWidthInt()), new Interval(0, area.getHeightInt()));
 		this.img = new ColorBufferGraphics(area);
 		this.fill = new FillBufferGraphics(area);
 	
@@ -50,9 +54,7 @@ public class RenderContext {
 		} else {
 			fill.g.setClip(null);
 		}
-		s.render(area, t, res);
-		BBox c = t.transformBBox(s.bbox);
-		System.out.println(c);
+		s.render(zeroBased, t, res);
 		
 //		fill.g.clearRect(c.getXInt(), c.getYInt(), c.getWidthInt(), c.getHeightInt());
 		fill.g.fill(ShapesMaker.makePath(res));
@@ -91,7 +93,7 @@ public class RenderContext {
 			res.clear();
 		}
 		img.g.setPaint(p);
-		s.render(BBox.everything, t, res);
+		s.render(zeroBased, t, res);
 		img.g.fill(ShapesMaker.makePath(res));
 		img.g.setClip(null);
 		img.g.setTransform(oldTrans);

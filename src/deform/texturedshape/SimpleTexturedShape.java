@@ -42,9 +42,10 @@ public class SimpleTexturedShape extends TexturedShape{
 
 	
 	public void render(Transform t,RenderContext ctx) {
-		System.out.println(t);
+		
 		BBox me = t.transformBBox(shape.bbox);
 		if(!me.overlaps(ctx.area)){
+
 			return;
 		}
 		Shape shape = this.shape;
@@ -62,7 +63,6 @@ public class SimpleTexturedShape extends TexturedShape{
 				return;
 			} else {
 				Texture tex = Combinators.transform(t, this.tex);
-				System.out.println(tex);
 				ctx.renderShapeOutline(t, shape);
 				setPixels(ctx, actual, tex);
 			}
@@ -79,7 +79,7 @@ public class SimpleTexturedShape extends TexturedShape{
 		ScanLiner it = new ScanLiner(ctx.size, actual);
 		while(!it.isDone()){
 			int alpha = ctx.getAlpha(it.curFill);
-	
+
 			if(alpha!= 0){
 				Color c= tex.sample(new deform.Vec(it.getRealX() + 0.5, it.getRealY() + 0.5)).mul(alpha);
 				

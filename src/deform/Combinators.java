@@ -1,9 +1,17 @@
 package deform;
 
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.image.ImageObserver;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import paths.points.oned.Interval;
 
 import deform.paths.Path;
 import deform.paths.TransformPath;
@@ -160,9 +168,64 @@ public class Combinators {
 	public static TexturedShape combine(ColorCombine comb, TexturedShape a, TexturedShape b){
 		return new CombineTexturedShape(a,b,comb);
 	}
+
 	
-	public static void render(RenderContext ctx,TexturedShape s){
+	public static void render(BBox b, Graphics g, TexturedShape s){
+		RenderContext ctx = new RenderContext(b, null);
 		s.render(IdentityTransform.Instance,ctx);
+        g.drawImage(ctx.getImage(), 0, 0,null);
+	}
+
+	static final ExecutorService threadPool = Executors.newFixedThreadPool(16);
+	
+	static class RenderJob implements Runnable{
+		final Graphics g;
+		final BBox b;
+		final TexturedShape s;
+
+		public RenderJob(Graphics g, BBox b, TexturedShape s) {
+			this.g = g;
+			this.b = b;
+			this.s = s;
+		}
+
+		@Override
+		public void run() {
+			RenderContext ctx = new RenderContext(b, null);
+			s.render(IdentityTransform.Instance, ctx);
+			if(!g.drawImage(ctx.getImage(), b.getXInt(), b.getYInt(),null)){
+				System.out.println("HUH!!");
+			}
+//			System.out.println(b);
+		}
+		
+	}
+	
+	public static void renderPar(int nrJobsX, int nrJobsY, BBox b, Graphics g, TexturedShape s){
+		int jobWidth = b.getWidthInt()/nrJobsX;
+		int jobHeight = b.getHeightInt()/nrJobsY;
+		List<Future> futures = new ArrayList<Future>();
+		for(int x = 0 ; x< nrJobsX ; x++){
+			for(int y = 0 ; y < nrJobsY; y++){
+				int xLU = x * jobWidth + b.getXInt();
+				int yLU = y * jobHeight + b.getYInt();
+				int xRD = x == nrJobsX - 1? b.getWidthInt() + b.getXInt() : xLU + jobWidth;
+				int yRD = y == nrJobsY - 1? b.getHeightInt() + b.getYInt() : yLU + jobHeight;
+				BBox r = new BBox(xLU, yLU, xRD, yRD);
+				
+				futures.add(threadPool.submit(new RenderJob(g,r,s)));
+			}
+		}
+		
+		for(Future f : futures){
+			try {
+				f.get();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	

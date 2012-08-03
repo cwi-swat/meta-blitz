@@ -113,9 +113,9 @@ public class BetterFish extends DemoBase{
 				return a.mul(b.r);
 			}
 		},r,q);
-		draw(z);
 //		draw(z);
-//		draw(b);
+//		draw(z);
+		draw(b);
 		
 	}
 	

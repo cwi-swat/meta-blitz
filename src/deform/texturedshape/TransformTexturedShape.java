@@ -26,11 +26,11 @@ public class TransformTexturedShape extends TexturedShape{
 	public void render(Transform t,   RenderContext ctx) {
 		if(t.transformBBox(getBBox()).overlaps(ctx.area)){
 			Transform composed = t.compose(this.t);
-//			System.out.println(composed);
 //			Transform composed =this.t.compose(t);
 				texs.render(composed, ctx);
 
 		} else {
+			
 		}
 		
 	}

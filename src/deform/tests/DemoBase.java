@@ -31,6 +31,7 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
 	public String lastLine;
 	public double wheel;
     private RenderContext ctx;
+	private Graphics2D g;
     
     public DemoBase()
     {
@@ -99,7 +100,6 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
         fps = 0;
         
         // create a image to draw to to match 0,0 up correctly.
-        drawing = (BufferedImage) this.createImage(getWidth(),getHeight());
         
         while(isRunning)
         {
@@ -118,12 +118,12 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
             try
             {
                 g = (Graphics2D)bufferStrategy.getDrawGraphics();
-                this.ctx = new RenderContext(new BBox(0,0,size.x,size.y), null);
+                this.g = g;
                 g.setBackground(Color.black);
                 g.clearRect(0, 0, (int)size.x,(int)size.y);
                 draw(); // enter the method to draw everything
                
-                g.drawImage(ctx.getImage(), 0, 0,null);
+
         		g.setColor(Color.WHITE);
         		int fontHeight = g.getFontMetrics(this.getFont()).getHeight();
         		g.drawString("FPS/UPS: " + String.format("%3.2f",fps), insets.left, insets.top + fontHeight);
@@ -165,7 +165,7 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
    
     
     public void draw(TexturedShape s){
-    	Combinators.render(ctx,  s);
+    	Combinators.renderPar(6,6,new BBox(0,0,size.x,size.y), this.g, s);
     }
     
    

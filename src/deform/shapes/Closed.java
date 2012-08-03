@@ -30,7 +30,7 @@ public class Closed extends Shape{
 			
 			res.add(path.render(area,t));
 		} else {
-//			System.out.println("Skip! " + this);
+
 		}
 	}
 	

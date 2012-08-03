@@ -19,7 +19,7 @@ import deform.shapes.Shape;
 
 public class ParallelTexturedShape extends SimpleTexturedShape {
 
-	static final ExecutorService threadPool = Executors.newFixedThreadPool(48);
+	static final ExecutorService threadPool = Executors.newFixedThreadPool(16);
 	
 	final int blockSize;
 	

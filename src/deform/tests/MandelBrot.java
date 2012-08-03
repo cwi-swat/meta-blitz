@@ -28,7 +28,7 @@ public class MandelBrot extends DemoBase{
 	public void init() {
 		zoom = 1;
 		c = new Camera();
-		mandelRect = transform(translate(size.div(2)).compose(scale(size.x/4*3)),new MandelBrotTex());
+		mandelRect = transform(translate(size.x/1.5,size.y/2).compose(scale(size.x/4)),new MandelBrotTex());
 		lastTime = System.currentTimeMillis();
 		lastMouse = new Vec(0,0);
 		speed = 0;
@@ -126,11 +126,11 @@ public class MandelBrot extends DemoBase{
 			prevMouse = mouse;
 		}
 
-
-		Transform t = fisheye? new NumericToLens(Norms.circlerect,Profiles.gauss,
-				mouse,zoom,100,200).compose(c.getTransform()) : c.getTransform();
-		TexturedShape s = fillPar(125000,transform(scale(Math.max(size.x,size.y)),rectangle()),
-				
+		Transform t = new NumericToLens(Norms.circlerect,Profiles.gauss,
+				mouse,c.getZoom(),200,400);
+//		Transform t = fisheye? new NumericToLens(Norms.circlerect,Profiles.gauss,
+//				mouse,zoom,200,400).compose(c.getTransform()) : c.getTransform();
+		TexturedShape s = fill(transform(scale(Math.max(size.x,size.y)),rectangle()),
 				transform(t,mandelRect));
 		draw(s);
 	}
