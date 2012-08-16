@@ -30,7 +30,7 @@ public class RenderContext {
 	final FillBufferGraphics fill;
 	final BBox zeroBased;
 	
-	deform.shapes.Shape clip;
+	public deform.shapes.Shape clip;
 	
 	public RenderContext(BBox area,deform.shapes.Shape clip) {
 		this.clip = clip;
@@ -161,6 +161,7 @@ public class RenderContext {
 
 	public void renderMemo(Vec leftUp, BufferedImage i) {
 		List<SegPath> res = new ArrayList<SegPath>();
+	
 		if(clip!=null){
 			res = new ArrayList<SegPath>();
 			clip.render(area, IdentityTransform.Instance, res);

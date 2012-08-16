@@ -10,13 +10,15 @@ import deform.Texture;
 import deform.Vec;
 import deform.paths.Path;
 import deform.shapes.Shape;
+import deform.tests.MandelBrot.MandelBrotTex;
 import deform.texturedshape.TexturedShape;
 import deform.transform.lenses.Lens;
+import deform.transform.lenses.Norms;
 import deform.transform.lenses.NumericToLens;
+import deform.transform.lenses.Profiles;
 
 public class BasicDemo extends DemoBase{
 
-	public static boolean awt = true;
 
 	public static void main(String[] argv){
 		new BasicDemo();
@@ -37,12 +39,7 @@ public class BasicDemo extends DemoBase{
 	
 	@Override
 	void draw() {
-		final Vec lu = new Vec(10,10);
-		final double w = 1400;
-		final double h = 1200;
-		Vec ru = new Vec(lu.x + w, lu.y);
-		Vec ld = new Vec(lu.x , lu.y + h);
-		Vec rd = new Vec(lu.x + w , lu.y + h);
+		Shape rect = transform(translate(size.x/1.5,size.y/2).compose(scale(size.x/4)),new MandelBrotTex());
 //		Shape rect = close(
 //				path(lu, lineTo(ru), lineTo(rd), lineTo(ld),lineTo(lu)));
 //		rect = stroke(rect,30);
@@ -81,7 +78,8 @@ public class BasicDemo extends DemoBase{
 //		
 		
 		s = transform(sweep(p),s);
-		s = transform(new NumericToLens(mouse, 5,100,200),s);
+		new NumericToLens(Norms.circlerect,Profiles.gauss,
+				mouse,c.getZoom(),200,400);
 //		s = transform(coneLens(mouse, 100 + wheel),s);
 //		s = transform(fisheye(mouse,Math.abs(wheel)/100 , 200), s);
 		TexturedShape line = fill(stroke(p,10),fillColor(0,255,0));

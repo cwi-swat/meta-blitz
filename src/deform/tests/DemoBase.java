@@ -19,8 +19,8 @@ import java.util.Random;
 public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelListener,MouseListener, MouseMotionListener, WindowListener //, ComponentListener
 {
 	public Vec size;
-    private Insets insets;
-    private BufferStrategy bufferStrategy;
+    public Insets insets;
+    protected BufferStrategy bufferStrategy;
     private boolean isRunning;
     private boolean isFpsLimited;
     private BufferedImage drawing;
@@ -31,7 +31,7 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
 	public String lastLine;
 	public double wheel;
     private RenderContext ctx;
-	private Graphics2D g;
+	protected Graphics2D g;
     
     public DemoBase()
     {
@@ -40,7 +40,7 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
 
         textInput = "";
         lastLine ="";
-        size = new Vec(1600,1200);
+        size = new Vec(1600,1000);
         setTitle("Superawesome demo");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
@@ -118,13 +118,15 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
             try
             {
                 g = (Graphics2D)bufferStrategy.getDrawGraphics();
+                
                 this.g = g;
-                g.setBackground(Color.black);
+                g.setBackground(Color.white);
                 g.clearRect(0, 0, (int)size.x,(int)size.y);
+                g.translate(insets.left, insets.top);
                 draw(); // enter the method to draw everything
                
 
-        		g.setColor(Color.WHITE);
+        		g.setColor(Color.black);
         		int fontHeight = g.getFontMetrics(this.getFont()).getHeight();
         		g.drawString("FPS/UPS: " + String.format("%3.2f",fps), insets.left, insets.top + fontHeight);
             }
@@ -161,11 +163,11 @@ public abstract class DemoBase extends JFrame implements KeyListener,MouseWheelL
     }
     
 
-    abstract void draw();
+    public abstract void draw();
    
     
     public void draw(TexturedShape s){
-    	Combinators.renderPar(6,6,new BBox(0,0,size.x,size.y), this.g, s);
+    	Combinators.render(new BBox(0,0,size.x,size.y), this.g, s);
     }
     
    

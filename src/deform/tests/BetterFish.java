@@ -10,6 +10,8 @@ import static deform.Library.over;
 import static deform.Library.path;
 import static deform.Library.*;
 
+import static deform.Library.image;
+import static deform.Library.rectangle;
 import static deform.Library.scale;
 import static deform.Library.stroke;
 import static deform.Library.sweep;
@@ -20,6 +22,7 @@ import deform.Color;
 import deform.ColorCombine;
 import deform.Combinators;
 import deform.Texture;
+import deform.Transform;
 import deform.Vec;
 import deform.Library.ColorAndFraction;
 import deform.paths.Path;
@@ -44,18 +47,20 @@ public class BetterFish extends DemoBase{
 	Texture multip;
 	TexturedShape s;
 	
-	public static String txt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n Aliquam ultrices quam rhoncus diam sollicitudin at posuere nibh\n consequat. Quisque laoreet consequat diam ac pharetra.\n Curabitur nisl enim, lacinia at placerat a, pretium eu felis.\n Cras feugiat lobortis porttitor. Suspendisse ante lectus,\n hendrerit ullamcorper lacinia sed, porta quis augue. Vestibulum\n tristique sagittis nisl, quis tempus diam tincidunt id.\n Praesent facilisis, urna non accumsan euismod, elit nunc\n pharetra velit, quis sodales nisi ligula sit amet eros.\n Maecenas condimentum viverra lacus, non feugiat nibh fermentum\n at. Pellentesque ac enim dolor. Duis a lorem ante. Curabitur\n feugiat nisl eu leo tristique pharetra. Etiam in leo eu erat interdum\n pellentesque ut non erat.\n Donec fermentum sapien eget\n risus congue a feugiat risus luctus. Sed sollicitudin velit\n ut tellus feugiat posuere.\n\nDuis urna elit, viverra quis scelerisque nec, interdum commodo\n ligula. Fusce blandit mollis metus et molestie. Cras rutrum\n ultrices diam volutpat viverra. Mauris dapibus eros ut\n sapien convallis sit amet tempor elit iaculis. Sed sit amet\n dolor dui. Phasellus elementum condimentum lacus fringilla\n convallis. Curabitur velit metus, iaculis in pulvinar eget,\n tincidunt sit amet velit. Fusce et nisl nunc. Vestibulum\n suscipit, lacus vel blandit pretium, tortor orci sodales enim,\n sit amet aliquet est dui sit amet lacus. Fusce pellentesque\n lacus sit amet mauris facilisis sollicitudin. In convallis\n nisl vitae libero mattis blandit.";
+	public static String txt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sed turpis sed felis vestibulum pretium.\nPraesent at elit vitae odio eleifend tristique in sit amet sem. In cursus condimentum enim eget\nmalesuada. Donec iaculis, velit non tempor egestas, tellus lacus viverra orci, sed ultricies lorem magna";
+//public static String txt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sed turpis sed felis vestibulum pretium.\nPraesent at elit vitae odio eleifend tristique in sit amet sem. In cursus condimentum enim eget\nmalesuada. Donec iaculis, velit non tempor egestas, tellus lacus viverra orci, sed ultricies lorem magna";
+	static double zooml ;
+	
+	
 	
 	@Override
 	public void init(){
-		 r = text(txt,11);
-		rect = transform(translate(10,100).compose(scale(2)),
-				r);
-		multip = 
-				transform(scale(250).compose(translate(1,1)),radialGradient(new ColorAndFraction(0,color(255,0,0)),
-						new ColorAndFraction(0.7,color(0,255,0)),
-						new ColorAndFraction(1.0,color(0,0,255))));
-		s = memo(fill(rect,multip));
+		Shape r = text(txt,30);
+		r = transform(translate(0,470.8203125),r);
+//		 System.out.println(-r.bbox.yInterval.middle()+size.y/2-20);
+		s = fill(r,fillColor(0,0,0));
+		s = over(
+			fill(transform(translate(1,1).compose(scale(size.x,size.y)),rectangle()),image("/home/ploeg/landscape.jpg")),s);
 	}
 	Texture img;
 	@Override
@@ -66,7 +71,7 @@ public class BetterFish extends DemoBase{
 	}
 	
 	@Override
-	void draw() {
+	public void draw() {
 //		Shape rect = close(
 //				path(lu, lineTo(ru), lineTo(rd), lineTo(ld),lineTo(lu)));
 //		rect = stroke(rect,30);
@@ -101,44 +106,52 @@ public class BetterFish extends DemoBase{
 //		TexturedShape line = fill(stroke(p,10),fillColor(0,255,0));
 //		s = over(line,s);
 //		draw(transform(translate(mouse).compose(scale(5)),fill(Combinators.set(circle(),transform(scale(5),circle())),fillColor(255,0,0))));
-		Texture rad = radialGradient(new ColorAndFraction[] { new ColorAndFraction(0, color(255,0,0)),  new ColorAndFraction(1, color(0,255,0))});
-		Texture h = horGradient(new ColorAndFraction[] { new ColorAndFraction(0, color(255,255,255)),  new ColorAndFraction(1, color(0,0,0))});
-		TexturedShape b = fisheyeNew(mouse, 1 + wheel /100, 100, 200, s);
-		TexturedShape r = transform(translate(300,300).compose(scale(100)),fill(circle(),rad));
-		TexturedShape q = transform(translate(400,300).compose(scale(100)),fill(circle(),h));
-		TexturedShape z = combine(new ColorCombine() {
-			
-			@Override
-			public Color combine(Color a, Color b) {
-				return a.mul(b.r);
-			}
-		},r,q);
-//		draw(z);
+//		Texture rad = radialGradient(new ColorAndFraction[] { new ColorAndFraction(0, color(255,0,0)),  new ColorAndFraction(1, color(0,255,0))});
+//		Texture h = horGradient(new ColorAndFraction[] { new ColorAndFraction(0, color(255,255,255)),  new ColorAndFraction(1, color(0,0,0))});
+//		TexturedShape b =transform(
+//				new LinearLens(Norms.circle,
+//				mouse,2, 100, 200),s);
+		
+		TexturedShape b = fisheyeNew(size.div(2), 2.5, 100, 200, s);
+//		TexturedShape r = transform(translate(300,300).compose(scale(100)),fill(circle(),rad));
+//		TexturedShape q = transform(translate(400,300).compose(scale(100)),fill(circle(),h));
+//		TexturedShape z = combine(new ColorCombine() {
+//			
+//			@Override
+//			public Color combine(Color a, Color b) {
+//				return a.mul(b.r);
+//			}
+//		},r,q);
+////		draw(z);
 //		draw(z);
 		draw(b);
 		
 	}
 	
 	TexturedShape fisheyeNew(Vec center, double zoom, double inner, double outer, TexturedShape onto){
-		Shape innerShape = transform(scale(inner/Math.sqrt(2)),rectangle());
+//		Shape innerShape = transform(scale(inner/Math.sqrt(2)),rectangle());
 		Shape outerShape = transform(scale(outer),rectangle());
-		Shape border = transform(translate(mouse),outerShape);
+		Shape border = transform(translate(center),outerShape);
 //		System.out.println(border);
 //		return fill(innerShape,fillColor(255,0,0));\
 		
-//		TexturedShape zoomedArea = transform(scale(zoom).compose(translate(mouse.negate())),onto);
+//		TexturedShape zoomedArea = intersection(transform(scale(zoom).compose(translate(mouse.negate())),onto);
 //		zoomedArea = transform(translate(mouse),intersection(zoomedArea,innerShape));
+		Transform t = new NumericToLens(Norms.circle, Profiles.gauss, center, zoom, inner, outer);
 		TexturedShape borderArea = intersection(transform(
-				new NumericToLens(Norms.circlerect,Profiles.gauss,
-				mouse,zoom,inner,outer),onto),border);
+				t,onto),border);
 		
 //		return borderArea;
 //		return new MinusTexturedShape(onto,transform(translate(mouse),outerShape));
 //		return borderArea;
 //		return transform(new BasicLens(mouse,zoom,inner,outer),onto);
-		TexturedShape rest = minus(onto,transform(translate(mouse),outerShape));
-		return over(rest,borderArea);
-//		return over(minus(onto,transform(translate(mouse),outerShape)),borderArea,zoomedArea);
+//		TexturedShape rest = minus(onto,transform(translate(mouse),outerShape));
+//		return over(rest,borderArea);
+//		return minus(onto,border);
+//		return zoomedArea;
+//		return over(minus(onto,border),borderArea,zoomedArea);
+//		return transform(t,onto);
+		return over(minus(onto,border),borderArea);
 	}
 
 

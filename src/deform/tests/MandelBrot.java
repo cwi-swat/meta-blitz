@@ -110,7 +110,7 @@ public class MandelBrot extends DemoBase{
 	Vec lastMouse;
 	double speed;
 	@Override
-	void draw() {
+	public void draw() {
 		long time = System.currentTimeMillis();
 		long elapsed = time - lastTime;
 		lastTime = time;
