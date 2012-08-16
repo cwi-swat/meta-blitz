@@ -1,5 +1,6 @@
 package deform.transform.sweep;
 
+import paths.paths.paths.PathIndex;
 import paths.paths.paths.QueryPath;
 import paths.paths.results.project.BestProject;
 import deform.Transform;
@@ -12,7 +13,8 @@ public class Sweep extends Transform {
 
 	QueryPath path;
 	SweepTo to;
-	double prevT;
+	PathIndex prevT;
+	Vec prev;
 	
 	public Sweep(Path p){
 		this.path = p.normalise().toQueryPath().normaliseToLength();
@@ -26,7 +28,13 @@ public class Sweep extends Transform {
 
 	@Override
 	public Vec from(Vec to) {
-		BestProject best =path.project(to);
+		double bestd = Double.POSITIVE_INFINITY;
+		if(prevT != null && prev.distanceSquared(to) < 10){
+			bestd = path.getAt(prevT).distanceSquared(to);
+		}
+		BestProject best =path.project(bestd,to);
+		prevT = best.t;
+		prev = to;
 		return new Vec(best.t.getSimple(),Math.sqrt(best.distSquared));
 		
 	}

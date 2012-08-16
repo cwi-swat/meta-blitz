@@ -211,6 +211,15 @@ public class Library {
 		}
 	}
 	
+	public static Texture horGradient(Color ... colors){
+		ColorAndFraction[] cfs = new ColorAndFraction[colors.length+1];
+		for(int i = 0 ; i < colors.length ; i++){
+			cfs[i] = new ColorAndFraction((double)i/colors.length, colors[i]);
+		}
+		cfs[colors.length] = new ColorAndFraction(1.0, colors[0]);
+		return horGradient(cfs);
+	}
+	
 	public static Texture horGradient(ColorAndFraction ... cfs){
 		return horGradient(GradientCycleMethod.Reflect, cfs);
 	}

@@ -28,6 +28,8 @@ public class MemoTexturedShape extends TexturedShape{
 			return;
 		}
 		if(t instanceof IdentityTransform){
+//			System.out.println(ctx.clip);
+//			System.out.println("Memo!");
 			if(img == null || !prevArea.encloses(ctx.size)){
 				RenderContext ctxlocal = new RenderContext(ctx.size, null);
 				actual.render(t,ctxlocal);

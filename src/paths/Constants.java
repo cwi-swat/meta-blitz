@@ -1,7 +1,10 @@
 package paths;
 
 public class Constants {
-
+	public static final double MAX_ERROR_CONTINOUS = 1;
+	public static final double MAX_ERROR_CONTINOUS_POW2 = MAX_ERROR_CONTINOUS*MAX_ERROR_CONTINOUS;
+	public static final double MAX_ERROR_APPROX_CUBIC = 1;
+	public static final double MAX_ERROR_APPROX_CUBIC_POW2 = MAX_ERROR_APPROX_CUBIC*MAX_ERROR_APPROX_CUBIC;
 	// public static final double MAX_ERROR_LENGTH = 0.25;
 	public static final double MAX_ERROR = 2.5;
 	// public static final double HALF_MAX_ERROR = 0.5 * MAX_ERROR;
@@ -29,7 +32,7 @@ public class Constants {
 	public static final double T_MAX_DIFF_CUBIC_QUADRATIC = (Math.sqrt(3) + 3) / 6;
 	// public static final double DEFAULT_SAMPLES_PER_DIRECT = 10;
 	public static final double MAX_ERROR_2_POW2 = 4 * MAX_ERROR_POW2;
-	public static final double MAX_ERROR_TRANSFORM = 2;
+	public static final double MAX_ERROR_TRANSFORM = 15;
 	public static final double MAX_ERROR_TRANSFORM_POW2 = MAX_ERROR_TRANSFORM*MAX_ERROR_TRANSFORM;
 	public static final double MAX_ERROR_TRANSFORM_FROM = 10;
 	public static final double MAX_ERROR_TRANSFORM_FROM_POW2 = MAX_ERROR_TRANSFORM_FROM*MAX_ERROR_TRANSFORM_FROM;

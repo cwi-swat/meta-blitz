@@ -78,11 +78,13 @@ public abstract class SplittablePath extends QueryPath {
 
 		}
 	}
-
+	
 	public BestProject project(double best, Vec p) {
 		if (getBBox().getNearestPoint(p).distanceSquared(p) > best) {
 			return BestProject.noBestYet;
 		}
+//		if(getBBox().getFarthestPoint(p).distanceSquared(p))
+		
 		Tuple<QueryPath, QueryPath> sp = splitSimpler();
 		if (sp.l.getBBox().avgDistSquared(p) < sp.r.getBBox().avgDistSquared(p)) {
 			BestProject res = sp.l.project(best, p).transform(

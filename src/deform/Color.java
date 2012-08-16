@@ -74,7 +74,7 @@ public class Color {
 	
 	public Color lerp(int d, Color other){
 		d = clamp(d);
-		int rd = 255 - d;
+		int rd = 256 - d;
 		return new Color((r * rd + other.r * d) >> 8,
 				(g * rd + other.g * d) >> 8,
 				(b * rd  + other.b * d) >> 8,

@@ -67,6 +67,7 @@ public abstract class Lens extends Transform{
 	abstract double profile(double d);
 	
 	public boolean isAffine(BBox b){
+//		return false;
 		return !b.overlaps(inside) || insideZoom.encloses(b);
 	}
 	

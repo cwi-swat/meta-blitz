@@ -46,7 +46,7 @@ public abstract class QueryPath {
 		;
 		return project(Double.POSITIVE_INFINITY, p);
 	}
-
+	
 	public abstract BestProject project(double best, Vec p);
 
 	public BestProjectTup project(QueryPath other) {

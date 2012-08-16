@@ -3,6 +3,7 @@ package deform.texturedshape;
 import deform.BBox;
 import deform.Combinators;
 import deform.Library;
+import static deform.Combinators.transform;
 import static deform.Library.*;
 import deform.Transform;
 import deform.render.RenderContext;
@@ -38,7 +39,7 @@ public class MinusTexturedShape extends TexturedShape{
 		Shape curClip = ctx.getClip();
 		Shape outside = Combinators.transform(
 				scale(ctx.area.width(),ctx.area.height()).compose(translate(ctx.area.getLeftUp())),rectangle());
-		Shape myClip = min;
+		Shape myClip = transform(translate(ctx.area.getLeftUp().negate()),min);
 		if(!(t instanceof IdentityTransform)){
 			myClip = new TransformShape(min,t);
 		}

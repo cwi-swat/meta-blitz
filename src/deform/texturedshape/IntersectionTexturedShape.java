@@ -7,6 +7,8 @@ import deform.shapes.IntersectionShapes;
 import deform.shapes.Shape;
 import deform.shapes.TransformShape;
 import deform.transform.affine.IdentityTransform;
+import static deform.Combinators.*;
+import static deform.Library.*;
 
 public class IntersectionTexturedShape extends TexturedShape {
 
@@ -33,7 +35,7 @@ public class IntersectionTexturedShape extends TexturedShape {
 			return;
 		}
 		Shape curClip = ctx.getClip();
-		Shape myClip = inter;
+		Shape myClip = transform(translate(ctx.size.getLeftUp().negate()),inter);
 		if(!(t instanceof IdentityTransform)){
 			myClip = new TransformShape(inter,t);
 		}

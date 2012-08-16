@@ -3,6 +3,8 @@ package deform;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.ImageObserver;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,8 +13,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import javax.imageio.ImageIO;
+
 import paths.points.oned.Interval;
 
+import deform.paths.Append;
+import deform.paths.Function;
 import deform.paths.Path;
 import deform.paths.TransformPath;
 import deform.render.RenderContext;
@@ -41,6 +47,8 @@ import deform.texturedshape.ParallelTexturedShape;
 import deform.texturedshape.SimpleTexturedShape;
 import deform.texturedshape.TexturedShape;
 import deform.texturedshape.TransformTexturedShape;
+import deform.transform.CompositeTransform;
+import deform.transform.TransformedTransform;
 import deform.transform.affine.AffineTransform;
 import deform.transform.affine.IdentityTransform;
 
@@ -66,8 +74,16 @@ public class Combinators {
 		return new CubicTo(control1, control2, to);
 	}
 	
+	public static Path funcPath(IFunction f){
+		return new Function(f);
+	}
+	
 	public static Path path(Vec start, Segment ... segs){
 		return new SegPath(start,segs).toPath();
+	}
+	
+	public static Path append(Path a, Path b){
+		return new Append(a,b);
 	}
 
 	public static Shape close(Path p){
@@ -149,6 +165,10 @@ public class Combinators {
 		return new MemoTexturedShape(s);
 	}
 	
+	public static Transform transform(Transform t, Transform arg){
+		return new TransformedTransform(t, arg);
+	}
+	
 	public static Texture transform(Transform t, Texture tex){
 		if(t instanceof IdentityTransform){
 			return tex;
@@ -168,6 +188,22 @@ public class Combinators {
 	public static TexturedShape combine(ColorCombine comb, TexturedShape a, TexturedShape b){
 		return new CombineTexturedShape(a,b,comb);
 	}
+	
+	public static void render(int width , int height, String file, TexturedShape s){
+		BBox b = new BBox(0,0,width,height);
+		
+		RenderContext ctx = new RenderContext(b, null);
+		Graphics2D g = (Graphics2D) ctx.getImage().getGraphics();
+		g.setBackground(java.awt.Color.white);
+		g.clearRect(0, 0, width, height);
+		s.render(IdentityTransform.Instance,ctx);
+		try {
+			ImageIO.write(ctx.getImage(), "png", new File(file + ".png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	
 	public static void render(BBox b, Graphics g, TexturedShape s){
